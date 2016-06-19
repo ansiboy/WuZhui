@@ -1,0 +1,5 @@
+namespace wuzhui {
+    class DataBoundTable {
+
+    }
+}
