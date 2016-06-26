@@ -1,5 +1,5 @@
 namespace wuzhui {
-   export class CommandField extends DataControlField {
+    export class CommandField extends DataControlField {
 
     }
 }

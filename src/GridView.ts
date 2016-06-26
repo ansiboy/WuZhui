@@ -1,3 +1,4 @@
+
 namespace wuzhui {
     class GridView {
         private _pageSize: number;
@@ -71,4 +72,5 @@ namespace wuzhui {
 
         }
     }
+
 }

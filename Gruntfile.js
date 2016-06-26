@@ -1,15 +1,14 @@
 var js_output_file = 'release/chitu.js';
 var ts_output_file = 'release/chitu.d.ts';
-var build_dir = 'build';
 var release_dir = 'release';
 module.exports = function (grunt) {
     var config = {
         ts: {
             main: {
                 src: ['src/**/*.ts'],
-                dest: build_dir + '/wuzhui.js',
+                dest: release_dir + '/wuzhui.js',
                 options: {
-                    basePath: build_dir,
+                    basePath: release_dir,
                     target: 'es5',
                     removeComments: true,
                     declaration: true,
