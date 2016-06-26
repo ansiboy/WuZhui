@@ -1,6 +1,7 @@
 {
     "files.exclude": {
         "node_modules": true,
+        "release": true,
         "LICENSE.txt": true,
         "README.txt": true,
         "*.doc": true,
