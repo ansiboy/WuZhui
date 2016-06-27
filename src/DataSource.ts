@@ -27,26 +27,29 @@ namespace wuzhui {
         }
 
         insert(item) {
-            this.inserting.fireWith(this, this, { item });
+            this.inserting.fireWith(this, [this, { item }]);
             return this.executeInsert(item).done((data) => {
                 $.extend(item, data);
-                this.inserted.fireWith(this, this, { item });
+                this.inserted.fireWith(this, [this, { item }]);
             });
         }
         delete(item) {
-            this.deleting.fireWith(this, this, { item });
+            this.deleting.fireWith(this, [this, { item }]);
             return this.executeDelete(item).done(() => {
-                this.deleted.fireWith(this, this, { item });
+                this.deleted.fireWith(this, [this, { item }]);
             });
         }
         update(item) {
-            this.updating.fireWith(this, this, { item });
+            this.updating.fireWith(this, [this, { item }]);
             return this.executeUpdate(item).done((data) => {
                 $.extend(item, data);
             });
         }
-        select(args: DataSourceSelectArguments) {
-            this.selecting.fireWith(this, this, { arguments: args });
+        select(args?: DataSourceSelectArguments) {
+            if (!args)
+                args = new DataSourceSelectArguments();
+
+            this.selecting.fireWith(this, [this, { arguments: args }]);
             return this.executeSelect(args).done((data) => {
                 let data_items: Array<any>;
                 if ($.isArray(data)) {
@@ -60,7 +63,7 @@ namespace wuzhui {
                 else {
                     throw new Error('Type of the query result is expected as Array or DataSourceSelectResult.');
                 }
-                this.selected.fireWith(this, this, { arguments: args, items: data_items });
+                this.selected.fireWith(this, [this, { arguments: args, items: data_items }]);
             });
         }
 

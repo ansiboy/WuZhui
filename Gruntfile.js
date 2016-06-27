@@ -1,10 +1,8 @@
-var js_output_file = 'release/chitu.js';
-var ts_output_file = 'release/chitu.d.ts';
 var release_dir = 'release';
 module.exports = function (grunt) {
     var config = {
         ts: {
-            main: {
+            wuzhui_release: {
                 src: ['src/**/*.ts'],
                 dest: release_dir + '/wuzhui.js',
                 options: {
@@ -17,12 +15,38 @@ module.exports = function (grunt) {
                     ],
                     sourceMap: false
                 }
+            },
+            test_release: {
+                src: ['test/**/*.ts'],
+                dest: release_dir + '/test',
+                options: {
+                    basePath: release_dir,
+                    target: 'es5',
+                    removeComments: true,
+                    declaration: false,
+                    references: [
+                        "test/**/*.ts"
+                    ],
+                    sourceMap: false
+                }
             }
+        },
+        copy: {
+            release_test: {
+                files: [
+                    { src: ['release/wuzhui.js'], dest: 'test/scripts/wuzhui.js' },
+                    { src: ['release/wuzhui.d.ts'], dest: 'test/scripts/typings/wuzhui.d.ts' },
+                ]
+            },
+            test_release: {
+                files: [
+                    { expand: true, src: ['test/**/*.html'], dest: release_dir },
+                    { expand: true, src: ['test/scripts/**/*.js'], dest: release_dir },
+                    { expand: true, src: ['test/content/**/*.css'], dest: release_dir },
+                ]
+            },
         }
     };
-
-
-
 
     grunt.initConfig(config);
 
@@ -32,6 +56,6 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-copy');
 
-    grunt.registerTask('default', ['ts']);//,, 'clean'
+    grunt.registerTask('default', ['ts', 'copy']);
 
 };
