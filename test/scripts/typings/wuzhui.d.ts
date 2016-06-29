@@ -131,7 +131,7 @@ declare namespace wuzhui {
     }
 }
 declare namespace wuzhui {
-    class WebControl {
+    class Control {
         private _text;
         private _visible;
         private _element;
@@ -140,9 +140,10 @@ declare namespace wuzhui {
         html: string;
         visible: boolean;
         element: HTMLElement;
-        parent: WebControl;
-        appendChild(child: WebControl): void;
+        parent: Control;
+        appendChild(child: Control): void;
         style(value: CSSStyleDeclaration | string): void;
+        static getControlByElement(element: HTMLElement): Control;
     }
 }
 declare namespace wuzhui {
@@ -152,13 +153,13 @@ declare namespace wuzhui {
         Data = 2,
         Paging = 3,
     }
-    class GridViewRow extends WebControl {
+    class GridViewRow extends Control {
         private _rowType;
         constructor(rowType: GridViewRowType);
-        protected createCell(): WebControl;
+        protected createCell(): Control;
         rowType: GridViewRowType;
     }
-    class GridView extends WebControl {
+    class GridView extends Control {
         private _pageSize;
         private _selectedRowStyle;
         private _showFooter;
@@ -168,8 +169,6 @@ declare namespace wuzhui {
         private _header;
         private _footer;
         private _body;
-        private pagerSettings;
-        private pagingBar;
         headerStyle: string;
         footerStyle: string;
         rowStyle: string;
@@ -183,7 +182,6 @@ declare namespace wuzhui {
             columns: Array<DataControlField>;
             showHeader?: boolean;
             showFooter?: boolean;
-            allowPaging?: boolean;
         });
         pageSize: number;
         columns: DataControlField[];
@@ -196,7 +194,6 @@ declare namespace wuzhui {
         private appendDataRow(dataItem);
         private appendHeaderRow();
         private appendFooterRow();
-        private appendPagingBar();
         private createCell();
         private on_selectExecuted(items, args);
     }

@@ -17,28 +17,24 @@ let gridView = new wuzhui.GridView({
             itemStyle: 'width:200px;text-align:right;',
         })
     ],
-    allowPaging: true,
     showFooter: true,
 });
 
-// gridView.rowCreated.add((sender, args) => {
-//     switch (args.row.rowType) {
-//         case wuzhui.GridViewRowType.Header:
-//             headerCreated = true;
-//             break;
-//         case wuzhui.GridViewRowType.Footer:
-//             footerCreated = true;
-//             break;
-//     }
-// });
-
-//let headerCreated = false;
-//let footerCreated = false;
-
 document.body.appendChild(gridView.element);
-let headerCreated = $(gridView.element).find('theader > tr').length;
-QUnit.test('', (assert) => {
-    assert.equal(headerCreated, true);
+let headerElement = $(gridView.element).find('thead > tr')[0];
+let footerElement = $(gridView.element).find('tfoot > tr')[0];
+QUnit.test('gridView header and footer', (assert) => {
+    assert.notEqual(headerElement, null);
+    assert.notEqual(footerElement, null);
+
+    let headerRow = wuzhui.Control.getControlByElement(headerElement); //$(headerElement).data('Control');
+    let footerRow = wuzhui.Control.getControlByElement(footerElement); //$(footerElement).data('Control');
+    assert.equal(headerRow instanceof wuzhui.GridViewRow, true);
+    assert.equal(footerRow instanceof wuzhui.GridViewRow, true);
 })
+
+var pagingBarElement = document.createElement('div');
+new wuzhui.NumberPagingBar(dataSource, new wuzhui.PagerSettings(), pagingBarElement);
+document.body.appendChild(pagingBarElement);
 
 dataSource.select(new wuzhui.DataSourceSelectArguments({ maximumRows: 10 }));

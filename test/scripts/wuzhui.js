@@ -462,14 +462,15 @@ var wuzhui;
 })(wuzhui || (wuzhui = {}));
 var wuzhui;
 (function (wuzhui) {
-    var WebControl = (function () {
-        function WebControl(element) {
+    var CONTROL_DATA_NAME = 'Control';
+    var Control = (function () {
+        function Control(element) {
             if (!element)
                 throw wuzhui.Errors.argumentNull('element');
             this._element = element;
-            $(element).data('Control', this);
+            $(element).data(CONTROL_DATA_NAME, this);
         }
-        Object.defineProperty(WebControl.prototype, "html", {
+        Object.defineProperty(Control.prototype, "html", {
             get: function () {
                 return $(this.element).html();
             },
@@ -479,7 +480,7 @@ var wuzhui;
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(WebControl.prototype, "visible", {
+        Object.defineProperty(Control.prototype, "visible", {
             get: function () {
                 return $(this.element).is(':visible');
             },
@@ -492,21 +493,21 @@ var wuzhui;
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(WebControl.prototype, "element", {
+        Object.defineProperty(Control.prototype, "element", {
             get: function () {
                 return this._element;
             },
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(WebControl.prototype, "parent", {
+        Object.defineProperty(Control.prototype, "parent", {
             get: function () {
                 return this._parent;
             },
             enumerable: true,
             configurable: true
         });
-        WebControl.prototype.appendChild = function (child) {
+        Control.prototype.appendChild = function (child) {
             if (child == null)
                 throw wuzhui.Errors.argumentNull('child');
             if (child.parent != null)
@@ -514,7 +515,7 @@ var wuzhui;
             child._parent = this;
             this.element.appendChild(child.element);
         };
-        WebControl.prototype.style = function (value) {
+        Control.prototype.style = function (value) {
             var style = value || '';
             if (typeof style == 'string')
                 $(this.element).attr('style', style);
@@ -524,9 +525,12 @@ var wuzhui;
                 }
             }
         };
-        return WebControl;
+        Control.getControlByElement = function (element) {
+            return $(element).data(CONTROL_DATA_NAME);
+        };
+        return Control;
     }());
-    wuzhui.WebControl = WebControl;
+    wuzhui.Control = Control;
 })(wuzhui || (wuzhui = {}));
 var wuzhui;
 (function (wuzhui) {
@@ -545,7 +549,7 @@ var wuzhui;
             this._rowType = rowType;
         }
         GridViewRow.prototype.createCell = function () {
-            var cell = new wuzhui.WebControl(document.createElement('TD'));
+            var cell = new wuzhui.Control(document.createElement('TD'));
             return cell;
         };
         Object.defineProperty(GridViewRow.prototype, "rowType", {
@@ -556,7 +560,7 @@ var wuzhui;
             configurable: true
         });
         return GridViewRow;
-    }(wuzhui.WebControl));
+    }(wuzhui.Control));
     wuzhui.GridViewRow = GridViewRow;
     var GridViewDataRow = (function (_super) {
         __extends(GridViewDataRow, _super);
@@ -586,21 +590,18 @@ var wuzhui;
             this._columns = params.columns;
             this.dataSource = params.dataSource;
             this.dataSource.selected.add(function (sender, e) { return _this.on_selectExecuted(e.items, e.selectArguments); });
-            this.pagerSettings = new wuzhui.PagerSettings();
             if (params.showHeader) {
-                this._header = new wuzhui.WebControl(document.createElement('THEAD'));
+                this._header = new wuzhui.Control(document.createElement('THEAD'));
                 this.appendChild(this._header);
                 this.appendHeaderRow();
             }
-            this._body = new wuzhui.WebControl(document.createElement('TBODY'));
+            this._body = new wuzhui.Control(document.createElement('TBODY'));
             this.appendChild(this._body);
-            if (params.showFooter || params.allowPaging) {
-                this._footer = new wuzhui.WebControl(document.createElement('TFOOT'));
+            if (params.showFooter) {
+                this._footer = new wuzhui.Control(document.createElement('TFOOT'));
                 this.appendChild(this._footer);
                 if (params.showFooter)
                     this.appendFooterRow();
-                if (params.allowPaging)
-                    this.appendPagingBar();
             }
         }
         Object.defineProperty(GridView.prototype, "pageSize", {
@@ -662,16 +663,8 @@ var wuzhui;
             }
             this._footer.appendChild(row);
         };
-        GridView.prototype.appendPagingBar = function () {
-            var row = new GridViewRow(GridViewRowType.Paging);
-            var cell = this.createCell();
-            row.appendChild(cell);
-            cell.element.setAttribute('colSpan', this.columns.length);
-            this.pagingBar = new wuzhui.NumberPagingBar(this.dataSource, this.pagerSettings, cell.element);
-            this._footer.appendChild(row);
-        };
         GridView.prototype.createCell = function () {
-            var cell = new wuzhui.WebControl(document.createElement('TD'));
+            var cell = new wuzhui.Control(document.createElement('TD'));
             return cell;
         };
         GridView.prototype.on_selectExecuted = function (items, args) {
@@ -681,7 +674,7 @@ var wuzhui;
             }
         };
         return GridView;
-    }(wuzhui.WebControl));
+    }(wuzhui.Control));
     wuzhui.GridView = GridView;
 })(wuzhui || (wuzhui = {}));
 var wuzhui;
