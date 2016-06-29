@@ -4,8 +4,9 @@ namespace wuzhui {
 
         }
 
-        static notImplemented() {
-            return new Error("Not implemented");
+        static notImplemented(message?: string) {
+            message = message || "Not implemented";
+            return new Error(message);
         }
         static argumentNull(paramName) {
             return new Error("Argument '" + paramName + "' can not be null.");

@@ -37,11 +37,25 @@ namespace wuzhui {
         }
 
         appendChild(child: WebControl) {
+            if (child == null)
+                throw Errors.argumentNull('child');
+
             if (child.parent != null)
                 throw Errors.controllBelonsAnother();
 
             child._parent = this;
             this.element.appendChild(child.element);
+        }
+
+        style(value: CSSStyleDeclaration | string) {
+            let style = value || '';
+            if (typeof style == 'string')
+                $(this.element).attr('style', <string>style);
+            else {
+                for (let key in <any>style) {
+                    this.element.style[key] = style[key];
+                }
+            }
         }
     }
 }

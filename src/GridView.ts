@@ -2,7 +2,7 @@
 /// <reference path="WebControl.ts"/>
 
 namespace wuzhui {
-    abstract class GridViewRow extends WebControl {
+    class GridViewRow extends WebControl {
         constructor() {
             let element = document.createElement('TR');
             super(element);
@@ -14,13 +14,6 @@ namespace wuzhui {
         }
     }
 
-    class GridViewHeaderRow extends GridViewRow {
-    }
-
-    class GridViewFooterRow extends GridViewRow {
-
-    }
-
     class GridViewDataRow extends GridViewRow {
         constructor(gridView: GridView, dataItem: any) {
             super();
@@ -30,6 +23,8 @@ namespace wuzhui {
                 var cell = this.createCell();
                 this.appendChild(cell);
                 cell.html = column.cellHtml(dataItem);
+                if (column.itemStyle)
+                    cell.style(column.itemStyle);
             }
         }
     }
@@ -44,6 +39,7 @@ namespace wuzhui {
         private _header: WebControl;
         private _footer: WebControl;
         private _body: WebControl;
+        private pagerSettings: PagerSettings;
 
         //========================================================
         // 样式
@@ -54,24 +50,51 @@ namespace wuzhui {
         emptyDataRowStyle: string;
         //========================================================
 
-        constructor(dataSource: DataSource, columns: Array<DataControlField>) {
+        constructor(params: {
+            dataSource: DataSource,
+            columns: Array<DataControlField>,
+            showHeader?: boolean,
+            showFooter?: boolean,
+            allowPaging?: boolean
+        }) {
             let element: HTMLElement = document.createElement('TABLE');
             super(element);
 
-            this._columns = columns;
-            this.dataSource = dataSource;
-            this.dataSource.selected.add((sender, e) => this.on_select_executed(e.items, e.arguments));
+            params = $.extend({
+                showHeader: true, showFooter: false,
+                allowPaging: false
+            }, params);
 
-            this._header = new WebControl(document.createElement('THEAD'));
-            this._footer = new WebControl(document.createElement('TFOOT'));
+            this._columns = params.columns;
+            this.dataSource = params.dataSource;
+            this.dataSource.selected.add((sender, e) => this.on_selectExecuted(e.items, e.selectArguments));
+            this.pagerSettings = new PagerSettings();
+
+            if (params.showHeader) {
+                this._header = new WebControl(document.createElement('THEAD'));
+                this.appendChild(this._header);
+                this.appendHeaderRow();
+            }
+
             this._body = new WebControl(document.createElement('TBODY'));
-
-            this.appendChild(this._header);
             this.appendChild(this._body);
-            this.appendChild(this._footer);
 
-            this.appendHeaderRow();
-            this.appendFooterRow();
+            // if (params.allowPaging) {
+
+            // }
+
+            if (params.showFooter || params.allowPaging) {
+                this._footer = new WebControl(document.createElement('TFOOT'));
+                this.appendChild(this._footer);
+
+                if (params.showFooter)
+                    this.appendFooterRow();
+
+                if (params.allowPaging)
+                    this.appendPagingBar();
+            }
+
+
         }
 
         /** 
@@ -87,33 +110,19 @@ namespace wuzhui {
             this._pageSize = value;
         }
 
-        get selectedRowStyle(): string {
-            return this._selectedRowStyle;
-        }
-        set selectedRowStyle(value: string) {
-            this._selectedRowStyle = value;
-        }
-
-        get showFooter(): boolean {
-            return this._showFooter;
-        }
-        set showFooter(value: boolean) {
-            this._showFooter = value;
-        }
-
-        get showHeader(): boolean {
-            return this._showHeader;
-        }
-        set showHeader(value: boolean) {
-            this._showHeader = value;
-        }
+        // get selectedRowStyle(): string {
+        //     return this._selectedRowStyle;
+        // }
+        // set selectedRowStyle(value: string) {
+        //     this._selectedRowStyle = value;
+        // }
 
         get columns() {
             return this._columns;
         }
-        set columns(value) {
-            this._columns = value;
-        }
+        // set columns(value) {
+        //     this._columns = value;
+        // }
 
         private handleEdit(row) {
 
@@ -145,18 +154,43 @@ namespace wuzhui {
         }
 
         private appendHeaderRow() {
-            var row = new GridViewHeaderRow();
+            var row = new GridViewRow();
             for (var i = 0; i < this.columns.length; i++) {
                 var column = this.columns[i];
                 let cell = this.createCell();
                 cell.html = column.headerText;
+                if (this.columns[i].headerStyle)
+                    cell.style(this.columns[i].headerStyle);
+
                 row.appendChild(cell);
+                cell.visible = this.columns[i].visible;
             }
             this._header.appendChild(row);
         }
 
         private appendFooterRow() {
-            var row = new GridViewFooterRow();
+            var row = new GridViewRow();
+            for (var i = 0; i < this.columns.length; i++) {
+                var column = this.columns[i];
+                let cell = this.createCell();
+                cell.html = column.footerText;
+                if (this.columns[i].footerStyle)
+                    cell.style(this.columns[i].footerStyle);
+
+                row.appendChild(cell);
+            }
+            this._footer.appendChild(row);
+        }
+
+        private appendPagingBar() {
+            var row = new GridViewRow();
+            var cell = this.createCell();
+            row.appendChild(cell);
+            cell.element.setAttribute('colSpan', <any>this.columns.length);
+
+            var pagingBar = new NumberPagingBar(this.dataSource, this.pagerSettings, cell.element);
+            pagingBar.render();
+
             this._footer.appendChild(row);
         }
 
@@ -165,11 +199,11 @@ namespace wuzhui {
             return cell;
         }
 
-        private on_select_executed(items: Array<any>, args: DataSourceSelectArguments) {
+        private on_selectExecuted(items: Array<any>, args: DataSourceSelectArguments) {
             this._body.element.innerHTML = "";
             for (let i = 0; i < items.length; i++) {
                 let dataRow = this.createDataRow(items[i]);
-                this.appendChild(dataRow);
+                this._body.appendChild(dataRow);
             }
         }
     }

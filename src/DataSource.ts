@@ -7,8 +7,8 @@ namespace wuzhui {
         deleted = <Callback<DataSource, { item: any }>>$.Callbacks();
         updating = <Callback<DataSource, { item: any }>>$.Callbacks();
         updated = <Callback<DataSource, { item: any }>>$.Callbacks();
-        selecting = <Callback<DataSource, { arguments: DataSourceSelectArguments }>>$.Callbacks();
-        selected = <Callback<DataSource, { arguments: DataSourceSelectArguments, items: Array<any> }>>$.Callbacks();
+        selecting = <Callback<DataSource, { selectArguments: DataSourceSelectArguments }>>$.Callbacks();
+        selected = <Callback<DataSource, { selectArguments: DataSourceSelectArguments, items: Array<any> }>>$.Callbacks();
 
         constructor() {
         }
@@ -49,7 +49,7 @@ namespace wuzhui {
             if (!args)
                 args = new DataSourceSelectArguments();
 
-            this.selecting.fireWith(this, [this, { arguments: args }]);
+            this.selecting.fireWith(this, [this, { selectArguments: args }]);
             return this.executeSelect(args).done((data) => {
                 let data_items: Array<any>;
                 if ($.isArray(data)) {
@@ -63,7 +63,7 @@ namespace wuzhui {
                 else {
                     throw new Error('Type of the query result is expected as Array or DataSourceSelectResult.');
                 }
-                this.selected.fireWith(this, [this, { arguments: args, items: data_items }]);
+                this.selected.fireWith(this, [this, { selectArguments: args, items: data_items }]);
             });
         }
 
@@ -85,14 +85,21 @@ namespace wuzhui {
         private _startRowIndex: number;
         private _totalRowCount: number;
         private _maximumRows: number;
-        private _retrieveTotalRowCount: boolean;
         private _sortExpression: string;
 
-        constructor() {
-            this._startRowIndex = 0;
+        constructor(params?: {
+            startRowIndex?: number,
+            maximumRows?: number
+        }) {
+
+            params = $.extend({
+                startRowIndex: 0,
+                maximumRows: 2147483647
+            }, params || {})
+
+            this._startRowIndex = params.startRowIndex;
             this._totalRowCount = null;
-            this._maximumRows = 2147483647;
-            this._retrieveTotalRowCount = false;
+            this._maximumRows = params.maximumRows;
             this._sortExpression = null;
         }
 

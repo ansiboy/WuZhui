@@ -5,6 +5,10 @@ namespace wuzhui {
         headerText?: string,
         nullText?: string,
         cellHtml?: (dataItem: any) => string;
+        itemStyle?: string | CSSStyleDeclaration;
+        headerStyle?: string | CSSStyleDeclaration;
+        footerStyle?: string | CSSStyleDeclaration;
+        visible?: boolean
     }
 
     export class DataControlField {
@@ -12,16 +16,25 @@ namespace wuzhui {
         private _headerText: string;
         private _nullText: string;
         private _cellHtml: (dataItem: any) => string;
+        private _itemStyle: string | CSSStyleDeclaration;
+        private _headerStyle: string | CSSStyleDeclaration;
+        private _footerStyle: string | CSSStyleDeclaration;
+        private _visible: boolean;
 
         constructor(params?: DataControlFieldParams) {
             params = $.extend({
-                cellHtml: () => ""
+                cellHtml: () => "",
+                visible: true
             }, params);
 
-            this.footerText = params.footerText;
-            this.headerText = params.headerText;
-            this.nullText = params.nullText;
-            this.cellHtml = params.cellHtml;
+            this._footerText = params.footerText;
+            this._headerText = params.headerText;
+            this._nullText = params.nullText;
+            this._cellHtml = params.cellHtml;
+            this._itemStyle = params.itemStyle;
+            this._headerStyle = params.headerStyle;
+            this._footerStyle = params.footerStyle;
+            this._visible = params.visible;
         }
 
         /**
@@ -65,6 +78,18 @@ namespace wuzhui {
         }
         set cellHtml(value: (dataItem: any) => string) {
             this._cellHtml = value;
+        }
+        get itemStyle(): string | CSSStyleDeclaration {
+            return this._itemStyle;
+        }
+        get footerStyle(): string | CSSStyleDeclaration {
+            return this._footerStyle;
+        }
+        get headerStyle(): string | CSSStyleDeclaration {
+            return this._headerStyle;
+        }
+        get visible(): boolean {
+            return this._visible;
         }
     }
 
