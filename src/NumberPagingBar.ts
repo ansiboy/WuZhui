@@ -15,7 +15,7 @@ namespace wuzhui {
     export class PagerSettings {
         private _FirstPageText: string;
         private _LastPageText: string;
-        private _Mode: any;
+        private _Mode: PagerButtons;
         private _NextPageText: string;
         private _pageButtonCount: number;
         private _position: any;
@@ -24,6 +24,7 @@ namespace wuzhui {
 
         constructor() {
             this._pageButtonCount = 10;
+            this._Mode = PagerButtons.NextPreviousFirstLast;
         }
 
         /**
@@ -184,6 +185,9 @@ namespace wuzhui {
         get totalRowCount() {
             return this._totalRowCount;
         }
+        set totalRowCount(value: number) {
+            this._totalRowCount = value;
+        }
         // Virtual Method
         render() {
             throw Errors.notImplemented('The table-row render method is not implemented.');
@@ -238,19 +242,6 @@ namespace wuzhui {
             var OTHER_BUTTONS_COUNT = 4;
 
 
-            var createButtons;
-            var handlePage = function () {
-                var buttonIndex = pagingBar._buttons.indexOf(this);
-                var index;
-                let args = pagingBar.selectArgument();
-                args.maximumRows = pagingBar.pageSize;
-                args.startRowIndex = this.pageIndex * pagingBar.pageSize;
-                if (pagingBar.sortExpression) {
-                    args.sortExpression = pagingBar.sortExpression;
-                }
-                pagingBar.dataSource.select(args);
-
-            };
             for (var i = 0; i < buttonCount + OTHER_BUTTONS_COUNT; i++) {
                 if (pagingBar._buttons[i] != null) {
                     pagingBar.cell.removeChild(pagingBar._buttons[i]);
@@ -262,7 +253,18 @@ namespace wuzhui {
                 url.href = 'javascript:';
                 url['pageIndex'] = i;
 
-                $(url).click(handlePage);
+                $(url).click(function () {
+                    var buttonIndex = pagingBar._buttons.indexOf(this);
+                    var index;
+                    let args = pagingBar.selectArgument();
+                    args.maximumRows = pagingBar.pageSize;
+                    args.startRowIndex = this.pageIndex * pagingBar.pageSize;
+                    if (pagingBar.sortExpression) {
+                        args.sortExpression = pagingBar.sortExpression;
+                    }
+                    pagingBar.dataSource.select(args);
+
+                });
             }
 
             if (pagingBar.totalElement == null) {
@@ -299,24 +301,22 @@ namespace wuzhui {
                         url.style.color = 'red';
                 }
 
-                url.style.display = 'block';
-
                 if (pageCount != null && url['pageIndex'] > pageCount - 1)
                     url.style.display = 'none';
             }
 
             if (pagingBarIndex > 0 && pagerSettings.mode == PagerButtons.NumericFirstLast)
-                pagingBar._buttons[FIRST_BUTTON].style.display = 'block'; 
+                pagingBar._buttons[LAST_BUTTON].style.removeProperty('display');
             else
-                pagingBar._buttons[FIRST_BUTTON].style.display = 'none'; 
+                pagingBar._buttons[FIRST_BUTTON].style.display = 'none';
 
             if (pageCount > 0 && pagingBar.pageIndex < pageCount - 1 && pagerSettings.mode == PagerButtons.NumericFirstLast)
-                pagingBar._buttons[LAST_BUTTON].style.display = 'block'; 
+                pagingBar._buttons[LAST_BUTTON].style.removeProperty('display');// = 'block';
             else
-                pagingBar._buttons[LAST_BUTTON].style.display = 'none'; 
+                pagingBar._buttons[LAST_BUTTON].style.display = 'none';
 
             if (pagingBarIndex == 0)
-                pagingBar._buttons[PREVIOUS_PAGING_BUTTON].style.display = 'none'; 
+                pagingBar._buttons[PREVIOUS_PAGING_BUTTON].style.display = 'none';
         }
     }
 }

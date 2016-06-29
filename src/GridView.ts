@@ -40,6 +40,7 @@ namespace wuzhui {
         private _footer: WebControl;
         private _body: WebControl;
         private pagerSettings: PagerSettings;
+        private pagingBar: PagingBar;
 
         //========================================================
         // 样式
@@ -188,9 +189,7 @@ namespace wuzhui {
             row.appendChild(cell);
             cell.element.setAttribute('colSpan', <any>this.columns.length);
 
-            var pagingBar = new NumberPagingBar(this.dataSource, this.pagerSettings, cell.element);
-            pagingBar.render();
-
+            this.pagingBar = new NumberPagingBar(this.dataSource, this.pagerSettings, cell.element);
             this._footer.appendChild(row);
         }
 
