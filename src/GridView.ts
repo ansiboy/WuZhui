@@ -9,7 +9,7 @@ namespace wuzhui {
         Paging
     }
 
-    export class GridViewRow extends WebControl {
+    export class GridViewRow extends Control {
         private _rowType: GridViewRowType;
 
         constructor(rowType: GridViewRowType) {
@@ -18,8 +18,8 @@ namespace wuzhui {
             this._rowType = rowType;
         }
 
-        protected createCell(): WebControl {
-            var cell = new WebControl(document.createElement('TD'));
+        protected createCell(): Control {
+            var cell = new Control(document.createElement('TD'));
             return cell;
         }
 
@@ -43,19 +43,17 @@ namespace wuzhui {
         }
     }
 
-    export class GridView extends WebControl {
+    export class GridView extends Control {
         private _pageSize: number;
         private _selectedRowStyle: string;
         private _showFooter: boolean;
         private _showHeader: boolean;
         private _columns: Array<DataControlField>;
         private dataSource: DataSource;
-        private _header: WebControl;
-        private _footer: WebControl;
-        private _body: WebControl;
-        private pagerSettings: PagerSettings;
-        private pagingBar: PagingBar;
-
+        private _header: Control;
+        private _footer: Control;
+        private _body: Control;
+        
         //========================================================
         // 样式
         headerStyle: string;
@@ -72,7 +70,6 @@ namespace wuzhui {
             columns: Array<DataControlField>,
             showHeader?: boolean,
             showFooter?: boolean,
-            allowPaging?: boolean
         }) {
 
             super(document.createElement('TABLE'));
@@ -85,26 +82,23 @@ namespace wuzhui {
             this._columns = params.columns;
             this.dataSource = params.dataSource;
             this.dataSource.selected.add((sender, e) => this.on_selectExecuted(e.items, e.selectArguments));
-            this.pagerSettings = new PagerSettings();
+            //this.pagerSettings = new PagerSettings();
 
             if (params.showHeader) {
-                this._header = new WebControl(document.createElement('THEAD'));
+                this._header = new Control(document.createElement('THEAD'));
                 this.appendChild(this._header);
                 this.appendHeaderRow();
             }
 
-            this._body = new WebControl(document.createElement('TBODY'));
+            this._body = new Control(document.createElement('TBODY'));
             this.appendChild(this._body);
 
-            if (params.showFooter || params.allowPaging) {
-                this._footer = new WebControl(document.createElement('TFOOT'));
+            if (params.showFooter) {
+                this._footer = new Control(document.createElement('TFOOT'));
                 this.appendChild(this._footer);
 
                 if (params.showFooter)
                     this.appendFooterRow();
-
-                if (params.allowPaging)
-                    this.appendPagingBar();
             }
 
 
@@ -196,18 +190,8 @@ namespace wuzhui {
             this._footer.appendChild(row);
         }
 
-        private appendPagingBar() {
-            var row = new GridViewRow(GridViewRowType.Paging);
-            var cell = this.createCell();
-            row.appendChild(cell);
-            cell.element.setAttribute('colSpan', <any>this.columns.length);
-
-            this.pagingBar = new NumberPagingBar(this.dataSource, this.pagerSettings, cell.element);
-            this._footer.appendChild(row);
-        }
-
         private createCell() {
-            let cell = new WebControl(document.createElement('TD'));
+            let cell = new Control(document.createElement('TD'));
             return cell;
         }
 

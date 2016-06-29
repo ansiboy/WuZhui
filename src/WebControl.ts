@@ -1,14 +1,15 @@
 namespace wuzhui {
-    export class WebControl {
+    const CONTROL_DATA_NAME = 'Control';
+    export class Control {
         private _text: string;
         private _visible: boolean;
         private _element: HTMLElement;
-        private _parent: WebControl;
+        private _parent: Control;
 
         constructor(element: HTMLElement) {
             if (!element) throw Errors.argumentNull('element');
             this._element = element;
-            $(element).data('Control', this);
+            $(element).data(CONTROL_DATA_NAME, this);
         }
 
         get html(): string {
@@ -32,11 +33,11 @@ namespace wuzhui {
             return this._element;
         }
 
-        get parent(): WebControl {
+        get parent(): Control {
             return this._parent;
         }
 
-        appendChild(child: WebControl) {
+        appendChild(child: Control) {
             if (child == null)
                 throw Errors.argumentNull('child');
 
@@ -56,6 +57,10 @@ namespace wuzhui {
                     this.element.style[key] = style[key];
                 }
             }
+        }
+
+        static getControlByElement(element: HTMLElement): Control {
+            return $(element).data(CONTROL_DATA_NAME);
         }
     }
 }
