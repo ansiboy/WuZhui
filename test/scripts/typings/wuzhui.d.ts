@@ -146,6 +146,18 @@ declare namespace wuzhui {
     }
 }
 declare namespace wuzhui {
+    enum GridViewRowType {
+        Header = 0,
+        Footer = 1,
+        Data = 2,
+        Paging = 3,
+    }
+    class GridViewRow extends WebControl {
+        private _rowType;
+        constructor(rowType: GridViewRowType);
+        protected createCell(): WebControl;
+        rowType: GridViewRowType;
+    }
     class GridView extends WebControl {
         private _pageSize;
         private _selectedRowStyle;
@@ -157,11 +169,15 @@ declare namespace wuzhui {
         private _footer;
         private _body;
         private pagerSettings;
+        private pagingBar;
         headerStyle: string;
         footerStyle: string;
         rowStyle: string;
         alternatingRowStyle: string;
         emptyDataRowStyle: string;
+        rowCreated: Callback<GridView, {
+            row: GridViewRow;
+        }>;
         constructor(params: {
             dataSource: DataSource;
             columns: Array<DataControlField>;
@@ -177,7 +193,7 @@ declare namespace wuzhui {
         private handleSelect(row);
         private handleSort(sortExpression, sortDirection);
         private handleUpdate(row);
-        private createDataRow(dataItem);
+        private appendDataRow(dataItem);
         private appendHeaderRow();
         private appendFooterRow();
         private appendPagingBar();
@@ -259,4 +275,6 @@ declare namespace wuzhui {
         remove(callbacks: Function[]): Callback<S, A>;
     }
     function ajax(url: string, data: any): JQueryDeferred<{}>;
+    function callbacks<S, A>(): Callback<S, A>;
+    function fireCallback<S, A>(callback: Callback<S, A>, sender: S, args: A): Callback<S, A>;
 }

@@ -2,21 +2,35 @@
 /// <reference path="WebControl.ts"/>
 
 namespace wuzhui {
-    class GridViewRow extends WebControl {
-        constructor() {
+    export enum GridViewRowType {
+        Header,
+        Footer,
+        Data,
+        Paging
+    }
+
+    export class GridViewRow extends WebControl {
+        private _rowType: GridViewRowType;
+
+        constructor(rowType: GridViewRowType) {
             let element = document.createElement('TR');
             super(element);
+            this._rowType = rowType;
         }
 
         protected createCell(): WebControl {
             var cell = new WebControl(document.createElement('TD'));
             return cell;
         }
+
+        get rowType() {
+            return this._rowType;
+        }
     }
 
     class GridViewDataRow extends GridViewRow {
         constructor(gridView: GridView, dataItem: any) {
-            super();
+            super(GridViewRowType.Data);
 
             for (var i = 0; i < gridView.columns.length; i++) {
                 var column = gridView.columns[i];
@@ -51,6 +65,8 @@ namespace wuzhui {
         emptyDataRowStyle: string;
         //========================================================
 
+        rowCreated = callbacks<GridView, { row: GridViewRow }>();
+
         constructor(params: {
             dataSource: DataSource,
             columns: Array<DataControlField>,
@@ -58,8 +74,8 @@ namespace wuzhui {
             showFooter?: boolean,
             allowPaging?: boolean
         }) {
-            let element: HTMLElement = document.createElement('TABLE');
-            super(element);
+
+            super(document.createElement('TABLE'));
 
             params = $.extend({
                 showHeader: true, showFooter: false,
@@ -79,10 +95,6 @@ namespace wuzhui {
 
             this._body = new WebControl(document.createElement('TBODY'));
             this.appendChild(this._body);
-
-            // if (params.allowPaging) {
-
-            // }
 
             if (params.showFooter || params.allowPaging) {
                 this._footer = new WebControl(document.createElement('TFOOT'));
@@ -149,13 +161,14 @@ namespace wuzhui {
 
         }
 
-        private createDataRow(dataItem: any) {
+        private appendDataRow(dataItem: any) {
             var row = new GridViewDataRow(this, dataItem);
-            return row;
+            this._body.appendChild(row);
+            fireCallback(this.rowCreated, this, { row });
         }
 
         private appendHeaderRow() {
-            var row = new GridViewRow();
+            var row = new GridViewRow(GridViewRowType.Header);
             for (var i = 0; i < this.columns.length; i++) {
                 var column = this.columns[i];
                 let cell = this.createCell();
@@ -170,7 +183,7 @@ namespace wuzhui {
         }
 
         private appendFooterRow() {
-            var row = new GridViewRow();
+            var row = new GridViewRow(GridViewRowType.Footer);
             for (var i = 0; i < this.columns.length; i++) {
                 var column = this.columns[i];
                 let cell = this.createCell();
@@ -184,7 +197,7 @@ namespace wuzhui {
         }
 
         private appendPagingBar() {
-            var row = new GridViewRow();
+            var row = new GridViewRow(GridViewRowType.Paging);
             var cell = this.createCell();
             row.appendChild(cell);
             cell.element.setAttribute('colSpan', <any>this.columns.length);
@@ -201,8 +214,7 @@ namespace wuzhui {
         private on_selectExecuted(items: Array<any>, args: DataSourceSelectArguments) {
             this._body.element.innerHTML = "";
             for (let i = 0; i < items.length; i++) {
-                let dataRow = this.createDataRow(items[i]);
-                this._body.appendChild(dataRow);
+                this.appendDataRow(items[i]);
             }
         }
     }

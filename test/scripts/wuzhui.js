@@ -467,6 +467,7 @@ var wuzhui;
             if (!element)
                 throw wuzhui.Errors.argumentNull('element');
             this._element = element;
+            $(element).data('Control', this);
         }
         Object.defineProperty(WebControl.prototype, "html", {
             get: function () {
@@ -529,22 +530,38 @@ var wuzhui;
 })(wuzhui || (wuzhui = {}));
 var wuzhui;
 (function (wuzhui) {
+    (function (GridViewRowType) {
+        GridViewRowType[GridViewRowType["Header"] = 0] = "Header";
+        GridViewRowType[GridViewRowType["Footer"] = 1] = "Footer";
+        GridViewRowType[GridViewRowType["Data"] = 2] = "Data";
+        GridViewRowType[GridViewRowType["Paging"] = 3] = "Paging";
+    })(wuzhui.GridViewRowType || (wuzhui.GridViewRowType = {}));
+    var GridViewRowType = wuzhui.GridViewRowType;
     var GridViewRow = (function (_super) {
         __extends(GridViewRow, _super);
-        function GridViewRow() {
+        function GridViewRow(rowType) {
             var element = document.createElement('TR');
             _super.call(this, element);
+            this._rowType = rowType;
         }
         GridViewRow.prototype.createCell = function () {
             var cell = new wuzhui.WebControl(document.createElement('TD'));
             return cell;
         };
+        Object.defineProperty(GridViewRow.prototype, "rowType", {
+            get: function () {
+                return this._rowType;
+            },
+            enumerable: true,
+            configurable: true
+        });
         return GridViewRow;
     }(wuzhui.WebControl));
+    wuzhui.GridViewRow = GridViewRow;
     var GridViewDataRow = (function (_super) {
         __extends(GridViewDataRow, _super);
         function GridViewDataRow(gridView, dataItem) {
-            _super.call(this);
+            _super.call(this, GridViewRowType.Data);
             for (var i = 0; i < gridView.columns.length; i++) {
                 var column = gridView.columns[i];
                 var cell = this.createCell();
@@ -560,8 +577,8 @@ var wuzhui;
         __extends(GridView, _super);
         function GridView(params) {
             var _this = this;
-            var element = document.createElement('TABLE');
-            _super.call(this, element);
+            _super.call(this, document.createElement('TABLE'));
+            this.rowCreated = wuzhui.callbacks();
             params = $.extend({
                 showHeader: true, showFooter: false,
                 allowPaging: false
@@ -615,12 +632,13 @@ var wuzhui;
         };
         GridView.prototype.handleUpdate = function (row) {
         };
-        GridView.prototype.createDataRow = function (dataItem) {
+        GridView.prototype.appendDataRow = function (dataItem) {
             var row = new GridViewDataRow(this, dataItem);
-            return row;
+            this._body.appendChild(row);
+            wuzhui.fireCallback(this.rowCreated, this, { row: row });
         };
         GridView.prototype.appendHeaderRow = function () {
-            var row = new GridViewRow();
+            var row = new GridViewRow(GridViewRowType.Header);
             for (var i = 0; i < this.columns.length; i++) {
                 var column = this.columns[i];
                 var cell = this.createCell();
@@ -633,7 +651,7 @@ var wuzhui;
             this._header.appendChild(row);
         };
         GridView.prototype.appendFooterRow = function () {
-            var row = new GridViewRow();
+            var row = new GridViewRow(GridViewRowType.Footer);
             for (var i = 0; i < this.columns.length; i++) {
                 var column = this.columns[i];
                 var cell = this.createCell();
@@ -645,12 +663,11 @@ var wuzhui;
             this._footer.appendChild(row);
         };
         GridView.prototype.appendPagingBar = function () {
-            var row = new GridViewRow();
+            var row = new GridViewRow(GridViewRowType.Paging);
             var cell = this.createCell();
             row.appendChild(cell);
             cell.element.setAttribute('colSpan', this.columns.length);
-            var pagingBar = new wuzhui.NumberPagingBar(this.dataSource, this.pagerSettings, cell.element);
-            pagingBar.render();
+            this.pagingBar = new wuzhui.NumberPagingBar(this.dataSource, this.pagerSettings, cell.element);
             this._footer.appendChild(row);
         };
         GridView.prototype.createCell = function () {
@@ -660,8 +677,7 @@ var wuzhui;
         GridView.prototype.on_selectExecuted = function (items, args) {
             this._body.element.innerHTML = "";
             for (var i = 0; i < items.length; i++) {
-                var dataRow = this.createDataRow(items[i]);
-                this._body.appendChild(dataRow);
+                this.appendDataRow(items[i]);
             }
         };
         return GridView;
@@ -688,6 +704,7 @@ var wuzhui;
     var PagerSettings = (function () {
         function PagerSettings() {
             this._pageButtonCount = 10;
+            this._Mode = PagerButtons.NextPreviousFirstLast;
         }
         Object.defineProperty(PagerSettings.prototype, "firstPageText", {
             get: function () {
@@ -835,6 +852,9 @@ var wuzhui;
             get: function () {
                 return this._totalRowCount;
             },
+            set: function (value) {
+                this._totalRowCount = value;
+            },
             enumerable: true,
             configurable: true
         });
@@ -878,18 +898,6 @@ var wuzhui;
             var NEXT_PAGING_BUTTON = pagerSettings.pageButtonCount + 2;
             var LAST_BUTTON = pagerSettings.pageButtonCount + 3;
             var OTHER_BUTTONS_COUNT = 4;
-            var createButtons;
-            var handlePage = function () {
-                var buttonIndex = pagingBar._buttons.indexOf(this);
-                var index;
-                var args = pagingBar.selectArgument();
-                args.maximumRows = pagingBar.pageSize;
-                args.startRowIndex = this.pageIndex * pagingBar.pageSize;
-                if (pagingBar.sortExpression) {
-                    args.sortExpression = pagingBar.sortExpression;
-                }
-                pagingBar.dataSource.select(args);
-            };
             for (var i = 0; i < buttonCount + OTHER_BUTTONS_COUNT; i++) {
                 if (pagingBar._buttons[i] != null) {
                     pagingBar.cell.removeChild(pagingBar._buttons[i]);
@@ -900,7 +908,17 @@ var wuzhui;
                 url.style.paddingLeft = '4px';
                 url.href = 'javascript:';
                 url['pageIndex'] = i;
-                $(url).click(handlePage);
+                $(url).click(function () {
+                    var buttonIndex = pagingBar._buttons.indexOf(this);
+                    var index;
+                    var args = pagingBar.selectArgument();
+                    args.maximumRows = pagingBar.pageSize;
+                    args.startRowIndex = this.pageIndex * pagingBar.pageSize;
+                    if (pagingBar.sortExpression) {
+                        args.sortExpression = pagingBar.sortExpression;
+                    }
+                    pagingBar.dataSource.select(args);
+                });
             }
             if (pagingBar.totalElement == null) {
                 pagingBar.totalElement = document.createElement('span');
@@ -934,16 +952,15 @@ var wuzhui;
                     if (url_1['pageIndex'] == this.pageIndex)
                         url_1.style.color = 'red';
                 }
-                $(url_1).show();
                 if (pageCount != null && url_1['pageIndex'] > pageCount - 1)
-                    $(url_1).hide();
+                    url_1.style.display = 'none';
             }
             if (pagingBarIndex > 0 && pagerSettings.mode == PagerButtons.NumericFirstLast)
-                pagingBar._buttons[FIRST_BUTTON].style.display = 'block';
+                pagingBar._buttons[LAST_BUTTON].style.removeProperty('display');
             else
                 pagingBar._buttons[FIRST_BUTTON].style.display = 'none';
             if (pageCount > 0 && pagingBar.pageIndex < pageCount - 1 && pagerSettings.mode == PagerButtons.NumericFirstLast)
-                pagingBar._buttons[LAST_BUTTON].style.display = 'block';
+                pagingBar._buttons[LAST_BUTTON].style.removeProperty('display');
             else
                 pagingBar._buttons[LAST_BUTTON].style.display = 'none';
             if (pagingBarIndex == 0)
@@ -976,6 +993,14 @@ var wuzhui;
         return result;
     }
     wuzhui.ajax = ajax;
+    function callbacks() {
+        return $.Callbacks();
+    }
+    wuzhui.callbacks = callbacks;
+    function fireCallback(callback, sender, args) {
+        return callback.fireWith(this, [sender, args]);
+    }
+    wuzhui.fireCallback = fireCallback;
     (function () {
         var prefix = '/Date(';
         function parseStringToDate(value) {

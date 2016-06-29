@@ -7,8 +7,8 @@ namespace wuzhui {
 
         constructor(element: HTMLElement) {
             if (!element) throw Errors.argumentNull('element');
-
             this._element = element;
+            $(element).data('Control', this);
         }
 
         get html(): string {

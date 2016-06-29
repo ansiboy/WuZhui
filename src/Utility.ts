@@ -98,6 +98,14 @@ namespace wuzhui {
         return result;
     }
 
+    export function callbacks<S, A>(): Callback<S, A> {
+        return $.Callbacks();
+    }
+
+    export function fireCallback<S, A>(callback: Callback<S, A>, sender: S, args: A) {
+        return callback.fireWith(this, [sender, args]);
+    }
+
     //============================================================
     //这一部份可能需要移入 JData
     //var parseStringToDate
