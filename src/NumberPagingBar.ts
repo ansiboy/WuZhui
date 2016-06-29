@@ -240,8 +240,7 @@ namespace wuzhui {
 
             var createButtons;
             var handlePage = function () {
-                var buttonIndex = pagingBar._buttons.indexOf(this); //Array.indexOf(pagingBar._buttons, this);
-
+                var buttonIndex = pagingBar._buttons.indexOf(this);
                 var index;
                 let args = pagingBar.selectArgument();
                 args.maximumRows = pagingBar.pageSize;
@@ -262,7 +261,7 @@ namespace wuzhui {
                 url.style.paddingLeft = '4px';
                 url.href = 'javascript:';
                 url['pageIndex'] = i;
-                //Sys.UI.DomEvent.addHandler(url, 'click', handlePage);
+
                 $(url).click(handlePage);
             }
 
@@ -270,8 +269,6 @@ namespace wuzhui {
                 pagingBar.totalElement = document.createElement('span');
                 $('<div style="float:right;margin-right:4px;">').text('总记录：').append(pagingBar.totalElement).appendTo(pagingBar.cell);
             }
-            //if (this.totalRowCount != null)
-            //    $(pagingBar.totalElement).text(this.totalRowCount);
 
             var pagingBarIndex = Math.floor(pagingBar.pageIndex / buttonCount);
             for (var i = 0; i < buttonCount + OTHER_BUTTONS_COUNT; i++) {
@@ -301,27 +298,25 @@ namespace wuzhui {
                     if (url['pageIndex'] == this.pageIndex)
                         url.style.color = 'red';
                 }
-                //Sys.UI.DomElement.setVisible(url, true);
-                $(url).show();
+
+                url.style.display = 'block';
 
                 if (pageCount != null && url['pageIndex'] > pageCount - 1)
-                    $(url).hide(); //Sys.UI.DomElement.setVisible(url, false);
+                    url.style.display = 'none';
             }
 
             if (pagingBarIndex > 0 && pagerSettings.mode == PagerButtons.NumericFirstLast)
-                pagingBar._buttons[FIRST_BUTTON].style.display = 'block';  //Sys.UI.DomElement.setVisible(pagingBar._buttons[FIRST_BUTTON], true);
+                pagingBar._buttons[FIRST_BUTTON].style.display = 'block'; 
             else
-                pagingBar._buttons[FIRST_BUTTON].style.display = 'none'; //Sys.UI.DomElement.setVisible(pagingBar._buttons[FIRST_BUTTON], false);
+                pagingBar._buttons[FIRST_BUTTON].style.display = 'none'; 
 
             if (pageCount > 0 && pagingBar.pageIndex < pageCount - 1 && pagerSettings.mode == PagerButtons.NumericFirstLast)
-                pagingBar._buttons[LAST_BUTTON].style.display = 'block'; //Sys.UI.DomElement.setVisible(pagingBar._buttons[LAST_BUTTON], true);
+                pagingBar._buttons[LAST_BUTTON].style.display = 'block'; 
             else
-                pagingBar._buttons[LAST_BUTTON].style.display = 'none'; //Sys.UI.DomElement.setVisible(pagingBar._buttons[LAST_BUTTON], false);
+                pagingBar._buttons[LAST_BUTTON].style.display = 'none'; 
 
             if (pagingBarIndex == 0)
-                pagingBar._buttons[PREVIOUS_PAGING_BUTTON].style.display = 'none';  //Sys.UI.DomElement.setVisible(pagingBar._buttons[PREVIOUS_PAGING_BUTTON], false);
-
-            //$('<span>').html('总记录：'+).appendTo(pagingBar.cell);
+                pagingBar._buttons[PREVIOUS_PAGING_BUTTON].style.display = 'none'; 
         }
     }
 }
