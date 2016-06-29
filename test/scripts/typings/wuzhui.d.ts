@@ -21,10 +21,10 @@ declare namespace wuzhui {
             item: any;
         }>;
         selecting: Callback<DataSource, {
-            arguments: DataSourceSelectArguments;
+            selectArguments: DataSourceSelectArguments;
         }>;
         selected: Callback<DataSource, {
-            arguments: DataSourceSelectArguments;
+            selectArguments: DataSourceSelectArguments;
             items: any[];
         }>;
         constructor();
@@ -44,9 +44,11 @@ declare namespace wuzhui {
         private _startRowIndex;
         private _totalRowCount;
         private _maximumRows;
-        private _retrieveTotalRowCount;
         private _sortExpression;
-        constructor();
+        constructor(params?: {
+            startRowIndex?: number;
+            maximumRows?: number;
+        });
         startRowIndex: number;
         totalRowCount: number;
         maximumRows: number;
@@ -74,7 +76,7 @@ declare namespace wuzhui {
 declare namespace wuzhui {
     class Errors {
         constructor(parameters: any);
-        static notImplemented(): Error;
+        static notImplemented(message?: string): Error;
         static argumentNull(paramName: any): Error;
         static controllBelonsAnother(): Error;
     }
@@ -85,17 +87,29 @@ declare namespace wuzhui {
         headerText?: string;
         nullText?: string;
         cellHtml?: (dataItem: any) => string;
+        itemStyle?: string | CSSStyleDeclaration;
+        headerStyle?: string | CSSStyleDeclaration;
+        footerStyle?: string | CSSStyleDeclaration;
+        visible?: boolean;
     }
     class DataControlField {
         private _footerText;
         private _headerText;
         private _nullText;
         private _cellHtml;
+        private _itemStyle;
+        private _headerStyle;
+        private _footerStyle;
+        private _visible;
         constructor(params?: DataControlFieldParams);
         footerText: string;
         headerText: string;
         nullText: string;
         cellHtml: (dataItem: any) => string;
+        itemStyle: string | CSSStyleDeclaration;
+        footerStyle: string | CSSStyleDeclaration;
+        headerStyle: string | CSSStyleDeclaration;
+        visible: boolean;
     }
     interface BoundFieldParams extends DataControlFieldParams {
         sortExpression?: string;
@@ -128,6 +142,7 @@ declare namespace wuzhui {
         element: HTMLElement;
         parent: WebControl;
         appendChild(child: WebControl): void;
+        style(value: CSSStyleDeclaration | string): void;
     }
 }
 declare namespace wuzhui {
@@ -141,16 +156,20 @@ declare namespace wuzhui {
         private _header;
         private _footer;
         private _body;
+        private pagerSettings;
         headerStyle: string;
         footerStyle: string;
         rowStyle: string;
         alternatingRowStyle: string;
         emptyDataRowStyle: string;
-        constructor(dataSource: DataSource, columns: Array<DataControlField>);
+        constructor(params: {
+            dataSource: DataSource;
+            columns: Array<DataControlField>;
+            showHeader?: boolean;
+            showFooter?: boolean;
+            allowPaging?: boolean;
+        });
         pageSize: number;
-        selectedRowStyle: string;
-        showFooter: boolean;
-        showHeader: boolean;
         columns: DataControlField[];
         private handleEdit(row);
         private handleInsert(row);
@@ -161,8 +180,67 @@ declare namespace wuzhui {
         private createDataRow(dataItem);
         private appendHeaderRow();
         private appendFooterRow();
+        private appendPagingBar();
         private createCell();
-        private on_select_executed(items, args);
+        private on_selectExecuted(items, args);
+    }
+}
+declare namespace wuzhui {
+    enum PagerPosition {
+        Bottom = 0,
+        Top = 1,
+        TopAndBottom = 2,
+    }
+    enum PagerButtons {
+        NextPrevious = 0,
+        Numeric = 1,
+        NextPreviousFirstLast = 2,
+        NumericFirstLast = 3,
+    }
+    class PagerSettings {
+        private _FirstPageText;
+        private _LastPageText;
+        private _Mode;
+        private _NextPageText;
+        private _pageButtonCount;
+        private _position;
+        private _PreviousPageText;
+        private _Visible;
+        constructor();
+        firstPageText: string;
+        lastPageText: string;
+        mode: PagerButtons;
+        nextPageText: string;
+        pageButtonCount: number;
+        position: PagerPosition;
+        previousPageText: string;
+        visible: boolean;
+    }
+    class PagingBar {
+        private _pageIndex;
+        private _dataSource;
+        private _totalRowCount;
+        private _pageSize;
+        init(dataSource: DataSource): void;
+        pageCount: number;
+        pageSize: number;
+        pageIndex: number;
+        totalRowCount: number;
+        render(): void;
+    }
+    class NumberPagingBar extends PagingBar {
+        private dataSource;
+        private pagerSettings;
+        private element;
+        private _buttons;
+        private _selectArgument;
+        private sortExpression;
+        private cell;
+        private totalElement;
+        constructor(dataSource: DataSource, pagerSettings: PagerSettings, element: any, selectArgument?: DataSourceSelectArguments);
+        init(dataSource: any): void;
+        selectArgument(): DataSourceSelectArguments;
+        render(): void;
     }
 }
 declare namespace wuzhui {
