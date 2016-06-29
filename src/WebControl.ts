@@ -11,11 +11,11 @@ namespace wuzhui {
             this._element = element;
         }
 
-        get text(): string {
-            return $(this.element).text();
+        get html(): string {
+            return $(this.element).html();
         }
-        set text(value) {
-            $(this.element).text(value);
+        set html(value) {
+            $(this.element).html(value);
         }
 
         get visible(): boolean {

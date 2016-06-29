@@ -80,15 +80,40 @@ declare namespace wuzhui {
     }
 }
 declare namespace wuzhui {
-    interface DataControlField {
+    interface DataControlFieldParams {
         footerText?: string;
         headerText?: string;
         nullText?: string;
+        cellHtml?: (dataItem: any) => string;
     }
-    interface BoundField extends DataControlField {
+    class DataControlField {
+        private _footerText;
+        private _headerText;
+        private _nullText;
+        private _cellHtml;
+        constructor(params?: DataControlFieldParams);
+        footerText: string;
+        headerText: string;
+        nullText: string;
+        cellHtml: (dataItem: any) => string;
+    }
+    interface BoundFieldParams extends DataControlFieldParams {
         sortExpression?: string;
         dataField: string;
         dataFormatString?: string;
+    }
+    class BoundField extends DataControlField {
+        private _dataField;
+        private _sortExpression;
+        private _dataFormatString;
+        constructor(params: BoundFieldParams);
+        private getCellHtml(dataItem);
+        private formatValue(...args);
+        private formatDate(value, format);
+        private formatNumber(value, format);
+        sortExpression: string;
+        dataField: string;
+        dataFormatString: string;
     }
 }
 declare namespace wuzhui {
@@ -98,7 +123,7 @@ declare namespace wuzhui {
         private _element;
         private _parent;
         constructor(element: HTMLElement);
-        text: string;
+        html: string;
         visible: boolean;
         element: HTMLElement;
         parent: WebControl;
@@ -116,7 +141,12 @@ declare namespace wuzhui {
         private _header;
         private _footer;
         private _body;
-        constructor(dataSource: DataSource, columns: Array<any>);
+        headerStyle: string;
+        footerStyle: string;
+        rowStyle: string;
+        alternatingRowStyle: string;
+        emptyDataRowStyle: string;
+        constructor(dataSource: DataSource, columns: Array<DataControlField>);
         pageSize: number;
         selectedRowStyle: string;
         showFooter: boolean;
@@ -134,8 +164,6 @@ declare namespace wuzhui {
         private createCell();
         private on_select_executed(items, args);
     }
-}
-declare namespace wuzhui {
 }
 declare namespace wuzhui {
     interface Callback<S, A> {

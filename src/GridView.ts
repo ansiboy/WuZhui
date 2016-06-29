@@ -29,15 +29,7 @@ namespace wuzhui {
                 var column = gridView.columns[i];
                 var cell = this.createCell();
                 this.appendChild(cell);
-
-                let cell_text = '';
-
-                let bound_field = <BoundField>column;
-                if (bound_field.dataField != null) {
-                    cell_text = dataItem[bound_field.dataField];
-                }
-
-                cell.text = cell_text;
+                cell.html = column.cellHtml(dataItem);
             }
         }
     }
@@ -62,7 +54,7 @@ namespace wuzhui {
         emptyDataRowStyle: string;
         //========================================================
 
-        constructor(dataSource: DataSource, columns: Array<any>) {
+        constructor(dataSource: DataSource, columns: Array<DataControlField>) {
             let element: HTMLElement = document.createElement('TABLE');
             super(element);
 
@@ -157,10 +149,9 @@ namespace wuzhui {
             for (var i = 0; i < this.columns.length; i++) {
                 var column = this.columns[i];
                 let cell = this.createCell();
-                cell.text = column.headerText;
+                cell.html = column.headerText;
                 row.appendChild(cell);
             }
-            //row.element.style = this.he
             this._header.appendChild(row);
         }
 
@@ -175,16 +166,11 @@ namespace wuzhui {
         }
 
         private on_select_executed(items: Array<any>, args: DataSourceSelectArguments) {
-            // this.dataSource.selected.add((sender, args) => {
             this._body.element.innerHTML = "";
             for (let i = 0; i < items.length; i++) {
                 let dataRow = this.createDataRow(items[i]);
                 this.appendChild(dataRow);
             }
-            // })
-            // for (var i = 0; i < items.length; i++) {
-            //     var element = items[i];
-            // }
         }
     }
 }
