@@ -6,7 +6,8 @@ namespace wuzhui {
         Header,
         Footer,
         Data,
-        Paging
+        Paging,
+        Empty
     }
 
     export class GridViewRow extends Control {
@@ -18,13 +19,19 @@ namespace wuzhui {
             this._rowType = rowType;
         }
 
-        protected createCell(): Control {
-            var cell = new Control(document.createElement('TD'));
-            return cell;
-        }
+        // protected createCell(): Control {
+        //     var cell = new Control(document.createElement('TD'));
+        //     return cell;
+        // }
 
         get rowType() {
             return this._rowType;
+        }
+    }
+
+    export class GridViewCell extends Control {
+        constructor() {
+            super(document.createElement('TD'));
         }
     }
 
@@ -34,11 +41,12 @@ namespace wuzhui {
 
             for (var i = 0; i < gridView.columns.length; i++) {
                 var column = gridView.columns[i];
-                var cell = this.createCell();
-                this.appendChild(cell);
-                cell.html = column.cellHtml(dataItem);
-                if (column.itemStyle)
-                    cell.style(column.itemStyle);
+                var cell = column.createDataCell(dataItem);
+
+                this.element.appendChild(cell.element);
+
+                // if (column.itemStyle)
+                //     cell.style(column.itemStyle);
             }
         }
     }
@@ -49,11 +57,11 @@ namespace wuzhui {
         private _showFooter: boolean;
         private _showHeader: boolean;
         private _columns: Array<DataControlField>;
-        private dataSource: DataSource;
+        private _dataSource: DataSource;
         private _header: Control;
         private _footer: Control;
         private _body: Control;
-        
+
         //========================================================
         // 样式
         headerStyle: string;
@@ -79,10 +87,17 @@ namespace wuzhui {
                 allowPaging: false
             }, params);
 
-            this._columns = params.columns;
-            this.dataSource = params.dataSource;
-            this.dataSource.selected.add((sender, e) => this.on_selectExecuted(e.items, e.selectArguments));
-            //this.pagerSettings = new PagerSettings();
+            this._columns = params.columns || [];
+            if (this._columns.length == 0)
+                throw Errors.columnsCanntEmpty();
+
+            for (var i = 0; i < this._columns.length; i++) {
+                var column = this._columns[i];
+                column.gridView = this;
+            }
+
+            this._dataSource = params.dataSource;
+            this._dataSource.selected.add((sender, e) => this.on_selectExecuted(e.items, e.selectArguments));
 
             if (params.showHeader) {
                 this._header = new Control(document.createElement('THEAD'));
@@ -104,32 +119,13 @@ namespace wuzhui {
 
         }
 
-        /** 
-         * Gets a reference to the TableItemStyle object that allows you to set the appearance of the selected row in a GridView control. 
-         */
-        get pageSize(): number {
-            return this._pageSize;
-        }
-        /**
-         * Sets a reference to the TableItemStyle object that allows you to set the appearance of the selected row in a GridView control.
-         */
-        set pageSize(value: number) {
-            this._pageSize = value;
-        }
-
-        // get selectedRowStyle(): string {
-        //     return this._selectedRowStyle;
-        // }
-        // set selectedRowStyle(value: string) {
-        //     this._selectedRowStyle = value;
-        // }
-
         get columns() {
             return this._columns;
         }
-        // set columns(value) {
-        //     this._columns = value;
-        // }
+
+        get dataSource(){
+            return this._dataSource;
+        }
 
         private handleEdit(row) {
 
@@ -165,10 +161,7 @@ namespace wuzhui {
             var row = new GridViewRow(GridViewRowType.Header);
             for (var i = 0; i < this.columns.length; i++) {
                 var column = this.columns[i];
-                let cell = this.createCell();
-                cell.html = column.headerText;
-                if (this.columns[i].headerStyle)
-                    cell.style(this.columns[i].headerStyle);
+                let cell = column.createHeaderCell(); 
 
                 row.appendChild(cell);
                 cell.visible = this.columns[i].visible;
@@ -180,26 +173,29 @@ namespace wuzhui {
             var row = new GridViewRow(GridViewRowType.Footer);
             for (var i = 0; i < this.columns.length; i++) {
                 var column = this.columns[i];
-                let cell = this.createCell();
-                cell.html = column.footerText;
-                if (this.columns[i].footerStyle)
-                    cell.style(this.columns[i].footerStyle);
+                let cell = column.createFooterCell(); 
 
                 row.appendChild(cell);
             }
             this._footer.appendChild(row);
         }
 
-        private createCell() {
-            let cell = new Control(document.createElement('TD'));
-            return cell;
-        }
-
         private on_selectExecuted(items: Array<any>, args: DataSourceSelectArguments) {
+            if (items.length == 0) {
+                this.showEmptyRow();
+                return;
+            }
             this._body.element.innerHTML = "";
             for (let i = 0; i < items.length; i++) {
                 this.appendDataRow(items[i]);
             }
         }
+
+        private showEmptyRow() {
+            var row = new GridViewRow(GridViewRowType.Empty);
+            row.element.className = 'emtpy';
+            this._body.appendChild(row);
+        }
+
     }
 }

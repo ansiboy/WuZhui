@@ -4,7 +4,6 @@ namespace wuzhui {
         private _text: string;
         private _visible: boolean;
         private _element: HTMLElement;
-        private _parent: Control;
 
         constructor(element: HTMLElement) {
             if (!element) throw Errors.argumentNull('element');
@@ -33,19 +32,17 @@ namespace wuzhui {
             return this._element;
         }
 
-        get parent(): Control {
-            return this._parent;
-        }
-
-        appendChild(child: Control) {
+        appendChild(child: Control | HTMLElement) {
             if (child == null)
                 throw Errors.argumentNull('child');
 
-            if (child.parent != null)
-                throw Errors.controllBelonsAnother();
+            let childElement: HTMLElement;
+            if (child instanceof Control)
+                childElement = child.element;
+            else
+                childElement = child;
 
-            child._parent = this;
-            this.element.appendChild(child.element);
+            this.element.appendChild(childElement);
         }
 
         style(value: CSSStyleDeclaration | string) {

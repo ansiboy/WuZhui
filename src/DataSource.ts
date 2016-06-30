@@ -1,6 +1,8 @@
 namespace wuzhui {
 
     export abstract class DataSource {
+        private _currentSelectArguments: DataSourceSelectArguments;
+
         inserting = <Callback<DataSource, { item: any }>>$.Callbacks();
         inserted = <Callback<DataSource, { item: any }>>$.Callbacks();
         deleting = <Callback<DataSource, { item: any }>>$.Callbacks();
@@ -11,6 +13,10 @@ namespace wuzhui {
         selected = <Callback<DataSource, { selectArguments: DataSourceSelectArguments, items: Array<any> }>>$.Callbacks();
 
         constructor() {
+        }
+
+        get currentSelectArguments() {
+            return this._currentSelectArguments;
         }
 
         protected executeInsert(item): JQueryPromise<any> {
@@ -49,6 +55,7 @@ namespace wuzhui {
             if (!args)
                 args = new DataSourceSelectArguments();
 
+            this._currentSelectArguments = args;
             this.selecting.fireWith(this, [this, { selectArguments: args }]);
             return this.executeSelect(args).done((data) => {
                 let data_items: Array<any>;

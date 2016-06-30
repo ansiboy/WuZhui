@@ -20,6 +20,7 @@ namespace wuzhui {
         private _headerStyle: string | CSSStyleDeclaration;
         private _footerStyle: string | CSSStyleDeclaration;
         private _visible: boolean;
+        private _gridView: GridView;
 
         constructor(params?: DataControlFieldParams) {
             params = $.extend({
@@ -40,56 +41,79 @@ namespace wuzhui {
         /**
          * Gets the text that is displayed in the footer item of a data control field.
          */
-        get footerText(): string {
+        protected get footerText(): string {
             return this._footerText;
-        }
-        /**
-         * Sets the text that is displayed in the footer item of a data control field.
-         */
-        set footerText(value: string) {
-            this._footerText = value;
         }
         /**
          * Gets the text that is displayed in the header item of a data control field.
          */
-        get headerText(): string {
+        protected get headerText(): string {
             return this._headerText;
-        }
-        /**
-         * Sets the text that is displayed in the header item of a data control field.
-         */
-        set headerText(value: string) {
-            this._headerText = value;
         }
         /**
          * Gets the caption displayed for a field when the field's value is null.
          */
-        get nullText(): string {
+        protected get nullText(): string {
             return this._nullText;
         }
-        /**
-         * Sets the caption displayed for a field when the field's value is null.
-         */
-        set nullText(value: string) {
-            this._nullText = value;
-        }
-        get cellHtml(): (dataItem: any) => string {
-            return this._cellHtml;
-        }
-        set cellHtml(value: (dataItem: any) => string) {
-            this._cellHtml = value;
-        }
-        get itemStyle(): string | CSSStyleDeclaration {
+        protected get itemStyle(): string | CSSStyleDeclaration {
             return this._itemStyle;
         }
-        get footerStyle(): string | CSSStyleDeclaration {
+        protected get footerStyle(): string | CSSStyleDeclaration {
             return this._footerStyle;
         }
-        get headerStyle(): string | CSSStyleDeclaration {
+        protected get headerStyle(): string | CSSStyleDeclaration {
             return this._headerStyle;
         }
         get visible(): boolean {
             return this._visible;
+        }
+        get gridView(): GridView {
+            return this._gridView;
+        }
+        set gridView(value: GridView) {
+            this._gridView = value;
+        }
+        createHeaderCell(): GridViewCell {
+            let cell = new GridViewCell();
+            cell.html = this.headerText || '';
+            cell.style(this.headerStyle);
+
+            return cell;
+        }
+        createFooterCell(): GridViewCell {
+            let cell = new GridViewCell();
+            cell.html = this.footerText || '';
+            cell.style(this.footerStyle);
+
+            return cell;
+        }
+        createDataCell(dataItem: any): GridViewCell {
+            if (!dataItem)
+                throw Errors.argumentNull('dataItem');
+
+            let cell = new GridViewCell();
+            cell.style(this.itemStyle);
+
+            return cell;
+        }
+    }
+
+    export interface CommandFieldParams extends DataControlFieldParams {
+        showEditButton?: boolean,
+        showInsertButton?: boolean,
+        showDeleteButton?: boolean,
+        showUpdateButton?: boolean
+    }
+
+    export class CommandField extends DataControlField {
+        constructor(params?: CommandFieldParams) {
+            super(params);
+        }
+        createDataCell(dataItem: any): GridViewCell {
+            let cell = new GridViewCell();
+            cell.style(this.itemStyle);
+            return cell;
         }
     }
 
@@ -103,6 +127,7 @@ namespace wuzhui {
         private _dataField: string;
         private _sortExpression: string;
         private _dataFormatString: string;
+        private _sortType: 'asc' | 'desc'
 
         constructor(params: BoundFieldParams) {
             params = $.extend({
@@ -114,6 +139,46 @@ namespace wuzhui {
             this.sortExpression = params.sortExpression;
             this.dataField = params.dataField;
             this.dataFormatString = params.dataFormatString;
+        }
+
+        createHeaderCell() {
+            if (!this.sortExpression) {
+                return super.createHeaderCell();
+            }
+            let cell = new GridViewCell();
+            let a = document.createElement('a');
+            a.href = 'javascript:';
+            a.innerText = this.headerText || '&nbsp;';
+            $(a).click(() => this.handleSort());
+
+            cell.appendChild(a);
+            cell.style(this.headerStyle);
+
+            return cell;
+        }
+
+        createDataCell(dataItem: any) {
+            let cell = super.createDataCell(dataItem);
+            cell.html = this.getCellHtml(dataItem);
+            return cell;
+        }
+
+        private handleSort() {
+            var selectArgument = this.gridView.dataSource.currentSelectArguments;
+            if (selectArgument == null)
+                return;
+
+            if (this._sortType == 'asc') {
+                this._sortType = 'desc';
+            }
+            else if (this._sortType == 'desc') {
+                this._sortType = 'asc';
+            }
+            else if (this._sortType == null) {
+                this._sortType = 'asc'
+            }
+            selectArgument.sortExpression = this.sortExpression + ' ' + this._sortType;
+            this.gridView.dataSource.select(selectArgument);
         }
 
         private getCellHtml(dataItem: any): string {

@@ -14,5 +14,8 @@ namespace wuzhui {
         static controllBelonsAnother() {
             return new Error("The control is belongs another control.");
         }
+        static columnsCanntEmpty(){
+            return new Error("Columns cannt empty.");
+        }
     }
 }
