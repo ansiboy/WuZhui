@@ -107,13 +107,61 @@ namespace wuzhui {
     }
 
     export class CommandField extends DataControlField {
+        private params: CommandFieldParams;
+
         constructor(params?: CommandFieldParams) {
             super(params);
+            this.params = params;
         }
+
         createDataCell(dataItem: any): GridViewCell {
             let cell = new GridViewCell();
             cell.style(this.itemStyle);
+            if (this.params.showEditButton) {
+                let editButton = this.createEditButton();
+                editButton.style.marginRight = '4px';
+                cell.appendChild(editButton);
+
+                let updateButton = this.createUpdateButton();
+                updateButton.style.display = 'none';
+                updateButton.style.marginRight = '4px';
+                cell.appendChild(updateButton);
+            }
+            if (this.params.showDeleteButton) {
+                let deleteButton = this.createDeleteButton();
+                deleteButton.style.marginRight = '4px';
+                cell.appendChild(deleteButton);
+            }
+            if (this.params.showInsertButton) {
+                let insertButton = this.createInsertButton();
+                insertButton.style.marginRight = '4px';
+                cell.appendChild(insertButton);
+            }
             return cell;
+        }
+        createEditButton(): HTMLElement {
+            let button = document.createElement('a');
+            button.innerHTML = '编辑';
+            button.href = 'javascript:'
+            return button;
+        }
+        createDeleteButton(): HTMLElement {
+            let button = document.createElement('a');
+            button.innerHTML = '删除';
+            button.href = 'javascript:'
+            return button;
+        }
+        createInsertButton(): HTMLElement {
+            let button = document.createElement('a');
+            button.innerHTML = '新增'
+            button.href = 'javascript:'
+            return button;
+        }
+        createUpdateButton(): HTMLElement {
+            let button = document.createElement('a');
+            button.innerHTML = '更新';
+            button.href = 'javascript:'
+            return button;
         }
     }
 
