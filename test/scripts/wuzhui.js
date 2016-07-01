@@ -5,6 +5,66 @@ var __extends = (this && this.__extends) || function (d, b) {
 };
 var wuzhui;
 (function (wuzhui) {
+    var CONTROL_DATA_NAME = 'Control';
+    var Control = (function () {
+        function Control(element) {
+            if (!element)
+                throw wuzhui.Errors.argumentNull('element');
+            this._element = element;
+            $(element).data(CONTROL_DATA_NAME, this);
+        }
+        Object.defineProperty(Control.prototype, "html", {
+            get: function () {
+                return $(this.element).html();
+            },
+            set: function (value) {
+                $(this.element).html(value);
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Control.prototype, "visible", {
+            get: function () {
+                return $(this.element).is(':visible');
+            },
+            set: function (value) {
+                if (value)
+                    $(this._element).show();
+                else
+                    $(this._element).hide();
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Control.prototype, "element", {
+            get: function () {
+                return this._element;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Control.prototype.appendChild = function (child) {
+            if (child == null)
+                throw wuzhui.Errors.argumentNull('child');
+            var childElement;
+            if (child instanceof Control)
+                childElement = child.element;
+            else
+                childElement = child;
+            this.element.appendChild(childElement);
+        };
+        Control.prototype.style = function (value) {
+            wuzhui.applyStyle(this.element, value);
+        };
+        Control.getControlByElement = function (element) {
+            return $(element).data(CONTROL_DATA_NAME);
+        };
+        return Control;
+    }());
+    wuzhui.Control = Control;
+})(wuzhui || (wuzhui = {}));
+var wuzhui;
+(function (wuzhui) {
     var DataBoundTable = (function () {
         function DataBoundTable() {
         }
@@ -24,6 +84,13 @@ var wuzhui;
             this.selecting = $.Callbacks();
             this.selected = $.Callbacks();
         }
+        Object.defineProperty(DataSource.prototype, "currentSelectArguments", {
+            get: function () {
+                return this._currentSelectArguments;
+            },
+            enumerable: true,
+            configurable: true
+        });
         DataSource.prototype.executeInsert = function (item) {
             throw wuzhui.Errors.notImplemented();
         };
@@ -61,6 +128,7 @@ var wuzhui;
             var _this = this;
             if (!args)
                 args = new DataSourceSelectArguments();
+            this._currentSelectArguments = args;
             this.selecting.fireWith(this, [this, { selectArguments: args }]);
             return this.executeSelect(args).done(function (data) {
                 var data_items;
@@ -238,6 +306,9 @@ var wuzhui;
         Errors.controllBelonsAnother = function () {
             return new Error("The control is belongs another control.");
         };
+        Errors.columnsCanntEmpty = function () {
+            return new Error("Columns cannt empty.");
+        };
         return Errors;
     }());
     wuzhui.Errors = Errors;
@@ -263,9 +334,6 @@ var wuzhui;
             get: function () {
                 return this._footerText;
             },
-            set: function (value) {
-                this._footerText = value;
-            },
             enumerable: true,
             configurable: true
         });
@@ -273,28 +341,12 @@ var wuzhui;
             get: function () {
                 return this._headerText;
             },
-            set: function (value) {
-                this._headerText = value;
-            },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(DataControlField.prototype, "nullText", {
             get: function () {
                 return this._nullText;
-            },
-            set: function (value) {
-                this._nullText = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(DataControlField.prototype, "cellHtml", {
-            get: function () {
-                return this._cellHtml;
-            },
-            set: function (value) {
-                this._cellHtml = value;
             },
             enumerable: true,
             configurable: true
@@ -327,32 +379,236 @@ var wuzhui;
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(DataControlField.prototype, "gridView", {
+            get: function () {
+                return this._gridView;
+            },
+            set: function (value) {
+                this._gridView = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        DataControlField.prototype.createHeaderCell = function () {
+            var cell = new GridViewCell();
+            cell.html = this.headerText || '';
+            cell.style(this.headerStyle);
+            return cell;
+        };
+        DataControlField.prototype.createFooterCell = function () {
+            var cell = new GridViewCell();
+            cell.html = this.footerText || '';
+            cell.style(this.footerStyle);
+            return cell;
+        };
+        DataControlField.prototype.createDataCell = function (dataItem) {
+            if (!dataItem)
+                throw wuzhui.Errors.argumentNull('dataItem');
+            var cell = new GridViewCell();
+            cell.style(this.itemStyle);
+            return cell;
+        };
         return DataControlField;
     }());
     wuzhui.DataControlField = DataControlField;
-    var BoundField = (function (_super) {
-        __extends(BoundField, _super);
-        function BoundField(params) {
-            var _this = this;
-            params = $.extend({
-                cellHtml: function (dataItem) { return _this.getCellHtml(dataItem); }
-            }, params);
+    var CommandField = (function (_super) {
+        __extends(CommandField, _super);
+        function CommandField(params) {
             _super.call(this, params);
-            this.sortExpression = params.sortExpression;
-            this.dataField = params.dataField;
-            this.dataFormatString = params.dataFormatString;
+            this.params = params;
         }
-        BoundField.prototype.getCellHtml = function (dataItem) {
-            if (!dataItem)
-                throw wuzhui.Errors.argumentNull("dataItem");
-            var value = dataItem[this.dataField];
+        CommandField.prototype.createDataCell = function (dataItem) {
+            var cell = new GridViewCell();
+            cell.style(this.itemStyle);
+            if (this.params.showEditButton) {
+                var editButton = this.createEditButton();
+                editButton.style.marginRight = '4px';
+                editButton.className = 'edit';
+                cell.appendChild(editButton);
+                var updateButton = this.createUpdateButton();
+                updateButton.style.display = 'none';
+                updateButton.style.marginRight = '4px';
+                updateButton.className = 'update';
+                cell.appendChild(updateButton);
+                var cancelButton = this.createCancelButton();
+                cancelButton.style.display = 'none';
+                cancelButton.style.marginRight = '4px';
+                cancelButton.className = 'cancel';
+                cell.appendChild(cancelButton);
+            }
+            if (this.params.showDeleteButton) {
+                var deleteButton = this.createDeleteButton();
+                deleteButton.style.marginRight = '4px';
+                deleteButton.className = 'delete';
+                cell.appendChild(deleteButton);
+            }
+            if (this.params.showInsertButton) {
+                var insertButton = this.createInsertButton();
+                insertButton.style.marginRight = '4px';
+                insertButton.className = 'insert';
+                cell.appendChild(insertButton);
+            }
+            return cell;
+        };
+        CommandField.prototype.createEditButton = function () {
+            var button = document.createElement('a');
+            button.innerHTML = '编辑';
+            button.href = 'javascript:';
+            $(button).click(this.on_editButtonClick);
+            return button;
+        };
+        CommandField.prototype.createDeleteButton = function () {
+            var button = document.createElement('a');
+            button.innerHTML = '删除';
+            button.href = 'javascript:';
+            return button;
+        };
+        CommandField.prototype.createInsertButton = function () {
+            var button = document.createElement('a');
+            button.innerHTML = '新增';
+            button.href = 'javascript:';
+            return button;
+        };
+        CommandField.prototype.createUpdateButton = function () {
+            var button = document.createElement('a');
+            button.innerHTML = '更新';
+            button.href = 'javascript:';
+            $(button).click(this.on_updateButtonClick);
+            return button;
+        };
+        CommandField.prototype.createCancelButton = function () {
+            var button = document.createElement('a');
+            button.innerHTML = '取消';
+            button.href = 'javascript:';
+            $(button).click(this.on_cancelButtonClick);
+            return button;
+        };
+        CommandField.prototype.on_editButtonClick = function (e) {
+            var row = $(e.target).parents('tr').first()[0];
+            for (var i = 0; i < row.cells.length; i++) {
+                var cell = wuzhui.Control.getControlByElement(row.cells[i]);
+                if (cell instanceof GridViewEditableCell) {
+                    cell.beginEdit();
+                }
+            }
+            $(e.target.parentElement).find('.cancel, .update').show();
+            $(e.target).hide();
+        };
+        CommandField.prototype.on_cancelButtonClick = function (e) {
+            var row = $(e.target).parents('tr').first()[0];
+            for (var i = 0; i < row.cells.length; i++) {
+                var cell = wuzhui.Control.getControlByElement(row.cells[i]);
+                if (cell instanceof GridViewEditableCell) {
+                    cell.cancelEdit();
+                }
+            }
+            $(e.target.parentElement).find('.cancel, .update').hide();
+            $(e.target.parentElement).find('.edit').show();
+        };
+        CommandField.prototype.on_updateButtonClick = function (e) {
+            var row = $(e.target).parents('tr').first()[0];
+            for (var i = 0; i < row.cells.length; i++) {
+                var cell = wuzhui.Control.getControlByElement(row.cells[i]);
+                if (cell instanceof GridViewEditableCell) {
+                    cell.endEdit();
+                }
+            }
+            $(e.target.parentElement).find('.cancel, .update').hide();
+            $(e.target.parentElement).find('.edit').show();
+            var gridView = wuzhui.Control.getControlByElement($(row).parents('table').first()[0]);
+            var gridViewRow = wuzhui.Control.getControlByElement(row);
+        };
+        return CommandField;
+    }(DataControlField));
+    wuzhui.CommandField = CommandField;
+    var GridViewCell = (function (_super) {
+        __extends(GridViewCell, _super);
+        function GridViewCell() {
+            _super.call(this, document.createElement('td'));
+        }
+        return GridViewCell;
+    }(wuzhui.Control));
+    wuzhui.GridViewCell = GridViewCell;
+    var GridViewEditableCell = (function (_super) {
+        __extends(GridViewEditableCell, _super);
+        function GridViewEditableCell(field, dataItem) {
+            if (field == null)
+                throw wuzhui.Errors.argumentNull('field');
+            if (dataItem == null)
+                throw wuzhui.Errors.argumentNull('dataItem');
+            _super.call(this);
+            this._field = field;
+            this._dataItem = dataItem;
+            this._valueElement = document.createElement('span');
+            this._editorElement = this.createControl();
+            this.appendChild(this._valueElement);
+            this.appendChild(this._editorElement);
+            wuzhui.applyStyle(this._editorElement, this._field.controlStyle);
+            this.value = dataItem[field.dataField];
+            if (this.value instanceof Date)
+                this._valueType = 'date';
+            else
+                this._valueType = typeof this.value;
+            $(this._editorElement).hide();
+        }
+        GridViewEditableCell.prototype.beginEdit = function () {
+            $(this._valueElement).hide();
+            $(this._editorElement).show();
+            var value = this._dataItem[this._field.dataField];
+            this.setControlValue(this._editorElement, value);
+        };
+        GridViewEditableCell.prototype.endEdit = function () {
+            var value = this.getControlValue(this._editorElement);
+            this._dataItem[this._field.dataField] = value;
+            this._valueElement.innerHTML = this.getCellHtml(value);
+            $(this._editorElement).hide();
+            $(this._valueElement).show();
+        };
+        GridViewEditableCell.prototype.cancelEdit = function () {
+            $(this._editorElement).hide();
+            $(this._valueElement).show();
+        };
+        Object.defineProperty(GridViewEditableCell.prototype, "value", {
+            get: function () {
+                return this._value;
+            },
+            set: function (value) {
+                if (this._value == value)
+                    return;
+                this._value = value;
+                this.setControlValue(this._editorElement, value);
+                this._valueElement.innerHTML = this.getCellHtml(value);
+            },
+            enumerable: true,
+            configurable: true
+        });
+        GridViewEditableCell.prototype.createControl = function () {
+            var ctrl = document.createElement('span');
+            ctrl.appendChild(document.createElement('input'));
+            return ctrl;
+        };
+        GridViewEditableCell.prototype.setControlValue = function (control, value) {
+            $(control).find('input').val(value);
+        };
+        GridViewEditableCell.prototype.getControlValue = function (control) {
+            var text = $(control).find('input').val();
+            switch (this._valueType) {
+                case 'number':
+                    return new Number(text).valueOf();
+                case 'date':
+                    return new Date(text);
+                default:
+                    return text;
+            }
+        };
+        GridViewEditableCell.prototype.getCellHtml = function (value) {
             if (value == null)
-                return this.nullText;
-            if (this.dataFormatString)
-                return this.formatValue(this.dataFormatString, value);
+                return this._field.nullText;
+            if (this._field.dataFormatString)
+                return this.formatValue(this._field.dataFormatString, value);
             return value;
         };
-        BoundField.prototype.formatValue = function () {
+        GridViewEditableCell.prototype.formatValue = function () {
             var args = [];
             for (var _i = 0; _i < arguments.length; _i++) {
                 args[_i - 0] = arguments[_i];
@@ -395,7 +651,7 @@ var wuzhui;
                 }
                 if (arg instanceof Date)
                     result = result + this.formatDate(arg, argFormat);
-                else if (typeof arg == 'number')
+                else if (arg instanceof Number || typeof arg == 'number')
                     result = result + this.formatNumber(arg, argFormat);
                 else
                     result = result + arg.toString();
@@ -403,7 +659,7 @@ var wuzhui;
             }
             return result;
         };
-        BoundField.prototype.formatDate = function (value, format) {
+        GridViewEditableCell.prototype.formatDate = function (value, format) {
             switch (format) {
                 case 'd':
                     return value.getFullYear() + "-" + (value.getMonth() + 1) + "-" + value.getDate();
@@ -418,7 +674,7 @@ var wuzhui;
             }
             return value.toString();
         };
-        BoundField.prototype.formatNumber = function (value, format) {
+        GridViewEditableCell.prototype.formatNumber = function (value, format) {
             var reg = new RegExp('^C[0-9]+');
             if (reg.test(format)) {
                 var num = format.substr(1);
@@ -426,32 +682,81 @@ var wuzhui;
             }
             return value.toString();
         };
+        return GridViewEditableCell;
+    }(GridViewCell));
+    wuzhui.GridViewEditableCell = GridViewEditableCell;
+    var BoundField = (function (_super) {
+        __extends(BoundField, _super);
+        function BoundField(params) {
+            _super.call(this, params);
+            this._params = params;
+            this._valueElement = document.createElement('span');
+        }
+        BoundField.prototype.createHeaderCell = function () {
+            var _this = this;
+            if (!this.sortExpression) {
+                return _super.prototype.createHeaderCell.call(this);
+            }
+            var cell = new GridViewCell();
+            var a = document.createElement('a');
+            a.href = 'javascript:';
+            a.innerText = this.headerText || '&nbsp;';
+            $(a).click(function () { return _this.handleSort(); });
+            cell.appendChild(a);
+            cell.style(this.headerStyle);
+            return cell;
+        };
+        BoundField.prototype.createDataCell = function (dataItem) {
+            var cell = new GridViewEditableCell(this, dataItem);
+            cell.style(this.itemStyle);
+            return cell;
+        };
+        BoundField.prototype.handleSort = function () {
+            var selectArgument = this.gridView.dataSource.currentSelectArguments;
+            if (selectArgument == null)
+                return;
+            if (this._sortType == 'asc') {
+                this._sortType = 'desc';
+            }
+            else if (this._sortType == 'desc') {
+                this._sortType = 'asc';
+            }
+            else if (this._sortType == null) {
+                this._sortType = 'asc';
+            }
+            selectArgument.sortExpression = this.sortExpression + ' ' + this._sortType;
+            this.gridView.dataSource.select(selectArgument);
+        };
         Object.defineProperty(BoundField.prototype, "sortExpression", {
             get: function () {
-                return this._sortExpression;
+                return this._params.sortExpression;
             },
             set: function (value) {
-                this._sortExpression = value;
+                this._params.sortExpression = value;
             },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(BoundField.prototype, "dataField", {
             get: function () {
-                return this._dataField;
+                return this._params.dataField;
             },
             set: function (value) {
-                this._dataField = value;
+                this._params.dataField = value;
             },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(BoundField.prototype, "dataFormatString", {
             get: function () {
-                return this._dataFormatString;
+                return this._params.dataFormatString;
             },
-            set: function (value) {
-                this._dataFormatString = value;
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(BoundField.prototype, "controlStyle", {
+            get: function () {
+                return this._params.controlStyle;
             },
             enumerable: true,
             configurable: true
@@ -459,78 +764,21 @@ var wuzhui;
         return BoundField;
     }(DataControlField));
     wuzhui.BoundField = BoundField;
-})(wuzhui || (wuzhui = {}));
-var wuzhui;
-(function (wuzhui) {
-    var CONTROL_DATA_NAME = 'Control';
-    var Control = (function () {
-        function Control(element) {
-            if (!element)
-                throw wuzhui.Errors.argumentNull('element');
-            this._element = element;
-            $(element).data(CONTROL_DATA_NAME, this);
+    var TextBoxField = (function (_super) {
+        __extends(TextBoxField, _super);
+        function TextBoxField() {
+            _super.apply(this, arguments);
         }
-        Object.defineProperty(Control.prototype, "html", {
-            get: function () {
-                return $(this.element).html();
-            },
-            set: function (value) {
-                $(this.element).html(value);
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Control.prototype, "visible", {
-            get: function () {
-                return $(this.element).is(':visible');
-            },
-            set: function (value) {
-                if (value)
-                    $(this._element).show();
-                else
-                    $(this._element).hide();
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Control.prototype, "element", {
-            get: function () {
-                return this._element;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Control.prototype, "parent", {
-            get: function () {
-                return this._parent;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Control.prototype.appendChild = function (child) {
-            if (child == null)
-                throw wuzhui.Errors.argumentNull('child');
-            if (child.parent != null)
-                throw wuzhui.Errors.controllBelonsAnother();
-            child._parent = this;
-            this.element.appendChild(child.element);
+        TextBoxField.prototype.beginEdit = function (cell, value) {
+            var control = document.createElement('input');
+            control.value = value;
+            cell.appendChild(control);
         };
-        Control.prototype.style = function (value) {
-            var style = value || '';
-            if (typeof style == 'string')
-                $(this.element).attr('style', style);
-            else {
-                for (var key in style) {
-                    this.element.style[key] = style[key];
-                }
-            }
+        TextBoxField.prototype.endEdit = function () {
         };
-        Control.getControlByElement = function (element) {
-            return $(element).data(CONTROL_DATA_NAME);
-        };
-        return Control;
-    }());
-    wuzhui.Control = Control;
+        return TextBoxField;
+    }(BoundField));
+    wuzhui.TextBoxField = TextBoxField;
 })(wuzhui || (wuzhui = {}));
 var wuzhui;
 (function (wuzhui) {
@@ -539,6 +787,7 @@ var wuzhui;
         GridViewRowType[GridViewRowType["Footer"] = 1] = "Footer";
         GridViewRowType[GridViewRowType["Data"] = 2] = "Data";
         GridViewRowType[GridViewRowType["Paging"] = 3] = "Paging";
+        GridViewRowType[GridViewRowType["Empty"] = 4] = "Empty";
     })(wuzhui.GridViewRowType || (wuzhui.GridViewRowType = {}));
     var GridViewRowType = wuzhui.GridViewRowType;
     var GridViewRow = (function (_super) {
@@ -548,10 +797,6 @@ var wuzhui;
             _super.call(this, element);
             this._rowType = rowType;
         }
-        GridViewRow.prototype.createCell = function () {
-            var cell = new wuzhui.Control(document.createElement('TD'));
-            return cell;
-        };
         Object.defineProperty(GridViewRow.prototype, "rowType", {
             get: function () {
                 return this._rowType;
@@ -566,17 +811,23 @@ var wuzhui;
         __extends(GridViewDataRow, _super);
         function GridViewDataRow(gridView, dataItem) {
             _super.call(this, GridViewRowType.Data);
+            this._dataItem = dataItem;
             for (var i = 0; i < gridView.columns.length; i++) {
                 var column = gridView.columns[i];
-                var cell = this.createCell();
-                this.appendChild(cell);
-                cell.html = column.cellHtml(dataItem);
-                if (column.itemStyle)
-                    cell.style(column.itemStyle);
+                var cell = column.createDataCell(dataItem);
+                this.element.appendChild(cell.element);
             }
         }
+        Object.defineProperty(GridViewDataRow.prototype, "dataItem", {
+            get: function () {
+                return this._dataItem;
+            },
+            enumerable: true,
+            configurable: true
+        });
         return GridViewDataRow;
     }(GridViewRow));
+    wuzhui.GridViewDataRow = GridViewDataRow;
     var GridView = (function (_super) {
         __extends(GridView, _super);
         function GridView(params) {
@@ -587,9 +838,15 @@ var wuzhui;
                 showHeader: true, showFooter: false,
                 allowPaging: false
             }, params);
-            this._columns = params.columns;
-            this.dataSource = params.dataSource;
-            this.dataSource.selected.add(function (sender, e) { return _this.on_selectExecuted(e.items, e.selectArguments); });
+            this._columns = params.columns || [];
+            if (this._columns.length == 0)
+                throw wuzhui.Errors.columnsCanntEmpty();
+            for (var i = 0; i < this._columns.length; i++) {
+                var column = this._columns[i];
+                column.gridView = this;
+            }
+            this._dataSource = params.dataSource;
+            this._dataSource.selected.add(function (sender, e) { return _this.on_selectExecuted(e.items, e.selectArguments); });
             if (params.showHeader) {
                 this._header = new wuzhui.Control(document.createElement('THEAD'));
                 this.appendChild(this._header);
@@ -604,19 +861,16 @@ var wuzhui;
                     this.appendFooterRow();
             }
         }
-        Object.defineProperty(GridView.prototype, "pageSize", {
+        Object.defineProperty(GridView.prototype, "columns", {
             get: function () {
-                return this._pageSize;
-            },
-            set: function (value) {
-                this._pageSize = value;
+                return this._columns;
             },
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(GridView.prototype, "columns", {
+        Object.defineProperty(GridView.prototype, "dataSource", {
             get: function () {
-                return this._columns;
+                return this._dataSource;
             },
             enumerable: true,
             configurable: true
@@ -642,10 +896,7 @@ var wuzhui;
             var row = new GridViewRow(GridViewRowType.Header);
             for (var i = 0; i < this.columns.length; i++) {
                 var column = this.columns[i];
-                var cell = this.createCell();
-                cell.html = column.headerText;
-                if (this.columns[i].headerStyle)
-                    cell.style(this.columns[i].headerStyle);
+                var cell = column.createHeaderCell();
                 row.appendChild(cell);
                 cell.visible = this.columns[i].visible;
             }
@@ -655,23 +906,27 @@ var wuzhui;
             var row = new GridViewRow(GridViewRowType.Footer);
             for (var i = 0; i < this.columns.length; i++) {
                 var column = this.columns[i];
-                var cell = this.createCell();
-                cell.html = column.footerText;
-                if (this.columns[i].footerStyle)
-                    cell.style(this.columns[i].footerStyle);
+                var cell = column.createFooterCell();
                 row.appendChild(cell);
             }
             this._footer.appendChild(row);
         };
-        GridView.prototype.createCell = function () {
-            var cell = new wuzhui.Control(document.createElement('TD'));
-            return cell;
-        };
         GridView.prototype.on_selectExecuted = function (items, args) {
+            if (items.length == 0) {
+                this.showEmptyRow();
+                return;
+            }
             this._body.element.innerHTML = "";
             for (var i = 0; i < items.length; i++) {
                 this.appendDataRow(items[i]);
             }
+        };
+        GridView.prototype.on_updateExecuted = function (items) {
+        };
+        GridView.prototype.showEmptyRow = function () {
+            var row = new GridViewRow(GridViewRowType.Empty);
+            row.element.className = 'emtpy';
+            this._body.appendChild(row);
         };
         return GridView;
     }(wuzhui.Control));
@@ -986,6 +1241,17 @@ var wuzhui;
         return result;
     }
     wuzhui.ajax = ajax;
+    function applyStyle(element, value) {
+        var style = value || '';
+        if (typeof style == 'string')
+            $(element).attr('style', style);
+        else {
+            for (var key in style) {
+                element.style[key] = style[key];
+            }
+        }
+    }
+    wuzhui.applyStyle = applyStyle;
     function callbacks() {
         return $.Callbacks();
     }

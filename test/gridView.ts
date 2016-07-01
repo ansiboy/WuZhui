@@ -14,13 +14,20 @@ let gridView = new wuzhui.GridView({
             headerText: '价格', dataField: 'Price', dataFormatString: '￥{0:C2}',
             headerStyle: <CSSStyleDeclaration>{ textAlign: 'center' },
             footerText: '合计', footerStyle: <CSSStyleDeclaration>{ textAlign: 'center' },
-            itemStyle: 'width:200px;text-align:right;',
+            itemStyle: 'width:140px;text-align:right;',
+            sortExpression: 'Price'
+        }),
+        new wuzhui.CommandField({
+            showEditButton: true, showDeleteButton: true,
+            itemStyle: 'width:120px;text-align:center'
         })
     ],
     showFooter: true,
 });
 
+gridView.element.style.width = '100%';
 document.body.appendChild(gridView.element);
+
 let headerElement = $(gridView.element).find('thead > tr')[0];
 let footerElement = $(gridView.element).find('tfoot > tr')[0];
 QUnit.test('gridView header and footer', (assert) => {

@@ -1,7 +1,22 @@
 declare namespace wuzhui {
+    class Control {
+        private _text;
+        private _visible;
+        private _element;
+        constructor(element: HTMLElement);
+        html: string;
+        visible: boolean;
+        element: HTMLElement;
+        appendChild(child: Control | HTMLElement): void;
+        style(value: CSSStyleDeclaration | string): void;
+        static getControlByElement(element: HTMLElement): Control;
+    }
+}
+declare namespace wuzhui {
 }
 declare namespace wuzhui {
     abstract class DataSource {
+        private _currentSelectArguments;
         inserting: Callback<DataSource, {
             item: any;
         }>;
@@ -28,6 +43,7 @@ declare namespace wuzhui {
             items: any[];
         }>;
         constructor();
+        currentSelectArguments: DataSourceSelectArguments;
         protected executeInsert(item: any): JQueryPromise<any>;
         protected executeDelete(item: any): JQueryPromise<any>;
         protected executeUpdate(item: any): JQueryPromise<any>;
@@ -79,6 +95,7 @@ declare namespace wuzhui {
         static notImplemented(message?: string): Error;
         static argumentNull(paramName: any): Error;
         static controllBelonsAnother(): Error;
+        static columnsCanntEmpty(): Error;
     }
 }
 declare namespace wuzhui {
@@ -101,49 +118,84 @@ declare namespace wuzhui {
         private _headerStyle;
         private _footerStyle;
         private _visible;
+        private _gridView;
         constructor(params?: DataControlFieldParams);
-        footerText: string;
-        headerText: string;
+        protected footerText: string;
+        protected headerText: string;
         nullText: string;
-        cellHtml: (dataItem: any) => string;
-        itemStyle: string | CSSStyleDeclaration;
-        footerStyle: string | CSSStyleDeclaration;
-        headerStyle: string | CSSStyleDeclaration;
+        protected itemStyle: string | CSSStyleDeclaration;
+        protected footerStyle: string | CSSStyleDeclaration;
+        protected headerStyle: string | CSSStyleDeclaration;
         visible: boolean;
+        gridView: GridView;
+        createHeaderCell(): GridViewCell;
+        createFooterCell(): GridViewCell;
+        createDataCell(dataItem: any): GridViewCell;
+    }
+    interface CommandFieldParams extends DataControlFieldParams {
+        showEditButton?: boolean;
+        showInsertButton?: boolean;
+        showDeleteButton?: boolean;
+        showUpdateButton?: boolean;
+    }
+    class CommandField extends DataControlField {
+        private params;
+        constructor(params?: CommandFieldParams);
+        createDataCell(dataItem: any): GridViewCell;
+        createEditButton(): HTMLElement;
+        createDeleteButton(): HTMLElement;
+        createInsertButton(): HTMLElement;
+        createUpdateButton(): HTMLElement;
+        createCancelButton(): HTMLElement;
+        private on_editButtonClick(e);
+        private on_cancelButtonClick(e);
+        private on_updateButtonClick(e);
     }
     interface BoundFieldParams extends DataControlFieldParams {
         sortExpression?: string;
         dataField: string;
         dataFormatString?: string;
+        controlStyle?: CSSStyleDeclaration | string;
     }
-    class BoundField extends DataControlField {
-        private _dataField;
-        private _sortExpression;
-        private _dataFormatString;
-        constructor(params: BoundFieldParams);
-        private getCellHtml(dataItem);
+    class GridViewCell extends Control {
+        constructor();
+    }
+    class GridViewEditableCell extends GridViewCell {
+        private _field;
+        private _dataItem;
+        private _valueElement;
+        private _editorElement;
+        private _value;
+        private _valueType;
+        constructor(field: BoundField, dataItem: any);
+        beginEdit(): void;
+        endEdit(): void;
+        cancelEdit(): void;
+        value: any;
+        createControl(): HTMLElement;
+        setControlValue(control: HTMLElement, value: any): void;
+        getControlValue(control: HTMLElement): any;
+        private getCellHtml(value);
         private formatValue(...args);
         private formatDate(value, format);
         private formatNumber(value, format);
+    }
+    class BoundField extends DataControlField {
+        private _sortType;
+        private _valueElement;
+        private _params;
+        constructor(params: BoundFieldParams);
+        createHeaderCell(): GridViewCell;
+        createDataCell(dataItem: any): GridViewEditableCell;
+        private handleSort();
         sortExpression: string;
         dataField: string;
         dataFormatString: string;
+        controlStyle: CSSStyleDeclaration | string;
     }
-}
-declare namespace wuzhui {
-    class Control {
-        private _text;
-        private _visible;
-        private _element;
-        private _parent;
-        constructor(element: HTMLElement);
-        html: string;
-        visible: boolean;
-        element: HTMLElement;
-        parent: Control;
-        appendChild(child: Control): void;
-        style(value: CSSStyleDeclaration | string): void;
-        static getControlByElement(element: HTMLElement): Control;
+    class TextBoxField extends BoundField {
+        beginEdit(cell: GridViewCell, value: any): void;
+        endEdit(): void;
     }
 }
 declare namespace wuzhui {
@@ -152,12 +204,17 @@ declare namespace wuzhui {
         Footer = 1,
         Data = 2,
         Paging = 3,
+        Empty = 4,
     }
     class GridViewRow extends Control {
         private _rowType;
         constructor(rowType: GridViewRowType);
-        protected createCell(): Control;
         rowType: GridViewRowType;
+    }
+    class GridViewDataRow extends GridViewRow {
+        private _dataItem;
+        constructor(gridView: GridView, dataItem: any);
+        dataItem: any;
     }
     class GridView extends Control {
         private _pageSize;
@@ -165,7 +222,7 @@ declare namespace wuzhui {
         private _showFooter;
         private _showHeader;
         private _columns;
-        private dataSource;
+        private _dataSource;
         private _header;
         private _footer;
         private _body;
@@ -183,8 +240,8 @@ declare namespace wuzhui {
             showHeader?: boolean;
             showFooter?: boolean;
         });
-        pageSize: number;
         columns: DataControlField[];
+        dataSource: DataSource;
         private handleEdit(row);
         private handleInsert(row);
         private handlePage(pageIndex);
@@ -194,8 +251,9 @@ declare namespace wuzhui {
         private appendDataRow(dataItem);
         private appendHeaderRow();
         private appendFooterRow();
-        private createCell();
         private on_selectExecuted(items, args);
+        private on_updateExecuted(items);
+        private showEmptyRow();
     }
 }
 declare namespace wuzhui {
@@ -272,6 +330,7 @@ declare namespace wuzhui {
         remove(callbacks: Function[]): Callback<S, A>;
     }
     function ajax(url: string, data: any): JQueryDeferred<{}>;
+    function applyStyle(element: HTMLElement, value: CSSStyleDeclaration | string): void;
     function callbacks<S, A>(): Callback<S, A>;
     function fireCallback<S, A>(callback: Callback<S, A>, sender: S, args: A): Callback<S, A>;
 }

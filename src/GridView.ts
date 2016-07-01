@@ -1,5 +1,4 @@
-
-/// <reference path="WebControl.ts"/>
+/// <reference path="Control.ts"/>
 
 namespace wuzhui {
     export enum GridViewRowType {
@@ -19,35 +18,28 @@ namespace wuzhui {
             this._rowType = rowType;
         }
 
-        // protected createCell(): Control {
-        //     var cell = new Control(document.createElement('TD'));
-        //     return cell;
-        // }
-
         get rowType() {
             return this._rowType;
         }
     }
 
-    export class GridViewCell extends Control {
-        constructor() {
-            super(document.createElement('TD'));
-        }
-    }
 
-    class GridViewDataRow extends GridViewRow {
+
+    export class GridViewDataRow extends GridViewRow {
+        private _dataItem;
         constructor(gridView: GridView, dataItem: any) {
             super(GridViewRowType.Data);
-
+            this._dataItem = dataItem;
             for (var i = 0; i < gridView.columns.length; i++) {
                 var column = gridView.columns[i];
                 var cell = column.createDataCell(dataItem);
 
                 this.element.appendChild(cell.element);
-
-                // if (column.itemStyle)
-                //     cell.style(column.itemStyle);
             }
+        }
+
+        get dataItem() {
+            return this._dataItem;
         }
     }
 
@@ -123,7 +115,7 @@ namespace wuzhui {
             return this._columns;
         }
 
-        get dataSource(){
+        get dataSource() {
             return this._dataSource;
         }
 
@@ -161,7 +153,7 @@ namespace wuzhui {
             var row = new GridViewRow(GridViewRowType.Header);
             for (var i = 0; i < this.columns.length; i++) {
                 var column = this.columns[i];
-                let cell = column.createHeaderCell(); 
+                let cell = column.createHeaderCell();
 
                 row.appendChild(cell);
                 cell.visible = this.columns[i].visible;
@@ -173,7 +165,7 @@ namespace wuzhui {
             var row = new GridViewRow(GridViewRowType.Footer);
             for (var i = 0; i < this.columns.length; i++) {
                 var column = this.columns[i];
-                let cell = column.createFooterCell(); 
+                let cell = column.createFooterCell();
 
                 row.appendChild(cell);
             }
@@ -189,6 +181,10 @@ namespace wuzhui {
             for (let i = 0; i < items.length; i++) {
                 this.appendDataRow(items[i]);
             }
+        }
+
+        private on_updateExecuted(items){
+
         }
 
         private showEmptyRow() {

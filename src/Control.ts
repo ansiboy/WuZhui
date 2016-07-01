@@ -46,14 +46,7 @@ namespace wuzhui {
         }
 
         style(value: CSSStyleDeclaration | string) {
-            let style = value || '';
-            if (typeof style == 'string')
-                $(this.element).attr('style', <string>style);
-            else {
-                for (let key in <any>style) {
-                    this.element.style[key] = style[key];
-                }
-            }
+            applyStyle(this.element, value);
         }
 
         static getControlByElement(element: HTMLElement): Control {

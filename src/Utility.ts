@@ -98,6 +98,17 @@ namespace wuzhui {
         return result;
     }
 
+    export function applyStyle(element: HTMLElement, value: CSSStyleDeclaration | string) {
+        let style = value || '';
+        if (typeof style == 'string')
+            $(element).attr('style', <string>style);
+        else {
+            for (let key in <any>style) {
+                element.style[key] = style[key];
+            }
+        }
+    }
+
     export function callbacks<S, A>(): Callback<S, A> {
         return $.Callbacks();
     }
