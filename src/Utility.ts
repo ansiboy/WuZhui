@@ -74,6 +74,7 @@ namespace wuzhui {
         remove(callbacks: Function[]): Callback<S, A>;
     }
 
+    const ajaxTimeout = 5000;
     export function ajax(url: string, data) {
         var result = $.Deferred();
         $.ajax({
@@ -93,8 +94,12 @@ namespace wuzhui {
             result.reject(err);
         });
 
-        //TODO:超时处理
-
+        //超时处理
+        setTimeout(() => {
+            if (result.state() == 'pending') {
+                result.reject({ Code: 'Timeout', Message: 'Ajax call timemout.' });
+            }
+        }, ajaxTimeout);
         return result;
     }
 
