@@ -440,8 +440,16 @@ namespace wuzhui {
             let cell = new GridViewCell();
             let a = document.createElement('a');
             a.href = 'javascript:';
-            a.innerText = this.headerText || '&nbsp;';
-            $(a).click(() => this.handleSort());
+            a.innerText = this.headerText || '';
+            $(a).click(() => {
+                this.handleSort();
+                if (this._sortType == 'asc')
+                    a.innerText = (this.headerText || '') + '↑';
+                else if (this._sortType == 'desc')
+                    a.innerText = (this.headerText || '') + '↓';
+                else
+                    a.innerText = this.headerText || '';
+            });
 
             cell.appendChild(a);
             cell.style(this.headerStyle);
@@ -453,7 +461,6 @@ namespace wuzhui {
             let cell = new GridViewEditableCell(this, dataItem);
             cell.style(this.itemStyle);
 
-            // cell.html = this.getCellHtml(dataItem);
             return cell;
         }
 
@@ -472,7 +479,7 @@ namespace wuzhui {
                 this._sortType = 'asc'
             }
             selectArgument.sortExpression = this.sortExpression + ' ' + this._sortType;
-            this.gridView.dataSource.select(selectArgument);
+            return this.gridView.dataSource.select(selectArgument);
         }
 
         // private getCellHtml(dataItem: any): string {
