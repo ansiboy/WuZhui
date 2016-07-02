@@ -198,19 +198,19 @@ namespace wuzhui {
         private pagerSettings: PagerSettings;
         private element: HTMLElement;
         private _buttons: Array<HTMLElement>;
-        private _selectArgument: DataSourceSelectArguments;
+        //private _selectArgument: DataSourceSelectArguments;
         private sortExpression: string;
         private cell: HTMLElement;
         private totalElement: HTMLElement;
 
-        constructor(dataSource: DataSource, pagerSettings: PagerSettings, element, selectArgument?: DataSourceSelectArguments) {
+        constructor(dataSource: DataSource, pagerSettings: PagerSettings, element) {
             super();
 
             this.dataSource = dataSource;
             this.pagerSettings = pagerSettings;
             this.element = element;
             this._buttons = new Array();
-            this._selectArgument = selectArgument;
+            //this._selectArgument = selectArgument;
 
             this.init(dataSource);
         }
@@ -223,12 +223,12 @@ namespace wuzhui {
                     $(pagingBar.totalElement).text(args.selectArguments.totalRowCount);
             });
         }
-        selectArgument(): DataSourceSelectArguments {
-            if (!this._selectArgument)
-                this._selectArgument = new DataSourceSelectArguments();
+        // selectArgument(): DataSourceSelectArguments {
+        //     if (!this._selectArgument)
+        //         this._selectArgument = new DataSourceSelectArguments();
 
-            return this._selectArgument;
-        }
+        //     return this._selectArgument;
+        // }
         render() {
             var pagerSettings = this.pagerSettings;
             var pagingBar = this;
@@ -256,7 +256,10 @@ namespace wuzhui {
                 $(url).click(function () {
                     var buttonIndex = pagingBar._buttons.indexOf(this);
                     var index;
-                    let args = pagingBar.selectArgument();
+                    let args = pagingBar.dataSource.currentSelectArguments; //pagingBar.selectArgument();
+                    if (args == null)
+                        args = new DataSourceSelectArguments();
+
                     args.maximumRows = pagingBar.pageSize;
                     args.startRowIndex = this.pageIndex * pagingBar.pageSize;
                     if (pagingBar.sortExpression) {
