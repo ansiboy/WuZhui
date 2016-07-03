@@ -33,8 +33,9 @@ namespace wuzhui {
             for (var i = 0; i < gridView.columns.length; i++) {
                 var column = gridView.columns[i];
                 var cell = column.createDataCell(dataItem);
+                cell.visible = column.visible;
 
-                this.element.appendChild(cell.element);
+                this.appendChild(cell);
             }
         }
 
@@ -168,6 +169,7 @@ namespace wuzhui {
                 let cell = column.createFooterCell();
 
                 row.appendChild(cell);
+                cell.visible = column.visible;
             }
             this._footer.appendChild(row);
         }
