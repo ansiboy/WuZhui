@@ -65,14 +65,6 @@ var wuzhui;
 })(wuzhui || (wuzhui = {}));
 var wuzhui;
 (function (wuzhui) {
-    var DataBoundTable = (function () {
-        function DataBoundTable() {
-        }
-        return DataBoundTable;
-    }());
-})(wuzhui || (wuzhui = {}));
-var wuzhui;
-(function (wuzhui) {
     var DataSource = (function () {
         function DataSource() {
             this.inserting = $.Callbacks();
@@ -689,22 +681,38 @@ var wuzhui;
         __extends(BoundField, _super);
         function BoundField(params) {
             _super.call(this, params);
+            if (params.headerHTML == null)
+                params.headerHTML = this.headerHTML;
             this._params = params;
             this._valueElement = document.createElement('span');
         }
         BoundField.prototype.createHeaderCell = function () {
             var _this = this;
-            if (!this.sortExpression) {
-                return _super.prototype.createHeaderCell.call(this);
-            }
             var cell = new GridViewCell();
-            var a = document.createElement('a');
-            a.href = 'javascript:';
-            a.innerText = this.headerText || '&nbsp;';
-            $(a).click(function () { return _this.handleSort(); });
-            cell.appendChild(a);
+            if (this.sortExpression) {
+                var a_1 = document.createElement('a');
+                a_1.href = 'javascript:';
+                a_1.innerHTML = this._params.headerHTML(this._sortType);
+                $(a_1).click(function () {
+                    _this.handleSort();
+                    a_1.innerHTML = _this._params.headerHTML(_this._sortType);
+                });
+                cell.appendChild(a_1);
+            }
+            else {
+                cell.element.innerHTML = this._params.headerHTML();
+            }
             cell.style(this.headerStyle);
             return cell;
+        };
+        BoundField.prototype.headerHTML = function (sortType) {
+            var headerText = this.headerText || this.dataField;
+            if (sortType == 'asc')
+                return headerText + '↑';
+            else if (sortType == 'desc')
+                return headerText + '↓';
+            else
+                return headerText;
         };
         BoundField.prototype.createDataCell = function (dataItem) {
             var cell = new GridViewEditableCell(this, dataItem);
@@ -725,14 +733,11 @@ var wuzhui;
                 this._sortType = 'asc';
             }
             selectArgument.sortExpression = this.sortExpression + ' ' + this._sortType;
-            this.gridView.dataSource.select(selectArgument);
+            return this.gridView.dataSource.select(selectArgument);
         };
         Object.defineProperty(BoundField.prototype, "sortExpression", {
             get: function () {
                 return this._params.sortExpression;
-            },
-            set: function (value) {
-                this._params.sortExpression = value;
             },
             enumerable: true,
             configurable: true
@@ -740,9 +745,6 @@ var wuzhui;
         Object.defineProperty(BoundField.prototype, "dataField", {
             get: function () {
                 return this._params.dataField;
-            },
-            set: function (value) {
-                this._params.dataField = value;
             },
             enumerable: true,
             configurable: true
@@ -815,7 +817,8 @@ var wuzhui;
             for (var i = 0; i < gridView.columns.length; i++) {
                 var column = gridView.columns[i];
                 var cell = column.createDataCell(dataItem);
-                this.element.appendChild(cell.element);
+                cell.visible = column.visible;
+                this.appendChild(cell);
             }
         }
         Object.defineProperty(GridViewDataRow.prototype, "dataItem", {
@@ -908,6 +911,7 @@ var wuzhui;
                 var column = this.columns[i];
                 var cell = column.createFooterCell();
                 row.appendChild(cell);
+                cell.visible = column.visible;
             }
             this._footer.appendChild(row);
         };
@@ -1114,13 +1118,12 @@ var wuzhui;
     wuzhui.PagingBar = PagingBar;
     var NumberPagingBar = (function (_super) {
         __extends(NumberPagingBar, _super);
-        function NumberPagingBar(dataSource, pagerSettings, element, selectArgument) {
+        function NumberPagingBar(dataSource, pagerSettings, element) {
             _super.call(this);
             this.dataSource = dataSource;
             this.pagerSettings = pagerSettings;
             this.element = element;
             this._buttons = new Array();
-            this._selectArgument = selectArgument;
             this.init(dataSource);
         }
         NumberPagingBar.prototype.init = function (dataSource) {
@@ -1130,11 +1133,6 @@ var wuzhui;
                 if (args.selectArguments.totalRowCount != null)
                     $(pagingBar.totalElement).text(args.selectArguments.totalRowCount);
             });
-        };
-        NumberPagingBar.prototype.selectArgument = function () {
-            if (!this._selectArgument)
-                this._selectArgument = new wuzhui.DataSourceSelectArguments();
-            return this._selectArgument;
         };
         NumberPagingBar.prototype.render = function () {
             var pagerSettings = this.pagerSettings;
@@ -1159,7 +1157,9 @@ var wuzhui;
                 $(url).click(function () {
                     var buttonIndex = pagingBar._buttons.indexOf(this);
                     var index;
-                    var args = pagingBar.selectArgument();
+                    var args = pagingBar.dataSource.currentSelectArguments;
+                    if (args == null)
+                        args = new wuzhui.DataSourceSelectArguments();
                     args.maximumRows = pagingBar.pageSize;
                     args.startRowIndex = this.pageIndex * pagingBar.pageSize;
                     if (pagingBar.sortExpression) {
@@ -1220,6 +1220,7 @@ var wuzhui;
 })(wuzhui || (wuzhui = {}));
 var wuzhui;
 (function (wuzhui) {
+    var ajaxTimeout = 5000;
     function ajax(url, data) {
         var result = $.Deferred();
         $.ajax({
@@ -1238,6 +1239,11 @@ var wuzhui;
             var err = { Code: textStatus, status: jqXHR.status, Message: jqXHR.statusText };
             result.reject(err);
         });
+        setTimeout(function () {
+            if (result.state() == 'pending') {
+                result.reject({ Code: 'Timeout', Message: 'Ajax call timemout.' });
+            }
+        }, ajaxTimeout);
         return result;
     }
     wuzhui.ajax = ajax;

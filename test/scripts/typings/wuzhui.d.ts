@@ -13,8 +13,6 @@ declare namespace wuzhui {
     }
 }
 declare namespace wuzhui {
-}
-declare namespace wuzhui {
     abstract class DataSource {
         private _currentSelectArguments;
         inserting: Callback<DataSource, {
@@ -156,6 +154,7 @@ declare namespace wuzhui {
         dataField: string;
         dataFormatString?: string;
         controlStyle?: CSSStyleDeclaration | string;
+        headerHTML?: (sortType?: 'asc' | 'desc') => string;
     }
     class GridViewCell extends Control {
         constructor();
@@ -186,6 +185,7 @@ declare namespace wuzhui {
         private _params;
         constructor(params: BoundFieldParams);
         createHeaderCell(): GridViewCell;
+        private headerHTML(sortType);
         createDataCell(dataItem: any): GridViewEditableCell;
         private handleSort();
         sortExpression: string;
@@ -304,13 +304,11 @@ declare namespace wuzhui {
         private pagerSettings;
         private element;
         private _buttons;
-        private _selectArgument;
         private sortExpression;
         private cell;
         private totalElement;
-        constructor(dataSource: DataSource, pagerSettings: PagerSettings, element: any, selectArgument?: DataSourceSelectArguments);
+        constructor(dataSource: DataSource, pagerSettings: PagerSettings, element: any);
         init(dataSource: any): void;
-        selectArgument(): DataSourceSelectArguments;
         render(): void;
     }
 }
