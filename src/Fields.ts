@@ -158,6 +158,8 @@ namespace wuzhui {
             let button = document.createElement('a');
             button.innerHTML = '删除';
             button.href = 'javascript:'
+            $(button).click(this.on_deleteButtonClick);
+            
             return button;
         }
         private createInsertButton(): HTMLElement {
@@ -223,14 +225,21 @@ namespace wuzhui {
                 }
             }
 
-            dataSource.update(dataItem).done(() => {
+            return dataSource.update(dataItem).done(() => {
                 editableCells.forEach((item) => item.endEdit());
+                $(e.target.parentElement).find('.cancel, .update').hide();
+                $(e.target.parentElement).find('.edit').show();
             });
-
-            $(e.target.parentElement).find('.cancel, .update').hide();
-            $(e.target.parentElement).find('.edit').show();
-
         }
+        private on_deleteButtonClick(e: JQueryEventObject) {
+            let rowElement = <HTMLTableRowElement>$(e.target).parents('tr').first()[0];
+            let row = <GridViewDataRow>Control.getControlByElement(rowElement);
+            let dataSource = row.gridView.dataSource;
+            return dataSource.delete(row.dataItem).done(() => {
+                $(rowElement).remove();
+            })
+        }
+
     }
 
     export interface BoundFieldParams extends DataControlFieldParams {
