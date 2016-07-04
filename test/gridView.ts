@@ -1,7 +1,11 @@
 
 let w = wuzhui;
+let baseUrl = 'http://shop.alinq.cn/AdminServices/Shop/Product/';
 let dataSource = new wuzhui.WebDataSource({
-    selectUrl: 'http://shop.alinq.cn/AdminServices/Shop/Product/GetProducts'
+    selectUrl: baseUrl + 'GetProducts',
+    updateUrl: baseUrl + 'SaveProduct',
+    insertUrl: baseUrl + 'SaveProduct',
+    deleteUrl: baseUrl + 'DeleteProduct'
 });
 
 

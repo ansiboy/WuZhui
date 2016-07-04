@@ -94,6 +94,9 @@ declare namespace wuzhui {
         static argumentNull(paramName: any): Error;
         static controllBelonsAnother(): Error;
         static columnsCanntEmpty(): Error;
+        static dataSourceCanntInsert(): Error;
+        static dataSourceCanntUpdate(): Error;
+        static dataSourceCanntDelete(): Error;
     }
 }
 declare namespace wuzhui {
@@ -101,22 +104,14 @@ declare namespace wuzhui {
         footerText?: string;
         headerText?: string;
         nullText?: string;
-        cellHtml?: (dataItem: any) => string;
         itemStyle?: string | CSSStyleDeclaration;
         headerStyle?: string | CSSStyleDeclaration;
         footerStyle?: string | CSSStyleDeclaration;
         visible?: boolean;
     }
     class DataControlField {
-        private _footerText;
-        private _headerText;
-        private _nullText;
-        private _cellHtml;
-        private _itemStyle;
-        private _headerStyle;
-        private _footerStyle;
-        private _visible;
         private _gridView;
+        protected _params: DataControlFieldParams;
         constructor(params?: DataControlFieldParams);
         protected footerText: string;
         protected headerText: string;
@@ -128,7 +123,15 @@ declare namespace wuzhui {
         gridView: GridView;
         createHeaderCell(): GridViewCell;
         createFooterCell(): GridViewCell;
-        createDataCell(dataItem: any): GridViewCell;
+        createItemCell(dataItem: any): GridViewCell;
+    }
+    interface CustomFieldParams extends DataControlFieldParams {
+        renderHeader: (element: HTMLElement) => void;
+        renderFooter: (element: HTMLElement) => void;
+        renderItem: (element: HTMLElement, dataItem: any) => void;
+    }
+    class CustomField extends DataControlField {
+        constructor(params: CustomFieldParams);
     }
     interface CommandFieldParams extends DataControlFieldParams {
         showEditButton?: boolean;
@@ -137,17 +140,20 @@ declare namespace wuzhui {
         showUpdateButton?: boolean;
     }
     class CommandField extends DataControlField {
-        private params;
+        private _updating;
+        private _deleting;
         constructor(params?: CommandFieldParams);
-        createDataCell(dataItem: any): GridViewCell;
-        createEditButton(): HTMLElement;
-        createDeleteButton(): HTMLElement;
-        createInsertButton(): HTMLElement;
-        createUpdateButton(): HTMLElement;
-        createCancelButton(): HTMLElement;
+        private params();
+        createItemCell(dataItem: any): GridViewCell;
+        private createEditButton();
+        private createDeleteButton();
+        private createInsertButton();
+        private createUpdateButton();
+        private createCancelButton();
         private on_editButtonClick(e);
         private on_cancelButtonClick(e);
         private on_updateButtonClick(e);
+        private on_deleteButtonClick(e);
     }
     interface BoundFieldParams extends DataControlFieldParams {
         sortExpression?: string;
@@ -157,10 +163,11 @@ declare namespace wuzhui {
         headerHTML?: (sortType?: 'asc' | 'desc') => string;
     }
     class GridViewCell extends Control {
-        constructor();
+        private _field;
+        constructor(field: DataControlField);
+        field: DataControlField;
     }
     class GridViewEditableCell extends GridViewCell {
-        private _field;
         private _dataItem;
         private _valueElement;
         private _editorElement;
@@ -172,8 +179,8 @@ declare namespace wuzhui {
         cancelEdit(): void;
         value: any;
         createControl(): HTMLElement;
-        setControlValue(control: HTMLElement, value: any): void;
-        getControlValue(control: HTMLElement): any;
+        setControlValue(value: any): void;
+        getControlValue(): any;
         private getCellHtml(value);
         private formatValue(...args);
         private formatDate(value, format);
@@ -182,11 +189,11 @@ declare namespace wuzhui {
     class BoundField extends DataControlField {
         private _sortType;
         private _valueElement;
-        private _params;
         constructor(params: BoundFieldParams);
-        createHeaderCell(): GridViewCell;
+        private params();
+        createHeaderCell(): any;
         private headerHTML(sortType);
-        createDataCell(dataItem: any): GridViewEditableCell;
+        createItemCell(dataItem: any): GridViewCell;
         private handleSort();
         sortExpression: string;
         dataField: string;
@@ -208,8 +215,10 @@ declare namespace wuzhui {
     }
     class GridViewRow extends Control {
         private _rowType;
+        private _gridView;
         constructor(rowType: GridViewRowType);
         rowType: GridViewRowType;
+        gridView: GridView;
     }
     class GridViewDataRow extends GridViewRow {
         private _dataItem;
@@ -242,12 +251,6 @@ declare namespace wuzhui {
         });
         columns: DataControlField[];
         dataSource: DataSource;
-        private handleEdit(row);
-        private handleInsert(row);
-        private handlePage(pageIndex);
-        private handleSelect(row);
-        private handleSort(sortExpression, sortDirection);
-        private handleUpdate(row);
         private appendDataRow(dataItem);
         private appendHeaderRow();
         private appendFooterRow();
@@ -327,6 +330,7 @@ declare namespace wuzhui {
         remove(callbacks: Function): Callback<S, A>;
         remove(callbacks: Function[]): Callback<S, A>;
     }
+    var ajaxTimeout: number;
     function ajax(url: string, data: any): JQueryDeferred<{}>;
     function applyStyle(element: HTMLElement, value: CSSStyleDeclaration | string): void;
     function callbacks<S, A>(): Callback<S, A>;
