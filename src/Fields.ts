@@ -104,17 +104,23 @@ namespace wuzhui {
     }
 
     export class CommandField extends DataControlField {
-        private params: CommandFieldParams;
+        //private _params: CommandFieldParams;
+        private _updating = false;
+        private _deleting = false;
 
         constructor(params?: CommandFieldParams) {
             super(params);
-            this.params = params;
+            this._params = params;
+        }
+
+        private params(): CommandFieldParams {
+            return this._params;
         }
 
         createItemCell(dataItem: any): GridViewCell {
             let cell = new GridViewCell(this);
             cell.style(this.itemStyle);
-            if (this.params.showEditButton) {
+            if (this.params().showEditButton) {
                 let editButton = this.createEditButton();
                 editButton.style.marginRight = '4px';
                 editButton.className = 'edit';
@@ -132,13 +138,13 @@ namespace wuzhui {
                 cancelButton.className = 'cancel';
                 cell.appendChild(cancelButton);
             }
-            if (this.params.showDeleteButton) {
+            if (this.params().showDeleteButton) {
                 let deleteButton = this.createDeleteButton();
                 deleteButton.style.marginRight = '4px';
                 deleteButton.className = 'delete';
                 cell.appendChild(deleteButton);
             }
-            if (this.params.showInsertButton) {
+            if (this.params().showInsertButton) {
                 let insertButton = this.createInsertButton();
                 insertButton.style.marginRight = '4px';
                 insertButton.className = 'insert';
@@ -159,7 +165,7 @@ namespace wuzhui {
             button.innerHTML = '删除';
             button.href = 'javascript:'
             $(button).click(this.on_deleteButtonClick);
-            
+
             return button;
         }
         private createInsertButton(): HTMLElement {
@@ -207,6 +213,10 @@ namespace wuzhui {
             $(e.target.parentElement).find('.edit').show();
         }
         private on_updateButtonClick(e: JQueryEventObject) {
+            if (this._updating)
+                return;
+
+            this._updating = true;
             let rowElement = <HTMLTableRowElement>$(e.target).parents('tr').first()[0];
             let row = <GridViewDataRow>Control.getControlByElement(rowElement);
 
@@ -225,19 +235,27 @@ namespace wuzhui {
                 }
             }
 
-            return dataSource.update(dataItem).done(() => {
-                editableCells.forEach((item) => item.endEdit());
-                $(e.target.parentElement).find('.cancel, .update').hide();
-                $(e.target.parentElement).find('.edit').show();
-            });
+            dataSource.update(dataItem)
+                .done(() => {
+                    editableCells.forEach((item) => item.endEdit());
+                    $(e.target.parentElement).find('.cancel, .update').hide();
+                    $(e.target.parentElement).find('.edit').show();
+                })
+                .always(() => this._updating = false);
         }
         private on_deleteButtonClick(e: JQueryEventObject) {
+            if (this._deleting)
+                return;
+
+            this._deleting = true;
             let rowElement = <HTMLTableRowElement>$(e.target).parents('tr').first()[0];
             let row = <GridViewDataRow>Control.getControlByElement(rowElement);
             let dataSource = row.gridView.dataSource;
-            return dataSource.delete(row.dataItem).done(() => {
-                $(rowElement).remove();
-            })
+            dataSource.delete(row.dataItem)
+                .done(() => {
+                    $(rowElement).remove();
+                })
+                .always(() => this._deleting = false);
         }
 
     }
