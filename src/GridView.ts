@@ -11,6 +11,7 @@ namespace wuzhui {
 
     export class GridViewRow extends Control {
         private _rowType: GridViewRowType;
+        private _gridView: GridView;
 
         constructor(rowType: GridViewRowType) {
             let element = document.createElement('TR');
@@ -21,9 +22,18 @@ namespace wuzhui {
         get rowType() {
             return this._rowType;
         }
+
+        get gridView(): GridView {
+            if (this._gridView == null) {
+                let gridViewElement = $(this.element).parents('table').first()[0];
+                console.assert(gridViewElement != null);
+
+                this._gridView = <GridView>Control.getControlByElement(gridViewElement);
+                console.assert(this._gridView != null);
+            }
+            return this._gridView;
+        }
     }
-
-
 
     export class GridViewDataRow extends GridViewRow {
         private _dataItem;
@@ -32,7 +42,7 @@ namespace wuzhui {
             this._dataItem = dataItem;
             for (var i = 0; i < gridView.columns.length; i++) {
                 var column = gridView.columns[i];
-                var cell = column.createDataCell(dataItem);
+                var cell = column.createItemCell(dataItem);
                 cell.visible = column.visible;
 
                 this.appendChild(cell);
@@ -108,8 +118,6 @@ namespace wuzhui {
                 if (params.showFooter)
                     this.appendFooterRow();
             }
-
-
         }
 
         get columns() {
@@ -118,30 +126,6 @@ namespace wuzhui {
 
         get dataSource() {
             return this._dataSource;
-        }
-
-        private handleEdit(row) {
-
-        }
-
-        private handleInsert(row) {
-
-        }
-
-        private handlePage(pageIndex: number) {
-
-        }
-
-        private handleSelect(row) {
-
-        }
-
-        private handleSort(sortExpression, sortDirection) {
-
-        }
-
-        private handleUpdate(row) {
-
         }
 
         private appendDataRow(dataItem: any) {
@@ -185,7 +169,7 @@ namespace wuzhui {
             }
         }
 
-        private on_updateExecuted(items){
+        private on_updateExecuted(items) {
 
         }
 

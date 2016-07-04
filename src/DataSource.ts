@@ -33,6 +33,9 @@ namespace wuzhui {
         }
 
         insert(item) {
+            if (!this.canInsert)
+                throw Errors.dataSourceCanntInsert();
+
             this.inserting.fireWith(this, [this, { item }]);
             return this.executeInsert(item).done((data) => {
                 $.extend(item, data);
@@ -40,12 +43,18 @@ namespace wuzhui {
             });
         }
         delete(item) {
+            if (!this.canDelete)
+                throw Errors.dataSourceCanntDelete();
+
             this.deleting.fireWith(this, [this, { item }]);
             return this.executeDelete(item).done(() => {
                 this.deleted.fireWith(this, [this, { item }]);
             });
         }
         update(item) {
+            if (!this.canUpdate)
+                throw Errors.dataSourceCanntDelete();
+
             this.updating.fireWith(this, [this, { item }]);
             return this.executeUpdate(item).done((data) => {
                 $.extend(item, data);

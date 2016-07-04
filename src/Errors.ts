@@ -14,8 +14,17 @@ namespace wuzhui {
         static controllBelonsAnother() {
             return new Error("The control is belongs another control.");
         }
-        static columnsCanntEmpty(){
+        static columnsCanntEmpty() {
             return new Error("Columns cannt empty.");
+        }
+        static dataSourceCanntInsert() {
+            return new Error("DataSource can not insert.");
+        }
+        static dataSourceCanntUpdate() {
+            return new Error("DataSource can not update.");
+        }
+        static dataSourceCanntDelete() {
+            return new Error("DataSource can not delete.");
         }
     }
 }

@@ -6,7 +6,6 @@ namespace wuzhui {
         footerText?: string,
         headerText?: string,
         nullText?: string,
-        cellHtml?: (dataItem: any) => string;
         itemStyle?: string | CSSStyleDeclaration;
         headerStyle?: string | CSSStyleDeclaration;
         footerStyle?: string | CSSStyleDeclaration;
@@ -14,61 +13,45 @@ namespace wuzhui {
     }
 
     export class DataControlField {
-        private _footerText: string;
-        private _headerText: string;
-        private _nullText: string;
-        private _cellHtml: (dataItem: any) => string;
-        private _itemStyle: string | CSSStyleDeclaration;
-        private _headerStyle: string | CSSStyleDeclaration;
-        private _footerStyle: string | CSSStyleDeclaration;
-        private _visible: boolean;
         private _gridView: GridView;
+        protected _params: DataControlFieldParams;
 
         constructor(params?: DataControlFieldParams) {
-            params = $.extend({
-                cellHtml: () => "",
-                visible: true
-            }, params);
+            if (params.visible == null)
+                params.visible = true;
 
-            this._footerText = params.footerText;
-            this._headerText = params.headerText;
-            this._nullText = params.nullText;
-            this._cellHtml = params.cellHtml;
-            this._itemStyle = params.itemStyle;
-            this._headerStyle = params.headerStyle;
-            this._footerStyle = params.footerStyle;
-            this._visible = params.visible;
+            this._params = params;
         }
 
         /**
          * Gets the text that is displayed in the footer item of a data control field.
          */
         protected get footerText(): string {
-            return this._footerText;
+            return this._params.footerText;
         }
         /**
          * Gets the text that is displayed in the header item of a data control field.
          */
         protected get headerText(): string {
-            return this._headerText;
+            return this._params.headerText;
         }
         /**
          * Gets the caption displayed for a field when the field's value is null.
          */
         public get nullText(): string {
-            return this._nullText;
+            return this._params.nullText;
         }
         protected get itemStyle(): string | CSSStyleDeclaration {
-            return this._itemStyle;
+            return this._params.itemStyle;
         }
         protected get footerStyle(): string | CSSStyleDeclaration {
-            return this._footerStyle;
+            return this._params.footerStyle;
         }
         protected get headerStyle(): string | CSSStyleDeclaration {
-            return this._headerStyle;
+            return this._params.headerStyle;
         }
         get visible(): boolean {
-            return this._visible;
+            return this._params.visible;
         }
         get gridView(): GridView {
             return this._gridView;
@@ -77,27 +60,39 @@ namespace wuzhui {
             this._gridView = value;
         }
         createHeaderCell(): GridViewCell {
-            let cell = new GridViewCell();
+            let cell = new GridViewCell(this);
             cell.html = this.headerText || '';
             cell.style(this.headerStyle);
 
             return cell;
         }
         createFooterCell(): GridViewCell {
-            let cell = new GridViewCell();
+            let cell = new GridViewCell(this);
             cell.html = this.footerText || '';
             cell.style(this.footerStyle);
 
             return cell;
         }
-        createDataCell(dataItem: any): GridViewCell {
+        createItemCell(dataItem: any): GridViewCell {
             if (!dataItem)
                 throw Errors.argumentNull('dataItem');
 
-            let cell = new GridViewCell();
+            let cell = new GridViewCell(this);
             cell.style(this.itemStyle);
 
             return cell;
+        }
+    }
+
+    export interface CustomFieldParams extends DataControlFieldParams {
+        renderHeader: (element: HTMLElement) => void,
+        renderFooter: (element: HTMLElement) => void,
+        renderItem: (element: HTMLElement, dataItem: any) => void
+    }
+
+    export class CustomField extends DataControlField {
+        constructor(params: CustomFieldParams) {
+            super(params);
         }
     }
 
@@ -116,8 +111,8 @@ namespace wuzhui {
             this.params = params;
         }
 
-        createDataCell(dataItem: any): GridViewCell {
-            let cell = new GridViewCell();
+        createItemCell(dataItem: any): GridViewCell {
+            let cell = new GridViewCell(this);
             cell.style(this.itemStyle);
             if (this.params.showEditButton) {
                 let editButton = this.createEditButton();
@@ -151,7 +146,7 @@ namespace wuzhui {
             }
             return cell;
         }
-        createEditButton(): HTMLElement {
+        private createEditButton(): HTMLElement {
             let button = document.createElement('a');
             button.innerHTML = '编辑';
             button.href = 'javascript:'
@@ -159,19 +154,19 @@ namespace wuzhui {
 
             return button;
         }
-        createDeleteButton(): HTMLElement {
+        private createDeleteButton(): HTMLElement {
             let button = document.createElement('a');
             button.innerHTML = '删除';
             button.href = 'javascript:'
             return button;
         }
-        createInsertButton(): HTMLElement {
+        private createInsertButton(): HTMLElement {
             let button = document.createElement('a');
             button.innerHTML = '新增'
             button.href = 'javascript:'
             return button;
         }
-        createUpdateButton(): HTMLElement {
+        private createUpdateButton(): HTMLElement {
             let button = document.createElement('a');
             button.innerHTML = '更新';
             button.href = 'javascript:'
@@ -179,7 +174,7 @@ namespace wuzhui {
 
             return button;
         }
-        createCancelButton(): HTMLElement {
+        private createCancelButton(): HTMLElement {
             let button = document.createElement('a');
             button.innerHTML = '取消';
             button.href = 'javascript:'
@@ -210,19 +205,31 @@ namespace wuzhui {
             $(e.target.parentElement).find('.edit').show();
         }
         private on_updateButtonClick(e: JQueryEventObject) {
-            let row = <HTMLTableRowElement>$(e.target).parents('tr').first()[0];
-            for (var i = 0; i < row.cells.length; i++) {
-                var cell = Control.getControlByElement(<HTMLElement>row.cells[i]);
+            let rowElement = <HTMLTableRowElement>$(e.target).parents('tr').first()[0];
+            let row = <GridViewDataRow>Control.getControlByElement(rowElement);
+
+            //==========================================================
+            // 复制 dataItem 副本
+            let dataItem = $.extend({}, row.dataItem || {});
+            //==========================================================
+            let dataSource = row.gridView.dataSource;
+
+            let editableCells = new Array<GridViewEditableCell>();
+            for (var i = 0; i < rowElement.cells.length; i++) {
+                var cell = Control.getControlByElement(<HTMLElement>rowElement.cells[i]);
                 if (cell instanceof GridViewEditableCell) {
-                    (<GridViewEditableCell>cell).endEdit();
+                    dataItem[(<BoundField>cell.field).dataField] = cell.getControlValue();
+                    editableCells.push(cell);
                 }
             }
+
+            dataSource.update(dataItem).done(() => {
+                editableCells.forEach((item) => item.endEdit());
+            });
+
             $(e.target.parentElement).find('.cancel, .update').hide();
             $(e.target.parentElement).find('.edit').show();
 
-            let gridView = <GridView>Control.getControlByElement($(row).parents('table').first()[0]);
-            let gridViewRow = <GridViewDataRow>Control.getControlByElement(row);
-            //gridView.dataSource.update(this.data);
         }
     }
 
@@ -235,14 +242,21 @@ namespace wuzhui {
     }
 
     export class GridViewCell extends Control {
-        constructor() {
+        private _field: DataControlField;
+
+        constructor(field: DataControlField) {
             super(document.createElement('td'));
+
+            this._field = field;
+        }
+
+        get field() {
+            return this._field;
         }
     }
 
     export class GridViewEditableCell extends GridViewCell {
 
-        private _field: BoundField;
         private _dataItem: any;
         private _valueElement: HTMLElement;
         private _editorElement: HTMLElement
@@ -253,17 +267,15 @@ namespace wuzhui {
             if (field == null) throw Errors.argumentNull('field');
             if (dataItem == null) throw Errors.argumentNull('dataItem');
 
-            super();
+            super(field);
 
-            this._field = field;
             this._dataItem = dataItem;
             this._valueElement = document.createElement('span');
             this._editorElement = this.createControl();
-            //this._editorElement.style.display = 'none';
             this.appendChild(this._valueElement);
             this.appendChild(this._editorElement);
 
-            applyStyle(this._editorElement, this._field.controlStyle)
+            applyStyle(this._editorElement, (<BoundField>this.field).controlStyle)
             this.value = dataItem[field.dataField];
             if (this.value instanceof Date)
                 this._valueType = 'date'
@@ -276,12 +288,12 @@ namespace wuzhui {
         beginEdit() {
             $(this._valueElement).hide();
             $(this._editorElement).show();
-            let value = this._dataItem[this._field.dataField];
-            this.setControlValue(this._editorElement, value);
+            let value = this._dataItem[(<BoundField>this.field).dataField];
+            this.setControlValue(value);
         }
         endEdit() {
-            let value = this.getControlValue(this._editorElement);
-            this._dataItem[this._field.dataField] = value;
+            let value = this.getControlValue();
+            this._dataItem[(<BoundField>this.field).dataField] = value;
             this._valueElement.innerHTML = this.getCellHtml(value);
             $(this._editorElement).hide();
             $(this._valueElement).show();
@@ -295,7 +307,7 @@ namespace wuzhui {
                 return;
 
             this._value = value;
-            this.setControlValue(this._editorElement, value);
+            this.setControlValue(value);
             this._valueElement.innerHTML = this.getCellHtml(value);
         }
         get value() {
@@ -308,11 +320,11 @@ namespace wuzhui {
             ctrl.appendChild(document.createElement('input'));
             return ctrl;
         }
-        setControlValue(control: HTMLElement, value: any) {
-            $(control).find('input').val(value);
+        setControlValue(value: any) {
+            $(this._editorElement).find('input').val(value);
         }
-        getControlValue(control: HTMLElement) {
-            var text = $(control).find('input').val();
+        getControlValue() {
+            var text = $(this._editorElement).find('input').val();
             switch (this._valueType) {
                 case 'number':
                     return new Number(text).valueOf();
@@ -326,10 +338,10 @@ namespace wuzhui {
 
         private getCellHtml(value: any): string {
             if (value == null)
-                return this._field.nullText;
+                return this.field.nullText;
 
-            if (this._field.dataFormatString)
-                return this.formatValue(this._field.dataFormatString, value);
+            if ((<BoundField>this.field).dataFormatString)
+                return this.formatValue((<BoundField>this.field).dataFormatString, value);
 
             return value;
         }
@@ -421,7 +433,6 @@ namespace wuzhui {
     export class BoundField extends DataControlField {
         private _sortType: 'asc' | 'desc'
         private _valueElement: HTMLElement;
-        private _params: BoundFieldParams;
 
         constructor(params: BoundFieldParams) {
             super(params);
@@ -432,21 +443,25 @@ namespace wuzhui {
             this._valueElement = document.createElement('span');
         }
 
+        private params(): BoundFieldParams {
+            return <BoundFieldParams>this._params;
+        }
+
         createHeaderCell() {
-            let cell = new GridViewCell();
+            let cell = new GridViewCell(this);
             if (this.sortExpression) {
                 let a = document.createElement('a');
                 a.href = 'javascript:';
-                a.innerHTML = this._params.headerHTML(this._sortType);
+                a.innerHTML = this.params().headerHTML(this._sortType);
                 $(a).click(() => {
                     this.handleSort();
-                    a.innerHTML = this._params.headerHTML(this._sortType);
+                    a.innerHTML = this.params().headerHTML(this._sortType);
                 });
 
                 cell.appendChild(a);
             }
             else {
-                cell.element.innerHTML = this._params.headerHTML();
+                cell.element.innerHTML = this.params().headerHTML();
             }
             cell.style(this.headerStyle);
 
@@ -463,7 +478,7 @@ namespace wuzhui {
                 return headerText;
         }
 
-        createDataCell(dataItem: any) {
+        createItemCell(dataItem: any): GridViewCell {
             let cell = new GridViewEditableCell(this, dataItem);
             cell.style(this.itemStyle);
 
@@ -492,49 +507,27 @@ namespace wuzhui {
          * Gets a sort expression that is used by a data source control to sort data.
          */
         get sortExpression(): string {
-            return this._params.sortExpression;
+            return this.params().sortExpression;
         }
 
         /**
          * Gets the field for the value.
          */
         get dataField(): string {
-            return this._params.dataField;
+            return this.params().dataField;
         }
 
         /**
          * Gets the string that specifies the display format for the value of the field.
          */
         get dataFormatString(): string {
-            return this._params.dataFormatString;
+            return this.params().dataFormatString;
         }
 
         get controlStyle() {
-            return this._params.controlStyle;
+            return this.params().controlStyle;
         }
     }
-
-    // export abstract class EditableField extends BoundField {
-    //     private _value: any;
-
-    //     // Vritual Methods
-    //     beginEdit() {
-
-    //     }
-    //     endEdit() {
-
-    //     }
-    //     createDataCell(dataItem) {
-    //         let cell = new GridViewCell();
-
-    //     }
-    //     get value() {
-    //         return this._value;
-    //     }
-    //     set value(value) {
-    //         this._value = value;
-    //     }
-    // }
 
     export class TextBoxField extends BoundField {
         beginEdit(cell: GridViewCell, value) {

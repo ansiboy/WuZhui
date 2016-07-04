@@ -74,7 +74,7 @@ namespace wuzhui {
         remove(callbacks: Function[]): Callback<S, A>;
     }
 
-    const ajaxTimeout = 5000;
+    export var ajaxTimeout = 5000;
     export function ajax(url: string, data) {
         var result = $.Deferred();
         $.ajax({
