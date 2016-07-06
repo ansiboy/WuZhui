@@ -75,7 +75,7 @@ namespace wuzhui {
     }
 
     export var ajaxTimeout = 5000;
-    export function ajax(url: string, data) {
+    export function ajax(url: string, data): JQueryPromise<any> {
         var result = $.Deferred();
         $.ajax({
             url: url,

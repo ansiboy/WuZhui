@@ -54,6 +54,13 @@ namespace wuzhui {
         }
     }
 
+    export interface GridViewArguments {
+        dataSource: DataSource,
+        columns: Array<DataControlField>,
+        showHeader?: boolean,
+        showFooter?: boolean,
+    }
+
     export class GridView extends Control {
         private _pageSize: number;
         private _selectedRowStyle: string;
@@ -76,12 +83,7 @@ namespace wuzhui {
 
         rowCreated = callbacks<GridView, { row: GridViewRow }>();
 
-        constructor(params: {
-            dataSource: DataSource,
-            columns: Array<DataControlField>,
-            showHeader?: boolean,
-            showFooter?: boolean,
-        }) {
+        constructor(params: GridViewArguments) {
 
             super(document.createElement('TABLE'));
 

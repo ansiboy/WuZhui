@@ -26,14 +26,26 @@ namespace wuzhui {
         /**
          * Gets the text that is displayed in the footer item of a data control field.
          */
-        protected get footerText(): string {
+        public get footerText(): string {
             return this._params.footerText;
+        }
+        /**
+         * Sets the text that is displayed in the footer item of a data control field.
+         */
+        public set footerText(value: string) {
+            this._params.footerText = value;
         }
         /**
          * Gets the text that is displayed in the header item of a data control field.
          */
-        protected get headerText(): string {
+        public get headerText(): string {
             return this._params.headerText;
+        }
+        /**
+        * Sets the text that is displayed in the header item of a data control field.
+        */
+        public set headerText(value: string) {
+            this._params.headerText = value;
         }
         /**
          * Gets the caption displayed for a field when the field's value is null.
@@ -41,14 +53,23 @@ namespace wuzhui {
         public get nullText(): string {
             return this._params.nullText;
         }
-        protected get itemStyle(): string | CSSStyleDeclaration {
+        public get itemStyle(): string | CSSStyleDeclaration {
             return this._params.itemStyle;
         }
-        protected get footerStyle(): string | CSSStyleDeclaration {
+        public set itemStyle(value: string | CSSStyleDeclaration) {
+            this._params.itemStyle = value;
+        }
+        public get footerStyle(): string | CSSStyleDeclaration {
             return this._params.footerStyle;
         }
-        protected get headerStyle(): string | CSSStyleDeclaration {
+        public set footerStyle(value: string | CSSStyleDeclaration) {
+            this._params.footerStyle = value;
+        }
+        public get headerStyle(): string | CSSStyleDeclaration {
             return this._params.headerStyle;
+        }
+        public set headerStyle(value: string | CSSStyleDeclaration) {
+            this._params.headerStyle = value;
         }
         get visible(): boolean {
             return this._params.visible;
@@ -100,7 +121,7 @@ namespace wuzhui {
         showEditButton?: boolean,
         showInsertButton?: boolean,
         showDeleteButton?: boolean,
-        showUpdateButton?: boolean
+        //showUpdateButton?: boolean
     }
 
     export class CommandField extends DataControlField {
