@@ -119,129 +119,203 @@ namespace wuzhui {
 
     export interface CommandFieldParams extends DataControlFieldParams {
         showEditButton?: boolean,
-        showInsertButton?: boolean,
+        showNewButton?: boolean,
         showDeleteButton?: boolean,
-        //showUpdateButton?: boolean
+        cancelButtonHTML?: string,
+        deleteButtonHTML?: string,
+        editButtonHTML?: string,
+        newButtonHTML?: string,
+        updateButtonHTML?: string,
+        insertButtonHTML?: string
     }
 
+
+
     export class CommandField extends DataControlField {
-        //private _params: CommandFieldParams;
         private _updating = false;
         private _deleting = false;
 
         constructor(params?: CommandFieldParams) {
             super(params);
-            this._params = params;
+            if (!this.params().cancelButtonHTML)
+                this.params().cancelButtonHTML = '取消';
+            if (!this.params().deleteButtonHTML)
+                this.params().deleteButtonHTML = '删除';
+            if (!this.params().editButtonHTML)
+                this.params().editButtonHTML = '编辑';
+            if (!this.params().updateButtonHTML)
+                this.params().updateButtonHTML = '更新';
         }
 
         private params(): CommandFieldParams {
             return this._params;
         }
 
+        get cancelButtonHTML(): string {
+            return this.params().cancelButtonHTML;
+        }
+        set cancelButtonHTML(value: string) {
+            this.params().cancelButtonHTML = value;
+        }
+
+        get deleteButtonHTML(): string {
+            return this.params().deleteButtonHTML;
+        }
+        set deleteButtonHTML(value: string) {
+            this.params().deleteButtonHTML = value;
+        }
+
+        get editButtonHTML(): string {
+            return this.params().editButtonHTML;
+        }
+        set editButtonHTML(value: string) {
+            this.params().editButtonHTML = value;
+        }
+
+        get updateButtonHTML(): string {
+            return this.params().updateButtonHTML;
+        }
+        set updateButtonHTML(value: string) {
+            this.params().updateButtonHTML = value;
+        }
+
+        get newButtonHTML(): string {
+            return this.params().newButtonHTML;
+        }
+        set newButtonHTML(value: string) {
+            this.params().newButtonHTML = value;
+        }
+
+        get insertButtonHTML(): string {
+            return this.params().insertButtonHTML;
+        }
+        set insertButtonHTML(value: string) {
+            this.params().insertButtonHTML = value;
+        }
+
         createItemCell(dataItem: any): GridViewCell {
-            let cell = new GridViewCell(this);
+            let cell = new GridViewCommandCell(this);
             cell.style(this.itemStyle);
             if (this.params().showEditButton) {
                 let editButton = this.createEditButton();
                 editButton.style.marginRight = '4px';
-                editButton.className = 'edit';
+                //editButton.className = 'edit';
+                cell.editButton = editButton;
                 $(editButton).click(this.on_editButtonClick);
                 cell.appendChild(editButton);
 
                 let updateButton = this.createUpdateButton();
                 updateButton.style.display = 'none';
                 updateButton.style.marginRight = '4px';
-                updateButton.className = 'update';
+                //updateButton.className = 'update';
+                cell.updateButton = updateButton;
                 $(updateButton).click(this.on_updateButtonClick);
                 cell.appendChild(updateButton);
 
                 let cancelButton = this.createCancelButton();
                 cancelButton.style.display = 'none';
                 cancelButton.style.marginRight = '4px';
-                cancelButton.className = 'cancel';
+                //cancelButton.className = 'cancel';
+                cell.cacelButton = cancelButton;
+
                 $(cancelButton).click(this.on_cancelButtonClick);
                 cell.appendChild(cancelButton);
             }
             if (this.params().showDeleteButton) {
                 let deleteButton = this.createDeleteButton();
                 deleteButton.style.marginRight = '4px';
-                deleteButton.className = 'delete';
+                cell.deleteButton = deleteButton;
                 $(deleteButton).click(this.on_deleteButtonClick);
                 cell.appendChild(deleteButton);
             }
-            if (this.params().showInsertButton) {
-                let insertButton = this.createInsertButton();
-                insertButton.style.marginRight = '4px';
-                insertButton.className = 'insert';
-                cell.appendChild(insertButton);
+            if (this.params().showNewButton) {
+                let newButton = this.createNewButton();
+                newButton.style.marginRight = '4px';
+                cell.newButton = newButton;
+                cell.appendChild(newButton);
             }
             return cell;
         }
         private createEditButton(): HTMLElement {
             let button = document.createElement('a');
-            button.innerHTML = '编辑';
+            button.innerHTML = this.editButtonHTML;
             button.href = 'javascript:'
 
             return button;
         }
         private createDeleteButton(): HTMLElement {
             let button = document.createElement('a');
-            button.innerHTML = '删除';
+            button.innerHTML = this.deleteButtonHTML;
             button.href = 'javascript:'
-
 
             return button;
         }
         private createInsertButton(): HTMLElement {
             let button = document.createElement('a');
-            button.innerHTML = '新增'
+            button.innerHTML = this.insertButtonHTML;
             button.href = 'javascript:'
             return button;
         }
         private createUpdateButton(): HTMLElement {
             let button = document.createElement('a');
-            button.innerHTML = '更新';
+            button.innerHTML = this.updateButtonHTML;
             button.href = 'javascript:'
-
 
             return button;
         }
         private createCancelButton(): HTMLElement {
             let button = document.createElement('a');
-            button.innerHTML = '取消';
+            button.innerHTML = this.cancelButtonHTML;
+            button.href = 'javascript:'
+
+            return button;
+        }
+        private createNewButton(): HTMLElement {
+            let button = document.createElement('a');
+            button.innerHTML = this.newButtonHTML;
             button.href = 'javascript:'
 
             return button;
         }
 
+
         private on_editButtonClick(e: JQueryEventObject) {
-            let row = <HTMLTableRowElement>$(e.target).parents('tr').first()[0];
-            for (var i = 0; i < row.cells.length; i++) {
-                var cell = Control.getControlByElement(<HTMLElement>row.cells[i]);
+            let cellElement = $(e.target).parents('td').first()[0];
+            let rowElement = <HTMLTableRowElement>cellElement.parentElement; //<HTMLTableRowElement>$(e.target).parents('tr').first()[0];
+
+            for (let i = 0; i < rowElement.cells.length; i++) {
+                let cell = Control.getControlByElement(<HTMLElement>rowElement.cells[i]);
                 if (cell instanceof GridViewEditableCell) {
                     (<GridViewEditableCell>cell).beginEdit();
                 }
             }
-            $(e.target.parentElement).find('.cancel, .update').show();
-            $(e.target).hide();
+
+            let cell = <GridViewCommandCell>Control.getControlByElement(cellElement);
+            $([cell.cacelButton, cell.updateButton]).show();
+            $(cell.editButton).hide();
         }
         private on_cancelButtonClick(e: JQueryEventObject) {
-            let row = <HTMLTableRowElement>$(e.target).parents('tr').first()[0];
-            for (var i = 0; i < row.cells.length; i++) {
-                var cell = Control.getControlByElement(<HTMLElement>row.cells[i]);
+            let cellElement = $(e.target).parents('td').first()[0];
+            let rowElement = <HTMLTableRowElement>cellElement.parentElement;
+
+            for (let i = 0; i < rowElement.cells.length; i++) {
+                let cell = Control.getControlByElement(<HTMLElement>rowElement.cells[i]);
                 if (cell instanceof GridViewEditableCell) {
                     (<GridViewEditableCell>cell).cancelEdit();
                 }
             }
-            $(e.target.parentElement).find('.cancel, .update').hide();
-            $(e.target.parentElement).find('.edit').show();
+
+            let cell = <GridViewCommandCell>Control.getControlByElement(cellElement);
+            $([cell.cacelButton, cell.updateButton]).hide();
+            $(cell.editButton).show();
         }
         private on_updateButtonClick(e: JQueryEventObject) {
             if (this._updating)
                 return;
 
             this._updating = true;
-            let rowElement = <HTMLTableRowElement>$(e.target).parents('tr').first()[0];
+            let cellElement = $(e.target).parents('td').first()[0];
+            let rowElement = <HTMLTableRowElement>cellElement.parentElement;
             let row = <GridViewDataRow>Control.getControlByElement(rowElement);
 
             //==========================================================
@@ -262,8 +336,9 @@ namespace wuzhui {
             dataSource.update(dataItem)
                 .done(() => {
                     editableCells.forEach((item) => item.endEdit());
-                    $(e.target.parentElement).find('.cancel, .update').hide();
-                    $(e.target.parentElement).find('.edit').show();
+                    let cell = <GridViewCommandCell>Control.getControlByElement(cellElement);
+                    $([cell.cacelButton, cell.updateButton]).hide();
+                    $(cell.editButton).show();
                 })
                 .always(() => this._updating = false);
         }
@@ -304,6 +379,19 @@ namespace wuzhui {
         get field() {
             return this._field;
         }
+    }
+
+    class GridViewCommandCell extends GridViewCell {
+        cacelButton: HTMLElement;
+        deleteButton: HTMLElement;
+        editButton: HTMLElement;
+        newButton: HTMLElement;
+        updateButton: HTMLElement;
+
+        constructor(field: DataControlField) {
+            super(field)
+        }
+
     }
 
     export class GridViewEditableCell extends GridViewCell {
