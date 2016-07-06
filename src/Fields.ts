@@ -145,24 +145,28 @@ namespace wuzhui {
                 let editButton = this.createEditButton();
                 editButton.style.marginRight = '4px';
                 editButton.className = 'edit';
+                $(editButton).click(this.on_editButtonClick);
                 cell.appendChild(editButton);
 
                 let updateButton = this.createUpdateButton();
                 updateButton.style.display = 'none';
                 updateButton.style.marginRight = '4px';
                 updateButton.className = 'update';
+                $(updateButton).click(this.on_updateButtonClick);
                 cell.appendChild(updateButton);
 
                 let cancelButton = this.createCancelButton();
                 cancelButton.style.display = 'none';
                 cancelButton.style.marginRight = '4px';
                 cancelButton.className = 'cancel';
+                $(cancelButton).click(this.on_cancelButtonClick);
                 cell.appendChild(cancelButton);
             }
             if (this.params().showDeleteButton) {
                 let deleteButton = this.createDeleteButton();
                 deleteButton.style.marginRight = '4px';
                 deleteButton.className = 'delete';
+                $(deleteButton).click(this.on_deleteButtonClick);
                 cell.appendChild(deleteButton);
             }
             if (this.params().showInsertButton) {
@@ -177,7 +181,6 @@ namespace wuzhui {
             let button = document.createElement('a');
             button.innerHTML = '编辑';
             button.href = 'javascript:'
-            $(button).click(this.on_editButtonClick);
 
             return button;
         }
@@ -185,7 +188,7 @@ namespace wuzhui {
             let button = document.createElement('a');
             button.innerHTML = '删除';
             button.href = 'javascript:'
-            $(button).click(this.on_deleteButtonClick);
+
 
             return button;
         }
@@ -199,7 +202,7 @@ namespace wuzhui {
             let button = document.createElement('a');
             button.innerHTML = '更新';
             button.href = 'javascript:'
-            $(button).click(this.on_updateButtonClick);
+
 
             return button;
         }
@@ -207,7 +210,7 @@ namespace wuzhui {
             let button = document.createElement('a');
             button.innerHTML = '取消';
             button.href = 'javascript:'
-            $(button).click(this.on_cancelButtonClick);
+
             return button;
         }
 
