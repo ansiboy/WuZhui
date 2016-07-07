@@ -36,6 +36,9 @@ module.exports = function (grunt) {
                 files: [
                     { src: ['release/wuzhui.js'], dest: 'test/scripts/wuzhui.js' },
                     { src: ['release/wuzhui.d.ts'], dest: 'test/scripts/typings/wuzhui.d.ts' },
+
+                    { src: ['release/wuzhui.js'], dest: '../ShopCloud/AdminWeb/src/js/wuzhui.js' },
+                    { src: ['release/wuzhui.d.ts'], dest: '../ShopCloud/AdminWeb/src/js/typings/wuzhui.d.ts' },
                 ]
             },
             test_release: {
