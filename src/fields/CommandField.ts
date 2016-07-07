@@ -33,6 +33,8 @@ namespace wuzhui {
         newButtonClass?: string,
         updateButtonClass?: string,
         insertButtonClass?: string,
+
+        handleUpdate?: () => JQueryPromise<any>
     }
 
     export class CommandField extends DataControlField {
