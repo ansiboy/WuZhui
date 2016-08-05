@@ -12,117 +12,19 @@ namespace wuzhui {
         NumericFirstLast
     };
 
-    export class PagerSettings {
-        private _FirstPageText: string;
-        private _LastPageText: string;
-        private _Mode: PagerButtons;
-        private _NextPageText: string;
-        private _pageButtonCount: number;
-        private _position: any;
-        private _PreviousPageText: string;
-        private _Visible: boolean;
-
-        constructor() {
-            this._pageButtonCount = 10;
-            this._Mode = PagerButtons.NextPreviousFirstLast;
-        }
-
-        /**
-         * Gets the text to display for the first-page button.
-         */
-        get firstPageText(): string {
-            return this._FirstPageText;
-        }
-        /**
-         * Sets the text to display for the first-page button.
-         */
-        set firstPageText(value) {
-            this._FirstPageText = value;
-        }
-        /**
-         * Gets the text to display for the last-page button.
-         */
-        get lastPageText() {
-            return this._LastPageText;
-        }
-        /**
-         * Sets the text to display for the last-page button.
-         */
-        set lastPageText(value: string) {
-            this._LastPageText = value;
-        }
-        /**
-         * Gets the mode in which to display the pager controls in a control that supports pagination.
-         */
-        get mode(): PagerButtons {
-            return this._Mode;
-        }
-        /**
-         * Sets the mode in which to display the pager controls in a control that supports pagination.
-         */
-        set mode(value: PagerButtons) {
-            this._Mode = value;
-        }
-        /**
-         * Gets the text to display for the next-page button.
-         */
-        get nextPageText() {
-            return this._NextPageText;
-        }
-        /**
-         * Sets the text to display for the next-page button.
-         */
-        set nextPageText(value: string) {
-            this._NextPageText = value;
-        }
-        /**
-         * Gets the number of page buttons to display in the pager when the Mode property is set to the Numeric or NumericFirstLast value.
-         */
-        get pageButtonCount() {
-            return this._pageButtonCount;
-        }
-        /**
-         * Sets the number of page buttons to display in the pager when the Mode property is set to the Numeric or NumericFirstLast value.
-         */
-        set pageButtonCount(value: number) {
-            this._pageButtonCount = value;
-        }
-        /**
-         * Gets a value that specifies the location where the pager is displayed.
-         */
-        get position(): PagerPosition {
-            return this._position;
-        }
-        /**
-         * Sets a value that specifies the location where the pager is displayed.
-         */
-        set position(value: PagerPosition) {
-            this._position = value;
-        }
-        /**
-         * Gets the text to display for the previous page button.
-         */
-        get previousPageText(): string {
-            return this._PreviousPageText;
-        }
-        /**
-         * Sets the text to display for the previous page button.
-         */
-        set previousPageText(value: string) {
-            this._PreviousPageText = value;
-        }
-        /**
-         * Gets a value indicating whether the paging controls are displayed in a control that supports pagination.
-         */
-        get visible(): boolean {
-            return this._Visible;
-        }
-        /**
-         * Sets a value indicating whether the paging controls are displayed in a control that supports pagination.
-         */
-        set visible(value: boolean) {
-            this._Visible = value;
-        }
+    export interface PagerSettings {
+        /** The text to display for the first-page button. */
+        firstPageText?: string,
+        /** The text to display for the last-page button. */
+        lastPageText?: string,
+        /** The text to display for the last-page button. */
+        nextPageText?: string,
+        /** The number of page buttons to display in the pager when the Mode property is set to the Numeric or NumericFirstLast value. */
+        pageButtonCount?: number,
+        /** The text to display for the previous-page button. */
+        previousPageText?: string,
+        /** The mode in which to display the pager controls in a control that supports pagination. */
+        mode?: PagerButtons
     }
 
     export class PagingBar {
@@ -198,19 +100,30 @@ namespace wuzhui {
         private pagerSettings: PagerSettings;
         private element: HTMLElement;
         private _buttons: Array<HTMLElement>;
-        //private _selectArgument: DataSourceSelectArguments;
         private sortExpression: string;
         private cell: HTMLElement;
         private totalElement: HTMLElement;
 
         constructor(dataSource: DataSource, pagerSettings: PagerSettings, element) {
-            super();
+            if (!dataSource) throw Errors.argumentNull('dataSource');
+            if (!pagerSettings) throw Errors.argumentNull('pagerSettings');
+            if (!element) throw Errors.argumentNull('element');
 
+            pagerSettings = $.extend(<PagerSettings>{
+                pageButtonCount: 10,
+                firstPageText: '<<',
+                lastPageText: '>>',
+                nextPageText: '>',
+                previousPageText: '<',
+                mode: PagerButtons.NextPreviousFirstLast
+            }, pagerSettings);
+
+
+            super();
             this.dataSource = dataSource;
             this.pagerSettings = pagerSettings;
             this.element = element;
             this._buttons = new Array();
-            //this._selectArgument = selectArgument;
 
             this.init(dataSource);
         }
