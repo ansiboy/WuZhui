@@ -1202,6 +1202,94 @@ var wuzhui;
     })(wuzhui.PagerButtons || (wuzhui.PagerButtons = {}));
     var PagerButtons = wuzhui.PagerButtons;
     ;
+    var PagerSettings = (function () {
+        function PagerSettings() {
+            this._pageButtonCount = 10;
+            this._Mode = PagerButtons.NextPreviousFirstLast;
+        }
+        Object.defineProperty(PagerSettings.prototype, "firstPageText", {
+            get: function () {
+                return this._FirstPageText;
+            },
+            set: function (value) {
+                this._FirstPageText = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PagerSettings.prototype, "lastPageText", {
+            get: function () {
+                return this._LastPageText;
+            },
+            set: function (value) {
+                this._LastPageText = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PagerSettings.prototype, "mode", {
+            get: function () {
+                return this._Mode;
+            },
+            set: function (value) {
+                this._Mode = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PagerSettings.prototype, "nextPageText", {
+            get: function () {
+                return this._NextPageText;
+            },
+            set: function (value) {
+                this._NextPageText = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PagerSettings.prototype, "pageButtonCount", {
+            get: function () {
+                return this._pageButtonCount;
+            },
+            set: function (value) {
+                this._pageButtonCount = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PagerSettings.prototype, "position", {
+            get: function () {
+                return this._position;
+            },
+            set: function (value) {
+                this._position = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PagerSettings.prototype, "previousPageText", {
+            get: function () {
+                return this._PreviousPageText;
+            },
+            set: function (value) {
+                this._PreviousPageText = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(PagerSettings.prototype, "visible", {
+            get: function () {
+                return this._Visible;
+            },
+            set: function (value) {
+                this._Visible = value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return PagerSettings;
+    }());
+    wuzhui.PagerSettings = PagerSettings;
     var PagingBar = (function () {
         function PagingBar() {
         }
@@ -1280,20 +1368,6 @@ var wuzhui;
     var NumberPagingBar = (function (_super) {
         __extends(NumberPagingBar, _super);
         function NumberPagingBar(dataSource, pagerSettings, element) {
-            if (!dataSource)
-                throw wuzhui.Errors.argumentNull('dataSource');
-            if (!pagerSettings)
-                throw wuzhui.Errors.argumentNull('pagerSettings');
-            if (!element)
-                throw wuzhui.Errors.argumentNull('element');
-            pagerSettings = $.extend({
-                pageButtonCount: 10,
-                firstPageText: '<<',
-                lastPageText: '>>',
-                nextPageText: '>',
-                previousPageText: '<',
-                mode: PagerButtons.NextPreviousFirstLast
-            }, pagerSettings);
             _super.call(this);
             this.dataSource = dataSource;
             this.pagerSettings = pagerSettings;
