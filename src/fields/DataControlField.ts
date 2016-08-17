@@ -18,7 +18,6 @@ namespace wuzhui {
     export interface DataControlFieldParams {
         footerText?: string,
         headerText?: string,
-        nullText?: string,
         itemStyle?: string | CSSStyleDeclaration;
         headerStyle?: string | CSSStyleDeclaration;
         footerStyle?: string | CSSStyleDeclaration;
@@ -60,12 +59,7 @@ namespace wuzhui {
         public set headerText(value: string) {
             this._params.headerText = value;
         }
-        /**
-         * Gets the caption displayed for a field when the field's value is null.
-         */
-        public get nullText(): string {
-            return this._params.nullText;
-        }
+
         public get itemStyle(): string | CSSStyleDeclaration {
             return this._params.itemStyle;
         }

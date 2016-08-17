@@ -84,7 +84,7 @@ namespace wuzhui {
 
         private getCellHtml(value: any): string {
             if (value == null)
-                return this.field.nullText;
+                return (<BoundField>this.field).nullText;
 
             if ((<BoundField>this.field).dataFormatString)
                 return this.formatValue((<BoundField>this.field).dataFormatString, value);
@@ -181,7 +181,8 @@ namespace wuzhui {
         dataField: string,
         dataFormatString?: string,
         controlStyle?: CSSStyleDeclaration | string,
-        headerHTML?: (sortType?: 'asc' | 'desc') => string
+        headerHTML?: (sortType?: 'asc' | 'desc') => string,
+        nullText?: string,
     }
 
     export class BoundField extends DataControlField {
@@ -199,6 +200,12 @@ namespace wuzhui {
 
         private params(): BoundFieldParams {
             return <BoundFieldParams>this._params;
+        }
+        /**
+         * Gets the caption displayed for a field when the field's value is null.
+         */
+        public get nullText(): string {
+            return this.params().nullText;
         }
 
         createHeaderCell() {

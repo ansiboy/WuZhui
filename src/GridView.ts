@@ -55,7 +55,7 @@ namespace wuzhui {
     }
 
     export interface GridViewArguments {
-        dataSource: DataSource,
+        dataSource: DataSource<any>,
         columns: Array<DataControlField>,
         showHeader?: boolean,
         showFooter?: boolean,
@@ -67,7 +67,7 @@ namespace wuzhui {
         private _showFooter: boolean;
         private _showHeader: boolean;
         private _columns: Array<DataControlField>;
-        private _dataSource: DataSource;
+        private _dataSource: DataSource<any>;
         private _header: Control;
         private _footer: Control;
         private _body: Control;

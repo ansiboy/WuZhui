@@ -2,6 +2,7 @@
 let w = wuzhui;
 let baseUrl = 'http://shop.alinq.cn/AdminServices/Shop/Product/';
 let dataSource = new wuzhui.WebDataSource({
+    primaryKeys: ['Id'],
     selectUrl: baseUrl + 'GetProducts',
     updateUrl: baseUrl + 'SaveProduct',
     insertUrl: baseUrl + 'SaveProduct',
@@ -49,7 +50,7 @@ QUnit.test('gridView header and footer', (assert) => {
 })
 
 var pagingBarElement = document.createElement('div');
-new wuzhui.NumberPagingBar(dataSource, new wuzhui.PagerSettings(), pagingBarElement);
+new wuzhui.NumberPagingBar(dataSource, {}, pagingBarElement);
 document.body.appendChild(pagingBarElement);
 
 dataSource.select(new wuzhui.DataSourceSelectArguments({ maximumRows: 10 }));

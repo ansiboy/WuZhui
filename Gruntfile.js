@@ -42,6 +42,9 @@ module.exports = function (grunt) {
 
                     { src: ['release/wuzhui.js'], dest: '../ShopCloud/AdminWeb/Shop/js/wuzhui.js' },
                     { src: ['release/wuzhui.d.ts'], dest: '../ShopCloud/AdminWeb/Shop/js/typings/wuzhui.d.ts' },
+
+                    { src: ['release/wuzhui.js'], dest: '../node_auth/src/client/js/wuzhui.js' },
+                    { src: ['release/wuzhui.d.ts'], dest: '../node_auth/src/client/js/typings/wuzhui.d.ts' },
                 ]
             },
             test_release: {
@@ -62,6 +65,6 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-copy');
 
-    grunt.registerTask('default', ['ts', 'copy']);
+    grunt.registerTask('default', ['ts:wuzhui_release', 'copy']);
 
 };

@@ -29,11 +29,11 @@ namespace wuzhui {
 
     export class PagingBar {
         private _pageIndex: number;
-        private _dataSource: DataSource;
+        private _dataSource: DataSource<any>;
         private _totalRowCount: number;
         private _pageSize: number;
 
-        init(dataSource: DataSource) {
+        init(dataSource: DataSource<any>) {
             if (dataSource == null)
                 throw Errors.argumentNull('dataSource');
 
@@ -96,7 +96,7 @@ namespace wuzhui {
         }
     }
     export class NumberPagingBar extends PagingBar {
-        private dataSource: DataSource;
+        private dataSource: DataSource<any>;
         private pagerSettings: PagerSettings;
         private element: HTMLElement;
         private _buttons: Array<HTMLElement>;
@@ -104,7 +104,7 @@ namespace wuzhui {
         private cell: HTMLElement;
         private totalElement: HTMLElement;
 
-        constructor(dataSource: DataSource, pagerSettings: PagerSettings, element) {
+        constructor(dataSource: DataSource<any>, pagerSettings: PagerSettings, element) {
             if (!dataSource) throw Errors.argumentNull('dataSource');
             if (!pagerSettings) throw Errors.argumentNull('pagerSettings');
             if (!element) throw Errors.argumentNull('element');

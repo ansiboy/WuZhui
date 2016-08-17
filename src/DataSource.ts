@@ -1,40 +1,47 @@
 namespace wuzhui {
-
-    export abstract class DataSource {
+    export interface DataSourceSelectResult<T> {
+        TotalRowCount: number,
+        DataItems: Array<T>
+    }
+    export abstract class DataSource<T> {
         private _currentSelectArguments: DataSourceSelectArguments;
+        protected primaryKeys: string[];
 
-        inserting = <Callback<DataSource, { item: any }>>$.Callbacks();
-        inserted = <Callback<DataSource, { item: any }>>$.Callbacks();
-        deleting = <Callback<DataSource, { item: any }>>$.Callbacks();
-        deleted = <Callback<DataSource, { item: any }>>$.Callbacks();
-        updating = <Callback<DataSource, { item: any }>>$.Callbacks();
-        updated = <Callback<DataSource, { item: any }>>$.Callbacks();
-        selecting = <Callback<DataSource, { selectArguments: DataSourceSelectArguments }>>$.Callbacks();
-        selected = <Callback<DataSource, { selectArguments: DataSourceSelectArguments, items: Array<any> }>>$.Callbacks();
+        inserting = <Callback<DataSource<T>, { item: any }>>$.Callbacks();
+        inserted = <Callback<DataSource<T>, { item: any }>>$.Callbacks();
+        deleting = <Callback<DataSource<T>, { item: any }>>$.Callbacks();
+        deleted = <Callback<DataSource<T>, { item: any }>>$.Callbacks();
+        updating = <Callback<DataSource<T>, { item: any }>>$.Callbacks();
+        updated = <Callback<DataSource<T>, { item: any }>>$.Callbacks();
+        selecting = <Callback<DataSource<T>, { selectArguments: DataSourceSelectArguments }>>$.Callbacks();
+        selected = <Callback<DataSource<T>, { selectArguments: DataSourceSelectArguments, items: Array<any> }>>$.Callbacks();
 
-        constructor() {
+        constructor(primaryKeys: string[]) {
+            this.primaryKeys = primaryKeys;
         }
 
         get currentSelectArguments() {
             return this._currentSelectArguments;
         }
 
-        protected executeInsert(item): JQueryPromise<any> {
+        protected executeInsert(item: T): JQueryPromise<any> {
             throw Errors.notImplemented();
         }
-        protected executeDelete(item): JQueryPromise<any> {
+        protected executeDelete(item: T): JQueryPromise<any> {
             throw Errors.notImplemented();
         }
-        protected executeUpdate(item): JQueryPromise<any> {
+        protected executeUpdate(item: T): JQueryPromise<any> {
             throw Errors.notImplemented();
         }
-        protected executeSelect(args): JQueryPromise<any> {
+        protected executeSelect(args): JQueryPromise<Array<T> | DataSourceSelectResult<T>> {
             throw Errors.notImplemented();
         }
 
         insert(item) {
             if (!this.canInsert)
                 throw Errors.dataSourceCanntInsert();
+
+            this.checkPrimaryKeys(item);
 
             this.inserting.fireWith(this, [this, { item }]);
             return this.executeInsert(item).done((data) => {
@@ -46,6 +53,8 @@ namespace wuzhui {
             if (!this.canDelete)
                 throw Errors.dataSourceCanntDelete();
 
+            this.checkPrimaryKeys(item);
+
             this.deleting.fireWith(this, [this, { item }]);
             return this.executeDelete(item).done(() => {
                 this.deleted.fireWith(this, [this, { item }]);
@@ -55,10 +64,18 @@ namespace wuzhui {
             if (!this.canUpdate)
                 throw Errors.dataSourceCanntDelete();
 
+            this.checkPrimaryKeys(item);
+
             this.updating.fireWith(this, [this, { item }]);
             return this.executeUpdate(item).done((data) => {
                 $.extend(item, data);
             });
+        }
+        private checkPrimaryKeys(item) {
+            for (let key in item) {
+                if (item[key] == null)
+                    throw Errors.primaryKeyNull(key);
+            }
         }
         select(args?: DataSourceSelectArguments) {
             if (!args)
@@ -67,14 +84,14 @@ namespace wuzhui {
             this._currentSelectArguments = args;
             this.selecting.fireWith(this, [this, { selectArguments: args }]);
             return this.executeSelect(args).done((data) => {
-                let data_items: Array<any>;
+                let data_items: Array<T>;
                 if ($.isArray(data)) {
-                    data_items = data;
+                    data_items = <Array<T>>data;
                     args.totalRowCount = data_items.length;
                 }
-                else if (data.Type == 'DataSourceSelectResult') {
-                    data_items = data.DataItems;
-                    args.totalRowCount = data.TotalRowCount;
+                else if ((<any>data).Type == 'DataSourceSelectResult') {
+                    data_items = (<DataSourceSelectResult<T>>data).DataItems;
+                    args.totalRowCount = (<DataSourceSelectResult<T>>data).TotalRowCount;
                 }
                 else {
                     throw new Error('Type of the query result is expected as Array or DataSourceSelectResult.');
@@ -146,44 +163,45 @@ namespace wuzhui {
     }
 
     export type WebDataSourceArguments = {
+        primaryKeys?: string[]
         selectUrl: string,
         insertUrl?: string,
         updateUrl?: string,
         deleteUrl?: string
     };
 
-    export class WebDataSource extends DataSource {
+    export class WebDataSource<T> extends DataSource<T> {
         private args: WebDataSourceArguments;
         constructor(args: WebDataSourceArguments) {
-            super();
+            super(args.primaryKeys);
             this.args = args;
         }
         get canDelete() {
-            return this.args.deleteUrl != null;
+            return this.args.deleteUrl != null && this.primaryKeys.length > 0;
         }
         get canInsert() {
-            return this.args.insertUrl != null;
+            return this.args.insertUrl != null && this.primaryKeys.length > 0;
         }
         get canUpdate() {
-            return this.args.updateUrl != null;
+            return this.args.updateUrl != null && this.primaryKeys.length > 0;
         }
 
-        protected executeInsert(item): JQueryPromise<any> {
+        protected executeInsert(item: T): JQueryPromise<any> {
             if (!item) throw Errors.argumentNull("item");
 
             return ajax(this.args.selectUrl, this.formatData(item));
         }
-        protected executeDelete(item): JQueryPromise<any> {
+        protected executeDelete(item: T): JQueryPromise<any> {
             if (!item) throw Errors.argumentNull("item");
 
             return ajax(this.args.deleteUrl, this.formatData(item));
         }
-        protected executeUpdate(item): JQueryPromise<any> {
+        protected executeUpdate(item: T): JQueryPromise<any> {
             if (!item) throw Errors.argumentNull("item");
 
             return ajax(this.args.updateUrl, this.formatData(item));
         }
-        protected executeSelect(args): JQueryPromise<any> {
+        protected executeSelect(args): JQueryPromise<Array<T> | DataSourceSelectResult<T>> {
             if (!args) throw Errors.argumentNull("args");
 
             return ajax(this.args.selectUrl, args);
@@ -207,6 +225,97 @@ namespace wuzhui {
                 }
             }
             return obj;
+        }
+    }
+
+    export class ArrayDataSource<T> extends DataSource<T> {
+        private source: Array<T>;
+        constructor(items: Array<T>, primaryKeys?: string[]) {
+            if (items == null)
+                throw Errors.argumentNull('items');
+
+            super(primaryKeys);
+            this.source = items;
+        }
+        protected executeInsert(item: T): JQueryPromise<any> {
+            if (item == null)
+                throw Errors.argumentNull('item')
+
+            this.source.push(item);
+            return $.Deferred().resolve();
+        }
+
+        protected executeDelete(item: T): JQueryPromise<any> {
+            if (item == null)
+                throw Errors.argumentNull('item')
+
+            let pkValues = this.getPrimaryKeyValues(item);
+            let itemIndex = this.findItem(pkValues);
+
+            this.source.filter((value, index, array): boolean => {
+                return index != itemIndex;
+            })
+
+            return $.Deferred().resolve();
+        }
+
+        protected executeUpdate(item: T): JQueryPromise<any> {
+            if (item == null)
+                throw Errors.argumentNull('item')
+
+            let pkValues = this.getPrimaryKeyValues(item);
+            let itemIndex = this.findItem(pkValues);
+            if (itemIndex >= 0) {
+                let sourceItem = this.source[itemIndex];
+                for (let key in sourceItem) {
+                    sourceItem[key] = item[key];
+                }
+            }
+
+            return $.Deferred().resolve();
+        }
+
+        protected executeSelect(args): JQueryPromise<Array<T> | DataSourceSelectResult<T>> {
+            return $.Deferred().resolve(this.source);
+        }
+
+        get canDelete() {
+            return  this.primaryKeys.length > 0;
+        }
+        get canInsert() {
+            return this.primaryKeys.length > 0;
+        }
+        get canUpdate() {
+            return this.primaryKeys.length > 0;
+        }
+
+
+        private getPrimaryKeyValues(item) {
+            let pkValues = [];
+            for (let i = 0; i < this.primaryKeys.length; i++) {
+                pkValues[i] = item[this.primaryKeys[i]];
+            }
+            return pkValues;
+        }
+
+        private findItem(pkValues: Array<any>): number {
+            for (let i = 0; i < this.source.length; i++) {
+                let item = this.source[i];
+                let same = true;
+                for (let j = 0; j < this.primaryKeys.length; j++) {
+                    let primaryKey = this.primaryKeys[j];
+                    if (item[primaryKey] != pkValues[primaryKey]) {
+                        same = false
+                        break;
+                    }
+                }
+
+                if (same) {
+                    return i;
+                }
+            }
+
+            return -1;
         }
     }
 }
