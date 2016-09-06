@@ -49,7 +49,7 @@ QUnit.test('gridView header and footer', (assert) => {
 })
 
 var pagingBarElement = document.createElement('div');
-new wuzhui.NumberPagingBar(dataSource, new wuzhui.PagerSettings(), pagingBarElement);
+new wuzhui.NumberPagingBar(dataSource, {}, pagingBarElement);
 document.body.appendChild(pagingBarElement);
 
 dataSource.select(new wuzhui.DataSourceSelectArguments({ maximumRows: 10 }));

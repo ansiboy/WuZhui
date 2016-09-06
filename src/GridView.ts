@@ -70,8 +70,11 @@ namespace wuzhui {
         private _dataSource: DataSource;
         private _header: Control;
         private _footer: Control;
+        private _emptyRow: GridViewRow;
         private _body: Control;
 
+        static emtpyRowClassName = 'emptyRow';
+        static dataRowClassName = 'dataRow';
         //========================================================
         // 样式
         headerStyle: string;
@@ -112,6 +115,7 @@ namespace wuzhui {
 
             this._body = new Control(document.createElement('TBODY'));
             this.appendChild(this._body);
+            this.appendEmtpyRow();
 
             if (params.showFooter) {
                 this._footer = new Control(document.createElement('TFOOT'));
@@ -130,8 +134,19 @@ namespace wuzhui {
             return this._dataSource;
         }
 
+        private appendEmtpyRow() {
+            let td = document.createElement('td');
+            td.colSpan = this.columns.length;
+            this._emptyRow = new GridViewRow(GridViewRowType.Empty);
+            this._emptyRow.appendChild(td);
+            this._emptyRow.element.className = GridView.emtpyRowClassName;
+            this._body.appendChild(this._emptyRow);
+            fireCallback(this.rowCreated, this, { row: this._emptyRow });
+        }
+
         private appendDataRow(dataItem: any) {
             var row = new GridViewDataRow(this, dataItem);
+            row.element.className = 'dataRow';
             this._body.appendChild(row);
             fireCallback(this.rowCreated, this, { row });
         }
@@ -161,14 +176,27 @@ namespace wuzhui {
         }
 
         private on_selectExecuted(items: Array<any>, args: DataSourceSelectArguments) {
+            this.clearDataRows();
             if (items.length == 0) {
                 this.showEmptyRow();
                 return;
             }
-            this._body.element.innerHTML = "";
+
+            this.hideEmtpyRow();
             for (let i = 0; i < items.length; i++) {
                 this.appendDataRow(items[i]);
             }
+        }
+
+        private clearDataRows() {
+            let rowsToRemove = new Array<HTMLTableRowElement>();
+            for (let i = 0; i < this._body.element.children.length; i++) {
+                let row: HTMLTableRowElement = <HTMLTableRowElement>this._body.element.children[i];
+                if ($(row).hasClass(GridView.dataRowClassName)) {
+                    rowsToRemove.push(row);
+                }
+            }
+            rowsToRemove.forEach((o) => this._body.element.removeChild(o));
         }
 
         private on_updateExecuted(items) {
@@ -176,9 +204,11 @@ namespace wuzhui {
         }
 
         private showEmptyRow() {
-            var row = new GridViewRow(GridViewRowType.Empty);
-            row.element.className = 'emtpy';
-            this._body.appendChild(row);
+            $(this._emptyRow.element).show();
+        }
+
+        private hideEmtpyRow() {
+            $(this._emptyRow.element).hide();
         }
 
     }

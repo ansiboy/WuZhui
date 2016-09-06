@@ -271,7 +271,10 @@ declare namespace wuzhui {
         private _dataSource;
         private _header;
         private _footer;
+        private _emptyRow;
         private _body;
+        static emtpyRowClassName: string;
+        static dataRowClassName: string;
         headerStyle: string;
         footerStyle: string;
         rowStyle: string;
@@ -283,12 +286,15 @@ declare namespace wuzhui {
         constructor(params: GridViewArguments);
         columns: DataControlField[];
         dataSource: DataSource;
+        private appendEmtpyRow();
         private appendDataRow(dataItem);
         private appendHeaderRow();
         private appendFooterRow();
         private on_selectExecuted(items, args);
+        private clearDataRows();
         private on_updateExecuted(items);
         private showEmptyRow();
+        private hideEmtpyRow();
     }
 }
 declare namespace wuzhui {
