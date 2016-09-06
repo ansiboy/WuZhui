@@ -548,6 +548,9 @@ var wuzhui;
             _super.call(this, field);
             this._dataItem = dataItem;
             this._valueElement = document.createElement('span');
+            if (field.nullText) {
+                this._valueElement.innerHTML = field.nullText;
+            }
             this._editorElement = this.createControl();
             this.appendChild(this._valueElement);
             this.appendChild(this._editorElement);
@@ -693,6 +696,16 @@ var wuzhui;
         return GridViewEditableCell;
     }(wuzhui.GridViewCell));
     wuzhui.GridViewEditableCell = GridViewEditableCell;
+    var GridViewHeaderCell = (function (_super) {
+        __extends(GridViewHeaderCell, _super);
+        function GridViewHeaderCell(field) {
+            _super.call(this, field);
+            if (field.sortExpression) {
+            }
+        }
+        return GridViewHeaderCell;
+    }(wuzhui.GridViewCell));
+    wuzhui.GridViewHeaderCell = GridViewHeaderCell;
     var BoundField = (function (_super) {
         __extends(BoundField, _super);
         function BoundField(params) {
@@ -1515,8 +1528,10 @@ var wuzhui;
         }).fail(function (jqXHR, textStatus) {
             var err = { Code: textStatus, status: jqXHR.status, Message: jqXHR.statusText };
             result.reject(err);
+        }).always(function () {
+            clearTimeout(timeoutid);
         });
-        setTimeout(function () {
+        var timeoutid = setTimeout(function () {
             if (result.state() == 'pending') {
                 result.reject({ Code: 'Timeout', Message: 'Ajax call timemout.' });
             }

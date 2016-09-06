@@ -17,12 +17,18 @@ namespace wuzhui {
 
             this._dataItem = dataItem;
             this._valueElement = document.createElement('span');
+            if (field.nullText) {
+                this._valueElement.innerHTML = field.nullText;
+            }
+
             this._editorElement = this.createControl();
             this.appendChild(this._valueElement);
             this.appendChild(this._editorElement);
 
             applyStyle(this._editorElement, (<BoundField>this.field).controlStyle)
             this.value = dataItem[field.dataField];
+
+
             if (this.value instanceof Date)
                 this._valueType = 'date'
             else
@@ -173,6 +179,16 @@ namespace wuzhui {
                 return value.toFixed(num);
             }
             return value.toString();
+        }
+    }
+
+    export class GridViewHeaderCell extends GridViewCell {
+        constructor(field: BoundField) {
+            super(field);
+
+            if (field.sortExpression) {
+
+            }
         }
     }
 

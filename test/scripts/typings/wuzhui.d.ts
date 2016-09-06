@@ -170,6 +170,9 @@ declare namespace wuzhui {
         private formatDate(value, format);
         private formatNumber(value, format);
     }
+    class GridViewHeaderCell extends GridViewCell {
+        constructor(field: BoundField);
+    }
     interface BoundFieldParams extends DataControlFieldParams {
         sortExpression?: string;
         dataField: string;
