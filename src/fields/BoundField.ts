@@ -17,12 +17,18 @@ namespace wuzhui {
 
             this._dataItem = dataItem;
             this._valueElement = document.createElement('span');
+            if (field.nullText) {
+                this._valueElement.innerHTML = field.nullText;
+            }
+
             this._editorElement = this.createControl();
             this.appendChild(this._valueElement);
             this.appendChild(this._editorElement);
 
             applyStyle(this._editorElement, (<BoundField>this.field).controlStyle)
             this.value = dataItem[field.dataField];
+
+
             if (this.value instanceof Date)
                 this._valueType = 'date'
             else
@@ -84,7 +90,7 @@ namespace wuzhui {
 
         private getCellHtml(value: any): string {
             if (value == null)
-                return this.field.nullText;
+                return (<BoundField>this.field).nullText;
 
             if ((<BoundField>this.field).dataFormatString)
                 return this.formatValue((<BoundField>this.field).dataFormatString, value);
@@ -176,12 +182,23 @@ namespace wuzhui {
         }
     }
 
+    export class GridViewHeaderCell extends GridViewCell {
+        constructor(field: BoundField) {
+            super(field);
+
+            if (field.sortExpression) {
+
+            }
+        }
+    }
+
     export interface BoundFieldParams extends DataControlFieldParams {
         sortExpression?: string,
         dataField: string,
         dataFormatString?: string,
         controlStyle?: CSSStyleDeclaration | string,
-        headerHTML?: (sortType?: 'asc' | 'desc') => string
+        headerHTML?: (sortType?: 'asc' | 'desc') => string,
+        nullText?: string,
     }
 
     export class BoundField extends DataControlField {
@@ -199,6 +216,12 @@ namespace wuzhui {
 
         private params(): BoundFieldParams {
             return <BoundFieldParams>this._params;
+        }
+        /**
+         * Gets the caption displayed for a field when the field's value is null.
+         */
+        public get nullText(): string {
+            return this.params().nullText;
         }
 
         createHeaderCell() {

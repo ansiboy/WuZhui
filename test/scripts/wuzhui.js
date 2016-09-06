@@ -66,7 +66,7 @@ var wuzhui;
 var wuzhui;
 (function (wuzhui) {
     var DataSource = (function () {
-        function DataSource() {
+        function DataSource(primaryKeys) {
             this.inserting = $.Callbacks();
             this.inserted = $.Callbacks();
             this.deleting = $.Callbacks();
@@ -75,6 +75,7 @@ var wuzhui;
             this.updated = $.Callbacks();
             this.selecting = $.Callbacks();
             this.selected = $.Callbacks();
+            this.primaryKeys = primaryKeys;
         }
         Object.defineProperty(DataSource.prototype, "currentSelectArguments", {
             get: function () {
@@ -99,6 +100,7 @@ var wuzhui;
             var _this = this;
             if (!this.canInsert)
                 throw wuzhui.Errors.dataSourceCanntInsert();
+            this.checkPrimaryKeys(item);
             this.inserting.fireWith(this, [this, { item: item }]);
             return this.executeInsert(item).done(function (data) {
                 $.extend(item, data);
@@ -109,6 +111,7 @@ var wuzhui;
             var _this = this;
             if (!this.canDelete)
                 throw wuzhui.Errors.dataSourceCanntDelete();
+            this.checkPrimaryKeys(item);
             this.deleting.fireWith(this, [this, { item: item }]);
             return this.executeDelete(item).done(function () {
                 _this.deleted.fireWith(_this, [_this, { item: item }]);
@@ -117,10 +120,17 @@ var wuzhui;
         DataSource.prototype.update = function (item) {
             if (!this.canUpdate)
                 throw wuzhui.Errors.dataSourceCanntDelete();
+            this.checkPrimaryKeys(item);
             this.updating.fireWith(this, [this, { item: item }]);
             return this.executeUpdate(item).done(function (data) {
                 $.extend(item, data);
             });
+        };
+        DataSource.prototype.checkPrimaryKeys = function (item) {
+            for (var key in item) {
+                if (item[key] == null)
+                    throw wuzhui.Errors.primaryKeyNull(key);
+            }
         };
         DataSource.prototype.select = function (args) {
             var _this = this;
@@ -225,26 +235,26 @@ var wuzhui;
     var WebDataSource = (function (_super) {
         __extends(WebDataSource, _super);
         function WebDataSource(args) {
-            _super.call(this);
+            _super.call(this, args.primaryKeys);
             this.args = args;
         }
         Object.defineProperty(WebDataSource.prototype, "canDelete", {
             get: function () {
-                return this.args.deleteUrl != null;
+                return this.args.deleteUrl != null && this.primaryKeys.length > 0;
             },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(WebDataSource.prototype, "canInsert", {
             get: function () {
-                return this.args.insertUrl != null;
+                return this.args.insertUrl != null && this.primaryKeys.length > 0;
             },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(WebDataSource.prototype, "canUpdate", {
             get: function () {
-                return this.args.updateUrl != null;
+                return this.args.updateUrl != null && this.primaryKeys.length > 0;
             },
             enumerable: true,
             configurable: true
@@ -288,6 +298,94 @@ var wuzhui;
         return WebDataSource;
     }(DataSource));
     wuzhui.WebDataSource = WebDataSource;
+    var ArrayDataSource = (function (_super) {
+        __extends(ArrayDataSource, _super);
+        function ArrayDataSource(items, primaryKeys) {
+            if (items == null)
+                throw wuzhui.Errors.argumentNull('items');
+            _super.call(this, primaryKeys);
+            this.source = items;
+        }
+        ArrayDataSource.prototype.executeInsert = function (item) {
+            if (item == null)
+                throw wuzhui.Errors.argumentNull('item');
+            this.source.push(item);
+            return $.Deferred().resolve();
+        };
+        ArrayDataSource.prototype.executeDelete = function (item) {
+            if (item == null)
+                throw wuzhui.Errors.argumentNull('item');
+            var pkValues = this.getPrimaryKeyValues(item);
+            var itemIndex = this.findItem(pkValues);
+            this.source.filter(function (value, index, array) {
+                return index != itemIndex;
+            });
+            return $.Deferred().resolve();
+        };
+        ArrayDataSource.prototype.executeUpdate = function (item) {
+            if (item == null)
+                throw wuzhui.Errors.argumentNull('item');
+            var pkValues = this.getPrimaryKeyValues(item);
+            var itemIndex = this.findItem(pkValues);
+            if (itemIndex >= 0) {
+                var sourceItem = this.source[itemIndex];
+                for (var key in sourceItem) {
+                    sourceItem[key] = item[key];
+                }
+            }
+            return $.Deferred().resolve();
+        };
+        ArrayDataSource.prototype.executeSelect = function (args) {
+            return $.Deferred().resolve(this.source);
+        };
+        Object.defineProperty(ArrayDataSource.prototype, "canDelete", {
+            get: function () {
+                return this.primaryKeys.length > 0;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(ArrayDataSource.prototype, "canInsert", {
+            get: function () {
+                return this.primaryKeys.length > 0;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(ArrayDataSource.prototype, "canUpdate", {
+            get: function () {
+                return this.primaryKeys.length > 0;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        ArrayDataSource.prototype.getPrimaryKeyValues = function (item) {
+            var pkValues = [];
+            for (var i = 0; i < this.primaryKeys.length; i++) {
+                pkValues[i] = item[this.primaryKeys[i]];
+            }
+            return pkValues;
+        };
+        ArrayDataSource.prototype.findItem = function (pkValues) {
+            for (var i = 0; i < this.source.length; i++) {
+                var item = this.source[i];
+                var same = true;
+                for (var j = 0; j < this.primaryKeys.length; j++) {
+                    var primaryKey = this.primaryKeys[j];
+                    if (item[primaryKey] != pkValues[primaryKey]) {
+                        same = false;
+                        break;
+                    }
+                }
+                if (same) {
+                    return i;
+                }
+            }
+            return -1;
+        };
+        return ArrayDataSource;
+    }(DataSource));
+    wuzhui.ArrayDataSource = ArrayDataSource;
 })(wuzhui || (wuzhui = {}));
 var wuzhui;
 (function (wuzhui) {
@@ -315,6 +413,10 @@ var wuzhui;
         };
         Errors.dataSourceCanntDelete = function () {
             return new Error("DataSource can not delete.");
+        };
+        Errors.primaryKeyNull = function (key) {
+            var msg = "Primary key named '" + key + "' value is null.";
+            return new Error(msg);
         };
         return Errors;
     }());
@@ -360,13 +462,6 @@ var wuzhui;
             },
             set: function (value) {
                 this._params.headerText = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(DataControlField.prototype, "nullText", {
-            get: function () {
-                return this._params.nullText;
             },
             enumerable: true,
             configurable: true
@@ -453,6 +548,9 @@ var wuzhui;
             _super.call(this, field);
             this._dataItem = dataItem;
             this._valueElement = document.createElement('span');
+            if (field.nullText) {
+                this._valueElement.innerHTML = field.nullText;
+            }
             this._editorElement = this.createControl();
             this.appendChild(this._valueElement);
             this.appendChild(this._editorElement);
@@ -598,6 +696,16 @@ var wuzhui;
         return GridViewEditableCell;
     }(wuzhui.GridViewCell));
     wuzhui.GridViewEditableCell = GridViewEditableCell;
+    var GridViewHeaderCell = (function (_super) {
+        __extends(GridViewHeaderCell, _super);
+        function GridViewHeaderCell(field) {
+            _super.call(this, field);
+            if (field.sortExpression) {
+            }
+        }
+        return GridViewHeaderCell;
+    }(wuzhui.GridViewCell));
+    wuzhui.GridViewHeaderCell = GridViewHeaderCell;
     var BoundField = (function (_super) {
         __extends(BoundField, _super);
         function BoundField(params) {
@@ -610,6 +718,13 @@ var wuzhui;
         BoundField.prototype.params = function () {
             return this._params;
         };
+        Object.defineProperty(BoundField.prototype, "nullText", {
+            get: function () {
+                return this.params().nullText;
+            },
+            enumerable: true,
+            configurable: true
+        });
         BoundField.prototype.createHeaderCell = function () {
             var _this = this;
             var cell = new wuzhui.GridViewCell(this);
@@ -1202,94 +1317,6 @@ var wuzhui;
     })(wuzhui.PagerButtons || (wuzhui.PagerButtons = {}));
     var PagerButtons = wuzhui.PagerButtons;
     ;
-    var PagerSettings = (function () {
-        function PagerSettings() {
-            this._pageButtonCount = 10;
-            this._Mode = PagerButtons.NextPreviousFirstLast;
-        }
-        Object.defineProperty(PagerSettings.prototype, "firstPageText", {
-            get: function () {
-                return this._FirstPageText;
-            },
-            set: function (value) {
-                this._FirstPageText = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(PagerSettings.prototype, "lastPageText", {
-            get: function () {
-                return this._LastPageText;
-            },
-            set: function (value) {
-                this._LastPageText = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(PagerSettings.prototype, "mode", {
-            get: function () {
-                return this._Mode;
-            },
-            set: function (value) {
-                this._Mode = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(PagerSettings.prototype, "nextPageText", {
-            get: function () {
-                return this._NextPageText;
-            },
-            set: function (value) {
-                this._NextPageText = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(PagerSettings.prototype, "pageButtonCount", {
-            get: function () {
-                return this._pageButtonCount;
-            },
-            set: function (value) {
-                this._pageButtonCount = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(PagerSettings.prototype, "position", {
-            get: function () {
-                return this._position;
-            },
-            set: function (value) {
-                this._position = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(PagerSettings.prototype, "previousPageText", {
-            get: function () {
-                return this._PreviousPageText;
-            },
-            set: function (value) {
-                this._PreviousPageText = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(PagerSettings.prototype, "visible", {
-            get: function () {
-                return this._Visible;
-            },
-            set: function (value) {
-                this._Visible = value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        return PagerSettings;
-    }());
-    wuzhui.PagerSettings = PagerSettings;
     var PagingBar = (function () {
         function PagingBar() {
         }
@@ -1368,6 +1395,20 @@ var wuzhui;
     var NumberPagingBar = (function (_super) {
         __extends(NumberPagingBar, _super);
         function NumberPagingBar(dataSource, pagerSettings, element) {
+            if (!dataSource)
+                throw wuzhui.Errors.argumentNull('dataSource');
+            if (!pagerSettings)
+                throw wuzhui.Errors.argumentNull('pagerSettings');
+            if (!element)
+                throw wuzhui.Errors.argumentNull('element');
+            pagerSettings = $.extend({
+                pageButtonCount: 10,
+                firstPageText: '<<',
+                lastPageText: '>>',
+                nextPageText: '>',
+                previousPageText: '<',
+                mode: PagerButtons.NextPreviousFirstLast
+            }, pagerSettings);
             _super.call(this);
             this.dataSource = dataSource;
             this.pagerSettings = pagerSettings;
@@ -1487,8 +1528,10 @@ var wuzhui;
         }).fail(function (jqXHR, textStatus) {
             var err = { Code: textStatus, status: jqXHR.status, Message: jqXHR.statusText };
             result.reject(err);
+        }).always(function () {
+            clearTimeout(timeoutid);
         });
-        setTimeout(function () {
+        var timeoutid = setTimeout(function () {
             if (result.state() == 'pending') {
                 result.reject({ Code: 'Timeout', Message: 'Ajax call timemout.' });
             }

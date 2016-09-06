@@ -92,10 +92,12 @@ namespace wuzhui {
         }).fail((jqXHR, textStatus) => {
             var err = { Code: textStatus, status: jqXHR.status, Message: jqXHR.statusText };
             result.reject(err);
+        }).always(() => {
+            clearTimeout(timeoutid);
         });
 
         //超时处理
-        setTimeout(() => {
+        let timeoutid = setTimeout(() => {
             if (result.state() == 'pending') {
                 result.reject({ Code: 'Timeout', Message: 'Ajax call timemout.' });
             }

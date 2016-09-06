@@ -26,5 +26,9 @@ namespace wuzhui {
         static dataSourceCanntDelete() {
             return new Error("DataSource can not delete.");
         }
+        static primaryKeyNull(key:string){
+            let msg = `Primary key named '${key}' value is null.`;
+            return new Error(msg);
+        }
     }
 }
