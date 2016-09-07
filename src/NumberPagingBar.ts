@@ -100,7 +100,7 @@ namespace wuzhui {
         private pagerSettings: PagerSettings;
         private element: HTMLElement;
         private _buttons: Array<HTMLElement>;
-        private sortExpression: string;
+        //private sortExpression: string;
         private cell: HTMLElement;
         private totalElement: HTMLElement;
 
@@ -169,16 +169,16 @@ namespace wuzhui {
                 $(url).click(function () {
                     var buttonIndex = pagingBar._buttons.indexOf(this);
                     var index;
-                    let args = pagingBar.dataSource.currentSelectArguments; //pagingBar.selectArgument();
-                    if (args == null)
-                        args = new DataSourceSelectArguments();
+                    let args = pagingBar.dataSource.selectArguments; //pagingBar.selectArgument();
+                    // if (args == null)
+                    //     args = new DataSourceSelectArguments();
 
                     args.maximumRows = pagingBar.pageSize;
                     args.startRowIndex = this.pageIndex * pagingBar.pageSize;
-                    if (pagingBar.sortExpression) {
-                        args.sortExpression = pagingBar.sortExpression;
-                    }
-                    pagingBar.dataSource.select(args);
+                    // if (pagingBar.sortExpression) {
+                    //     args.sortExpression = pagingBar.sortExpression;
+                    // }
+                    pagingBar.dataSource.select();
 
                 });
             }

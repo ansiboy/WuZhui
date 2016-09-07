@@ -1,7 +1,7 @@
 namespace wuzhui {
     export interface DataSourceSelectResult<T> {
-        TotalRowCount: number,
-        DataItems: Array<T>
+        totalRowCount: number,
+        dataItems: Array<T>
     }
     export abstract class DataSource<T> {
         private _currentSelectArguments: DataSourceSelectArguments;
@@ -18,9 +18,10 @@ namespace wuzhui {
 
         constructor(primaryKeys: string[]) {
             this.primaryKeys = primaryKeys;
+            this._currentSelectArguments = new DataSourceSelectArguments();
         }
 
-        get currentSelectArguments() {
+        get selectArguments() {
             return this._currentSelectArguments;
         }
 
@@ -77,21 +78,20 @@ namespace wuzhui {
                     throw Errors.primaryKeyNull(key);
             }
         }
-        select(args?: DataSourceSelectArguments) {
-            if (!args)
-                args = new DataSourceSelectArguments();
+        select() {
 
-            this._currentSelectArguments = args;
+            let args = this.selectArguments;
             this.selecting.fireWith(this, [this, { selectArguments: args }]);
             return this.executeSelect(args).done((data) => {
                 let data_items: Array<T>;
+                let result = data as DataSourceSelectResult<T>;
                 if ($.isArray(data)) {
                     data_items = <Array<T>>data;
                     args.totalRowCount = data_items.length;
                 }
-                else if ((<any>data).Type == 'DataSourceSelectResult') {
-                    data_items = (<DataSourceSelectResult<T>>data).DataItems;
-                    args.totalRowCount = (<DataSourceSelectResult<T>>data).TotalRowCount;
+                else if (result.dataItems !== undefined && result.totalRowCount !== undefined) {//(<any>data).Type == 'DataSourceSelectResult') {
+                    data_items = (<DataSourceSelectResult<T>>data).dataItems;
+                    args.totalRowCount = (<DataSourceSelectResult<T>>data).totalRowCount;
                 }
                 else {
                     throw new Error('Type of the query result is expected as Array or DataSourceSelectResult.');
@@ -280,7 +280,7 @@ namespace wuzhui {
         }
 
         get canDelete() {
-            return  this.primaryKeys.length > 0;
+            return this.primaryKeys.length > 0;
         }
         get canInsert() {
             return this.primaryKeys.length > 0;

@@ -1,7 +1,7 @@
 /// <reference path="../Control.ts"/>
 
 namespace wuzhui {
-    export class GridViewCell extends Control {
+    export class GridViewCell extends Control<HTMLTableCellElement> {
         private _field: DataControlField;
 
         constructor(field: DataControlField) {

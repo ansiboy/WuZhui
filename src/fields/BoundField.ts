@@ -182,12 +182,82 @@ namespace wuzhui {
         }
     }
 
-    export class GridViewHeaderCell extends GridViewCell {
+    export class BoundFieldHeaderCell extends GridViewCell {
+        private _sortType: 'asc' | 'desc';
+        private _iconElement: HTMLElement;
+
+        ascHTML = '↑';
+        descHTML = '↓';
+        sortingHTML = '...';
+
+        sorting: Callback<BoundFieldHeaderCell, { sortType: string }>;
+        sorted: Callback<BoundFieldHeaderCell, { sortType: string }>;
+
         constructor(field: BoundField) {
             super(field);
 
-            if (field.sortExpression) {
+            this.sorting = callbacks();
+            this.sorted = callbacks();
 
+            if (field.sortExpression) {
+                let labelElement = document.createElement('a');
+                labelElement.href = 'javascript:';
+
+                labelElement.innerHTML = this.defaultHeaderText();
+                $(labelElement).click(() => this.handleSort());
+
+                this._iconElement = document.createElement('span');
+
+                this.appendChild(labelElement);
+                this.appendChild(this._iconElement);
+
+                this.sorting.add(() => this._iconElement.innerHTML = this.sortingHTML);
+                this.sorted.add(() => this.updateSortIcon());
+            }
+            else {
+                this.element.innerHTML = this.defaultHeaderText();
+            }
+
+            this.style(field.headerStyle);
+        }
+
+        handleSort() {
+            let selectArguments = this.field.gridView.dataSource.selectArguments;
+            let sortType: 'asc' | 'desc' = this.sortType == 'asc' ? 'desc' : 'asc';
+
+            fireCallback(this.sorting, this, { sortType });
+            selectArguments.sortExpression = (this.field as BoundField).sortExpression + ' ' + sortType;
+            return this.field.gridView.dataSource.select()
+                .done(() => {
+                    this.sortType = sortType;
+                    fireCallback(this.sorted, this, { sortType });
+                });
+        }
+
+        private defaultHeaderText() {
+            return this.field.headerText || (this.field as BoundField).dataField;
+        }
+
+        get sortType() {
+            return this._sortType;
+        }
+        set sortType(value) {
+            this._sortType = value;
+        }
+
+        clearSortIcon() {
+            this._iconElement.innerHTML = '';
+        }
+
+        private updateSortIcon() {
+            if (this.sortType == 'asc') {
+                this._iconElement.innerHTML = '↑';
+            }
+            else if (this.sortType == 'desc') {
+                this._iconElement.innerHTML = '↓';
+            }
+            else {
+                this._iconElement.innerHTML = '';
             }
         }
     }
@@ -197,7 +267,6 @@ namespace wuzhui {
         dataField: string,
         dataFormatString?: string,
         controlStyle?: CSSStyleDeclaration | string,
-        headerHTML?: (sortType?: 'asc' | 'desc') => string,
         nullText?: string,
     }
 
@@ -207,8 +276,6 @@ namespace wuzhui {
 
         constructor(params: BoundFieldParams) {
             super(params);
-            if (params.headerHTML == null)
-                params.headerHTML = this.headerHTML;
 
             this._params = params;
             this._valueElement = document.createElement('span');
@@ -217,6 +284,7 @@ namespace wuzhui {
         private params(): BoundFieldParams {
             return <BoundFieldParams>this._params;
         }
+
         /**
          * Gets the caption displayed for a field when the field's value is null.
          */
@@ -225,34 +293,8 @@ namespace wuzhui {
         }
 
         createHeaderCell() {
-            let cell = new GridViewCell(this);
-            if (this.sortExpression) {
-                let a = document.createElement('a');
-                a.href = 'javascript:';
-                a.innerHTML = this.params().headerHTML(this._sortType);
-                $(a).click(() => {
-                    this.handleSort();
-                    a.innerHTML = this.params().headerHTML(this._sortType);
-                });
-
-                cell.appendChild(a);
-            }
-            else {
-                cell.element.innerHTML = this.params().headerHTML();
-            }
-            cell.style(this.headerStyle);
-
+            let cell = new BoundFieldHeaderCell(this);
             return cell;
-        }
-
-        private headerHTML(sortType: 'asc' | 'desc') {
-            let headerText = this.headerText || this.dataField;
-            if (sortType == 'asc')
-                return headerText + '↑';
-            else if (sortType == 'desc')
-                return headerText + '↓';
-            else
-                return headerText;
         }
 
         createItemCell(dataItem: any): GridViewCell {
@@ -260,24 +302,6 @@ namespace wuzhui {
             cell.style(this.itemStyle);
 
             return cell;
-        }
-
-        private handleSort() {
-            var selectArgument = this.gridView.dataSource.currentSelectArguments;
-            if (selectArgument == null)
-                return;
-
-            if (this._sortType == 'asc') {
-                this._sortType = 'desc';
-            }
-            else if (this._sortType == 'desc') {
-                this._sortType = 'asc';
-            }
-            else if (this._sortType == null) {
-                this._sortType = 'asc'
-            }
-            selectArgument.sortExpression = this.sortExpression + ' ' + this._sortType;
-            return this.gridView.dataSource.select(selectArgument);
         }
 
         /**

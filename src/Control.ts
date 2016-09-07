@@ -1,11 +1,11 @@
 namespace wuzhui {
     const CONTROL_DATA_NAME = 'Control';
-    export class Control {
+    export class Control<T extends HTMLElement> {
         private _text: string;
         private _visible: boolean;
-        private _element: HTMLElement;
+        private _element: T;
 
-        constructor(element: HTMLElement) {
+        constructor(element: T) {
             if (!element) throw Errors.argumentNull('element');
             this._element = element;
             $(element).data(CONTROL_DATA_NAME, this);
@@ -28,11 +28,11 @@ namespace wuzhui {
                 $(this._element).hide();
         }
 
-        get element(): HTMLElement {
+        get element(): T {
             return this._element;
         }
 
-        appendChild(child: Control | HTMLElement) {
+        appendChild(child: Control<any> | HTMLElement) {
             if (child == null)
                 throw Errors.argumentNull('child');
 
@@ -49,7 +49,7 @@ namespace wuzhui {
             applyStyle(this.element, value);
         }
 
-        static getControlByElement(element: HTMLElement): Control {
+        static getControlByElement(element: HTMLElement): Control<any> {
             return $(element).data(CONTROL_DATA_NAME);
         }
     }

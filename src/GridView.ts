@@ -9,12 +9,12 @@ namespace wuzhui {
         Empty
     }
 
-    export class GridViewRow extends Control {
+    export class GridViewRow extends Control<HTMLTableRowElement> {
         private _rowType: GridViewRowType;
         private _gridView: GridView;
 
         constructor(rowType: GridViewRowType) {
-            let element = document.createElement('TR');
+            let element = document.createElement('tr');
             super(element);
             this._rowType = rowType;
         }
@@ -61,16 +61,23 @@ namespace wuzhui {
         showFooter?: boolean,
     }
 
-    export class GridView extends Control {
+    export class GridView extends Control<HTMLTableElement> {
         private _pageSize: number;
         private _selectedRowStyle: string;
         private _showFooter: boolean;
         private _showHeader: boolean;
         private _columns: Array<DataControlField>;
         private _dataSource: DataSource<any>;
-        private _header: Control;
-        private _footer: Control;
-        private _body: Control;
+        private _header: Control<HTMLTableSectionElement>;
+        private _footer: Control<HTMLTableSectionElement>;
+        private _body: Control<HTMLTableSectionElement>;
+        private _emtpyRow: GridViewRow;
+        private _currentSortCell: BoundFieldHeaderCell;
+
+        static emptyRowClassName = 'empty';
+        static dataRowClassName = 'data';
+
+        emptyDataText = '暂无记录';
 
         //========================================================
         // 样式
@@ -85,7 +92,7 @@ namespace wuzhui {
 
         constructor(params: GridViewArguments) {
 
-            super(document.createElement('TABLE'));
+            super(document.createElement('table'));
 
             params = $.extend({
                 showHeader: true, showFooter: false,
@@ -105,16 +112,18 @@ namespace wuzhui {
             this._dataSource.selected.add((sender, e) => this.on_selectExecuted(e.items, e.selectArguments));
 
             if (params.showHeader) {
-                this._header = new Control(document.createElement('THEAD'));
+                this._header = new Control(document.createElement('thead'));
                 this.appendChild(this._header);
                 this.appendHeaderRow();
             }
 
-            this._body = new Control(document.createElement('TBODY'));
+            this._body = new Control(document.createElement('tbody'));
             this.appendChild(this._body);
 
+            this.appendEmptyRow();
+
             if (params.showFooter) {
-                this._footer = new Control(document.createElement('TFOOT'));
+                this._footer = new Control(document.createElement('tfoot'));
                 this.appendChild(this._footer);
 
                 if (params.showFooter)
@@ -130,10 +139,35 @@ namespace wuzhui {
             return this._dataSource;
         }
 
+        private appendEmptyRow() {
+            this._emtpyRow = new GridViewRow(GridViewRowType.Empty);
+            this._emtpyRow.element.className = GridView.emptyRowClassName;
+
+            let cell = document.createElement('td');
+            cell.colSpan = this.columns.length;
+            let textElement = document.createElement('span');
+            textElement.innerText = this.emptyDataText;
+            cell.appendChild(textElement);
+
+            this._emtpyRow.appendChild(cell);
+
+            this._body.appendChild(this._emtpyRow);
+            fireCallback(this.rowCreated, this, { row: this._emtpyRow });
+        }
+
         private appendDataRow(dataItem: any) {
             var row = new GridViewDataRow(this, dataItem);
+            row.element.className = GridView.dataRowClassName;
+
             this._body.appendChild(row);
             fireCallback(this.rowCreated, this, { row });
+        }
+
+        private on_sort(sender: BoundFieldHeaderCell, args: any) {
+            if (this._currentSortCell != null && this._currentSortCell != sender) {
+                this._currentSortCell.clearSortIcon();
+            }
+            this._currentSortCell = sender;
         }
 
         private appendHeaderRow() {
@@ -141,6 +175,9 @@ namespace wuzhui {
             for (var i = 0; i < this.columns.length; i++) {
                 var column = this.columns[i];
                 let cell = column.createHeaderCell();
+                if (cell instanceof BoundFieldHeaderCell) {
+                    (cell as BoundFieldHeaderCell).sorting.add(this.on_sort);
+                }
 
                 row.appendChild(cell);
                 cell.visible = this.columns[i].visible;
@@ -161,11 +198,15 @@ namespace wuzhui {
         }
 
         private on_selectExecuted(items: Array<any>, args: DataSourceSelectArguments) {
+            // Clear datarows
+            $(`.${GridView.dataRowClassName}`).each((i, e) => this._body.element.removeChild(e));
+
             if (items.length == 0) {
                 this.showEmptyRow();
                 return;
             }
-            this._body.element.innerHTML = "";
+
+            this.hideEmptyRow();
             for (let i = 0; i < items.length; i++) {
                 this.appendDataRow(items[i]);
             }
@@ -176,9 +217,11 @@ namespace wuzhui {
         }
 
         private showEmptyRow() {
-            var row = new GridViewRow(GridViewRowType.Empty);
-            row.element.className = 'emtpy';
-            this._body.appendChild(row);
+            $(this._emtpyRow.element).show();
+        }
+
+        private hideEmptyRow() {
+            $(this._emtpyRow.element).hide();
         }
 
     }
