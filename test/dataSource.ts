@@ -4,7 +4,7 @@ let dataSource = new wuzhui.WebDataSource({
     selectUrl: 'http://shop.alinq.cn/UserServices/Site/Home/GetHomeProducts?pageIndex=0'
 });
 
-let select_arguments = new wuzhui.DataSourceSelectArguments();
+//let select_arguments = new wuzhui.DataSourceSelectArguments();
 let selecting_event_fired = false;
 let selected_event_fired = false;
 
@@ -19,7 +19,7 @@ dataSource.selected.add((sender, args) => {
 })
 
 QUnit.asyncTest('Select 事件测试', (assert) => {
-    dataSource.select(select_arguments).done(() => {
+    dataSource.select().done(() => {
         assert.equal(selecting_event_fired, true, 'selecting 事件触发');
         assert.equal(selected_event_fired, true, 'selected 事件触发');
         QUnit.start();

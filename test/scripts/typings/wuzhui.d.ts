@@ -298,6 +298,7 @@ declare namespace wuzhui {
         columns: Array<DataControlField>;
         showHeader?: boolean;
         showFooter?: boolean;
+        element?: HTMLTableElement;
     }
     class GridView extends Control<HTMLTableElement> {
         private _pageSize;
@@ -342,19 +343,12 @@ declare namespace wuzhui {
         Top = 1,
         TopAndBottom = 2,
     }
-    enum PagerButtons {
-        NextPrevious = 0,
-        Numeric = 1,
-        NextPreviousFirstLast = 2,
-        NumericFirstLast = 3,
-    }
     interface PagerSettings {
         firstPageText?: string;
         lastPageText?: string;
         nextPageText?: string;
         pageButtonCount?: number;
         previousPageText?: string;
-        mode?: PagerButtons;
     }
     class PagingBar {
         private _pageIndex;
@@ -368,15 +362,29 @@ declare namespace wuzhui {
         totalRowCount: number;
         render(): void;
     }
+    type PagingBarElementType = 'firstButton' | 'lastButton' | 'previousButton' | 'nextButton' | 'numberButton' | 'totalLabel';
     class NumberPagingBar extends PagingBar {
         private dataSource;
         private pagerSettings;
         private element;
-        private _buttons;
-        private cell;
         private totalElement;
-        constructor(dataSource: DataSource<any>, pagerSettings: PagerSettings, element: any);
-        init(dataSource: any): void;
+        private appendElement;
+        private numberButtons;
+        private firstPageButton;
+        private previousPageButton;
+        private nextPageButton;
+        private lastPageButton;
+        constructor(params: {
+            dataSource: DataSource<any>;
+            element: HTMLElement;
+            pagerSettings?: PagerSettings;
+            appendElement?: (element: HTMLElement, type: PagingBarElementType) => void;
+        });
+        private createTotalLabel();
+        private createPreviousButtons();
+        private createNextButtons();
+        private createNumberButtons();
+        private static on_buttonClick(button, pagingBar);
         render(): void;
     }
 }

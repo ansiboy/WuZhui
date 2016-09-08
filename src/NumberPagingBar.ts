@@ -5,12 +5,12 @@ namespace wuzhui {
         TopAndBottom
     };
 
-    export enum PagerButtons {
-        NextPrevious,
-        Numeric,
-        NextPreviousFirstLast,
-        NumericFirstLast
-    };
+    // export enum PagerButtons {
+    //     NextPrevious,
+    //     Numeric,
+    //     NextPreviousFirstLast,
+    //     NumericFirstLast
+    // };
 
     export interface PagerSettings {
         /** The text to display for the first-page button. */
@@ -24,7 +24,7 @@ namespace wuzhui {
         /** The text to display for the previous-page button. */
         previousPageText?: string,
         /** The mode in which to display the pager controls in a control that supports pagination. */
-        mode?: PagerButtons
+        //mode?: PagerButtons
     }
 
     export class PagingBar {
@@ -95,144 +95,199 @@ namespace wuzhui {
             throw Errors.notImplemented('The table-row render method is not implemented.');
         }
     }
+
+    export type PagingBarElementType = 'firstButton' | 'lastButton' | 'previousButton' | 'nextButton' | 'numberButton' | 'totalLabel';
     export class NumberPagingBar extends PagingBar {
         private dataSource: DataSource<any>;
         private pagerSettings: PagerSettings;
         private element: HTMLElement;
-        private _buttons: Array<HTMLElement>;
-        //private sortExpression: string;
-        private cell: HTMLElement;
+        //private _buttons: Array<HTMLElement>;
         private totalElement: HTMLElement;
+        private appendElement: (btn: HTMLElement, type: PagingBarElementType) => void;
 
-        constructor(dataSource: DataSource<any>, pagerSettings: PagerSettings, element) {
-            if (!dataSource) throw Errors.argumentNull('dataSource');
-            if (!pagerSettings) throw Errors.argumentNull('pagerSettings');
-            if (!element) throw Errors.argumentNull('element');
+        private numberButtons: Array<HTMLElement>;
+        private firstPageButton: HTMLElement;
+        private previousPageButton: HTMLElement;
+        private nextPageButton: HTMLElement;
+        private lastPageButton: HTMLElement;
 
-            pagerSettings = $.extend(<PagerSettings>{
+        constructor(params: {
+            dataSource: DataSource<any>, element: HTMLElement, pagerSettings?: PagerSettings,
+            appendElement?: (element: HTMLElement, type: PagingBarElementType) => void
+        }) {
+            if (!params.dataSource) throw Errors.argumentNull('dataSource');
+            if (!params.element) throw Errors.argumentNull('element');
+            let pagerSettings = $.extend(<PagerSettings>{
                 pageButtonCount: 10,
                 firstPageText: '<<',
                 lastPageText: '>>',
-                nextPageText: '>',
-                previousPageText: '<',
-                mode: PagerButtons.NextPreviousFirstLast
-            }, pagerSettings);
+                nextPageText: '...',
+                previousPageText: '...',
+                //mode: PagerButtons.NextPreviousFirstLast
+            }, params.pagerSettings || {});
 
 
             super();
-            this.dataSource = dataSource;
+
+            if (params.appendElement != null) {
+                this.appendElement = params.appendElement;
+            }
+            else {
+                this.appendElement = (element: HTMLElement, type: PagingBarElementType) => {
+                    this.element.appendChild(element);
+                }
+            }
+
+            this.dataSource = params.dataSource;
             this.pagerSettings = pagerSettings;
-            this.element = element;
-            this._buttons = new Array();
+            this.element = params.element;
+            this.numberButtons = new Array<HTMLElement>();
 
-            this.init(dataSource);
+            this.createPreviousButtons();
+            this.createNumberButtons();
+            this.createNextButtons();
+
+            this.createTotalLabel();
+
+            this.init(params.dataSource);
         }
-        init(dataSource) {
-            super.init(dataSource);
 
-            var pagingBar = this;
-            pagingBar.dataSource.selected.add((sender, args) => {
-                if (args.selectArguments.totalRowCount != null)
-                    $(pagingBar.totalElement).text(args.selectArguments.totalRowCount);
+
+        private createTotalLabel() {
+            this.totalElement = document.createElement('div');
+            this.totalElement.className = 'total';
+
+            let textElement = document.createElement('span');
+            textElement.className = 'text';
+            textElement.innerHTML = '总记录：';
+            this.totalElement.appendChild(textElement);
+
+            let numberElement = document.createElement('span');
+            numberElement.className = 'number';
+            this.totalElement.appendChild(numberElement);
+
+            this.appendElement(this.totalElement, 'totalLabel');
+        }
+
+        private createPreviousButtons() {
+            this.firstPageButton = document.createElement('a');
+            this.firstPageButton.innerHTML = this.pagerSettings.firstPageText;
+            (this.firstPageButton as HTMLAnchorElement).href = 'javascript:';
+            this.appendElement(this.firstPageButton, 'firstButton');
+
+            this.previousPageButton = document.createElement('a');
+            this.previousPageButton.innerHTML = this.pagerSettings.previousPageText;
+            (this.previousPageButton as HTMLAnchorElement).href = 'javascript:';
+            this.appendElement(this.previousPageButton, 'previousButton');
+
+            let pagingBar = this;
+            $([this.firstPageButton, this.previousPageButton]).click(function () {
+                NumberPagingBar.on_buttonClick(this, pagingBar);
             });
         }
-        // selectArgument(): DataSourceSelectArguments {
-        //     if (!this._selectArgument)
-        //         this._selectArgument = new DataSourceSelectArguments();
 
-        //     return this._selectArgument;
-        // }
+        private createNextButtons() {
+            this.nextPageButton = document.createElement('a');
+            (this.nextPageButton as HTMLAnchorElement).href = 'javascript:'
+            this.nextPageButton.innerHTML = this.pagerSettings.nextPageText;
+            this.appendElement(this.nextPageButton, 'nextButton');
+
+            this.lastPageButton = document.createElement('a');
+            (this.lastPageButton as HTMLAnchorElement).href = 'javascript:';
+            this.lastPageButton.innerHTML = this.pagerSettings.lastPageText;
+            this.appendElement(this.lastPageButton, 'lastButton');
+
+            let pagingBar = this;
+            $([this.nextPageButton, this.lastPageButton]).click(function () {
+                NumberPagingBar.on_buttonClick(this, pagingBar);
+            });
+        }
+
+        private createNumberButtons() {
+            let pagingBar = this;
+            let buttonCount = this.pagerSettings.pageButtonCount;
+            for (let i = 0; i < buttonCount; i++) {
+                var button = document.createElement('a');
+                button.href = 'javascript:';
+                this.appendElement(button, 'numberButton');
+                this.numberButtons[i] = button;
+            }
+            $(this.numberButtons).click(function () {
+                NumberPagingBar.on_buttonClick(this, pagingBar);
+            });
+        }
+
+        private static on_buttonClick(button: HTMLElement, pagingBar: NumberPagingBar) {
+            let pageIndex = (<any>button).pageIndex;
+            if (!pageIndex == null) {
+                return;
+            }
+
+            let args = pagingBar.dataSource.selectArguments;
+
+            args.maximumRows = pagingBar.pageSize;
+            args.startRowIndex = pageIndex * pagingBar.pageSize;
+
+            pagingBar.dataSource.select();
+        }
+
         render() {
             var pagerSettings = this.pagerSettings;
-            var pagingBar = this;
-            pagingBar.cell = this.element;
-
+            //var pagingBar = this;
             var buttonCount = pagerSettings.pageButtonCount;
-            var FIRST_BUTTON = 0
-            var PREVIOUS_PAGING_BUTTON = 1;
-            var NEXT_PAGING_BUTTON = pagerSettings.pageButtonCount + 2;
-            var LAST_BUTTON = pagerSettings.pageButtonCount + 3
-            var OTHER_BUTTONS_COUNT = 4;
 
+            let pagingBarIndex = Math.floor(this.pageIndex / buttonCount);
+            let pagingBarCount = Math.floor(this.pageCount / buttonCount) + 1;
 
-            for (var i = 0; i < buttonCount + OTHER_BUTTONS_COUNT; i++) {
-                if (pagingBar._buttons[i] != null) {
-                    pagingBar.cell.removeChild(pagingBar._buttons[i]);
-                }
-                var url = document.createElement('a');
-                pagingBar.cell.appendChild(url);
-                pagingBar._buttons[i] = url;
-                url.style.paddingLeft = '4px';
-                url.href = 'javascript:';
-                url['pageIndex'] = i;
+            this.previousPageButton['pageIndex'] = (pagingBarIndex - 1) * buttonCount
+            this.nextPageButton['pageIndex'] = (pagingBarIndex + 1) * buttonCount;
+            this.firstPageButton['pageIndex'] = 0;
+            this.lastPageButton['pageIndex'] = this.pageCount - 1;
 
-                $(url).click(function () {
-                    var buttonIndex = pagingBar._buttons.indexOf(this);
-                    var index;
-                    let args = pagingBar.dataSource.selectArguments; //pagingBar.selectArgument();
-                    // if (args == null)
-                    //     args = new DataSourceSelectArguments();
-
-                    args.maximumRows = pagingBar.pageSize;
-                    args.startRowIndex = this.pageIndex * pagingBar.pageSize;
-                    // if (pagingBar.sortExpression) {
-                    //     args.sortExpression = pagingBar.sortExpression;
-                    // }
-                    pagingBar.dataSource.select();
-
-                });
-            }
-
-            if (pagingBar.totalElement == null) {
-                pagingBar.totalElement = document.createElement('span');
-                $('<div style="float:right;margin-right:4px;">').text('总记录：').append(pagingBar.totalElement).appendTo(pagingBar.cell);
-            }
-
-            var pagingBarIndex = Math.floor(pagingBar.pageIndex / buttonCount);
-            for (var i = 0; i < buttonCount + OTHER_BUTTONS_COUNT; i++) {
-                var pageCount = pagingBar.pageCount;
-                var start = pagingBarIndex * buttonCount;
-                var index;
-                let url = pagingBar._buttons[i];
-                if (i == PREVIOUS_PAGING_BUTTON) {
-                    url.innerHTML = '...';
-                    url['pageIndex'] = (pagingBarIndex - 1) * buttonCount;
-                }
-                else if (i == NEXT_PAGING_BUTTON) {
-                    url.innerHTML = '...';
-                    url['pageIndex'] = (pagingBarIndex + 1) * buttonCount;
-                }
-                else if (i == FIRST_BUTTON) {
-                    url.innerHTML = pagerSettings.firstPageText;
-                    url['pageIndex'] = 0;
-                }
-                else if (i == LAST_BUTTON) {
-                    url.innerHTML = pagerSettings.lastPageText;
-                    url['pageIndex'] = pageCount - 1;
+            for (let i = 0; i < this.numberButtons.length; i++) {
+                let pageIndex = pagingBarIndex * buttonCount + i;
+                if (pageIndex < this.pageCount) {
+                    this.numberButtons[i]['pageIndex'] = pageIndex;
+                    this.numberButtons[i].innerHTML = (pagingBarIndex * buttonCount + i + 1).toString();
+                    $(this.numberButtons[i]).show();
                 }
                 else {
-                    url.innerHTML = <any>(start + i - PREVIOUS_PAGING_BUTTON);
-                    url['pageIndex'] = start + i - PREVIOUS_PAGING_BUTTON - 1;
-                    if (url['pageIndex'] == this.pageIndex)
-                        url.style.color = 'red';
+                    $(this.numberButtons[i]).hide();
                 }
-
-                if (pageCount != null && url['pageIndex'] > pageCount - 1)
-                    url.style.display = 'none';
             }
 
-            if (pagingBarIndex > 0 && pagerSettings.mode == PagerButtons.NumericFirstLast)
-                pagingBar._buttons[LAST_BUTTON].style.removeProperty('display');
-            else
-                pagingBar._buttons[FIRST_BUTTON].style.display = 'none';
+            $(this.totalElement).find('.number').html(<any>this.totalRowCount);
 
-            if (pageCount > 0 && pagingBar.pageIndex < pageCount - 1 && pagerSettings.mode == PagerButtons.NumericFirstLast)
-                pagingBar._buttons[LAST_BUTTON].style.removeProperty('display');// = 'block';
-            else
-                pagingBar._buttons[LAST_BUTTON].style.display = 'none';
 
-            if (pagingBarIndex == 0)
-                pagingBar._buttons[PREVIOUS_PAGING_BUTTON].style.display = 'none';
+            this.firstPageButton.style.display = 'none';
+            this.previousPageButton.style.display = 'none';
+            this.lastPageButton.style.display = 'none';
+            this.nextPageButton.style.display = 'none'
+
+            if (pagingBarIndex > 0) {
+                $(this.firstPageButton).show();
+                $(this.previousPageButton).show();
+            }
+
+            if (pagingBarIndex < pagingBarCount - 1) {
+                $(this.lastPageButton).show();
+                $(this.nextPageButton).show();
+            }
+
+            //if()
+
+            // if (pagingBarIndex > 0)// && pagerSettings.mode == PagerButtons.NumericFirstLast)
+            //     this.lastPageButton.style.removeProperty('display');
+            // else
+            //     this.firstPageButton.style.display = 'none';
+
+            // if (this.pageCount > 0)// && this.pageIndex < this.pageCount - 1 && pagerSettings.mode == PagerButtons.NumericFirstLast)
+            //     this.lastPageButton.style.removeProperty('display');
+            // else
+            //     this.lastPageButton.style.display = 'none';
+
+            // if (pagingBarIndex == 0)
+            //     this.previousPageButton.style.display = 'none';
         }
     }
 }

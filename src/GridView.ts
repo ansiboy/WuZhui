@@ -59,6 +59,7 @@ namespace wuzhui {
         columns: Array<DataControlField>,
         showHeader?: boolean,
         showFooter?: boolean,
+        element?: HTMLTableElement,
     }
 
     export class GridView extends Control<HTMLTableElement> {
@@ -92,7 +93,7 @@ namespace wuzhui {
 
         constructor(params: GridViewArguments) {
 
-            super(document.createElement('table'));
+            super(params.element|| document.createElement('table'));
 
             params = $.extend({
                 showHeader: true, showFooter: false,

@@ -43,14 +43,15 @@ QUnit.test('gridView header and footer', (assert) => {
     assert.notEqual(headerElement, null);
     assert.notEqual(footerElement, null);
 
-    let headerRow = wuzhui.Control.getControlByElement(headerElement); //$(headerElement).data('Control');
-    let footerRow = wuzhui.Control.getControlByElement(footerElement); //$(footerElement).data('Control');
+    let headerRow = wuzhui.Control.getControlByElement(headerElement);
+    let footerRow = wuzhui.Control.getControlByElement(footerElement);
     assert.equal(headerRow instanceof wuzhui.GridViewRow, true);
     assert.equal(footerRow instanceof wuzhui.GridViewRow, true);
 })
 
 var pagingBarElement = document.createElement('div');
-new wuzhui.NumberPagingBar(dataSource, {}, pagingBarElement);
+pagingBarElement.className = 'pagingBar';
+new wuzhui.NumberPagingBar({ dataSource, element: pagingBarElement });
 document.body.appendChild(pagingBarElement);
-//new wuzhui.DataSourceSelectArguments({ maximumRows: 10 })
+dataSource.selectArguments.maximumRows = 10;
 dataSource.select();
