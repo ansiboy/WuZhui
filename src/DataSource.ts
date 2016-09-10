@@ -74,7 +74,7 @@ namespace wuzhui {
         }
         private checkPrimaryKeys(item) {
             for (let key in item) {
-                if (item[key] == null)
+                if (item[key] == null && this.primaryKeys.indexOf(key) >= 0)
                     throw Errors.primaryKeyNull(key);
             }
         }

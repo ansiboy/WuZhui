@@ -129,7 +129,7 @@ var wuzhui;
         };
         DataSource.prototype.checkPrimaryKeys = function (item) {
             for (var key in item) {
-                if (item[key] == null)
+                if (item[key] == null && this.primaryKeys.indexOf(key) >= 0)
                     throw wuzhui.Errors.primaryKeyNull(key);
             }
         };
@@ -1454,6 +1454,7 @@ var wuzhui;
             this.createNumberButtons();
             this.createNextButtons();
             this.totalElement = this.createLabel();
+            this.totalElement.visible = false;
             this.init(params.dataSource);
         }
         NumberPagingBar.prototype.createPagingButton = function () {
@@ -1462,11 +1463,14 @@ var wuzhui;
             button.href = 'javascript:';
             this.element.appendChild(button);
             var result = {
-                show: function () {
-                    $(button).show();
+                get visible() {
+                    return $(button).is(':visible');
                 },
-                hide: function () {
-                    $(button).hide();
+                set visible(value) {
+                    if (value)
+                        $(button).show();
+                    else
+                        $(button).hide();
                 },
                 get pageIndex() {
                     return new Number($(button).attr('pageIndex')).valueOf();
@@ -1499,7 +1503,7 @@ var wuzhui;
             return result;
         };
         NumberPagingBar.prototype.createTotalLabel = function () {
-            var totalElement = document.createElement('div');
+            var totalElement = document.createElement('span');
             totalElement.className = 'total';
             var textElement = document.createElement('span');
             textElement.className = 'text';
@@ -1515,6 +1519,15 @@ var wuzhui;
                 },
                 set text(value) {
                     numberElement.innerHTML = value;
+                },
+                get visible() {
+                    return $(totalElement).is(':visible');
+                },
+                set visible(value) {
+                    if (value == true)
+                        $(totalElement).show();
+                    else
+                        $(totalElement).hide();
                 }
             };
         };
@@ -1522,17 +1535,21 @@ var wuzhui;
             this.firstPageButton = this.createButton();
             this.firstPageButton.onclick = NumberPagingBar.on_buttonClick;
             this.firstPageButton.text = this.pagerSettings.firstPageText;
+            this.firstPageButton.visible = false;
             this.previousPageButton = this.createButton();
             this.previousPageButton.onclick = NumberPagingBar.on_buttonClick;
             this.previousPageButton.text = this.pagerSettings.previousPageText;
+            this.previousPageButton.visible = false;
         };
         NumberPagingBar.prototype.createNextButtons = function () {
             this.nextPageButton = this.createButton();
             this.nextPageButton.onclick = NumberPagingBar.on_buttonClick;
             this.nextPageButton.text = this.pagerSettings.nextPageText;
+            this.nextPageButton.visible = false;
             this.lastPageButton = this.createButton();
             this.lastPageButton.onclick = NumberPagingBar.on_buttonClick;
             this.lastPageButton.text = this.pagerSettings.lastPageText;
+            this.lastPageButton.visible = false;
         };
         NumberPagingBar.prototype.createNumberButtons = function () {
             var pagingBar = this;
@@ -1571,25 +1588,26 @@ var wuzhui;
                 if (pageIndex < this.pageCount) {
                     this.numberButtons[i].pageIndex = pageIndex;
                     this.numberButtons[i].text = (pagingBarIndex * buttonCount + i + 1).toString();
-                    this.numberButtons[i].show();
+                    this.numberButtons[i].visible = true;
                     this.numberButtons[i].active = pageIndex == this.pageIndex;
                 }
                 else {
-                    this.numberButtons[i].hide();
+                    this.numberButtons[i].visible = false;
                 }
             }
             this.totalElement.text = this.totalRowCount;
-            this.firstPageButton.hide();
-            this.previousPageButton.hide();
-            this.lastPageButton.hide();
-            this.nextPageButton.hide();
+            this.totalElement.visible = true;
+            this.firstPageButton.visible = false;
+            this.previousPageButton.visible = false;
+            this.lastPageButton.visible = false;
+            this.nextPageButton.visible = false;
             if (pagingBarIndex > 0) {
-                this.firstPageButton.show();
-                this.previousPageButton.show();
+                this.firstPageButton.visible = true;
+                this.previousPageButton.visible = true;
             }
             if (pagingBarIndex < pagingBarCount - 1) {
-                this.lastPageButton.show();
-                this.nextPageButton.show();
+                this.lastPageButton.visible = true;
+                this.nextPageButton.visible = true;
             }
         };
         return NumberPagingBar;

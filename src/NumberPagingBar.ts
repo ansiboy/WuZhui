@@ -90,8 +90,9 @@ namespace wuzhui {
     }
 
     export interface NumberPagingButton {
-        show: () => void,
-        hide: () => void,
+        // show: () => void,
+        // hide: () => void,
+        visible: boolean,
         pageIndex: number,
         text: string,
         active: boolean,
@@ -99,7 +100,8 @@ namespace wuzhui {
     }
 
     export interface PagingTotalLabel {
-        text: string
+        text: string,
+        visible: boolean,
     }
 
     export type NumberPagingButtonClickEvent = (sender: NumberPagingButton, pagingBar: NumberPagingBar) => void;
@@ -152,6 +154,7 @@ namespace wuzhui {
             this.createNextButtons();
 
             this.totalElement = this.createLabel();
+            this.totalElement.visible = false;
 
             this.init(params.dataSource);
 
@@ -163,11 +166,14 @@ namespace wuzhui {
             button.href = 'javascript:';
             this.element.appendChild(button);
             let result = <NumberPagingButton>{
-                show: () => {
-                    $(button).show()
+                get visible(): boolean {
+                    return $(button).is(':visible');
                 },
-                hide: () => {
-                    $(button).hide();
+                set visible(value: boolean) {
+                    if (value)
+                        $(button).show();
+                    else
+                        $(button).hide();
                 },
                 get pageIndex(): number {
                     return new Number($(button).attr('pageIndex')).valueOf();
@@ -201,7 +207,7 @@ namespace wuzhui {
         }
 
         private createTotalLabel() {
-            let totalElement = document.createElement('div');
+            let totalElement = document.createElement('span');
             totalElement.className = 'total';
 
             let textElement = document.createElement('span');
@@ -221,6 +227,15 @@ namespace wuzhui {
                 },
                 set text(value: string) {
                     numberElement.innerHTML = value;
+                },
+                get visible(): boolean {
+                    return $(totalElement).is(':visible');
+                },
+                set visible(value: boolean) {
+                    if (value == true)
+                        $(totalElement).show();
+                    else
+                        $(totalElement).hide();
                 }
             }
         }
@@ -230,23 +245,24 @@ namespace wuzhui {
             this.firstPageButton = this.createButton();
             this.firstPageButton.onclick = NumberPagingBar.on_buttonClick;
             this.firstPageButton.text = this.pagerSettings.firstPageText;
+            this.firstPageButton.visible = false;
 
             this.previousPageButton = this.createButton();
             this.previousPageButton.onclick = NumberPagingBar.on_buttonClick;
             this.previousPageButton.text = this.pagerSettings.previousPageText;
+            this.previousPageButton.visible = false;
         }
 
         private createNextButtons() {
             this.nextPageButton = this.createButton();
             this.nextPageButton.onclick = NumberPagingBar.on_buttonClick;
             this.nextPageButton.text = this.pagerSettings.nextPageText;
-            // (sender, pagingBar) => {
-            //     NumberPagingBar.on_buttonClick(sender, pagingBar);
-            // });
+            this.nextPageButton.visible = false;
 
             this.lastPageButton = this.createButton();
             this.lastPageButton.onclick = NumberPagingBar.on_buttonClick;
             this.lastPageButton.text = this.pagerSettings.lastPageText;
+            this.lastPageButton.visible = false;
         }
 
         private createNumberButtons() {
@@ -293,29 +309,30 @@ namespace wuzhui {
                 if (pageIndex < this.pageCount) {
                     this.numberButtons[i].pageIndex = pageIndex;
                     this.numberButtons[i].text = (pagingBarIndex * buttonCount + i + 1).toString();
-                    this.numberButtons[i].show();
+                    this.numberButtons[i].visible = true;
                     this.numberButtons[i].active = pageIndex == this.pageIndex;
                 }
                 else {
-                    this.numberButtons[i].hide();
+                    this.numberButtons[i].visible = false;
                 }
             }
 
             this.totalElement.text = <any>this.totalRowCount;
+            this.totalElement.visible = true;
 
-            this.firstPageButton.hide();//.style.display = 'none';
-            this.previousPageButton.hide();//.style.display = 'none';
-            this.lastPageButton.hide();//.style.display = 'none';
-            this.nextPageButton.hide();//.style.display = 'none'
+            this.firstPageButton.visible = false;
+            this.previousPageButton.visible = false;
+            this.lastPageButton.visible = false;
+            this.nextPageButton.visible = false;
 
             if (pagingBarIndex > 0) {
-                this.firstPageButton.show();
-                this.previousPageButton.show();
+                this.firstPageButton.visible = true;
+                this.previousPageButton.visible = true;
             }
 
             if (pagingBarIndex < pagingBarCount - 1) {
-                this.lastPageButton.show();
-                this.nextPageButton.show();
+                this.lastPageButton.visible = true;
+                this.nextPageButton.visible = true;
             }
         }
     }

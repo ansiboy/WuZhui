@@ -363,8 +363,7 @@ declare namespace wuzhui {
         render(): void;
     }
     interface NumberPagingButton {
-        show: () => void;
-        hide: () => void;
+        visible: boolean;
         pageIndex: number;
         text: string;
         active: boolean;
@@ -372,6 +371,7 @@ declare namespace wuzhui {
     }
     interface PagingTotalLabel {
         text: string;
+        visible: boolean;
     }
     type NumberPagingButtonClickEvent = (sender: NumberPagingButton, pagingBar: NumberPagingBar) => void;
     type PagingBarElementType = 'firstButton' | 'lastButton' | 'previousButton' | 'nextButton' | 'numberButton' | 'totalLabel';
