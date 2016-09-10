@@ -362,24 +362,39 @@ declare namespace wuzhui {
         totalRowCount: number;
         render(): void;
     }
+    interface NumberPagingButton {
+        show: () => void;
+        hide: () => void;
+        pageIndex: number;
+        text: string;
+        active: boolean;
+        onclick: NumberPagingButtonClickEvent;
+    }
+    interface PagingTotalLabel {
+        text: string;
+    }
+    type NumberPagingButtonClickEvent = (sender: NumberPagingButton, pagingBar: NumberPagingBar) => void;
     type PagingBarElementType = 'firstButton' | 'lastButton' | 'previousButton' | 'nextButton' | 'numberButton' | 'totalLabel';
     class NumberPagingBar extends PagingBar {
         private dataSource;
         private pagerSettings;
         private element;
         private totalElement;
-        private appendElement;
         private numberButtons;
         private firstPageButton;
         private previousPageButton;
         private nextPageButton;
         private lastPageButton;
+        private createLabel;
+        private createButton;
         constructor(params: {
             dataSource: DataSource<any>;
             element: HTMLElement;
             pagerSettings?: PagerSettings;
-            appendElement?: (element: HTMLElement, type: PagingBarElementType) => void;
+            createTotal?: () => PagingTotalLabel;
+            createButton?: () => NumberPagingButton;
         });
+        private createPagingButton();
         private createTotalLabel();
         private createPreviousButtons();
         private createNextButtons();

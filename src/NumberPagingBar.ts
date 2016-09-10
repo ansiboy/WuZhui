@@ -5,13 +5,6 @@ namespace wuzhui {
         TopAndBottom
     };
 
-    // export enum PagerButtons {
-    //     NextPrevious,
-    //     Numeric,
-    //     NextPreviousFirstLast,
-    //     NumericFirstLast
-    // };
-
     export interface PagerSettings {
         /** The text to display for the first-page button. */
         firstPageText?: string,
@@ -96,24 +89,41 @@ namespace wuzhui {
         }
     }
 
+    export interface NumberPagingButton {
+        show: () => void,
+        hide: () => void,
+        pageIndex: number,
+        text: string,
+        active: boolean,
+        onclick: NumberPagingButtonClickEvent
+    }
+
+    export interface PagingTotalLabel {
+        text: string
+    }
+
+    export type NumberPagingButtonClickEvent = (sender: NumberPagingButton, pagingBar: NumberPagingBar) => void;
+
     export type PagingBarElementType = 'firstButton' | 'lastButton' | 'previousButton' | 'nextButton' | 'numberButton' | 'totalLabel';
     export class NumberPagingBar extends PagingBar {
         private dataSource: DataSource<any>;
         private pagerSettings: PagerSettings;
         private element: HTMLElement;
-        //private _buttons: Array<HTMLElement>;
-        private totalElement: HTMLElement;
-        private appendElement: (btn: HTMLElement, type: PagingBarElementType) => void;
+        private totalElement: PagingTotalLabel;
 
-        private numberButtons: Array<HTMLElement>;
-        private firstPageButton: HTMLElement;
-        private previousPageButton: HTMLElement;
-        private nextPageButton: HTMLElement;
-        private lastPageButton: HTMLElement;
+        private numberButtons: Array<NumberPagingButton>;
+        private firstPageButton: NumberPagingButton;
+        private previousPageButton: NumberPagingButton;
+        private nextPageButton: NumberPagingButton;
+        private lastPageButton: NumberPagingButton;
+        private createLabel: () => PagingTotalLabel;
+        private createButton: () => NumberPagingButton;
 
         constructor(params: {
             dataSource: DataSource<any>, element: HTMLElement, pagerSettings?: PagerSettings,
-            appendElement?: (element: HTMLElement, type: PagingBarElementType) => void
+            //appendElement?: (element: HTMLElement, type: PagingBarElementType) => void,
+            createTotal?: () => PagingTotalLabel,
+            createButton?: () => NumberPagingButton
         }) {
             if (!params.dataSource) throw Errors.argumentNull('dataSource');
             if (!params.element) throw Errors.argumentNull('element');
@@ -121,7 +131,7 @@ namespace wuzhui {
                 pageButtonCount: 10,
                 firstPageText: '<<',
                 lastPageText: '>>',
-                nextPageText: '...',
+                nextPageText: '...',        //private _buttons: Array<HTMLElement>;
                 previousPageText: '...',
                 //mode: PagerButtons.NextPreviousFirstLast
             }, params.pagerSettings || {});
@@ -129,87 +139,122 @@ namespace wuzhui {
 
             super();
 
-            if (params.appendElement != null) {
-                this.appendElement = params.appendElement;
-            }
-            else {
-                this.appendElement = (element: HTMLElement, type: PagingBarElementType) => {
-                    this.element.appendChild(element);
-                }
-            }
-
             this.dataSource = params.dataSource;
             this.pagerSettings = pagerSettings;
             this.element = params.element;
-            this.numberButtons = new Array<HTMLElement>();
+            this.numberButtons = new Array<NumberPagingButton>();
+
+            this.createButton = params.createButton || this.createPagingButton;
+            this.createLabel = params.createTotal || this.createTotalLabel;
 
             this.createPreviousButtons();
             this.createNumberButtons();
             this.createNextButtons();
 
-            this.createTotalLabel();
+            this.totalElement = this.createLabel();
 
             this.init(params.dataSource);
+
+
         }
 
+        private createPagingButton(): NumberPagingButton {
+            let button = document.createElement('a');
+            button.href = 'javascript:';
+            this.element.appendChild(button);
+            let result = <NumberPagingButton>{
+                show: () => {
+                    $(button).show()
+                },
+                hide: () => {
+                    $(button).hide();
+                },
+                get pageIndex(): number {
+                    return new Number($(button).attr('pageIndex')).valueOf();
+                },
+                set pageIndex(value: number) {
+                    $(button).attr('pageIndex', value);
+                },
+                get text(): string {
+                    return button.innerHTML;
+                },
+                set text(value) {
+                    button.innerHTML = value;
+                },
+                get active(): boolean {
+                    return button.href != null;
+                },
+                set active(value: boolean) {
+                    if (value == true) {
+                        $(button).removeAttr('href');
+                        return;
+                    }
+                    button.href = 'javascript:';
+                }
+            };
+            $(button).click(() => {
+                if (result.onclick) {
+                    result.onclick(result, this);
+                }
+            })
+            return result;
+        }
 
         private createTotalLabel() {
-            this.totalElement = document.createElement('div');
-            this.totalElement.className = 'total';
+            let totalElement = document.createElement('div');
+            totalElement.className = 'total';
 
             let textElement = document.createElement('span');
             textElement.className = 'text';
             textElement.innerHTML = '总记录：';
-            this.totalElement.appendChild(textElement);
+            totalElement.appendChild(textElement);
 
             let numberElement = document.createElement('span');
             numberElement.className = 'number';
-            this.totalElement.appendChild(numberElement);
+            totalElement.appendChild(numberElement);
 
-            this.appendElement(this.totalElement, 'totalLabel');
+            this.element.appendChild(totalElement);
+
+            return <PagingTotalLabel>{
+                get text(): string {
+                    return numberElement.innerHTML;
+                },
+                set text(value: string) {
+                    numberElement.innerHTML = value;
+                }
+            }
         }
 
         private createPreviousButtons() {
-            this.firstPageButton = document.createElement('a');
-            this.firstPageButton.innerHTML = this.pagerSettings.firstPageText;
-            (this.firstPageButton as HTMLAnchorElement).href = 'javascript:';
-            this.appendElement(this.firstPageButton, 'firstButton');
 
-            this.previousPageButton = document.createElement('a');
-            this.previousPageButton.innerHTML = this.pagerSettings.previousPageText;
-            (this.previousPageButton as HTMLAnchorElement).href = 'javascript:';
-            this.appendElement(this.previousPageButton, 'previousButton');
+            this.firstPageButton = this.createButton();
+            this.firstPageButton.onclick = NumberPagingBar.on_buttonClick;
+            this.firstPageButton.text = this.pagerSettings.firstPageText;
 
-            let pagingBar = this;
-            $([this.firstPageButton, this.previousPageButton]).click(function () {
-                NumberPagingBar.on_buttonClick(this, pagingBar);
-            });
+            this.previousPageButton = this.createButton();
+            this.previousPageButton.onclick = NumberPagingBar.on_buttonClick;
+            this.previousPageButton.text = this.pagerSettings.previousPageText;
         }
 
         private createNextButtons() {
-            this.nextPageButton = document.createElement('a');
-            (this.nextPageButton as HTMLAnchorElement).href = 'javascript:'
-            this.nextPageButton.innerHTML = this.pagerSettings.nextPageText;
-            this.appendElement(this.nextPageButton, 'nextButton');
+            this.nextPageButton = this.createButton();
+            this.nextPageButton.onclick = NumberPagingBar.on_buttonClick;
+            this.nextPageButton.text = this.pagerSettings.nextPageText;
+            // (sender, pagingBar) => {
+            //     NumberPagingBar.on_buttonClick(sender, pagingBar);
+            // });
 
-            this.lastPageButton = document.createElement('a');
-            (this.lastPageButton as HTMLAnchorElement).href = 'javascript:';
-            this.lastPageButton.innerHTML = this.pagerSettings.lastPageText;
-            this.appendElement(this.lastPageButton, 'lastButton');
-
-            let pagingBar = this;
-            $([this.nextPageButton, this.lastPageButton]).click(function () {
-                NumberPagingBar.on_buttonClick(this, pagingBar);
-            });
+            this.lastPageButton = this.createButton();
+            this.lastPageButton.onclick = NumberPagingBar.on_buttonClick;
+            this.lastPageButton.text = this.pagerSettings.lastPageText;
         }
 
         private createNumberButtons() {
             let pagingBar = this;
             let buttonCount = this.pagerSettings.pageButtonCount;
             for (let i = 0; i < buttonCount; i++) {
-                var button = document.createElement('a');
-                button.href = 'javascript:';
-                this.appendElement(button, 'numberButton');
+                let button = this.createButton();//NumberPagingBar.on_buttonClick)
+                button.onclick = NumberPagingBar.on_buttonClick;
                 this.numberButtons[i] = button;
             }
             $(this.numberButtons).click(function () {
@@ -217,8 +262,8 @@ namespace wuzhui {
             });
         }
 
-        private static on_buttonClick(button: HTMLElement, pagingBar: NumberPagingBar) {
-            let pageIndex = (<any>button).pageIndex;
+        private static on_buttonClick(button: NumberPagingButton, pagingBar: NumberPagingBar) {
+            let pageIndex = button.pageIndex;
             if (!pageIndex == null) {
                 return;
             }
@@ -227,67 +272,51 @@ namespace wuzhui {
 
             args.maximumRows = pagingBar.pageSize;
             args.startRowIndex = pageIndex * pagingBar.pageSize;
-
+            pagingBar.pageIndex = pageIndex;
             pagingBar.dataSource.select();
         }
 
         render() {
             var pagerSettings = this.pagerSettings;
-            //var pagingBar = this;
             var buttonCount = pagerSettings.pageButtonCount;
 
             let pagingBarIndex = Math.floor(this.pageIndex / buttonCount);
             let pagingBarCount = Math.floor(this.pageCount / buttonCount) + 1;
 
-            this.previousPageButton['pageIndex'] = (pagingBarIndex - 1) * buttonCount
-            this.nextPageButton['pageIndex'] = (pagingBarIndex + 1) * buttonCount;
-            this.firstPageButton['pageIndex'] = 0;
-            this.lastPageButton['pageIndex'] = this.pageCount - 1;
+            this.previousPageButton.pageIndex = (pagingBarIndex - 1) * buttonCount
+            this.nextPageButton.pageIndex = (pagingBarIndex + 1) * buttonCount;
+            this.firstPageButton.pageIndex = 0;
+            this.lastPageButton.pageIndex = this.pageCount - 1;
 
             for (let i = 0; i < this.numberButtons.length; i++) {
                 let pageIndex = pagingBarIndex * buttonCount + i;
                 if (pageIndex < this.pageCount) {
-                    this.numberButtons[i]['pageIndex'] = pageIndex;
-                    this.numberButtons[i].innerHTML = (pagingBarIndex * buttonCount + i + 1).toString();
-                    $(this.numberButtons[i]).show();
+                    this.numberButtons[i].pageIndex = pageIndex;
+                    this.numberButtons[i].text = (pagingBarIndex * buttonCount + i + 1).toString();
+                    this.numberButtons[i].show();
+                    this.numberButtons[i].active = pageIndex == this.pageIndex;
                 }
                 else {
-                    $(this.numberButtons[i]).hide();
+                    this.numberButtons[i].hide();
                 }
             }
 
-            $(this.totalElement).find('.number').html(<any>this.totalRowCount);
+            this.totalElement.text = <any>this.totalRowCount;
 
-
-            this.firstPageButton.style.display = 'none';
-            this.previousPageButton.style.display = 'none';
-            this.lastPageButton.style.display = 'none';
-            this.nextPageButton.style.display = 'none'
+            this.firstPageButton.hide();//.style.display = 'none';
+            this.previousPageButton.hide();//.style.display = 'none';
+            this.lastPageButton.hide();//.style.display = 'none';
+            this.nextPageButton.hide();//.style.display = 'none'
 
             if (pagingBarIndex > 0) {
-                $(this.firstPageButton).show();
-                $(this.previousPageButton).show();
+                this.firstPageButton.show();
+                this.previousPageButton.show();
             }
 
             if (pagingBarIndex < pagingBarCount - 1) {
-                $(this.lastPageButton).show();
-                $(this.nextPageButton).show();
+                this.lastPageButton.show();
+                this.nextPageButton.show();
             }
-
-            //if()
-
-            // if (pagingBarIndex > 0)// && pagerSettings.mode == PagerButtons.NumericFirstLast)
-            //     this.lastPageButton.style.removeProperty('display');
-            // else
-            //     this.firstPageButton.style.display = 'none';
-
-            // if (this.pageCount > 0)// && this.pageIndex < this.pageCount - 1 && pagerSettings.mode == PagerButtons.NumericFirstLast)
-            //     this.lastPageButton.style.removeProperty('display');
-            // else
-            //     this.lastPageButton.style.display = 'none';
-
-            // if (pagingBarIndex == 0)
-            //     this.previousPageButton.style.display = 'none';
         }
     }
 }

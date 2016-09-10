@@ -1432,7 +1432,6 @@ var wuzhui;
     var NumberPagingBar = (function (_super) {
         __extends(NumberPagingBar, _super);
         function NumberPagingBar(params) {
-            var _this = this;
             if (!params.dataSource)
                 throw wuzhui.Errors.argumentNull('dataSource');
             if (!params.element)
@@ -1445,71 +1444,102 @@ var wuzhui;
                 previousPageText: '...',
             }, params.pagerSettings || {});
             _super.call(this);
-            if (params.appendElement != null) {
-                this.appendElement = params.appendElement;
-            }
-            else {
-                this.appendElement = function (element, type) {
-                    _this.element.appendChild(element);
-                };
-            }
             this.dataSource = params.dataSource;
             this.pagerSettings = pagerSettings;
             this.element = params.element;
             this.numberButtons = new Array();
+            this.createButton = params.createButton || this.createPagingButton;
+            this.createLabel = params.createTotal || this.createTotalLabel;
             this.createPreviousButtons();
             this.createNumberButtons();
             this.createNextButtons();
-            this.createTotalLabel();
+            this.totalElement = this.createLabel();
             this.init(params.dataSource);
         }
+        NumberPagingBar.prototype.createPagingButton = function () {
+            var _this = this;
+            var button = document.createElement('a');
+            button.href = 'javascript:';
+            this.element.appendChild(button);
+            var result = {
+                show: function () {
+                    $(button).show();
+                },
+                hide: function () {
+                    $(button).hide();
+                },
+                get pageIndex() {
+                    return new Number($(button).attr('pageIndex')).valueOf();
+                },
+                set pageIndex(value) {
+                    $(button).attr('pageIndex', value);
+                },
+                get text() {
+                    return button.innerHTML;
+                },
+                set text(value) {
+                    button.innerHTML = value;
+                },
+                get active() {
+                    return button.href != null;
+                },
+                set active(value) {
+                    if (value == true) {
+                        $(button).removeAttr('href');
+                        return;
+                    }
+                    button.href = 'javascript:';
+                }
+            };
+            $(button).click(function () {
+                if (result.onclick) {
+                    result.onclick(result, _this);
+                }
+            });
+            return result;
+        };
         NumberPagingBar.prototype.createTotalLabel = function () {
-            this.totalElement = document.createElement('div');
-            this.totalElement.className = 'total';
+            var totalElement = document.createElement('div');
+            totalElement.className = 'total';
             var textElement = document.createElement('span');
             textElement.className = 'text';
             textElement.innerHTML = '总记录：';
-            this.totalElement.appendChild(textElement);
+            totalElement.appendChild(textElement);
             var numberElement = document.createElement('span');
             numberElement.className = 'number';
-            this.totalElement.appendChild(numberElement);
-            this.appendElement(this.totalElement, 'totalLabel');
+            totalElement.appendChild(numberElement);
+            this.element.appendChild(totalElement);
+            return {
+                get text() {
+                    return numberElement.innerHTML;
+                },
+                set text(value) {
+                    numberElement.innerHTML = value;
+                }
+            };
         };
         NumberPagingBar.prototype.createPreviousButtons = function () {
-            this.firstPageButton = document.createElement('a');
-            this.firstPageButton.innerHTML = this.pagerSettings.firstPageText;
-            this.firstPageButton.href = 'javascript:';
-            this.appendElement(this.firstPageButton, 'firstButton');
-            this.previousPageButton = document.createElement('a');
-            this.previousPageButton.innerHTML = this.pagerSettings.previousPageText;
-            this.previousPageButton.href = 'javascript:';
-            this.appendElement(this.previousPageButton, 'previousButton');
-            var pagingBar = this;
-            $([this.firstPageButton, this.previousPageButton]).click(function () {
-                NumberPagingBar.on_buttonClick(this, pagingBar);
-            });
+            this.firstPageButton = this.createButton();
+            this.firstPageButton.onclick = NumberPagingBar.on_buttonClick;
+            this.firstPageButton.text = this.pagerSettings.firstPageText;
+            this.previousPageButton = this.createButton();
+            this.previousPageButton.onclick = NumberPagingBar.on_buttonClick;
+            this.previousPageButton.text = this.pagerSettings.previousPageText;
         };
         NumberPagingBar.prototype.createNextButtons = function () {
-            this.nextPageButton = document.createElement('a');
-            this.nextPageButton.href = 'javascript:';
-            this.nextPageButton.innerHTML = this.pagerSettings.nextPageText;
-            this.appendElement(this.nextPageButton, 'nextButton');
-            this.lastPageButton = document.createElement('a');
-            this.lastPageButton.href = 'javascript:';
-            this.lastPageButton.innerHTML = this.pagerSettings.lastPageText;
-            this.appendElement(this.lastPageButton, 'lastButton');
-            var pagingBar = this;
-            $([this.nextPageButton, this.lastPageButton]).click(function () {
-                NumberPagingBar.on_buttonClick(this, pagingBar);
-            });
+            this.nextPageButton = this.createButton();
+            this.nextPageButton.onclick = NumberPagingBar.on_buttonClick;
+            this.nextPageButton.text = this.pagerSettings.nextPageText;
+            this.lastPageButton = this.createButton();
+            this.lastPageButton.onclick = NumberPagingBar.on_buttonClick;
+            this.lastPageButton.text = this.pagerSettings.lastPageText;
         };
         NumberPagingBar.prototype.createNumberButtons = function () {
             var pagingBar = this;
             var buttonCount = this.pagerSettings.pageButtonCount;
             for (var i = 0; i < buttonCount; i++) {
-                var button = document.createElement('a');
-                button.href = 'javascript:';
-                this.appendElement(button, 'numberButton');
+                var button = this.createButton();
+                button.onclick = NumberPagingBar.on_buttonClick;
                 this.numberButtons[i] = button;
             }
             $(this.numberButtons).click(function () {
@@ -1524,6 +1554,7 @@ var wuzhui;
             var args = pagingBar.dataSource.selectArguments;
             args.maximumRows = pagingBar.pageSize;
             args.startRowIndex = pageIndex * pagingBar.pageSize;
+            pagingBar.pageIndex = pageIndex;
             pagingBar.dataSource.select();
         };
         NumberPagingBar.prototype.render = function () {
@@ -1531,33 +1562,34 @@ var wuzhui;
             var buttonCount = pagerSettings.pageButtonCount;
             var pagingBarIndex = Math.floor(this.pageIndex / buttonCount);
             var pagingBarCount = Math.floor(this.pageCount / buttonCount) + 1;
-            this.previousPageButton['pageIndex'] = (pagingBarIndex - 1) * buttonCount;
-            this.nextPageButton['pageIndex'] = (pagingBarIndex + 1) * buttonCount;
-            this.firstPageButton['pageIndex'] = 0;
-            this.lastPageButton['pageIndex'] = this.pageCount - 1;
+            this.previousPageButton.pageIndex = (pagingBarIndex - 1) * buttonCount;
+            this.nextPageButton.pageIndex = (pagingBarIndex + 1) * buttonCount;
+            this.firstPageButton.pageIndex = 0;
+            this.lastPageButton.pageIndex = this.pageCount - 1;
             for (var i = 0; i < this.numberButtons.length; i++) {
                 var pageIndex = pagingBarIndex * buttonCount + i;
                 if (pageIndex < this.pageCount) {
-                    this.numberButtons[i]['pageIndex'] = pageIndex;
-                    this.numberButtons[i].innerHTML = (pagingBarIndex * buttonCount + i + 1).toString();
-                    $(this.numberButtons[i]).show();
+                    this.numberButtons[i].pageIndex = pageIndex;
+                    this.numberButtons[i].text = (pagingBarIndex * buttonCount + i + 1).toString();
+                    this.numberButtons[i].show();
+                    this.numberButtons[i].active = pageIndex == this.pageIndex;
                 }
                 else {
-                    $(this.numberButtons[i]).hide();
+                    this.numberButtons[i].hide();
                 }
             }
-            $(this.totalElement).find('.number').html(this.totalRowCount);
-            this.firstPageButton.style.display = 'none';
-            this.previousPageButton.style.display = 'none';
-            this.lastPageButton.style.display = 'none';
-            this.nextPageButton.style.display = 'none';
+            this.totalElement.text = this.totalRowCount;
+            this.firstPageButton.hide();
+            this.previousPageButton.hide();
+            this.lastPageButton.hide();
+            this.nextPageButton.hide();
             if (pagingBarIndex > 0) {
-                $(this.firstPageButton).show();
-                $(this.previousPageButton).show();
+                this.firstPageButton.show();
+                this.previousPageButton.show();
             }
             if (pagingBarIndex < pagingBarCount - 1) {
-                $(this.lastPageButton).show();
-                $(this.nextPageButton).show();
+                this.lastPageButton.show();
+                this.nextPageButton.show();
             }
         };
         return NumberPagingBar;
