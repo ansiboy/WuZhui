@@ -182,88 +182,9 @@ namespace wuzhui {
         }
     }
 
-    export class BoundFieldHeaderCell extends GridViewCell {
-        private _sortType: 'asc' | 'desc';
-        private _iconElement: HTMLElement;
 
-        ascHTML = '↑';
-        descHTML = '↓';
-        sortingHTML = '...';
-
-        sorting: Callback<BoundFieldHeaderCell, { sortType: string }>;
-        sorted: Callback<BoundFieldHeaderCell, { sortType: string }>;
-
-        constructor(field: BoundField) {
-            super(field);
-
-            this.sorting = callbacks();
-            this.sorted = callbacks();
-
-            if (field.sortExpression) {
-                let labelElement = document.createElement('a');
-                labelElement.href = 'javascript:';
-
-                labelElement.innerHTML = this.defaultHeaderText();
-                $(labelElement).click(() => this.handleSort());
-
-                this._iconElement = document.createElement('span');
-
-                this.appendChild(labelElement);
-                this.appendChild(this._iconElement);
-
-                this.sorting.add(() => this._iconElement.innerHTML = this.sortingHTML);
-                this.sorted.add(() => this.updateSortIcon());
-            }
-            else {
-                this.element.innerHTML = this.defaultHeaderText();
-            }
-
-            this.style(field.headerStyle);
-        }
-
-        handleSort() {
-            let selectArguments = this.field.gridView.dataSource.selectArguments;
-            let sortType: 'asc' | 'desc' = this.sortType == 'asc' ? 'desc' : 'asc';
-
-            fireCallback(this.sorting, this, { sortType });
-            selectArguments.sortExpression = (this.field as BoundField).sortExpression + ' ' + sortType;
-            return this.field.gridView.dataSource.select()
-                .done(() => {
-                    this.sortType = sortType;
-                    fireCallback(this.sorted, this, { sortType });
-                });
-        }
-
-        private defaultHeaderText() {
-            return this.field.headerText || (this.field as BoundField).dataField;
-        }
-
-        get sortType() {
-            return this._sortType;
-        }
-        set sortType(value) {
-            this._sortType = value;
-        }
-
-        clearSortIcon() {
-            this._iconElement.innerHTML = '';
-        }
-
-        private updateSortIcon() {
-            if (this.sortType == 'asc') {
-                this._iconElement.innerHTML = '↑';
-            }
-            else if (this.sortType == 'desc') {
-                this._iconElement.innerHTML = '↓';
-            }
-            else {
-                this._iconElement.innerHTML = '';
-            }
-        }
-    }
 
     export interface BoundFieldParams extends DataControlFieldParams {
-        sortExpression?: string,
         dataField: string,
         dataFormatString?: string,
         controlStyle?: CSSStyleDeclaration | string,
@@ -292,23 +213,13 @@ namespace wuzhui {
             return this.params().nullText;
         }
 
-        createHeaderCell() {
-            let cell = new BoundFieldHeaderCell(this);
-            return cell;
-        }
+
 
         createItemCell(dataItem: any): GridViewCell {
             let cell = new GridViewEditableCell(this, dataItem);
             cell.style(this.itemStyle);
 
             return cell;
-        }
-
-        /**
-         * Gets a sort expression that is used by a data source control to sort data.
-         */
-        get sortExpression(): string {
-            return this.params().sortExpression;
         }
 
         /**

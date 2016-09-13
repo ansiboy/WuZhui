@@ -73,7 +73,7 @@ namespace wuzhui {
         private _footer: Control<HTMLTableSectionElement>;
         private _body: Control<HTMLTableSectionElement>;
         private _emtpyRow: GridViewRow;
-        private _currentSortCell: BoundFieldHeaderCell;
+        private _currentSortCell: GridViewHeaderCell;
 
         static emptyRowClassName = 'empty';
         static dataRowClassName = 'data';
@@ -164,7 +164,7 @@ namespace wuzhui {
             fireCallback(this.rowCreated, this, { row });
         }
 
-        private on_sort(sender: BoundFieldHeaderCell, args: any) {
+        private on_sort(sender: GridViewHeaderCell, args: any) {
             if (this._currentSortCell != null && this._currentSortCell != sender) {
                 this._currentSortCell.clearSortIcon();
             }
@@ -176,8 +176,8 @@ namespace wuzhui {
             for (var i = 0; i < this.columns.length; i++) {
                 var column = this.columns[i];
                 let cell = column.createHeaderCell();
-                if (cell instanceof BoundFieldHeaderCell) {
-                    (cell as BoundFieldHeaderCell).sorting.add(this.on_sort);
+                if (cell instanceof GridViewHeaderCell) {
+                    (cell as GridViewHeaderCell).sorting.add(this.on_sort);
                 }
 
                 row.appendChild(cell);

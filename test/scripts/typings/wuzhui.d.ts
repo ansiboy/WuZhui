@@ -61,18 +61,12 @@ declare namespace wuzhui {
         canUpdate: boolean;
     }
     class DataSourceSelectArguments {
-        private _startRowIndex;
-        private _totalRowCount;
-        private _maximumRows;
-        private _sortExpression;
-        constructor(params?: {
-            startRowIndex?: number;
-            maximumRows?: number;
-        });
         startRowIndex: number;
         totalRowCount: number;
         maximumRows: number;
         sortExpression: string;
+        filter: string;
+        constructor();
     }
     type WebDataSourceArguments = {
         primaryKeys?: string[];
@@ -133,6 +127,26 @@ declare namespace wuzhui {
         headerStyle?: string | CSSStyleDeclaration;
         footerStyle?: string | CSSStyleDeclaration;
         visible?: boolean;
+        sortExpression?: string;
+    }
+    class GridViewHeaderCell extends GridViewCell {
+        private _sortType;
+        private _iconElement;
+        ascHTML: string;
+        descHTML: string;
+        sortingHTML: string;
+        sorting: Callback<GridViewHeaderCell, {
+            sortType: string;
+        }>;
+        sorted: Callback<GridViewHeaderCell, {
+            sortType: string;
+        }>;
+        constructor(field: DataControlField);
+        handleSort(): JQueryPromise<any[] | DataSourceSelectResult<any>>;
+        private defaultHeaderText();
+        sortType: "asc" | "desc";
+        clearSortIcon(): void;
+        private updateSortIcon();
     }
     class DataControlField {
         private _gridView;
@@ -145,6 +159,7 @@ declare namespace wuzhui {
         headerStyle: string | CSSStyleDeclaration;
         visible: boolean;
         gridView: GridView;
+        sortExpression: string;
         createHeaderCell(): GridViewCell;
         createFooterCell(): GridViewCell;
         createItemCell(dataItem: any): GridViewCell;
@@ -170,27 +185,7 @@ declare namespace wuzhui {
         private formatDate(value, format);
         private formatNumber(value, format);
     }
-    class BoundFieldHeaderCell extends GridViewCell {
-        private _sortType;
-        private _iconElement;
-        ascHTML: string;
-        descHTML: string;
-        sortingHTML: string;
-        sorting: Callback<BoundFieldHeaderCell, {
-            sortType: string;
-        }>;
-        sorted: Callback<BoundFieldHeaderCell, {
-            sortType: string;
-        }>;
-        constructor(field: BoundField);
-        handleSort(): JQueryPromise<any[] | DataSourceSelectResult<any>>;
-        private defaultHeaderText();
-        sortType: "asc" | "desc";
-        clearSortIcon(): void;
-        private updateSortIcon();
-    }
     interface BoundFieldParams extends DataControlFieldParams {
-        sortExpression?: string;
         dataField: string;
         dataFormatString?: string;
         controlStyle?: CSSStyleDeclaration | string;
@@ -202,9 +197,7 @@ declare namespace wuzhui {
         constructor(params: BoundFieldParams);
         private params();
         nullText: string;
-        createHeaderCell(): BoundFieldHeaderCell;
         createItemCell(dataItem: any): GridViewCell;
-        sortExpression: string;
         dataField: string;
         dataFormatString: string;
         controlStyle: CSSStyleDeclaration | string;
@@ -263,7 +256,7 @@ declare namespace wuzhui {
     interface CustomFieldParams extends DataControlFieldParams {
         createHeaderCell?: () => GridViewCell;
         createFooterCell?: () => GridViewCell;
-        createItemCell: (dataItem: any) => GridViewCell;
+        createItemCell: (field: CustomField, dataItem: any) => GridViewCell;
     }
     class CustomField extends DataControlField {
         constructor(params: CustomFieldParams);

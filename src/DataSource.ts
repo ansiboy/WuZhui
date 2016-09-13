@@ -115,50 +115,15 @@ namespace wuzhui {
     }
 
     export class DataSourceSelectArguments {
-        private _startRowIndex: number;
-        private _totalRowCount: number;
-        private _maximumRows: number;
-        private _sortExpression: string;
+        startRowIndex: number;
+        totalRowCount: number;
+        maximumRows: number;
+        sortExpression: string;
+        filter: string;
 
-        constructor(params?: {
-            startRowIndex?: number,
-            maximumRows?: number
-        }) {
-
-            params = $.extend({
-                startRowIndex: 0,
-                maximumRows: 2147483647
-            }, params || {})
-
-            this._startRowIndex = params.startRowIndex;
-            this._totalRowCount = null;
-            this._maximumRows = params.maximumRows;
-            this._sortExpression = null;
-        }
-
-        get startRowIndex() {
-            return this._startRowIndex;
-        }
-        set startRowIndex(value: number) {
-            this._startRowIndex = value;
-        }
-        get totalRowCount() {
-            return this._totalRowCount;
-        }
-        set totalRowCount(value: number) {
-            this._totalRowCount = value;
-        }
-        get maximumRows() {
-            return this._maximumRows;
-        }
-        set maximumRows(value: number) {
-            this._maximumRows = value;
-        }
-        get sortExpression() {
-            return this._sortExpression;
-        }
-        set sortExpression(value: string) {
-            this._sortExpression = value;
+        constructor() {
+            this.startRowIndex = 0;
+            this.maximumRows = 2147483647;
         }
     }
 

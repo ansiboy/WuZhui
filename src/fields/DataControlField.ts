@@ -21,7 +21,88 @@ namespace wuzhui {
         itemStyle?: string | CSSStyleDeclaration;
         headerStyle?: string | CSSStyleDeclaration;
         footerStyle?: string | CSSStyleDeclaration;
-        visible?: boolean
+        visible?: boolean,
+        sortExpression?: string
+    }
+
+    export class GridViewHeaderCell extends GridViewCell {
+        private _sortType: 'asc' | 'desc';
+        private _iconElement: HTMLElement;
+
+        ascHTML = '↑';
+        descHTML = '↓';
+        sortingHTML = '...';
+
+        sorting: Callback<GridViewHeaderCell, { sortType: string }>;
+        sorted: Callback<GridViewHeaderCell, { sortType: string }>;
+
+        constructor(field: DataControlField) {
+            super(field);
+
+            this.sorting = callbacks();
+            this.sorted = callbacks();
+
+            if (field.sortExpression) {
+                let labelElement = document.createElement('a');
+                labelElement.href = 'javascript:';
+
+                labelElement.innerHTML = this.defaultHeaderText();
+                $(labelElement).click(() => this.handleSort());
+
+                this._iconElement = document.createElement('span');
+
+                this.appendChild(labelElement);
+                this.appendChild(this._iconElement);
+
+                this.sorting.add(() => this._iconElement.innerHTML = this.sortingHTML);
+                this.sorted.add(() => this.updateSortIcon());
+            }
+            else {
+                this.element.innerHTML = this.defaultHeaderText();
+            }
+
+            this.style(field.headerStyle);
+        }
+
+        handleSort() {
+            let selectArguments = this.field.gridView.dataSource.selectArguments;
+            let sortType: 'asc' | 'desc' = this.sortType == 'asc' ? 'desc' : 'asc';
+
+            fireCallback(this.sorting, this, { sortType });
+            selectArguments.sortExpression = (this.field as BoundField).sortExpression + ' ' + sortType;
+            return this.field.gridView.dataSource.select()
+                .done(() => {
+                    this.sortType = sortType;
+                    fireCallback(this.sorted, this, { sortType });
+                });
+        }
+
+        private defaultHeaderText() {
+            return this.field.headerText || (this.field as BoundField).dataField || '';
+        }
+
+        get sortType() {
+            return this._sortType;
+        }
+        set sortType(value) {
+            this._sortType = value;
+        }
+
+        clearSortIcon() {
+            this._iconElement.innerHTML = '';
+        }
+
+        private updateSortIcon() {
+            if (this.sortType == 'asc') {
+                this._iconElement.innerHTML = '↑';
+            }
+            else if (this.sortType == 'desc') {
+                this._iconElement.innerHTML = '↓';
+            }
+            else {
+                this._iconElement.innerHTML = '';
+            }
+        }
     }
 
     export class DataControlField {
@@ -87,11 +168,21 @@ namespace wuzhui {
         set gridView(value: GridView) {
             this._gridView = value;
         }
-        createHeaderCell(): GridViewCell {
-            let cell = new GridViewCell(this);
-            cell.html = this.headerText || '';
-            cell.style(this.headerStyle);
+        /**
+         * Gets a sort expression that is used by a data source control to sort data.
+         */
+        get sortExpression(): string {
+            return this._params.sortExpression;
+        }
+        /**
+         * Sets a sort expression that is used by a data source control to sort data.
+         */
+        set sortExpression(value: string) {
+            this._params.sortExpression = value;
+        }
 
+        createHeaderCell(): GridViewCell {
+            let cell = new GridViewHeaderCell(this);
             return cell;
         }
         createFooterCell(): GridViewCell {
