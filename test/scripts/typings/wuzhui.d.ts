@@ -54,6 +54,7 @@ declare namespace wuzhui {
         insert(item: any): JQueryPromise<any>;
         delete(item: any): JQueryPromise<any>;
         update(item: any): JQueryPromise<any>;
+        isSameItem(theItem: T, otherItem: T): boolean;
         private checkPrimaryKeys(item);
         select(): JQueryPromise<T[] | DataSourceSelectResult<T>>;
         canDelete: boolean;
@@ -280,6 +281,7 @@ declare namespace wuzhui {
         constructor(rowType: GridViewRowType);
         rowType: GridViewRowType;
         gridView: GridView;
+        cells: GridViewCell[];
     }
     class GridViewDataRow extends GridViewRow {
         private _dataItem;
@@ -325,7 +327,7 @@ declare namespace wuzhui {
         private appendHeaderRow();
         private appendFooterRow();
         private on_selectExecuted(items, args);
-        private on_updateExecuted(items);
+        private on_updateExecuted(item);
         private showEmptyRow();
         private hideEmptyRow();
     }

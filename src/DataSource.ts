@@ -63,14 +63,34 @@ namespace wuzhui {
         }
         update(item) {
             if (!this.canUpdate)
-                throw Errors.dataSourceCanntDelete();
+                throw Errors.dataSourceCanntUpdate();
 
             this.checkPrimaryKeys(item);
 
             this.updating.fireWith(this, [this, { item }]);
             return this.executeUpdate(item).done((data) => {
                 $.extend(item, data);
+                this.updated.fireWith(this, [this, { item }]);
             });
+        }
+        isSameItem(theItem: T, otherItem: T) {
+            if (theItem == null)
+                throw Errors.argumentNull('theItem');
+
+            if (otherItem == null)
+                throw Errors.argumentNull('otherItem');
+
+            if (theItem != otherItem && this.primaryKeys.length == 0)
+                return false;
+
+            if (this.primaryKeys.length > 0) {
+                for (let pk of this.primaryKeys) {
+                    if (theItem[pk] != otherItem[pk])
+                        return false;
+                }
+            }
+
+            return true;
         }
         private checkPrimaryKeys(item) {
             for (let key in item) {
@@ -191,6 +211,8 @@ namespace wuzhui {
             }
             return obj;
         }
+
+
     }
 
     export class ArrayDataSource<T> extends DataSource<T> {

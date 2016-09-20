@@ -119,13 +119,31 @@ var wuzhui;
             });
         };
         DataSource.prototype.update = function (item) {
+            var _this = this;
             if (!this.canUpdate)
-                throw wuzhui.Errors.dataSourceCanntDelete();
+                throw wuzhui.Errors.dataSourceCanntUpdate();
             this.checkPrimaryKeys(item);
             this.updating.fireWith(this, [this, { item: item }]);
             return this.executeUpdate(item).done(function (data) {
                 $.extend(item, data);
+                _this.updated.fireWith(_this, [_this, { item: item }]);
             });
+        };
+        DataSource.prototype.isSameItem = function (theItem, otherItem) {
+            if (theItem == null)
+                throw wuzhui.Errors.argumentNull('theItem');
+            if (otherItem == null)
+                throw wuzhui.Errors.argumentNull('otherItem');
+            if (theItem != otherItem && this.primaryKeys.length == 0)
+                return false;
+            if (this.primaryKeys.length > 0) {
+                for (var _i = 0, _a = this.primaryKeys; _i < _a.length; _i++) {
+                    var pk = _a[_i];
+                    if (theItem[pk] != otherItem[pk])
+                        return false;
+                }
+            }
+            return true;
         };
         DataSource.prototype.checkPrimaryKeys = function (item) {
             for (var key in item) {
@@ -1149,6 +1167,19 @@ var wuzhui;
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(GridViewRow.prototype, "cells", {
+            get: function () {
+                var cells = new Array();
+                for (var i = 0; i < this.element.cells.length; i++) {
+                    var cell = wuzhui.Control.getControlByElement(this.element.cells[i]);
+                    console.assert(cell != null);
+                    cells[i] = cell;
+                }
+                return cells;
+            },
+            enumerable: true,
+            configurable: true
+        });
         return GridViewRow;
     }(wuzhui.Control));
     wuzhui.GridViewRow = GridViewRow;
@@ -1194,6 +1225,7 @@ var wuzhui;
             }
             this._dataSource = params.dataSource;
             this._dataSource.selected.add(function (sender, e) { return _this.on_selectExecuted(e.items, e.selectArguments); });
+            this._dataSource.updated.add(function (sender, e) { return _this.on_updateExecuted(e.item); });
             if (params.showHeader) {
                 this._header = new wuzhui.Control(document.createElement('thead'));
                 this.appendChild(this._header);
@@ -1272,7 +1304,7 @@ var wuzhui;
         };
         GridView.prototype.on_selectExecuted = function (items, args) {
             var _this = this;
-            $("." + GridView.dataRowClassName).each(function (i, e) { return _this._body.element.removeChild(e); });
+            $(this._body.element).find("." + GridView.dataRowClassName).each(function (i, e) { return _this._body.element.removeChild(e); });
             if (items.length == 0) {
                 this.showEmptyRow();
                 return;
@@ -1282,7 +1314,32 @@ var wuzhui;
                 this.appendDataRow(items[i]);
             }
         };
-        GridView.prototype.on_updateExecuted = function (items) {
+        GridView.prototype.on_updateExecuted = function (item) {
+            console.assert(item != null);
+            for (var i = 0; i < this._body.element.rows.length; i++) {
+                var row_element = this._body.element.rows[i];
+                var row = $(row_element).data('Control');
+                if (!(row instanceof GridViewDataRow))
+                    continue;
+                var dataItem = row.dataItem;
+                if (!this.dataSource.isSameItem(item, dataItem))
+                    continue;
+                for (var i_1 = 0; i_1 < this.columns.length; i_1++) {
+                    var col = this.columns[i_1];
+                    if (!(col instanceof wuzhui.BoundField))
+                        continue;
+                    var cell = row.cells[i_1];
+                    if (cell instanceof wuzhui.GridViewEditableCell) {
+                        var c = cell;
+                        var value = item[col.dataField];
+                        if (value !== undefined) {
+                            c.value = value;
+                            dataItem[col.dataField] = value;
+                        }
+                    }
+                }
+                break;
+            }
         };
         GridView.prototype.showEmptyRow = function () {
             $(this._emtpyRow.element).show();

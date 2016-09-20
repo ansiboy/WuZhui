@@ -33,6 +33,16 @@ namespace wuzhui {
             }
             return this._gridView;
         }
+
+        get cells(): GridViewCell[] {
+            let cells = new Array<GridViewCell>();
+            for (let i = 0; i < this.element.cells.length; i++) {
+                let cell = Control.getControlByElement(this.element.cells[i] as HTMLTableCellElement) as GridViewCell;
+                console.assert(cell != null);
+                cells[i] = cell;
+            }
+            return cells;
+        }
     }
 
     export class GridViewDataRow extends GridViewRow {
@@ -93,7 +103,7 @@ namespace wuzhui {
 
         constructor(params: GridViewArguments) {
 
-            super(params.element|| document.createElement('table'));
+            super(params.element || document.createElement('table'));
 
             params = $.extend({
                 showHeader: true, showFooter: false,
@@ -111,6 +121,7 @@ namespace wuzhui {
 
             this._dataSource = params.dataSource;
             this._dataSource.selected.add((sender, e) => this.on_selectExecuted(e.items, e.selectArguments));
+            this._dataSource.updated.add((sender, e) => this.on_updateExecuted(e.item));
 
             if (params.showHeader) {
                 this._header = new Control(document.createElement('thead'));
@@ -200,7 +211,7 @@ namespace wuzhui {
 
         private on_selectExecuted(items: Array<any>, args: DataSourceSelectArguments) {
             // Clear datarows
-            $(`.${GridView.dataRowClassName}`).each((i, e) => this._body.element.removeChild(e));
+            $(this._body.element).find(`.${GridView.dataRowClassName}`).each((i, e) => this._body.element.removeChild(e));
 
             if (items.length == 0) {
                 this.showEmptyRow();
@@ -213,8 +224,37 @@ namespace wuzhui {
             }
         }
 
-        private on_updateExecuted(items) {
+        private on_updateExecuted(item: any) {
+            console.assert(item != null);
+            for (let i = 0; i < this._body.element.rows.length; i++) {
+                let row_element = this._body.element.rows[i];
+                let row = $(row_element).data('Control') as GridViewRow;
+                if (!(row instanceof GridViewDataRow))
+                    continue;
 
+
+                let dataItem = (row as GridViewDataRow).dataItem;
+                if (!this.dataSource.isSameItem(item, dataItem))
+                    continue;
+
+                for (let i = 0; i < this.columns.length; i++) {
+                    let col = this.columns[i] as BoundField;
+                    if (!(col instanceof BoundField))
+                        continue;
+
+                    let cell = row.cells[i];
+                    if (cell instanceof GridViewEditableCell) {
+                        let c = cell as GridViewEditableCell;
+                        let value = item[col.dataField];
+                        if (value !== undefined) {
+                            c.value = value;
+                            dataItem[col.dataField] = value;
+                        }
+                    }
+                }
+                break;
+
+            }
         }
 
         private showEmptyRow() {
@@ -224,6 +264,8 @@ namespace wuzhui {
         private hideEmptyRow() {
             $(this._emtpyRow.element).hide();
         }
+
+
 
     }
 }
