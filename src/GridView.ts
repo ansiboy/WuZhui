@@ -70,6 +70,7 @@ namespace wuzhui {
         showHeader?: boolean,
         showFooter?: boolean,
         element?: HTMLTableElement,
+        emptyDataRowStyle?: string
     }
 
     export class GridView extends Control<HTMLTableElement> {
@@ -84,7 +85,7 @@ namespace wuzhui {
         private _body: Control<HTMLTableSectionElement>;
         private _emtpyRow: GridViewRow;
         private _currentSortCell: GridViewHeaderCell;
-
+        private _params: GridViewArguments;
         static emptyRowClassName = 'empty';
         static dataRowClassName = 'data';
 
@@ -92,11 +93,11 @@ namespace wuzhui {
 
         //========================================================
         // 样式
-        headerStyle: string;
-        footerStyle: string;
-        rowStyle: string;
-        alternatingRowStyle: string;
-        emptyDataRowStyle: string;
+        // headerStyle: string;
+        // footerStyle: string;
+        // rowStyle: string;
+        // alternatingRowStyle: string;
+        //private emptyDataRowStyle: string;
         //========================================================
 
         rowCreated = callbacks<GridView, { row: GridViewRow }>();
@@ -109,7 +110,7 @@ namespace wuzhui {
                 showHeader: true, showFooter: false,
                 allowPaging: false
             }, params);
-
+            this._params = params;
             this._columns = params.columns || [];
             if (this._columns.length == 0)
                 throw Errors.columnsCanntEmpty();
@@ -160,9 +161,10 @@ namespace wuzhui {
             let textElement = document.createElement('span');
             textElement.innerText = this.emptyDataText;
             cell.appendChild(textElement);
-
+            if (!this._params.emptyDataRowStyle) {
+                applyStyle(cell, this._params.emptyDataRowStyle);
+            }
             this._emtpyRow.appendChild(cell);
-
             this._body.appendChild(this._emtpyRow);
             fireCallback(this.rowCreated, this, { row: this._emtpyRow });
         }

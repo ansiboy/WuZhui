@@ -294,6 +294,7 @@ declare namespace wuzhui {
         showHeader?: boolean;
         showFooter?: boolean;
         element?: HTMLTableElement;
+        emptyDataRowStyle?: string;
     }
     class GridView extends Control<HTMLTableElement> {
         private _pageSize;
@@ -307,14 +308,10 @@ declare namespace wuzhui {
         private _body;
         private _emtpyRow;
         private _currentSortCell;
+        private _params;
         static emptyRowClassName: string;
         static dataRowClassName: string;
         emptyDataText: string;
-        headerStyle: string;
-        footerStyle: string;
-        rowStyle: string;
-        alternatingRowStyle: string;
-        emptyDataRowStyle: string;
         rowCreated: Callback<GridView, {
             row: GridViewRow;
         }>;
