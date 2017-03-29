@@ -38,8 +38,9 @@ namespace wuzhui {
     }
 
     export class CommandField extends DataControlField {
-        private _updating = false;
-        private _deleting = false;
+        // private _updating = false;
+        // private _deleting = false;
+        private currentMode = 'read'
 
         constructor(params?: CommandFieldParams) {
             super(params);
@@ -60,85 +61,49 @@ namespace wuzhui {
         get cancelButtonHTML(): string {
             return this.params().cancelButtonHTML;
         }
-        set cancelButtonHTML(value: string) {
-            this.params().cancelButtonHTML = value;
-        }
 
         get deleteButtonHTML(): string {
             return this.params().deleteButtonHTML;
-        }
-        set deleteButtonHTML(value: string) {
-            this.params().deleteButtonHTML = value;
         }
 
         get editButtonHTML(): string {
             return this.params().editButtonHTML;
         }
-        set editButtonHTML(value: string) {
-            this.params().editButtonHTML = value;
-        }
 
         get updateButtonHTML(): string {
             return this.params().updateButtonHTML;
-        }
-        set updateButtonHTML(value: string) {
-            this.params().updateButtonHTML = value;
         }
 
         get newButtonHTML(): string {
             return this.params().newButtonHTML;
         }
-        set newButtonHTML(value: string) {
-            this.params().newButtonHTML = value;
-        }
 
         get insertButtonHTML(): string {
             return this.params().insertButtonHTML;
-        }
-        set insertButtonHTML(value: string) {
-            this.params().insertButtonHTML = value;
         }
 
         get cancelButtonClass(): string {
             return this.params().cancelButtonClass;
         }
-        set cancelButtonClass(value: string) {
-            this.params().cancelButtonClass = value;
-        }
 
         get deleteButtonClass(): string {
             return this.params().deleteButtonClass;
-        }
-        set deleteButtonClass(value: string) {
-            this.params().deleteButtonClass = value;
         }
 
         get editButtonClass(): string {
             return this.params().editButtonClass;
         }
-        set editButtonClass(value: string) {
-            this.params().editButtonClass = value;
-        }
 
         get newButtonClass(): string {
             return this.params().newButtonClass;
-        }
-        set newButtonClass(value: string) {
-            this.params().newButtonClass = value;
         }
 
         get updateButtonClass(): string {
             return this.params().updateButtonClass;
         }
-        set updateButtonClass(value: string) {
-            this.params().updateButtonClass = value;
-        }
 
         get insertButtonClass(): string {
             return this.params().insertButtonClass;
-        }
-        set insertButtonClass(value: string) {
-            this.params().insertButtonClass = value;
         }
 
         createItemCell(dataItem: any): GridViewCell {
@@ -151,7 +116,8 @@ namespace wuzhui {
                     editButton.className = this.editButtonClass;
 
                 cell.editButton = editButton;
-                $(editButton).click(this.on_editButtonClick);
+                // $(editButton).click(this.on_editButtonClick);
+                editButton.addEventListener('click', (e) => this.on_editButtonClick(e));
                 cell.appendChild(editButton);
 
                 let updateButton = this.createUpdateButton();
@@ -161,7 +127,7 @@ namespace wuzhui {
                     updateButton.className = this.updateButtonClass;
 
                 cell.updateButton = updateButton;
-                $(updateButton).click(this.on_updateButtonClick);
+                updateButton.addEventListener('click', (e) => this.on_updateButtonClick(e));
                 cell.appendChild(updateButton);
 
                 let cancelButton = this.createCancelButton();
@@ -172,7 +138,7 @@ namespace wuzhui {
 
                 cell.cacelButton = cancelButton;
 
-                $(cancelButton).click(this.on_cancelButtonClick);
+                cancelButton.addEventListener('click', (e) => this.on_cancelButtonClick(e));
                 cell.appendChild(cancelButton);
             }
             if (this.params().showDeleteButton) {
@@ -237,11 +203,29 @@ namespace wuzhui {
 
             return button;
         }
+        private hideButton(button: HTMLElement) {
+            button.style.display = 'none';
+        }
+        private showButton(button: HTMLElement) {
+            button.style.removeProperty('display');
+        }
+        private findParentCell(element: HTMLElement) {
+            let cellElement: HTMLTableCellElement;
+            let p = element.parentElement;
+            while (p) {
+                if (p.tagName == 'TD') {
+                    cellElement = p as HTMLTableCellElement;
+                    break;
+                }
+                p = p.parentElement;
+            }
+            return cellElement;
+        }
+        private on_editButtonClick(e: MouseEvent) {
+            let cellElement = this.findParentCell(e.target as HTMLElement);
+            console.assert(cellElement != null);
 
-
-        private on_editButtonClick(e: JQueryEventObject) {
-            let cellElement = $(e.target).parents('td').first()[0];
-            let rowElement = <HTMLTableRowElement>cellElement.parentElement; //<HTMLTableRowElement>$(e.target).parents('tr').first()[0];
+            let rowElement = <HTMLTableRowElement>cellElement.parentElement;
 
             for (let i = 0; i < rowElement.cells.length; i++) {
                 let cell = Control.getControlByElement(<HTMLElement>rowElement.cells[i]);
@@ -251,11 +235,19 @@ namespace wuzhui {
             }
 
             let cell = <GridViewCommandCell>Control.getControlByElement(cellElement);
-            $([cell.cacelButton, cell.updateButton]).show();
-            $(cell.editButton).hide();
+            this.showButton(cell.cacelButton);
+            this.showButton(cell.updateButton);
+            this.hideButton(cell.editButton);
+
+            if (cell.deleteButton)
+                this.hideButton(cell.deleteButton);
+
+            if (cell.newButton)
+                this.hideButton(cell.newButton);
         }
-        private on_cancelButtonClick(e: JQueryEventObject) {
-            let cellElement = $(e.target).parents('td').first()[0];
+        private on_cancelButtonClick(e: MouseEvent) {
+            let cellElement = this.findParentCell(e.target as HTMLElement);
+            console.assert(cellElement != null);
             let rowElement = <HTMLTableRowElement>cellElement.parentElement;
 
             for (let i = 0; i < rowElement.cells.length; i++) {
@@ -266,14 +258,20 @@ namespace wuzhui {
             }
 
             let cell = <GridViewCommandCell>Control.getControlByElement(cellElement);
-            $([cell.cacelButton, cell.updateButton]).hide();
-            $(cell.editButton).show();
-        }
-        private on_updateButtonClick(e: JQueryEventObject) {
-            if (this._updating)
-                return;
+            this.hideButton(cell.cacelButton);
+            this.hideButton(cell.updateButton);
+            this.showButton(cell.editButton);
+            if (cell.deleteButton)
+                this.showButton(cell.deleteButton);
 
-            this._updating = true;
+            if (cell.newButton)
+                this.showButton(cell.newButton);
+        }
+        private on_updateButtonClick(e: MouseEvent) {
+
+            if (e.target['_updating'])
+                e.target['_updating'] = true;
+
             let cellElement = $(e.target).parents('td').first()[0];
             let rowElement = <HTMLTableRowElement>cellElement.parentElement;
             let row = <GridViewDataRow>Control.getControlByElement(rowElement);
@@ -292,29 +290,36 @@ namespace wuzhui {
                     editableCells.push(cell);
                 }
             }
+            try {
 
-            dataSource.update(dataItem)
-                .done(() => {
-                    editableCells.forEach((item) => item.endEdit());
-                    let cell = <GridViewCommandCell>Control.getControlByElement(cellElement);
-                    $([cell.cacelButton, cell.updateButton]).hide();
-                    $(cell.editButton).show();
-                })
-                .always(() => this._updating = false);
+                return dataSource.update(dataItem)
+                    .then(() => {
+                        editableCells.forEach((item) => item.endEdit());
+                        let cell = <GridViewCommandCell>Control.getControlByElement(cellElement);
+                        this.hideButton(cell.cacelButton);
+                        this.hideButton(cell.updateButton);
+                        e.target['_updating'] = false;
+                    })
+                    .catch(() => e.target['_updating'] = false);
+            }
+            finally {
+
+            }
         }
         private on_deleteButtonClick(e: JQueryEventObject) {
-            if (this._deleting)
-                return;
+            // if (this._deleting)
+            //     return;
 
-            this._deleting = true;
+            // this._deleting = true;
             let rowElement = <HTMLTableRowElement>$(e.target).parents('tr').first()[0];
             let row = <GridViewDataRow>Control.getControlByElement(rowElement);
             let dataSource = row.gridView.dataSource;
             dataSource.delete(row.dataItem)
-                .done(() => {
+                .then(() => {
                     $(rowElement).remove();
-                })
-                .always(() => this._deleting = false);
+                    // this._deleting = false;
+                });
+            // .catch(() => this._deleting = false);
         }
 
     }

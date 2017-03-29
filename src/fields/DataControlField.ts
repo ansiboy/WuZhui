@@ -71,7 +71,7 @@ namespace wuzhui {
             fireCallback(this.sorting, this, { sortType });
             selectArguments.sortExpression = (this.field as BoundField).sortExpression + ' ' + sortType;
             return this.field.gridView.dataSource.select()
-                .done(() => {
+                .then(() => {
                     this.sortType = sortType;
                     fireCallback(this.sorted, this, { sortType });
                 });
@@ -187,7 +187,7 @@ namespace wuzhui {
         }
         createFooterCell(): GridViewCell {
             let cell = new GridViewCell(this);
-            cell.html = this.footerText || '';
+            cell.element.innerHTML = this.footerText || '';
             cell.style(this.footerStyle);
 
             return cell;

@@ -1,35 +1,19 @@
 var release_dir = 'release';
 module.exports = function (grunt) {
     var config = {
-        ts: {
-            wuzhui_release: {
-                src: ['src/**/*.ts'],
-                dest: release_dir + '/wuzhui.js',
+        shell: {
+            src: {
+                command: 'tsc -p src',
                 options: {
-                    basePath: release_dir,
-                    target: 'es5',
-                    removeComments: true,
-                    declaration: true,
-                    references: [
-                        "src/**/*.ts"
-                    ],
-                    sourceMap: false
+                    failOnError: false
                 }
             },
-            test_release: {
-                src: ['test/**/*.ts'],
-                dest: release_dir + '/test',
+            test: {
+                command: 'tsc -p test',
                 options: {
-                    basePath: release_dir,
-                    target: 'es5',
-                    removeComments: true,
-                    declaration: false,
-                    references: [
-                        "test/**/*.ts"
-                    ],
-                    sourceMap: false
+                    failOnError: false
                 }
-            }
+            },
         },
         copy: {
             release_test: {
@@ -40,8 +24,8 @@ module.exports = function (grunt) {
                     { src: ['release/wuzhui.js'], dest: '../ShopCloud/AdminWeb/src/scripts/wuzhui.js' },
                     { src: ['release/wuzhui.d.ts'], dest: '../ShopCloud/AdminWeb/src/scripts/typings/wuzhui.d.ts' },
 
-                    { src: ['release/wuzhui.js'], dest: '../ShopCloud/AdminWeb/Shop/js/wuzhui.js' },
-                    { src: ['release/wuzhui.d.ts'], dest: '../ShopCloud/AdminWeb/Shop/js/typings/wuzhui.d.ts' },
+                    // { src: ['release/wuzhui.js'], dest: '../ShopCloud/AdminWeb/Shop/scripts/wuzhui.js' },
+                    // { src: ['release/wuzhui.d.ts'], dest: '../ShopCloud/AdminWeb/Shop/scripts/typings/wuzhui.d.ts' },
 
                     { src: ['release/wuzhui.js'], dest: '../node_auth/src/client/js/wuzhui.js' },
                     { src: ['release/wuzhui.d.ts'], dest: '../node_auth/src/client/js/typings/wuzhui.d.ts' },
@@ -59,12 +43,12 @@ module.exports = function (grunt) {
 
     grunt.initConfig(config);
 
+    grunt.loadNpmTasks('grunt-shell');
     grunt.loadNpmTasks('grunt-contrib-uglify');
-    grunt.loadNpmTasks('grunt-ts');
     grunt.loadNpmTasks('grunt-contrib-concat');
-    grunt.loadNpmTasks('grunt-contrib-clean');
+    //grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-copy');
 
-    grunt.registerTask('default', ['ts', 'copy']);
+    grunt.registerTask('default', ['shell', 'copy']);
 
 };

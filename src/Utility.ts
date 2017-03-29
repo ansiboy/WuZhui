@@ -1,109 +1,108 @@
 
 namespace wuzhui {
-    export interface Callback<S, A> {
-        /**
-         * Add a callback or a collection of callbacks to a callback list.
-         * 
-         * @param callbacks A function, or array of functions, that are to be added to the callback list.
-         */
-        add(callbacks: (sender: S, args: A) => any): Callback<S, A>;
+    /** 
+     * 判断服务端返回的数据是否为错误信息 
+     * @param responseData 服务端返回的数据
+     */
+    function isError(responseData: any): Error {
+        if (responseData.Type == 'ErrorObject') {
+            if (responseData.Code == 'Success') {
+                return null;
+            }
+            let err = new Error(responseData.Message);
+            err.name = responseData.Code;
+            return err;
+        }
 
-        /**
-         * Disable a callback list from doing anything more.
-         */
-        disable(): Callback<S, A>;
+        let err: Error = responseData;
+        if (err.name !== undefined && err.message !== undefined && err['stack'] !== undefined) {
+            return err;
+        }
 
-        /**
-         * Determine if the callbacks list has been disabled.
-         */
-        disabled(): boolean;
+        return null;
+    }
 
-        /**
-         * Remove all of the callbacks from a list.
-         */
-        empty(): Callback<S, A>;
+    export interface FetchOptions {
+        method?: string,
+        headers?: any,
+        body?: any,
+    }
 
-        /**
-         * Call all of the callbacks with the given arguments
-         * 
-         * @param arguments The argument or list of arguments to pass back to the callback list.
-         */
-        fire(sender: S, args: A): Callback<S, A>;
+    export class AjaxError implements Error {
+        name: string;
+        message: string;
+        method: 'get' | 'post';
 
-        /**
-         * Determine if the callbacks have already been called at least once.
-         */
-        fired(): boolean;
-
-        /**
-         * Call all callbacks in a list with the given context and arguments.
-         * 
-         * @param context A reference to the context in which the callbacks in the list should be fired.
-         * @param arguments An argument, or array of arguments, to pass to the callbacks in the list.
-         */
-        fireWith(context: any, [S, A]): Callback<S, A>;
-
-        /**
-         * Determine whether a supplied callback is in a list
-         * 
-         * @param callback The callback to search for.
-         */
-        has(callback: Function): boolean;
-
-        /**
-         * Lock a callback list in its current state.
-         */
-        lock(): Callback<S, A>;
-
-        /**
-         * Determine if the callbacks list has been locked.
-         */
-        locked(): boolean;
-
-        /**
-         * Remove a callback or a collection of callbacks from a callback list.
-         * 
-         * @param callbacks A function, or array of functions, that are to be removed from the callback list.
-         */
-        remove(callbacks: Function): Callback<S, A>;
-        /**
-         * Remove a callback or a collection of callbacks from a callback list.
-         * 
-         * @param callbacks A function, or array of functions, that are to be removed from the callback list.
-         */
-        remove(callbacks: Function[]): Callback<S, A>;
+        constructor(method) {
+            this.name = 'ajaxError';
+            this.message = 'Ajax Error';
+            this.method = method;
+        }
     }
 
     export var ajaxTimeout = 5000;
-    export function ajax(url: string, data): JQueryPromise<any> {
-        var result = $.Deferred();
-        $.ajax({
-            url: url,
-            data: data,
-            method: 'post',
-            traditional: true
-        }).done((data, textStatus, jqXHR) => {
-            if (data.Type == 'ErrorObject' && data.Code != 'Success') {
-                result.reject(data, textStatus, jqXHR);
-            }
-            else {
-                result.resolve(data, textStatus, jqXHR);
-            }
-        }).fail((jqXHR, textStatus) => {
-            var err = { Code: textStatus, status: jqXHR.status, Message: jqXHR.statusText };
-            result.reject(err);
-        }).always(() => {
-            clearTimeout(timeoutid);
-        });
+    export function ajax<T>(url: string, options: FetchOptions): Promise<T> {
+        return new Promise<T>((reslove, reject) => {
+            let timeId: number;
+            if (options.method == 'get') {
+                timeId = setTimeout(() => {
+                    let err = new AjaxError(options.method);
+                    err.name = 'timeout';
+                    reject(err);
+                    clearTimeout(timeId);
 
-        //超时处理
-        let timeoutid = setTimeout(() => {
-            if (result.state() == 'pending') {
-                result.reject({ Code: 'Timeout', Message: 'Ajax call timemout.' });
+                }, ajaxTimeout)
             }
-        }, ajaxTimeout);
-        return result;
+
+            _ajax<T>(url, options)
+                .then(data => {
+                    reslove(data);
+                    if (timeId)
+                        clearTimeout(timeId);
+                })
+                .catch(err => {
+                    reject(err);
+
+                    if (timeId)
+                        clearTimeout(timeId);
+                });
+
+        })
     }
+
+    async function _ajax<T>(url: string, options: FetchOptions): Promise<T> {
+        // try {
+        let response = await fetch(url, options);
+        if (response.status >= 300) {
+            let err = new AjaxError(options.method);
+            err.name = `${response.status}`;
+            err.message = response.statusText;
+            throw err
+        }
+        let responseText = response.text();
+        let p: Promise<string>;
+        if (typeof responseText == 'string') {
+            p = new Promise<string>((reslove, reject) => {
+                reslove(responseText);
+            })
+        }
+        else {
+            p = responseText as Promise<string>;
+        }
+
+        let text = await responseText;
+        let textObject = JSON.parse(text);
+        let err = isError(textObject);
+        if (err)
+            throw err;
+
+        return textObject;
+        // }
+        // catch (err) {
+        //     throw err;
+        // }
+    }
+
 
     export function applyStyle(element: HTMLElement, value: CSSStyleDeclaration | string) {
         let style = value || '';
@@ -116,67 +115,31 @@ namespace wuzhui {
         }
     }
 
+
+    export class Callback<S, A> {
+        private funcs = new Array<(ender: S, args: A) => void>();
+
+        constructor() {
+        }
+        add(func: (sender: S, args: A) => any) {
+            this.funcs.push(func);
+        }
+        remove(func: (sender: S, args: A) => any) {
+            this.funcs = this.funcs.filter(o => o != func);
+        }
+        fire(sender: S, args: A) {
+            this.funcs.forEach(o => o(sender, args));
+        }
+    }
+
+
     export function callbacks<S, A>(): Callback<S, A> {
-        return $.Callbacks();
+        return new Callback<S, A>();
     }
 
     export function fireCallback<S, A>(callback: Callback<S, A>, sender: S, args: A) {
-        return callback.fireWith(this, [sender, args]);
+        callback.fire(sender, args);
     }
 
-    //============================================================
-    //这一部份可能需要移入 JData
-    //var parseStringToDate
-    (function () {
-        var prefix = '/Date(';
-        function parseStringToDate(value) {
-            var star = prefix.length;
-            var len = value.length - prefix.length - ')/'.length;
-            var str = value.substr(star, len);
-            var num = parseInt(str);
-            var date = new Date(num);
-            return date;
-        }
 
-        $.ajaxSettings.converters['text json'] = function (json) {
-            var result = $.parseJSON(json);
-            if (typeof result === 'string') {
-                if (result.substr(0, prefix.length) == prefix)
-                    result = parseStringToDate(result);
-
-                return result;
-            }
-
-            var stack = new Array();
-            stack.push(result);
-            while (stack.length > 0) {
-                var item = stack.pop();
-                //Sys.Debug.assert(item != null);
-
-                for (var key in item) {
-                    var value = item[key];
-                    if (value == null)
-                        continue;
-
-                    if ($.isArray(value)) {
-                        for (var i = 0; i < value.length; i++) {
-                            stack.push(value[i]);
-                        }
-                        continue;
-                    }
-
-                    if ($.isPlainObject(value)) {
-                        stack.push(value);
-                        continue;
-                    }
-
-                    if (typeof value == 'string' && value.substr(0, prefix.length) == prefix) {
-                        item[key] = parseStringToDate(value);
-                    }
-                }
-            }
-            return result;
-        };
-    })();
-    //================================================================
 }

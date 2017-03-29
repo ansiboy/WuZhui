@@ -4,7 +4,7 @@ namespace wuzhui {
     export interface CustomFieldParams extends DataControlFieldParams {
         createHeaderCell?: () => GridViewCell,
         createFooterCell?: () => GridViewCell,
-        createItemCell: (field: CustomField, dataItem: any) => GridViewCell
+        createItemCell: (dataItem: any) => GridViewCell
     }
 
     export class CustomField extends DataControlField {
@@ -34,7 +34,7 @@ namespace wuzhui {
         }
         createItemCell(dataItem: any): GridViewCell {
             if (this.params().createItemCell) {
-                let cell = this.params().createItemCell(this, dataItem);
+                let cell = this.params().createItemCell(dataItem);
                 cell.style(this.params().itemStyle);
                 return cell;
             }

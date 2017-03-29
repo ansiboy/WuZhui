@@ -11,12 +11,12 @@ namespace wuzhui {
             $(element).data(CONTROL_DATA_NAME, this);
         }
 
-        get html(): string {
-            return $(this.element).html();
-        }
-        set html(value) {
-            $(this.element).html(value);
-        }
+        // get html(): string {
+        //     return $(this.element).html();
+        // }
+        // set html(value) {
+        //     $(this.element).html(value);
+        // }
 
         get visible(): boolean {
             return $(this.element).is(':visible');
@@ -32,7 +32,7 @@ namespace wuzhui {
             return this._element;
         }
 
-        appendChild(child: Control<any> | HTMLElement) {
+        appendChild(child: Control<any> | HTMLElement, index?: number) {
             if (child == null)
                 throw Errors.argumentNull('child');
 
@@ -42,7 +42,17 @@ namespace wuzhui {
             else
                 childElement = child;
 
-            this.element.appendChild(childElement);
+            let placeChild: HTMLElement;
+            if (index != null) {
+                placeChild = this.element.children[index] as HTMLElement;
+            }
+
+            if (placeChild == null) {
+                this.element.appendChild(childElement);
+            }
+            else {
+                this.element.insertBefore(childElement, placeChild);
+            }
         }
 
         style(value: CSSStyleDeclaration | string) {

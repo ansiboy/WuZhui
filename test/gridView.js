@@ -1,4 +1,3 @@
-
 let w = wuzhui;
 let baseUrl = 'http://shop.alinq.cn/AdminServices/Shop/Product/';
 let dataSource = new wuzhui.WebDataSource({
@@ -8,9 +7,6 @@ let dataSource = new wuzhui.WebDataSource({
     insertUrl: baseUrl + 'SaveProduct',
     deleteUrl: baseUrl + 'DeleteProduct'
 });
-
-
-
 let gridView = new wuzhui.GridView({
     dataSource,
     columns: [
@@ -21,8 +17,8 @@ let gridView = new wuzhui.GridView({
         }),
         new wuzhui.BoundField({
             headerText: '价格', dataField: 'Price', dataFormatString: '￥{0:C2}',
-            headerStyle: <CSSStyleDeclaration>{ textAlign: 'center' },
-            footerText: '合计', footerStyle: <CSSStyleDeclaration>{ textAlign: 'center' },
+            headerStyle: { textAlign: 'center' },
+            footerText: '合计', footerStyle: { textAlign: 'center' },
             itemStyle: 'width:140px;text-align:right;',
             sortExpression: 'Price'
         }),
@@ -33,22 +29,18 @@ let gridView = new wuzhui.GridView({
     ],
     showFooter: true,
 });
-
 gridView.element.style.width = '100%';
 document.body.appendChild(gridView.element);
-
-let headerElement = gridView.element.tHead.rows[0];// $(gridView.element).find('thead > tr')[0];
+let headerElement = gridView.element.tHead.rows[0]; // $(gridView.element).find('thead > tr')[0];
 let footerElement = gridView.element.tFoot.rows[0]; //$(gridView.element).find('tfoot > tr')[0];
 QUnit.test('gridView header and footer', (assert) => {
     assert.notEqual(headerElement, null);
     assert.notEqual(footerElement, null);
-
     let headerRow = wuzhui.Control.getControlByElement(headerElement);
     let footerRow = wuzhui.Control.getControlByElement(footerElement);
     assert.equal(headerRow instanceof wuzhui.GridViewRow, true);
     assert.equal(footerRow instanceof wuzhui.GridViewRow, true);
-})
-
+});
 var pagingBarElement = document.createElement('div');
 pagingBarElement.className = 'pagingBar';
 new wuzhui.NumberPagingBar({ dataSource, element: pagingBarElement });
