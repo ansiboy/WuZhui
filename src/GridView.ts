@@ -1,4 +1,3 @@
-/// <reference path="Control.ts"/>
 
 namespace wuzhui {
     export enum GridViewRowType {
@@ -7,6 +6,19 @@ namespace wuzhui {
         Data,
         Paging,
         Empty
+    }
+
+    function findParentElement(element: HTMLElement, parentTagName: string) {
+        console.assert(element != null);
+        console.assert(parentTagName != null);
+        parentTagName = parentTagName.toUpperCase();
+        let p = element.parentElement;
+        while (p) {
+            if (p.tagName == parentTagName)
+                return p;
+
+            p = p.parentElement;
+        }
     }
 
     export class GridViewRow extends Control<HTMLTableRowElement> {
@@ -25,9 +37,8 @@ namespace wuzhui {
 
         get gridView(): GridView {
             if (this._gridView == null) {
-                let gridViewElement = $(this.element).parents('table').first()[0];
+                let gridViewElement = findParentElement(this.element, 'table');
                 console.assert(gridViewElement != null);
-
                 this._gridView = <GridView>Control.getControlByElement(gridViewElement);
                 console.assert(this._gridView != null);
             }
@@ -71,8 +82,11 @@ namespace wuzhui {
         showFooter?: boolean,
         element?: HTMLTableElement,
         emptyDataRowStyle?: string,
-        allowPaging?: boolean,
-        pageSize?: number
+        // allowPaging?: boolean,
+        pageSize?: number,
+        pagerSettings?: PagerSettings,
+        emptyDataHTML?: string,
+        initDataHTML?: string
     }
 
     export class GridView extends Control<HTMLTableElement> {
@@ -92,7 +106,8 @@ namespace wuzhui {
         static dataRowClassName = 'data';
         static pagingBarClassName = 'pagingBar';
 
-        emptyDataText = '暂无记录';
+        private emptyDataHTML = '暂无记录';
+        private initDataHTML = '数据正在加载中...';
 
         //========================================================
         // 样式
@@ -109,7 +124,7 @@ namespace wuzhui {
 
             super(params.element || document.createElement('table'));
 
-            params = $.extend({
+            params = Object.assign({
                 showHeader: true, showFooter: false,
                 allowPaging: false
             }, params);
@@ -126,8 +141,14 @@ namespace wuzhui {
             this._dataSource = params.dataSource;
             this._dataSource.selected.add((sender, e) => this.on_selectExecuted(e.items, e.selectArguments));
             this._dataSource.updated.add((sender, e) => this.on_updateExecuted(e.item));
-            this._dataSource.inserted.add((sender, e) => this.on_insertExecuted(e.item));
+            this._dataSource.inserted.add((sender, e) => this.on_insertExecuted(e.item, e.index));
             this._dataSource.deleted.add((sender, e) => this.on_deleteExecuted(e.item));
+            this._dataSource.selecting.add((sender, e) => {
+                let display = this._emtpyRow.element.style.display;
+                if (display != 'none') {//$(this._emtpyRow.element).is(':visible')
+                    this._emtpyRow.element.cells[0].innerHTML = this.initDataHTML;
+                }
+            });
 
             if (params.showHeader) {
                 this._header = new Control(document.createElement('thead'));
@@ -135,30 +156,32 @@ namespace wuzhui {
                 this.appendHeaderRow();
             }
 
+            this.emptyDataHTML = params.emptyDataHTML || this.emptyDataHTML;
+            this.initDataHTML = params.initDataHTML || this.initDataHTML;
+
             this._body = new Control(document.createElement('tbody'));
             this.appendChild(this._body);
 
             this.appendEmptyRow();
 
-            if (params.showFooter || params.allowPaging) {
+            let allowPaging = params.pageSize;
+            if (params.showFooter || allowPaging) {
                 this._footer = new Control(document.createElement('tfoot'));
                 this.appendChild(this._footer);
 
                 if (params.showFooter)
                     this.appendFooterRow();
 
-                if (params.allowPaging)
-                    this.createPagingBar();
+                if (allowPaging) {
+                    this.createPagingBar(params.pagerSettings);
+                    this.dataSource.selectArguments.maximumRows = params.pageSize;
+                }
             }
 
-            if (params.allowPaging != null) {
-                this.dataSource.selectArguments.maximumRows = params.pageSize;
-                this.dataSource.select();
-            }
-
+            this.dataSource.select();
         }
 
-        private createPagingBar() {
+        private createPagingBar(pagerSettings?: PagerSettings) {
             var pagingBarContainer = document.createElement('tr');
             var pagingBarElement = document.createElement('td');
             pagingBarElement.className = GridView.pagingBarClassName;
@@ -166,7 +189,7 @@ namespace wuzhui {
             pagingBarContainer.appendChild(pagingBarElement);
             console.assert(this._footer != null);
             this._footer.appendChild(pagingBarContainer);
-            new wuzhui.NumberPagingBar({ dataSource: this.dataSource, element: pagingBarElement });
+            new wuzhui.NumberPagingBar({ dataSource: this.dataSource, element: pagingBarElement, pagerSettings });
         }
 
         get columns() {
@@ -181,13 +204,11 @@ namespace wuzhui {
             this._emtpyRow = new GridViewRow(GridViewRowType.Empty);
             this._emtpyRow.element.className = GridView.emptyRowClassName;
 
-            let cell = document.createElement('td');
-            cell.colSpan = this.columns.length;
-            let textElement = document.createElement('span');
-            textElement.innerText = this.emptyDataText;
-            cell.appendChild(textElement);
+            let cell = new GridViewCell();
+            cell.element.colSpan = this.columns.length;
+            // cell.element.innerHTML = this.initDataHTML;
             if (!this._params.emptyDataRowStyle) {
-                applyStyle(cell, this._params.emptyDataRowStyle);
+                applyStyle(cell.element, this._params.emptyDataRowStyle);
             }
             this._emtpyRow.appendChild(cell);
             this._body.appendChild(this._emtpyRow);
@@ -199,6 +220,8 @@ namespace wuzhui {
             row.element.className = GridView.dataRowClassName;
             this._body.appendChild(row, index);
             fireCallback(this.rowCreated, this, { row });
+            if (this._emtpyRow.element.style.display != 'none')
+                this.hideEmptyRow();
         }
 
         private on_sort(sender: GridViewHeaderCell, args: any) {
@@ -245,7 +268,6 @@ namespace wuzhui {
                 return;
             }
 
-            this.hideEmptyRow();
             for (let i = 0; i < items.length; i++) {
                 this.appendDataRow(items[i]);
             }
@@ -254,8 +276,8 @@ namespace wuzhui {
         private on_updateExecuted(item: any) {
             console.assert(item != null);
             for (let i = 0; i < this._body.element.rows.length; i++) {
-                let row_element = this._body.element.rows[i];
-                let row = $(row_element).data('Control') as GridViewRow;
+                let row_element = this._body.element.rows[i] as HTMLElement;
+                let row = Control.getControlByElement(row_element) as GridViewRow;;
                 if (!(row instanceof GridViewDataRow))
                     continue;
 
@@ -264,55 +286,59 @@ namespace wuzhui {
                 if (!this.dataSource.isSameItem(item, dataItem))
                     continue;
 
-                for (let i = 0; i < this.columns.length; i++) {
-                    let col = this.columns[i] as BoundField;
-                    if (!(col instanceof BoundField))
-                        continue;
-
-                    let cell = row.cells[i];
-                    if (cell instanceof GridViewEditableCell) {
-                        let c = cell as GridViewEditableCell;
-                        let value = item[col.dataField];
+                let cells = row.cells;
+                for (let j = 0; j < cells.length; j++) {
+                    let cell = cells[j];
+                    if (cell instanceof GridViewDataCell) {
+                        let value = item[cell.dataField];
                         if (value !== undefined) {
-                            c.value = value;
-                            dataItem[col.dataField] = value;
+                            cell.value = value;
+                            dataItem[cell.dataField] = value;
                         }
                     }
                 }
+
                 break;
 
             }
         }
 
-        private on_insertExecuted(item: any) {
-            this.appendDataRow(item, 0);
+        private on_insertExecuted(item: any, index?: number) {
+            if (index == null)
+                index = 0;
+
+            this.appendDataRow(item, index);
         }
 
         private on_deleteExecuted(item: any) {
-            for (let i = 0; i < this._body.element.rows.length; i++) {
-                let row_element = this._body.element.rows[i];
-                let row = $(row_element).data('Control') as GridViewRow;
-                if (!(row instanceof GridViewDataRow))
+
+            let dataRowsCount = 0;
+            let rows = this._body.element.rows;
+            let dataRows = new Array<GridViewDataRow>();
+            for (let i = 0; i < rows.length; i++) {
+                let row = Control.getControlByElement(rows.item(i)) as GridViewRow;
+                if ((row instanceof GridViewDataRow))
+                    dataRows.push(row);
+            }
+
+            for (let i = 0; i < dataRows.length; i++) {
+                let dataRow = dataRows[i];
+                if (!this.dataSource.isSameItem(item, dataRow.dataItem))
                     continue;
 
-                let dataItem = (row as GridViewDataRow).dataItem;
-                if (!this.dataSource.isSameItem(item, dataItem))
-                    continue;
-
-                row_element.remove();
-                break;
+                dataRow.element.remove();
+                if (dataRows.length == 1)
+                    this.showEmptyRow();
             }
         }
 
         private showEmptyRow() {
-            $(this._emtpyRow.element).show();
+            this._emtpyRow.element.cells[0].innerHTML = this.emptyDataHTML;
+            this._emtpyRow.element.style.removeProperty('display');
         }
 
         private hideEmptyRow() {
-            $(this._emtpyRow.element).hide();
+            this._emtpyRow.element.style.display = 'none';
         }
-
-
-
     }
 }
