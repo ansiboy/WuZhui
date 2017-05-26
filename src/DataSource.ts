@@ -8,7 +8,7 @@ namespace wuzhui {
         protected primaryKeys: string[];
 
         inserting = callbacks<DataSource<T>, { item: any }>();
-        inserted = callbacks<DataSource<T>, { item: any }>();
+        inserted = callbacks<DataSource<T>, { item: any, index?: number }>();
         deleting = callbacks<DataSource<T>, { item: any }>();
         deleted = callbacks<DataSource<T>, { item: any }>();
         updating = callbacks<DataSource<T>, { item: any }>();
@@ -48,6 +48,7 @@ namespace wuzhui {
             return this.executeInsert(item).then((data) => {
                 $.extend(item, data);
                 fireCallback(this.inserted, this, { item });
+                return data;
             });
         }
         delete(item: T) {
@@ -56,11 +57,10 @@ namespace wuzhui {
 
             this.checkPrimaryKeys(item);
 
-            //this.deleting.fireWith(this, [this, { item }]);
             fireCallback(this.deleting, this, { item });
-            return this.executeDelete(item).then(() => {
-                // this.deleted.fireWith(this, [this, { item }]);
+            return this.executeDelete(item).then((data) => {
                 fireCallback(this.deleted, this, { item });
+                return data;
             });
         }
         update(item: T) {
@@ -69,12 +69,11 @@ namespace wuzhui {
 
             this.checkPrimaryKeys(item);
 
-            //this.updating.fireWith(this, [this, { item }]);
             fireCallback(this.updating, this, { item });
             return this.executeUpdate(item).then((data) => {
                 $.extend(item, data);
-                // this.updated.fireWith(this, [this, { item }]);
                 fireCallback(this.updated, this, { item });
+                return data;
             });
         }
         isSameItem(theItem: T, otherItem: T) {
@@ -103,9 +102,7 @@ namespace wuzhui {
             }
         }
         select() {
-
             let args = this.selectArguments;
-            // this.selecting.fireWith(this, [this, { selectArguments: args }]);
             fireCallback(this.selecting, this, { selectArguments: args });
             return this.executeSelect(args).then((data) => {
                 let data_items: Array<T>;
@@ -114,15 +111,15 @@ namespace wuzhui {
                     data_items = <Array<T>>data;
                     args.totalRowCount = data_items.length;
                 }
-                else if (result.dataItems !== undefined && result.totalRowCount !== undefined) {//(<any>data).Type == 'DataSourceSelectResult') {
+                else if (result.dataItems !== undefined && result.totalRowCount !== undefined) {
                     data_items = (<DataSourceSelectResult<T>>data).dataItems;
                     args.totalRowCount = (<DataSourceSelectResult<T>>data).totalRowCount;
                 }
                 else {
                     throw new Error('Type of the query result is expected as Array or DataSourceSelectResult.');
                 }
-                //this.selected.fireWith(this, [this, { selectArguments: args, items: data_items }]);
-                fireCallback(this.selected, this, { selectArguments: args, items: data_items })
+                fireCallback(this.selected, this, { selectArguments: args, items: data_items });
+                return data;
             });
         }
 
@@ -153,55 +150,45 @@ namespace wuzhui {
         }
     }
 
-    export type WebDataSourceArguments = {
+    export type WebDataSourceArguments<T> = {
         primaryKeys?: string[]
-        selectUrl: string,
-        insertUrl?: string,
-        updateUrl?: string,
-        deleteUrl?: string
+        select: ((args: DataSourceSelectArguments) => Promise<any>),
+        insert?: ((item: T) => Promise<T>),
+        update?: ((item: T) => Promise<T>),
+        delete?: ((item: T) => Promise<T>)
     };
 
     export class WebDataSource<T> extends DataSource<T> {
-        private args: WebDataSourceArguments;
-        ajaxMethods = {
-            select: 'get',
-            update: 'post',
-            insert: 'post',
-            delete: 'post'
-        }
-        constructor(args: WebDataSourceArguments) {
+        private args: WebDataSourceArguments<T>;
+        constructor(args: WebDataSourceArguments<T>) {
             super(args.primaryKeys);
             this.args = args;
         }
         get canDelete() {
-            return this.args.deleteUrl != null && this.primaryKeys.length > 0;
+            return this.args.delete != null && this.primaryKeys.length > 0;
         }
         get canInsert() {
-            return this.args.insertUrl != null && this.primaryKeys.length > 0;
+            return this.args.insert != null && this.primaryKeys.length > 0;
         }
         get canUpdate() {
-            return this.args.updateUrl != null && this.primaryKeys.length > 0;
+            return this.args.update != null && this.primaryKeys.length > 0;
         }
 
         protected executeInsert(item: T): Promise<any> {
             if (!item) throw Errors.argumentNull("item");
-
-            return ajax(this.args.insertUrl, { body: this.formatData(item), method: this.ajaxMethods.insert });
+            return this.args.insert(item);
         }
         protected executeDelete(item: T): Promise<any> {
             if (!item) throw Errors.argumentNull("item");
-
-            return ajax(this.args.deleteUrl, { body: this.formatData(item), method: this.ajaxMethods.delete });
+            return this.args.delete(item);
         }
         protected executeUpdate(item: T): Promise<any> {
             if (!item) throw Errors.argumentNull("item");
-
-            return ajax(this.args.updateUrl, { body: this.formatData(item), method: this.ajaxMethods.update });
+            return this.args.update(item);
         }
         protected executeSelect(args: DataSourceSelectArguments): Promise<Array<T> | DataSourceSelectResult<T>> {
             if (!args) throw Errors.argumentNull("args");
-
-            return ajax(this.args.selectUrl, { body: args, method: this.ajaxMethods.select });
+            return this.args.select(args);
         }
 
         private formatData(data) {
