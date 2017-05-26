@@ -10,7 +10,7 @@ namespace wuzhui {
         updateButton: HTMLElement;
 
         constructor(field: DataControlField) {
-            super(field)
+            super()
         }
 
     }
@@ -34,7 +34,7 @@ namespace wuzhui {
         updateButtonClass?: string,
         insertButtonClass?: string,
 
-        handleUpdate?: () => JQueryPromise<any>
+        handleUpdate?: () => Promise<any>
     }
 
     export class CommandField extends DataControlField {
@@ -286,7 +286,7 @@ namespace wuzhui {
             for (var i = 0; i < rowElement.cells.length; i++) {
                 var cell = Control.getControlByElement(<HTMLElement>rowElement.cells[i]);
                 if (cell instanceof GridViewEditableCell) {
-                    dataItem[(<BoundField>cell.field).dataField] = cell.getControlValue();
+                    dataItem[(<BoundField>cell.field).dataField] = cell.controlValue;
                     editableCells.push(cell);
                 }
             }

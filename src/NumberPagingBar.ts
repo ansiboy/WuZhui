@@ -16,8 +16,12 @@ namespace wuzhui {
         pageButtonCount?: number,
         /** The text to display for the previous-page button. */
         previousPageText?: string,
-        /** The mode in which to display the pager controls in a control that supports pagination. */
-        //mode?: PagerButtons
+
+        /** Class name of the number buttons. */
+        buttonClassName?: string,
+
+        /** Class name of the active number button. */
+        activeButtonClassName?: string,
     }
 
     export class PagingBar {
@@ -123,7 +127,6 @@ namespace wuzhui {
 
         constructor(params: {
             dataSource: DataSource<any>, element: HTMLElement, pagerSettings?: PagerSettings,
-            //appendElement?: (element: HTMLElement, type: PagingBarElementType) => void,
             createTotal?: () => PagingTotalLabel,
             createButton?: () => NumberPagingButton
         }) {
@@ -135,7 +138,6 @@ namespace wuzhui {
                 lastPageText: '>>',
                 nextPageText: '...',        //private _buttons: Array<HTMLElement>;
                 previousPageText: '...',
-                //mode: PagerButtons.NextPreviousFirstLast
             }, params.pagerSettings || {});
 
 
@@ -162,9 +164,11 @@ namespace wuzhui {
         }
 
         private createPagingButton(): NumberPagingButton {
+            var pagerSettings = this.pagerSettings;
             let button = document.createElement('a');
             button.href = 'javascript:';
             this.element.appendChild(button);
+
             let result = <NumberPagingButton>{
                 get visible(): boolean {
                     return $(button).is(':visible');
@@ -192,17 +196,25 @@ namespace wuzhui {
                 },
                 set active(value: boolean) {
                     if (value == true) {
-                        $(button).removeAttr('href');
+                        button.removeAttribute('href');
+                        if (pagerSettings.activeButtonClassName)
+                            button.className = pagerSettings.activeButtonClassName;
+
                         return;
                     }
+
                     button.href = 'javascript:';
+                    if (pagerSettings.buttonClassName)
+                        button.className = pagerSettings.buttonClassName;
+                    else
+                        button.removeAttribute('class');
                 }
             };
-            $(button).click(() => {
+            button.onclick = () => {
                 if (result.onclick) {
                     result.onclick(result, this);
                 }
-            })
+            };
             return result;
         }
 

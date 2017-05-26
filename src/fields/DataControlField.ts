@@ -2,16 +2,164 @@
 
 namespace wuzhui {
     export class GridViewCell extends Control<HTMLTableCellElement> {
-        private _field: DataControlField;
 
-        constructor(field: DataControlField) {
+        constructor() {
             super(document.createElement('td'));
+        }
+    }
 
-            this._field = field;
+    export class GridViewDataCell extends GridViewCell {
+        private _value: any;
+        private _valueElement: HTMLElement;
+        private nullText: string;
+        private dataFormatString: string;
+        private _dataField: string;
+        private render: (element: HTMLElement, value: any) => void;
+
+        constructor(params: {
+            dataItem: any, dataField: string,
+            render?: (element: HTMLElement, value) => void,
+            nullText?: string, dataFormatString?: string
+        }) {
+            super();
+
+            this._valueElement = document.createElement('span');
+            this.element.appendChild(this._valueElement);
+            this.nullText = params.nullText != null ? params.nullText : '';
+            this.dataFormatString = params.dataFormatString;
+            this._dataField = params.dataField;
+            this.render = params.render || ((element: HTMLElement, value) => {
+                if (!element) throw Errors.argumentNull('element');
+
+                var text: string;
+                if (value == null)
+                    text = this.nullText;
+                else if (this.dataFormatString)
+                    text = this.formatValue(this.dataFormatString, value);
+                else
+                    text = value;
+
+                element.innerHTML = text;
+            });
+
+            this.value = params.dataItem[params.dataField];
+            this.render(this.valueElement, this.value);
         }
 
-        get field() {
-            return this._field;
+        protected get valueElement() {
+            return this._valueElement;
+        }
+
+        get dataField() {
+            return this._dataField;
+        }
+
+        set value(value) {
+            if (this._value == value)
+                return;
+
+            this._value = value;
+            // this._valueElement.innerHTML = this.getCellHtml(value);
+            this.render(this._valueElement, value);
+        }
+        get value() {
+            return this._value;
+        }
+
+        // getCellHtml(value: any): string {
+        //     // if (this.html)
+        //     //     return this.html(value);
+
+        //     if (value == null)
+        //         return this.nullText;
+
+        //     if (this.dataFormatString)
+        //         return this.formatValue(this.dataFormatString, value);
+
+        //     return value;
+        // }
+
+        private formatValue(...args): string {
+            var result = '';
+            var format = args[0];
+
+            for (var i = 0; ;) {
+                var open = format.indexOf('{', i);
+                var close = format.indexOf('}', i);
+                if ((open < 0) && (close < 0)) {
+                    result += format.slice(i);
+                    break;
+                }
+                if ((close > 0) && ((close < open) || (open < 0))) {
+                    if (format.charAt(close + 1) !== '}') {
+                        throw new Error('Sys.Res.stringFormatBraceMismatch');
+                    }
+                    result += format.slice(i, close + 1);
+                    i = close + 2;
+                    continue;
+                }
+
+                result += format.slice(i, open);
+                i = open + 1;
+
+                if (format.charAt(i) === '{') {
+                    result += '{';
+                    i++;
+                    continue;
+                }
+
+                if (close < 0)
+                    throw new Error('Sys.Res.stringFormatBraceMismatch');
+
+
+                var brace = format.substring(i, close);
+                var colonIndex = brace.indexOf(':');
+                var argNumber = parseInt((colonIndex < 0) ? brace : brace.substring(0, colonIndex), 10) + 1;
+                if (isNaN(argNumber)) throw new Error('Sys.Res.stringFormatInvalid');
+                var argFormat = (colonIndex < 0) ? '' : brace.substring(colonIndex + 1);
+
+                var arg = args[argNumber];
+                if (typeof (arg) === "undefined" || arg === null) {
+                    arg = '';
+                }
+
+                if (arg instanceof Date)
+                    result = result + this.formatDate(arg, argFormat);
+                else if (arg instanceof Number || typeof arg == 'number')
+                    result = result + this.formatNumber(arg, argFormat);
+                else
+                    result = result + arg.toString();
+
+                i = close + 1;
+            }
+
+            return result;
+        }
+
+        private formatDate(value: Date, format: string): string {
+            switch (format) {
+                case 'd':
+                    return `${value.getFullYear()}-${value.getMonth() + 1}-${value.getDate()}`;
+                case 'g':
+                    return `${value.getFullYear()}-${value.getMonth() + 1}-${value.getDate()} ${value.getHours()}:${value.getMinutes()}`;
+                case 'G':
+                    return `${value.getFullYear()}-${value.getMonth() + 1}-${value.getDate()} ${value.getHours()}:${value.getMinutes()}:${value.getSeconds()}`;
+                case 't':
+                    return `${value.getHours()}:${value.getMinutes()}`;
+                case 'T':
+                    return `${value.getHours()}:${value.getMinutes()}:${value.getSeconds()}`;
+            }
+
+            return value.toString();
+        }
+
+        private formatNumber(value: Number, format: string): string {
+            let reg = new RegExp('^C[0-9]+');
+            if (reg.test(format)) {
+                let num: any = format.substr(1);
+                return value.toFixed(num);
+            }
+            return value.toString();
         }
     }
 
@@ -25,9 +173,10 @@ namespace wuzhui {
         sortExpression?: string
     }
 
-    export class GridViewHeaderCell extends GridViewCell {
+    export class GridViewHeaderCell extends Control<HTMLTableHeaderCellElement> {
         private _sortType: 'asc' | 'desc';
         private _iconElement: HTMLElement;
+        private field: DataControlField;
 
         ascHTML = '↑';
         descHTML = '↓';
@@ -37,8 +186,9 @@ namespace wuzhui {
         sorted: Callback<GridViewHeaderCell, { sortType: string }>;
 
         constructor(field: DataControlField) {
-            super(field);
+            super(document.createElement('th'));
 
+            this.field = field;
             this.sorting = callbacks();
             this.sorted = callbacks();
 
@@ -186,7 +336,7 @@ namespace wuzhui {
             return cell;
         }
         createFooterCell(): GridViewCell {
-            let cell = new GridViewCell(this);
+            let cell = new GridViewCell();
             cell.element.innerHTML = this.footerText || '';
             cell.style(this.footerStyle);
 
@@ -196,7 +346,7 @@ namespace wuzhui {
             if (!dataItem)
                 throw Errors.argumentNull('dataItem');
 
-            let cell = new GridViewCell(this);
+            let cell = new GridViewCell();
             cell.style(this.itemStyle);
 
             return cell;

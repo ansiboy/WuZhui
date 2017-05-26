@@ -1,33 +1,33 @@
 /// <reference path="DataControlField.ts"/>
 
 namespace wuzhui {
-    export class GridViewEditableCell extends GridViewCell {
+
+    export class GridViewEditableCell extends GridViewDataCell {
 
         private _dataItem: any;
-        private _valueElement: HTMLElement;
+        // private _valueElement: HTMLElement;
         private _editorElement: HTMLElement
-        private _value: any;
+        // private _value: any;
         private _valueType: string;
+        private _field: BoundField;
 
         constructor(field: BoundField, dataItem: any) {
             if (field == null) throw Errors.argumentNull('field');
             if (dataItem == null) throw Errors.argumentNull('dataItem');
 
-            super(field);
+            super({
+                dataItem, dataField: field.dataField,
+                nullText: field.nullText, dataFormatString: field.dataFormatString
+            });
 
+            this._field = field;
             this._dataItem = dataItem;
-            this._valueElement = document.createElement('span');
-            if (field.nullText) {
-                this._valueElement.innerHTML = field.nullText;
-            }
 
             this._editorElement = this.createControl();
-            this.appendChild(this._valueElement);
             this.appendChild(this._editorElement);
 
-            applyStyle(this._editorElement, (<BoundField>this.field).controlStyle)
-            this.value = dataItem[field.dataField];
-
+            applyStyle(this._editorElement, this.field.controlStyle)
+            super.value = dataItem[field.dataField];
 
             if (this.value instanceof Date)
                 this._valueType = 'date'
@@ -37,46 +37,38 @@ namespace wuzhui {
             $(this._editorElement).hide();
         }
 
+        get field() {
+            return this._field;
+        }
+
         beginEdit() {
-            $(this._valueElement).hide();
+            $(super.valueElement).hide();
             $(this._editorElement).show();
-            let value = this._dataItem[(<BoundField>this.field).dataField];
-            this.setControlValue(value);
+            let value = this._dataItem[this.field.dataField];
+            this.controlValue = value;
         }
         endEdit() {
-            let value = this.getControlValue();
-            this._dataItem[(<BoundField>this.field).dataField] = value;
-            this._valueElement.innerHTML = this.getCellHtml(value);
+            super.value = this.controlValue;
+            this._dataItem[this.field.dataField] = super.value;
             $(this._editorElement).hide();
-            $(this._valueElement).show();
+            $(super.valueElement).show();
         }
         cancelEdit() {
             $(this._editorElement).hide();
-            $(this._valueElement).show();
-        }
-        set value(value) {
-            if (this._value == value)
-                return;
-
-            this._value = value;
-            this.setControlValue(value);
-            this._valueElement.innerHTML = this.getCellHtml(value);
-        }
-        get value() {
-            return this._value;
+            $(super.valueElement).show();
         }
         //==============================================
         // Virtual Methods
-        createControl(): HTMLElement {
+        protected createControl(): HTMLElement {
             let ctrl = document.createElement('span');
             ctrl.appendChild(document.createElement('input'));
             return ctrl;
         }
-        setControlValue(value: any) {
-            $(this._editorElement).find('input').val(value);
+        set controlValue(value: any) {
+            this._editorElement.querySelector('input').value = value;
         }
-        getControlValue() {
-            var text = $(this._editorElement).find('input').val();
+        get controlValue() {
+            var text = this._editorElement.querySelector('input').value;
             switch (this._valueType) {
                 case 'number':
                     return new Number(text).valueOf();
@@ -85,100 +77,6 @@ namespace wuzhui {
                 default:
                     return text;
             }
-        }
-        //==============================================
-
-        private getCellHtml(value: any): string {
-            if (value == null)
-                return (<BoundField>this.field).nullText;
-
-            if ((<BoundField>this.field).dataFormatString)
-                return this.formatValue((<BoundField>this.field).dataFormatString, value);
-
-            return value;
-        }
-
-        private formatValue(...args): string {
-            var result = '';
-            var format = args[0];
-
-            for (var i = 0; ;) {
-                var open = format.indexOf('{', i);
-                var close = format.indexOf('}', i);
-                if ((open < 0) && (close < 0)) {
-                    result += format.slice(i);
-                    break;
-                }
-                if ((close > 0) && ((close < open) || (open < 0))) {
-                    if (format.charAt(close + 1) !== '}') {
-                        throw new Error('Sys.Res.stringFormatBraceMismatch');
-                    }
-                    result += format.slice(i, close + 1);
-                    i = close + 2;
-                    continue;
-                }
-
-                result += format.slice(i, open);
-                i = open + 1;
-
-                if (format.charAt(i) === '{') {
-                    result += '{';
-                    i++;
-                    continue;
-                }
-
-                if (close < 0)
-                    throw new Error('Sys.Res.stringFormatBraceMismatch');
-
-
-                var brace = format.substring(i, close);
-                var colonIndex = brace.indexOf(':');
-                var argNumber = parseInt((colonIndex < 0) ? brace : brace.substring(0, colonIndex), 10) + 1;
-                if (isNaN(argNumber)) throw new Error('Sys.Res.stringFormatInvalid');
-                var argFormat = (colonIndex < 0) ? '' : brace.substring(colonIndex + 1);
-
-                var arg = args[argNumber];
-                if (typeof (arg) === "undefined" || arg === null) {
-                    arg = '';
-                }
-
-                if (arg instanceof Date)
-                    result = result + this.formatDate(arg, argFormat);
-                else if (arg instanceof Number || typeof arg == 'number')
-                    result = result + this.formatNumber(arg, argFormat);
-                else
-                    result = result + arg.toString();
-
-                i = close + 1;
-            }
-
-            return result;
-        }
-
-        private formatDate(value: Date, format: string): string {
-            switch (format) {
-                case 'd':
-                    return `${value.getFullYear()}-${value.getMonth() + 1}-${value.getDate()}`;
-                case 'g':
-                    return `${value.getFullYear()}-${value.getMonth() + 1}-${value.getDate()} ${value.getHours()}:${value.getMinutes()}`;
-                case 'G':
-                    return `${value.getFullYear()}-${value.getMonth() + 1}-${value.getDate()} ${value.getHours()}:${value.getMinutes()}:${value.getSeconds()}`;
-                case 't':
-                    return `${value.getHours()}:${value.getMinutes()}`;
-                case 'T':
-                    return `${value.getHours()}:${value.getMinutes()}:${value.getSeconds()}`;
-            }
-
-            return value.toString();
-        }
-
-        private formatNumber(value: Number, format: string): string {
-            let reg = new RegExp('^C[0-9]+');
-            if (reg.test(format)) {
-                let num: any = format.substr(1);
-                return value.toFixed(num);
-            }
-            return value.toString();
         }
     }
 
