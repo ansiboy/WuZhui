@@ -7,14 +7,14 @@ namespace wuzhui {
         private _currentSelectArguments: DataSourceSelectArguments;
         protected primaryKeys: string[];
 
-        inserting = callbacks<DataSource<T>, { item: any }>();
-        inserted = callbacks<DataSource<T>, { item: any, index?: number }>();
-        deleting = callbacks<DataSource<T>, { item: any }>();
-        deleted = callbacks<DataSource<T>, { item: any }>();
-        updating = callbacks<DataSource<T>, { item: any }>();
-        updated = callbacks<DataSource<T>, { item: any }>();
+        inserting = callbacks<DataSource<T>, { item: T }>();
+        inserted = callbacks<DataSource<T>, { item: T, index?: number }>();
+        deleting = callbacks<DataSource<T>, { item: T }>();
+        deleted = callbacks<DataSource<T>, { item: T }>();
+        updating = callbacks<DataSource<T>, { item: T }>();
+        updated = callbacks<DataSource<T>, { item: T }>();
         selecting = callbacks<DataSource<T>, { selectArguments: DataSourceSelectArguments }>();
-        selected = callbacks<DataSource<T>, { selectArguments: DataSourceSelectArguments, items: Array<any> }>();
+        selected = callbacks<DataSource<T>, { selectArguments: DataSourceSelectArguments, items: Array<T> }>();
 
         constructor(primaryKeys: string[]) {
             this.primaryKeys = primaryKeys || [];
