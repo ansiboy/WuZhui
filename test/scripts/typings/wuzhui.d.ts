@@ -16,49 +16,51 @@ declare namespace wuzhui {
         totalRowCount: number;
         dataItems: Array<T>;
     }
-    abstract class DataSource<T> {
+    class DataSource<T> {
         private _currentSelectArguments;
-        protected primaryKeys: string[];
+        private args;
+        private primaryKeys;
         inserting: Callback<DataSource<T>, {
-            item: any;
+            item: T;
         }>;
         inserted: Callback<DataSource<T>, {
-            item: any;
+            item: T;
+            index: number;
         }>;
         deleting: Callback<DataSource<T>, {
-            item: any;
+            item: T;
         }>;
         deleted: Callback<DataSource<T>, {
-            item: any;
+            item: T;
         }>;
         updating: Callback<DataSource<T>, {
-            item: any;
+            item: T;
         }>;
         updated: Callback<DataSource<T>, {
-            item: any;
+            item: T;
         }>;
         selecting: Callback<DataSource<T>, {
             selectArguments: DataSourceSelectArguments;
         }>;
         selected: Callback<DataSource<T>, {
             selectArguments: DataSourceSelectArguments;
-            items: any[];
+            items: T[];
         }>;
-        constructor(primaryKeys: string[]);
-        readonly selectArguments: DataSourceSelectArguments;
+        constructor(args: DataSourceArguments<T>);
+        readonly canDelete: boolean;
+        readonly canInsert: boolean;
+        readonly canUpdate: boolean;
         protected executeInsert(item: T): Promise<any>;
         protected executeDelete(item: T): Promise<any>;
         protected executeUpdate(item: T): Promise<any>;
         protected executeSelect(args: DataSourceSelectArguments): Promise<Array<T> | DataSourceSelectResult<T>>;
+        readonly selectArguments: DataSourceSelectArguments;
         insert(item: T): Promise<any>;
         delete(item: T): Promise<any>;
         update(item: T): Promise<any>;
         isSameItem(theItem: T, otherItem: T): boolean;
         private checkPrimaryKeys(item);
-        select(): Promise<void>;
-        readonly canDelete: boolean;
-        readonly canInsert: boolean;
-        readonly canUpdate: boolean;
+        select(): Promise<T[] | DataSourceSelectResult<T>>;
     }
     class DataSourceSelectArguments {
         startRowIndex: number;
@@ -68,43 +70,16 @@ declare namespace wuzhui {
         filter: string;
         constructor();
     }
-    type WebDataSourceArguments = {
+    type DataSourceArguments<T> = {
         primaryKeys?: string[];
-        selectUrl: string;
-        insertUrl?: string;
-        updateUrl?: string;
-        deleteUrl?: string;
+        select: ((args: DataSourceSelectArguments) => Promise<any>);
+        insert?: ((item: T) => Promise<T>);
+        update?: ((item: T) => Promise<T>);
+        delete?: ((item: T) => Promise<T>);
     };
     class WebDataSource<T> extends DataSource<T> {
-        private args;
-        ajaxMethods: {
-            select: string;
-            update: string;
-            insert: string;
-            delete: string;
-        };
-        constructor(args: WebDataSourceArguments);
-        readonly canDelete: boolean;
-        readonly canInsert: boolean;
-        readonly canUpdate: boolean;
-        protected executeInsert(item: T): Promise<any>;
-        protected executeDelete(item: T): Promise<any>;
-        protected executeUpdate(item: T): Promise<any>;
-        protected executeSelect(args: DataSourceSelectArguments): Promise<Array<T> | DataSourceSelectResult<T>>;
-        private formatData(data);
     }
     class ArrayDataSource<T> extends DataSource<T> {
-        private source;
-        constructor(items: Array<T>, primaryKeys?: string[]);
-        protected executeInsert(item: T): Promise<any>;
-        protected executeDelete(item: T): Promise<any>;
-        protected executeUpdate(item: T): Promise<any>;
-        protected executeSelect(args: any): Promise<Array<T> | DataSourceSelectResult<T>>;
-        readonly canDelete: boolean;
-        readonly canInsert: boolean;
-        readonly canUpdate: boolean;
-        private getPrimaryKeyValues(item);
-        private findItem(pkValues);
     }
 }
 declare namespace wuzhui {
@@ -148,8 +123,10 @@ declare namespace wuzhui {
         showFooter?: boolean;
         element?: HTMLTableElement;
         emptyDataRowStyle?: string;
-        allowPaging?: boolean;
         pageSize?: number;
+        pagerSettings?: PagerSettings;
+        emptyDataHTML?: string;
+        initDataHTML?: string;
     }
     class GridView extends Control<HTMLTableElement> {
         private _pageSize;
@@ -167,12 +144,13 @@ declare namespace wuzhui {
         static emptyRowClassName: string;
         static dataRowClassName: string;
         static pagingBarClassName: string;
-        emptyDataText: string;
+        private emptyDataHTML;
+        private initDataHTML;
         rowCreated: Callback<GridView, {
             row: GridViewRow;
         }>;
         constructor(params: GridViewArguments);
-        private createPagingBar();
+        private createPagingBar(pagerSettings?);
         readonly columns: DataControlField[];
         readonly dataSource: DataSource<any>;
         private appendEmptyRow();
@@ -182,7 +160,7 @@ declare namespace wuzhui {
         private appendFooterRow();
         private on_selectExecuted(items, args);
         private on_updateExecuted(item);
-        private on_insertExecuted(item);
+        private on_insertExecuted(item, index?);
         private on_deleteExecuted(item);
         private showEmptyRow();
         private hideEmptyRow();
@@ -205,6 +183,10 @@ declare namespace wuzhui {
         pageButtonCount?: number;
         /** The text to display for the previous-page button. */
         previousPageText?: string;
+        /** Class name of the number buttons. */
+        buttonClassName?: string;
+        /** Class name of the active number button. */
+        activeButtonClassName?: string;
     }
     class PagingBar {
         private _pageIndex;
@@ -271,8 +253,6 @@ declare namespace wuzhui {
         method: 'get' | 'post';
         constructor(method: any);
     }
-    var ajaxTimeout: number;
-    function ajax<T>(url: string, options: FetchOptions): Promise<T>;
     function applyStyle(element: HTMLElement, value: CSSStyleDeclaration | string): void;
     class Callback<S, A> {
         private funcs;
@@ -286,9 +266,28 @@ declare namespace wuzhui {
 }
 declare namespace wuzhui {
     class GridViewCell extends Control<HTMLTableCellElement> {
-        private _field;
-        constructor(field: DataControlField);
-        readonly field: DataControlField;
+        constructor();
+    }
+    class GridViewDataCell extends GridViewCell {
+        private _value;
+        private _valueElement;
+        private nullText;
+        private dataFormatString;
+        private _dataField;
+        private render;
+        constructor(params: {
+            dataItem: any;
+            dataField: string;
+            render?: (element: HTMLElement, value) => void;
+            nullText?: string;
+            dataFormatString?: string;
+        });
+        protected readonly valueElement: HTMLElement;
+        readonly dataField: string;
+        value: any;
+        private formatValue(...args);
+        private formatDate(value, format);
+        private formatNumber(value, format);
     }
     interface DataControlFieldParams {
         footerText?: string;
@@ -299,9 +298,10 @@ declare namespace wuzhui {
         visible?: boolean;
         sortExpression?: string;
     }
-    class GridViewHeaderCell extends GridViewCell {
+    class GridViewHeaderCell extends Control<HTMLTableHeaderCellElement> {
         private _sortType;
         private _iconElement;
+        private field;
         ascHTML: string;
         descHTML: string;
         sortingHTML: string;
@@ -354,24 +354,18 @@ declare namespace wuzhui {
     }
 }
 declare namespace wuzhui {
-    class GridViewEditableCell extends GridViewCell {
+    class GridViewEditableCell extends GridViewDataCell {
         private _dataItem;
-        private _valueElement;
         private _editorElement;
-        private _value;
         private _valueType;
+        private _field;
         constructor(field: BoundField, dataItem: any);
+        readonly field: BoundField;
         beginEdit(): void;
         endEdit(): void;
         cancelEdit(): void;
-        value: any;
-        createControl(): HTMLElement;
-        setControlValue(value: any): void;
-        getControlValue(): any;
-        private getCellHtml(value);
-        private formatValue(...args);
-        private formatDate(value, format);
-        private formatNumber(value, format);
+        protected createControl(): HTMLElement;
+        controlValue: any;
     }
     interface BoundFieldParams extends DataControlFieldParams {
         dataField: string;
@@ -417,7 +411,7 @@ declare namespace wuzhui {
         newButtonClass?: string;
         updateButtonClass?: string;
         insertButtonClass?: string;
-        handleUpdate?: () => JQueryPromise<any>;
+        handleUpdate?: () => Promise<any>;
     }
     class CommandField extends DataControlField {
         private currentMode;

@@ -3,39 +3,55 @@ namespace wuzhui {
         totalRowCount: number,
         dataItems: Array<T>
     }
-    export abstract class DataSource<T> {
+
+    export class DataSource<T> {//extends DataSource<T> {
         private _currentSelectArguments: DataSourceSelectArguments;
-        protected primaryKeys: string[];
+        private args: DataSourceArguments<T>;
+        private primaryKeys: string[];
 
-        inserting = callbacks<DataSource<T>, { item: any }>();
-        inserted = callbacks<DataSource<T>, { item: any, index?: number }>();
-        deleting = callbacks<DataSource<T>, { item: any }>();
-        deleted = callbacks<DataSource<T>, { item: any }>();
-        updating = callbacks<DataSource<T>, { item: any }>();
-        updated = callbacks<DataSource<T>, { item: any }>();
+        inserting = callbacks<DataSource<T>, { item: T }>();
+        inserted = callbacks<DataSource<T>, { item: T, index: number }>();
+        deleting = callbacks<DataSource<T>, { item: T }>();
+        deleted = callbacks<DataSource<T>, { item: T }>();
+        updating = callbacks<DataSource<T>, { item: T }>();
+        updated = callbacks<DataSource<T>, { item: T }>();
         selecting = callbacks<DataSource<T>, { selectArguments: DataSourceSelectArguments }>();
-        selected = callbacks<DataSource<T>, { selectArguments: DataSourceSelectArguments, items: Array<any> }>();
-
-        constructor(primaryKeys: string[]) {
-            this.primaryKeys = primaryKeys || [];
+        selected = callbacks<DataSource<T>, { selectArguments: DataSourceSelectArguments, items: Array<T> }>();
+        constructor(args: DataSourceArguments<T>) {
+            this.args = args;
+            this.primaryKeys = args.primaryKeys || [];
             this._currentSelectArguments = new DataSourceSelectArguments();
+
+        }
+        get canDelete() {
+            return this.args.delete != null && this.primaryKeys.length > 0;
+        }
+        get canInsert() {
+            return this.args.insert != null && this.primaryKeys.length > 0;
+        }
+        get canUpdate() {
+            return this.args.update != null && this.primaryKeys.length > 0;
+        }
+
+        protected executeInsert(item: T): Promise<any> {
+            if (!item) throw Errors.argumentNull("item");
+            return this.args.insert(item);
+        }
+        protected executeDelete(item: T): Promise<any> {
+            if (!item) throw Errors.argumentNull("item");
+            return this.args.delete(item);
+        }
+        protected executeUpdate(item: T): Promise<any> {
+            if (!item) throw Errors.argumentNull("item");
+            return this.args.update(item);
+        }
+        protected executeSelect(args: DataSourceSelectArguments): Promise<Array<T> | DataSourceSelectResult<T>> {
+            if (!args) throw Errors.argumentNull("args");
+            return this.args.select(args);
         }
 
         get selectArguments() {
             return this._currentSelectArguments;
-        }
-
-        protected executeInsert(item: T): Promise<any> {
-            throw Errors.notImplemented();
-        }
-        protected executeDelete(item: T): Promise<any> {
-            throw Errors.notImplemented();
-        }
-        protected executeUpdate(item: T): Promise<any> {
-            throw Errors.notImplemented();
-        }
-        protected executeSelect(args: DataSourceSelectArguments): Promise<Array<T> | DataSourceSelectResult<T>> {
-            throw Errors.notImplemented();
         }
 
         insert(item: T) {
@@ -122,19 +138,6 @@ namespace wuzhui {
                 return data;
             });
         }
-
-        //===============================================
-        //Virtual Properties
-        get canDelete() {
-            return false;
-        }
-        get canInsert() {
-            return false;
-        }
-        get canUpdate() {
-            return false;
-        }
-        //===============================================
     }
 
     export class DataSourceSelectArguments {
@@ -150,7 +153,7 @@ namespace wuzhui {
         }
     }
 
-    export type WebDataSourceArguments<T> = {
+    export type DataSourceArguments<T> = {
         primaryKeys?: string[]
         select: ((args: DataSourceSelectArguments) => Promise<any>),
         insert?: ((item: T) => Promise<T>),
@@ -158,150 +161,13 @@ namespace wuzhui {
         delete?: ((item: T) => Promise<T>)
     };
 
-    export class WebDataSource<T> extends DataSource<T> {
-        private args: WebDataSourceArguments<T>;
-        constructor(args: WebDataSourceArguments<T>) {
-            super(args.primaryKeys);
-            this.args = args;
-        }
-        get canDelete() {
-            return this.args.delete != null && this.primaryKeys.length > 0;
-        }
-        get canInsert() {
-            return this.args.insert != null && this.primaryKeys.length > 0;
-        }
-        get canUpdate() {
-            return this.args.update != null && this.primaryKeys.length > 0;
-        }
 
-        protected executeInsert(item: T): Promise<any> {
-            if (!item) throw Errors.argumentNull("item");
-            return this.args.insert(item);
-        }
-        protected executeDelete(item: T): Promise<any> {
-            if (!item) throw Errors.argumentNull("item");
-            return this.args.delete(item);
-        }
-        protected executeUpdate(item: T): Promise<any> {
-            if (!item) throw Errors.argumentNull("item");
-            return this.args.update(item);
-        }
-        protected executeSelect(args: DataSourceSelectArguments): Promise<Array<T> | DataSourceSelectResult<T>> {
-            if (!args) throw Errors.argumentNull("args");
-            return this.args.select(args);
-        }
 
-        private formatData(data) {
-            let obj = $.extend({}, data);
-            for (let name in obj) {
-                if (data[name] instanceof Date) {
-                    // 说明：对于MVC3，必须把日期时间转换成'yyyy-MM-dd HH:mm'这种格式。
-                    let date = <Date>obj[name];
-                    let y = date.getFullYear();
-                    let m = date.getMonth() + 1;
-                    let d = date.getDate();
-
-                    let h = date.getHours();
-                    let M = date.getMinutes();
-                    let s = date.getSeconds();
-
-                    obj[name] = y + "-" + m + "-" + d + " " + h + ":" + M + ":" + s;
-                }
-            }
-            return obj;
-        }
-
+    export class WebDataSource<T> extends DataSource<T>{
 
     }
 
     export class ArrayDataSource<T> extends DataSource<T> {
-        private source: Array<T>;
-        constructor(items: Array<T>, primaryKeys?: string[]) {
-            if (items == null)
-                throw Errors.argumentNull('items');
-
-            super(primaryKeys);
-            this.source = items;
-        }
-        protected executeInsert(item: T): Promise<any> {
-            if (item == null)
-                throw Errors.argumentNull('item')
-
-            this.source.push(item);
-            return Promise.resolve();
-        }
-
-        protected executeDelete(item: T): Promise<any> {
-            if (item == null)
-                throw Errors.argumentNull('item')
-
-            let pkValues = this.getPrimaryKeyValues(item);
-            let itemIndex = this.findItem(pkValues);
-
-            this.source.filter((value, index, array): boolean => {
-                return index != itemIndex;
-            })
-
-            return Promise.resolve();
-        }
-
-        protected executeUpdate(item: T): Promise<any> {
-            if (item == null)
-                throw Errors.argumentNull('item')
-
-            let pkValues = this.getPrimaryKeyValues(item);
-            let itemIndex = this.findItem(pkValues);
-            if (itemIndex >= 0) {
-                let sourceItem = this.source[itemIndex];
-                for (let key in sourceItem) {
-                    sourceItem[key] = item[key];
-                }
-            }
-
-            return Promise.resolve();
-        }
-
-        protected executeSelect(args): Promise<Array<T> | DataSourceSelectResult<T>> {
-            return Promise.resolve(this.source);
-        }
-
-        get canDelete() {
-            return this.primaryKeys.length > 0;
-        }
-        get canInsert() {
-            return this.primaryKeys.length > 0;
-        }
-        get canUpdate() {
-            return this.primaryKeys.length > 0;
-        }
-
-
-        private getPrimaryKeyValues(item) {
-            let pkValues = [];
-            for (let i = 0; i < this.primaryKeys.length; i++) {
-                pkValues[i] = item[this.primaryKeys[i]];
-            }
-            return pkValues;
-        }
-
-        private findItem(pkValues: Array<any>): number {
-            for (let i = 0; i < this.source.length; i++) {
-                let item = this.source[i];
-                let same = true;
-                for (let j = 0; j < this.primaryKeys.length; j++) {
-                    let primaryKey = this.primaryKeys[j];
-                    if (item[primaryKey] != pkValues[primaryKey]) {
-                        same = false
-                        break;
-                    }
-                }
-
-                if (same) {
-                    return i;
-                }
-            }
-
-            return -1;
-        }
     }
+
 }

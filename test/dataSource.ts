@@ -1,7 +1,7 @@
 
 let dataSource = new wuzhui.WebDataSource({
     //primaryKeys:[],
-    selectUrl: 'http://shop.alinq.cn/UserServices/Site/Home/GetHomeProducts?pageIndex=0'
+    select: () => Promise.resolve([]),//'http://shop.alinq.cn/UserServices/Site/Home/GetHomeProducts?pageIndex=0'
 });
 
 //let select_arguments = new wuzhui.DataSourceSelectArguments();

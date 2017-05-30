@@ -3,10 +3,11 @@ let w = wuzhui;
 let baseUrl = 'http://shop.alinq.cn/AdminServices/Shop/Product/';
 let dataSource = new wuzhui.WebDataSource({
     primaryKeys: ['Id'],
-    selectUrl: baseUrl + 'GetProducts',
-    updateUrl: baseUrl + 'SaveProduct',
-    insertUrl: baseUrl + 'SaveProduct',
-    deleteUrl: baseUrl + 'DeleteProduct'
+    select: () => Promise.resolve([])
+    // select: baseUrl + 'GetProducts',
+    // update: baseUrl + 'SaveProduct',
+    // insert: baseUrl + 'SaveProduct',
+    // delete: baseUrl + 'DeleteProduct'
 });
 
 
@@ -37,8 +38,8 @@ let gridView = new wuzhui.GridView({
 gridView.element.style.width = '100%';
 document.body.appendChild(gridView.element);
 
-let headerElement = gridView.element.tHead.rows[0];// $(gridView.element).find('thead > tr')[0];
-let footerElement = gridView.element.tFoot.rows[0]; //$(gridView.element).find('tfoot > tr')[0];
+let headerElement = gridView.element.tHead.rows[0] as HTMLElement;// $(gridView.element).find('thead > tr')[0];
+let footerElement = gridView.element.tFoot.rows[0] as HTMLElement; //$(gridView.element).find('tfoot > tr')[0];
 QUnit.test('gridView header and footer', (assert) => {
     assert.notEqual(headerElement, null);
     assert.notEqual(footerElement, null);

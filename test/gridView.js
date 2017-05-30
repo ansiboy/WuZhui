@@ -2,10 +2,7 @@ let w = wuzhui;
 let baseUrl = 'http://shop.alinq.cn/AdminServices/Shop/Product/';
 let dataSource = new wuzhui.WebDataSource({
     primaryKeys: ['Id'],
-    selectUrl: baseUrl + 'GetProducts',
-    updateUrl: baseUrl + 'SaveProduct',
-    insertUrl: baseUrl + 'SaveProduct',
-    deleteUrl: baseUrl + 'DeleteProduct'
+    select: () => Promise.resolve([])
 });
 let gridView = new wuzhui.GridView({
     dataSource,
