@@ -4,33 +4,26 @@ namespace wuzhui {
         dataItems: Array<T>
     }
 
-<<<<<<< HEAD
-    export class DataSource<T> {//extends DataSource<T> {
+    export type SelectResult<T> = Array<T> | DataSourceSelectResult<T>;
+    // <<<<<<< HEAD
+    export class DataSource<T> {//extends DataSource<T> {   
         private _currentSelectArguments: DataSourceSelectArguments;
         private args: DataSourceArguments<T>;
         private primaryKeys: string[];
 
         inserting = callbacks<DataSource<T>, { item: T }>();
         inserted = callbacks<DataSource<T>, { item: T, index: number }>();
-=======
-        inserting = callbacks<DataSource<T>, { item: T }>();
-        inserted = callbacks<DataSource<T>, { item: T, index?: number }>();
->>>>>>> 10fbf7c6a158202a95780b9ac2e6e18045c48282
+
         deleting = callbacks<DataSource<T>, { item: T }>();
         deleted = callbacks<DataSource<T>, { item: T }>();
         updating = callbacks<DataSource<T>, { item: T }>();
         updated = callbacks<DataSource<T>, { item: T }>();
         selecting = callbacks<DataSource<T>, { selectArguments: DataSourceSelectArguments }>();
         selected = callbacks<DataSource<T>, { selectArguments: DataSourceSelectArguments, items: Array<T> }>();
-<<<<<<< HEAD
+
         constructor(args: DataSourceArguments<T>) {
             this.args = args;
             this.primaryKeys = args.primaryKeys || [];
-=======
-
-        constructor(primaryKeys: string[]) {
-            this.primaryKeys = primaryKeys || [];
->>>>>>> 10fbf7c6a158202a95780b9ac2e6e18045c48282
             this._currentSelectArguments = new DataSourceSelectArguments();
 
         }
@@ -56,7 +49,7 @@ namespace wuzhui {
             if (!item) throw Errors.argumentNull("item");
             return this.args.update(item);
         }
-        protected executeSelect(args: DataSourceSelectArguments): Promise<Array<T> | DataSourceSelectResult<T>> {
+        protected executeSelect(args: DataSourceSelectArguments): Promise<SelectResult<T>> {
             if (!args) throw Errors.argumentNull("args");
             return this.args.select(args);
         }
@@ -166,7 +159,7 @@ namespace wuzhui {
 
     export type DataSourceArguments<T> = {
         primaryKeys?: string[]
-        select: ((args: DataSourceSelectArguments) => Promise<any>),
+        select: ((args: DataSourceSelectArguments) => Promise<SelectResult<T>>),
         insert?: ((item: T) => Promise<any>),
         update?: ((item: T) => Promise<any>),
         delete?: ((item: T) => Promise<any>)
