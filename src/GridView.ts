@@ -108,7 +108,7 @@ namespace wuzhui {
 
         private emptyDataHTML = '暂无记录';
         private initDataHTML = '数据正在加载中...';
-
+        private loadFailHTML = '加载数据失败，点击重新加载。';
         //========================================================
         // 样式
         // headerStyle: string;
@@ -139,7 +139,7 @@ namespace wuzhui {
             }
 
             this._dataSource = params.dataSource;
-            this._dataSource.selected.add((sender, e) => this.on_selectExecuted(e.items, e.selectArguments));
+            this._dataSource.selected.add((sender, e) => this.on_selectExecuted(e.items));
             this._dataSource.updated.add((sender, e) => this.on_updateExecuted(e.item));
             this._dataSource.inserted.add((sender, e) => this.on_insertExecuted(e.item, e.index));
             this._dataSource.deleted.add((sender, e) => this.on_deleteExecuted(e.item));
@@ -149,6 +149,17 @@ namespace wuzhui {
                     this._emtpyRow.element.cells[0].innerHTML = this.initDataHTML;
                 }
             });
+            this._dataSource.error.add((sender, e) => {
+                if (e.method == 'select') {
+                    this.on_selectExecuted([]);
+                    var element = this._emtpyRow.cells[0].element;
+                    element.innerHTML = this.loadFailHTML;
+                    element.onclick = () => {
+                        this._dataSource.select();
+                    }
+                    e.handled = true;
+                }
+            })
 
             if (params.showHeader) {
                 this._header = new Control(document.createElement('thead'));
@@ -258,7 +269,7 @@ namespace wuzhui {
             this._footer.appendChild(row);
         }
 
-        private on_selectExecuted(items: Array<any>, args: DataSourceSelectArguments) {
+        private on_selectExecuted(items: Array<any>) {
             var rows = this._body.element.querySelectorAll(`.${GridView.dataRowClassName}`);
             for (let i = 0; i < rows.length; i++)
                 this._body.element.removeChild(rows[i]);
