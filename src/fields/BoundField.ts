@@ -27,7 +27,7 @@ namespace wuzhui {
             this.appendChild(this._editorElement);
 
             applyStyle(this._editorElement, this.field.controlStyle)
-            super.value = dataItem[field.dataField];
+            this.value = dataItem[field.dataField];
 
             if (this.value instanceof Date)
                 this._valueType = 'date'
@@ -42,20 +42,20 @@ namespace wuzhui {
         }
 
         beginEdit() {
-            $(super.valueElement).hide();
+            $(this.valueElement).hide();
             $(this._editorElement).show();
             let value = this._dataItem[this.field.dataField];
             this.controlValue = value;
         }
         endEdit() {
-            super.value = this.controlValue;
-            this._dataItem[this.field.dataField] = super.value;
+            this.value = this.controlValue;
+            this._dataItem[this.field.dataField] = this.value;
             $(this._editorElement).hide();
-            $(super.valueElement).show();
+            $(this.valueElement).show();
         }
         cancelEdit() {
             $(this._editorElement).hide();
-            $(super.valueElement).show();
+            $(this.valueElement).show();
         }
         //==============================================
         // Virtual Methods
