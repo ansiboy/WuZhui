@@ -4,8 +4,13 @@ namespace wuzhui {
         dataItems: Array<T>
     }
 
+    export interface DataSourceError extends Error {
+        handled: boolean,
+        method: DataMethod,
+    }
+
+    export type DataMethod = 'select' | 'update' | 'delete' | 'insert';
     export type SelectResult<T> = Array<T> | DataSourceSelectResult<T>;
-    // <<<<<<< HEAD
     export class DataSource<T> {//extends DataSource<T> {   
         private _currentSelectArguments: DataSourceSelectArguments;
         private args: DataSourceArguments<T>;
@@ -20,6 +25,7 @@ namespace wuzhui {
         updated = callbacks<DataSource<T>, { item: T }>();
         selecting = callbacks<DataSource<T>, { selectArguments: DataSourceSelectArguments }>();
         selected = callbacks<DataSource<T>, { selectArguments: DataSourceSelectArguments, items: Array<T> }>();
+        error = callbacks<this, DataSourceError>();
 
         constructor(args: DataSourceArguments<T>) {
             this.args = args;
@@ -66,9 +72,11 @@ namespace wuzhui {
 
             fireCallback(this.inserting, this, { item });
             return this.executeInsert(item).then((data) => {
-                $.extend(item, data);
+                Object.assign(item, data);
                 fireCallback(this.inserted, this, { item });
                 return data;
+            }).catch(exc => {
+                this.processError(exc, 'insert');
             });
         }
         delete(item: T) {
@@ -81,6 +89,8 @@ namespace wuzhui {
             return this.executeDelete(item).then((data) => {
                 fireCallback(this.deleted, this, { item });
                 return data;
+            }).catch(exc => {
+                this.processError(exc, 'delete');
             });
         }
         update(item: T) {
@@ -91,9 +101,11 @@ namespace wuzhui {
 
             fireCallback(this.updating, this, { item });
             return this.executeUpdate(item).then((data) => {
-                $.extend(item, data);
+                Object.assign(item, data);
                 fireCallback(this.updated, this, { item });
                 return data;
+            }).catch((exc: DataSourceError) => {
+                this.processError(exc, 'update');
             });
         }
         isSameItem(theItem: T, otherItem: T) {
@@ -127,7 +139,7 @@ namespace wuzhui {
             return this.executeSelect(args).then((data) => {
                 let data_items: Array<T>;
                 let result = data as DataSourceSelectResult<T>;
-                if ($.isArray(data)) {
+                if (Array.isArray(data)) {
                     data_items = <Array<T>>data;
                     args.totalRowCount = data_items.length;
                 }
@@ -140,9 +152,20 @@ namespace wuzhui {
                 }
                 fireCallback(this.selected, this, { selectArguments: args, items: data_items });
                 return data;
+            }).catch(exc => {
+                this.processError(exc, 'select');
             });
         }
+
+        private processError(exc: DataSourceError, method: DataMethod) {
+            exc.method = method;
+            this.error.fire(this, exc);
+            if (!exc.handled)
+                throw exc;
+        }
     }
+
+
 
     export class DataSourceSelectArguments {
         startRowIndex: number;

@@ -171,19 +171,28 @@ namespace wuzhui {
 
             let result = <NumberPagingButton>{
                 get visible(): boolean {
-                    return $(button).is(':visible');
+                    // return $(button).is(':visible');
+                    return button.style.display != 'none';
                 },
                 set visible(value: boolean) {
-                    if (value)
-                        $(button).show();
-                    else
-                        $(button).hide();
+                    // if (value)
+                    //     $(button).show();
+                    // else
+                    //     $(button).hide();
+                    if (value) {
+                        button.style.removeProperty('display');
+                    }
+                    else {
+                        button.style.display = 'none';
+                    }
                 },
                 get pageIndex(): number {
-                    return new Number($(button).attr('pageIndex')).valueOf();
+                    // return new Number($(button).attr('pageIndex')).valueOf();
+                    return new Number(button.getAttribute('pageIndex')).valueOf();
                 },
                 set pageIndex(value: number) {
-                    $(button).attr('pageIndex', value);
+                    // $(button).attr('pageIndex', value);
+                    button.setAttribute('pageIndex', value as any);
                 },
                 get text(): string {
                     return button.innerHTML;
@@ -241,13 +250,15 @@ namespace wuzhui {
                     numberElement.innerHTML = value;
                 },
                 get visible(): boolean {
-                    return $(totalElement).is(':visible');
+                    // return $(totalElement).is(':visible');
+                    let display = totalElement.style.display;
+                    return display != 'none';
                 },
                 set visible(value: boolean) {
                     if (value == true)
-                        $(totalElement).show();
+                        totalElement.style.display = 'block' //$(totalElement).show();
                     else
-                        $(totalElement).hide();
+                        totalElement.style.display = 'node' //$(totalElement).hide();
                 }
             }
         }

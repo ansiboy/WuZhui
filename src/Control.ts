@@ -19,13 +19,21 @@ namespace wuzhui {
         // }
 
         get visible(): boolean {
-            return $(this.element).is(':visible');
+            // return $(this.element).is(':visible');
+            let { display } = this.element.style;
+            return !display || display != 'none';
         }
         set visible(value: boolean) {
-            if (value)
-                $(this._element).show();
-            else
-                $(this._element).hide();
+            // if (value)
+            //     $(this._element).show();
+            // else
+            //     $(this._element).hide();
+            if (value) {
+                this._element.style.removeProperty('display');
+            }
+            else {
+                this._element.style.display = 'none';
+            }
         }
 
         get element(): T {
