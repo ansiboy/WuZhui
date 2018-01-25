@@ -17,8 +17,8 @@ requirejs(['js/wuzhui.js'])
 ## 示例
 
 ### 数据的加载
-1. [数据的读取](#grid_view/data_read)
-2. [数据的分页]()
+1. [数据的显示](#grid_view/data_read)
+2. [数据的分页](#grid_view/data_paging)
 3. [设置样式]()
 
 ### 数据的增删改

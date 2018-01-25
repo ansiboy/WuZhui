@@ -1,0 +1,11 @@
+{
+    "compilerOptions": {
+        "target": "es6"
+    },
+    "typeAcquisition": {
+        "include": [
+            "js/require.d.ts",
+            "js/wuzhui.d.ts"
+        ]
+    }
+}

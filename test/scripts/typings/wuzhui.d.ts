@@ -71,11 +71,11 @@ declare namespace wuzhui {
         private processError(exc, method);
     }
     class DataSourceSelectArguments {
-        startRowIndex: number;
-        totalRowCount: number;
-        maximumRows: number;
-        sortExpression: string;
-        filter: string;
+        startRowIndex?: number;
+        totalRowCount?: number;
+        maximumRows?: number;
+        sortExpression?: string;
+        filter?: string;
         constructor();
     }
     type DataSourceArguments<T> = {
@@ -90,18 +90,18 @@ declare namespace wuzhui {
     class ArrayDataSource<T> extends DataSource<T> {
     }
 }
-declare class Errors {
-    constructor(parameters: any);
-    static notImplemented(message?: string): Error;
-    static argumentNull(paramName: any): Error;
-    static controllBelonsAnother(): Error;
-    static columnsCanntEmpty(): Error;
-    static dataSourceCanntInsert(): Error;
-    static dataSourceCanntUpdate(): Error;
-    static dataSourceCanntDelete(): Error;
-    static primaryKeyNull(key: string): Error;
-}
 declare namespace wuzhui {
+    class Errors {
+        constructor(parameters: any);
+        static notImplemented(message?: string): Error;
+        static argumentNull(paramName: any): Error;
+        static controllBelonsAnother(): Error;
+        static columnsCanntEmpty(): Error;
+        static dataSourceCanntInsert(): Error;
+        static dataSourceCanntUpdate(): Error;
+        static dataSourceCanntDelete(): Error;
+        static primaryKeyNull(key: string): Error;
+    }
 }
 declare namespace wuzhui {
     enum GridViewRowType {
@@ -250,13 +250,14 @@ declare namespace wuzhui {
         render(): void;
     }
 }
-declare class ElementHelper {
-    static showElement(element: HTMLElement): void;
-    static hideElement(element: HTMLElement): void;
-    static isVisible(element: HTMLElement): boolean;
-    static data(element: HTMLElement, name: string, value?: any): any;
-}
 declare namespace wuzhui {
+    class ElementHelper {
+        static showElement(element: HTMLElement): void;
+        static hideElement(element: HTMLElement): void;
+        static isVisible(element: HTMLElement): boolean;
+        static data(element: HTMLElement, name: string, value?: any): any;
+        static findFirstParentByTagName(element: Element, tagName: string): HTMLElement;
+    }
     function applyStyle(element: HTMLElement, value: CSSStyleDeclaration | string): void;
     class Callback<S, A> {
         private funcs;

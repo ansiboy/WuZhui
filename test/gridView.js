@@ -32,8 +32,8 @@ let gridView = new wuzhui.GridView({
 });
 gridView.element.style.width = '100%';
 document.body.appendChild(gridView.element);
-let headerElement = gridView.element.tHead.rows[0]; // $(gridView.element).find('thead > tr')[0];
-let footerElement = gridView.element.tFoot.rows[0]; //$(gridView.element).find('tfoot > tr')[0];
+let headerElement = gridView.element.tHead.rows[0];
+let footerElement = gridView.element.tFoot.rows[0];
 QUnit.test('gridView header and footer', (assert) => {
     assert.notEqual(headerElement, null);
     assert.notEqual(footerElement, null);
