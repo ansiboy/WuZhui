@@ -16,6 +16,12 @@ declare namespace wuzhui {
         totalRowCount: number;
         dataItems: Array<T>;
     }
+    interface DataSourceError extends Error {
+        handled: boolean;
+        method: DataMethod;
+    }
+    type DataMethod = 'select' | 'update' | 'delete' | 'insert';
+    type SelectResult<T> = Array<T> | DataSourceSelectResult<T>;
     class DataSource<T> {
         private _currentSelectArguments;
         private args;
@@ -46,6 +52,7 @@ declare namespace wuzhui {
             selectArguments: DataSourceSelectArguments;
             items: T[];
         }>;
+        error: Callback<this, DataSourceError>;
         constructor(args: DataSourceArguments<T>);
         readonly canDelete: boolean;
         readonly canInsert: boolean;
@@ -53,14 +60,15 @@ declare namespace wuzhui {
         protected executeInsert(item: T): Promise<any>;
         protected executeDelete(item: T): Promise<any>;
         protected executeUpdate(item: T): Promise<any>;
-        protected executeSelect(args: DataSourceSelectArguments): Promise<Array<T> | DataSourceSelectResult<T>>;
+        protected executeSelect(args: DataSourceSelectArguments): Promise<SelectResult<T>>;
         readonly selectArguments: DataSourceSelectArguments;
         insert(item: T): Promise<any>;
         delete(item: T): Promise<any>;
         update(item: T): Promise<any>;
         isSameItem(theItem: T, otherItem: T): boolean;
         private checkPrimaryKeys(item);
-        select(): Promise<T[] | DataSourceSelectResult<T>>;
+        select(): Promise<void | T[] | DataSourceSelectResult<T>>;
+        private processError(exc, method);
     }
     class DataSourceSelectArguments {
         startRowIndex: number;
@@ -72,28 +80,28 @@ declare namespace wuzhui {
     }
     type DataSourceArguments<T> = {
         primaryKeys?: string[];
-        select: ((args: DataSourceSelectArguments) => Promise<any>);
-        insert?: ((item: T) => Promise<T>);
-        update?: ((item: T) => Promise<T>);
-        delete?: ((item: T) => Promise<T>);
+        select: ((args: DataSourceSelectArguments) => Promise<SelectResult<T>>);
+        insert?: ((item: T) => Promise<any>);
+        update?: ((item: T) => Promise<any>);
+        delete?: ((item: T) => Promise<any>);
     };
     class WebDataSource<T> extends DataSource<T> {
     }
     class ArrayDataSource<T> extends DataSource<T> {
     }
 }
+declare class Errors {
+    constructor(parameters: any);
+    static notImplemented(message?: string): Error;
+    static argumentNull(paramName: any): Error;
+    static controllBelonsAnother(): Error;
+    static columnsCanntEmpty(): Error;
+    static dataSourceCanntInsert(): Error;
+    static dataSourceCanntUpdate(): Error;
+    static dataSourceCanntDelete(): Error;
+    static primaryKeyNull(key: string): Error;
+}
 declare namespace wuzhui {
-    class Errors {
-        constructor(parameters: any);
-        static notImplemented(message?: string): Error;
-        static argumentNull(paramName: any): Error;
-        static controllBelonsAnother(): Error;
-        static columnsCanntEmpty(): Error;
-        static dataSourceCanntInsert(): Error;
-        static dataSourceCanntUpdate(): Error;
-        static dataSourceCanntDelete(): Error;
-        static primaryKeyNull(key: string): Error;
-    }
 }
 declare namespace wuzhui {
     enum GridViewRowType {
@@ -146,6 +154,7 @@ declare namespace wuzhui {
         static pagingBarClassName: string;
         private emptyDataHTML;
         private initDataHTML;
+        private loadFailHTML;
         rowCreated: Callback<GridView, {
             row: GridViewRow;
         }>;
@@ -158,7 +167,7 @@ declare namespace wuzhui {
         private on_sort(sender, args);
         private appendHeaderRow();
         private appendFooterRow();
-        private on_selectExecuted(items, args);
+        private on_selectExecuted(items);
         private on_updateExecuted(item);
         private on_insertExecuted(item, index?);
         private on_deleteExecuted(item);
@@ -241,18 +250,13 @@ declare namespace wuzhui {
         render(): void;
     }
 }
+declare class ElementHelper {
+    static showElement(element: HTMLElement): void;
+    static hideElement(element: HTMLElement): void;
+    static isVisible(element: HTMLElement): boolean;
+    static data(element: HTMLElement, name: string, value?: any): any;
+}
 declare namespace wuzhui {
-    interface FetchOptions {
-        method?: string;
-        headers?: any;
-        body?: any;
-    }
-    class AjaxError implements Error {
-        name: string;
-        message: string;
-        method: 'get' | 'post';
-        constructor(method: any);
-    }
     function applyStyle(element: HTMLElement, value: CSSStyleDeclaration | string): void;
     class Callback<S, A> {
         private funcs;
@@ -374,7 +378,6 @@ declare namespace wuzhui {
         nullText?: string;
     }
     class BoundField extends DataControlField {
-        private _sortType;
         private _valueElement;
         constructor(params: BoundFieldParams);
         private params();

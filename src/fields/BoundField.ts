@@ -34,7 +34,8 @@ namespace wuzhui {
             else
                 this._valueType = typeof this.value;
 
-            $(this._editorElement).hide();
+            // $(this._editorElement).hide();
+            ElementHelper.hideElement(this._editorElement);
         }
 
         get field() {
@@ -42,20 +43,20 @@ namespace wuzhui {
         }
 
         beginEdit() {
-            $(this.valueElement).hide();
-            $(this._editorElement).show();
+            ElementHelper.hideElement(this.valueElement);
+            ElementHelper.showElement(this._editorElement);
             let value = this._dataItem[this.field.dataField];
             this.controlValue = value;
         }
         endEdit() {
             this.value = this.controlValue;
             this._dataItem[this.field.dataField] = this.value;
-            $(this._editorElement).hide();
-            $(this.valueElement).show();
+            ElementHelper.hideElement(this._editorElement);
+            ElementHelper.showElement(this.valueElement);
         }
         cancelEdit() {
-            $(this._editorElement).hide();
-            $(this.valueElement).show();
+            ElementHelper.hideElement(this._editorElement);
+            ElementHelper.showElement(this.valueElement);
         }
         //==============================================
         // Virtual Methods
@@ -90,7 +91,6 @@ namespace wuzhui {
     }
 
     export class BoundField extends DataControlField {
-        private _sortType: 'asc' | 'desc'
         private _valueElement: HTMLElement;
 
         constructor(params: BoundFieldParams) {

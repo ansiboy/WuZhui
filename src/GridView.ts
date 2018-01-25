@@ -145,7 +145,7 @@ namespace wuzhui {
             this._dataSource.deleted.add((sender, e) => this.on_deleteExecuted(e.item));
             this._dataSource.selecting.add((sender, e) => {
                 let display = this._emtpyRow.element.style.display;
-                if (display != 'none') {//$(this._emtpyRow.element).is(':visible')
+                if (display != 'none') {
                     this._emtpyRow.element.cells[0].innerHTML = this.initDataHTML;
                 }
             });

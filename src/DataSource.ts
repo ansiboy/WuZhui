@@ -168,11 +168,11 @@ namespace wuzhui {
 
 
     export class DataSourceSelectArguments {
-        startRowIndex: number;
-        totalRowCount: number;
-        maximumRows: number;
-        sortExpression: string;
-        filter: string;
+        startRowIndex?: number;
+        totalRowCount?: number;
+        maximumRows?: number;
+        sortExpression?: string;
+        filter?: string;
 
         constructor() {
             this.startRowIndex = 0;

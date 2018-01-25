@@ -1,9 +1,9 @@
 namespace wuzhui {
     export class Errors {
         constructor(parameters) {
-
+    
         }
-
+    
         static notImplemented(message?: string) {
             message = message || "Not implemented";
             return new Error(message);
@@ -26,7 +26,7 @@ namespace wuzhui {
         static dataSourceCanntDelete() {
             return new Error("DataSource can not delete.");
         }
-        static primaryKeyNull(key:string){
+        static primaryKeyNull(key: string) {
             let msg = `Primary key named '${key}' value is null.`;
             return new Error(msg);
         }

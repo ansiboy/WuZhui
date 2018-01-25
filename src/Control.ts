@@ -8,31 +8,18 @@ namespace wuzhui {
         constructor(element: T) {
             if (!element) throw Errors.argumentNull('element');
             this._element = element;
-            $(element).data(CONTROL_DATA_NAME, this);
+            ElementHelper.data(element, CONTROL_DATA_NAME, this);
         }
-
-        // get html(): string {
-        //     return $(this.element).html();
-        // }
-        // set html(value) {
-        //     $(this.element).html(value);
-        // }
 
         get visible(): boolean {
-            // return $(this.element).is(':visible');
-            let { display } = this.element.style;
-            return !display || display != 'none';
+            return ElementHelper.isVisible(this._element);
         }
         set visible(value: boolean) {
-            // if (value)
-            //     $(this._element).show();
-            // else
-            //     $(this._element).hide();
             if (value) {
-                this._element.style.removeProperty('display');
+                ElementHelper.showElement(this._element);
             }
             else {
-                this._element.style.display = 'none';
+                ElementHelper.hideElement(this._element);
             }
         }
 
@@ -68,7 +55,7 @@ namespace wuzhui {
         }
 
         static getControlByElement(element: HTMLElement): Control<any> {
-            return $(element).data(CONTROL_DATA_NAME);
+            return ElementHelper.data(element, CONTROL_DATA_NAME); 
         }
     }
 }

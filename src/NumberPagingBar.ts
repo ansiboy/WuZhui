@@ -132,7 +132,7 @@ namespace wuzhui {
         }) {
             if (!params.dataSource) throw Errors.argumentNull('dataSource');
             if (!params.element) throw Errors.argumentNull('element');
-            let pagerSettings = $.extend(<PagerSettings>{
+            let pagerSettings = Object.assign(<PagerSettings>{
                 pageButtonCount: 10,
                 firstPageText: '<<',
                 lastPageText: '>>',
@@ -171,14 +171,9 @@ namespace wuzhui {
 
             let result = <NumberPagingButton>{
                 get visible(): boolean {
-                    // return $(button).is(':visible');
                     return button.style.display != 'none';
                 },
                 set visible(value: boolean) {
-                    // if (value)
-                    //     $(button).show();
-                    // else
-                    //     $(button).hide();
                     if (value) {
                         button.style.removeProperty('display');
                     }
@@ -187,11 +182,9 @@ namespace wuzhui {
                     }
                 },
                 get pageIndex(): number {
-                    // return new Number($(button).attr('pageIndex')).valueOf();
                     return new Number(button.getAttribute('pageIndex')).valueOf();
                 },
                 set pageIndex(value: number) {
-                    // $(button).attr('pageIndex', value);
                     button.setAttribute('pageIndex', value as any);
                 },
                 get text(): string {
@@ -250,15 +243,14 @@ namespace wuzhui {
                     numberElement.innerHTML = value;
                 },
                 get visible(): boolean {
-                    // return $(totalElement).is(':visible');
                     let display = totalElement.style.display;
                     return display != 'none';
                 },
                 set visible(value: boolean) {
                     if (value == true)
-                        totalElement.style.display = 'block' //$(totalElement).show();
+                        totalElement.style.display = 'block';
                     else
-                        totalElement.style.display = 'node' //$(totalElement).hide();
+                        totalElement.style.display = 'node';
                 }
             }
         }
@@ -292,13 +284,15 @@ namespace wuzhui {
             let pagingBar = this;
             let buttonCount = this.pagerSettings.pageButtonCount;
             for (let i = 0; i < buttonCount; i++) {
-                let button = this.createButton();//NumberPagingBar.on_buttonClick)
+                let button = this.createButton();
                 button.onclick = NumberPagingBar.on_buttonClick;
                 this.numberButtons[i] = button;
             }
-            $(this.numberButtons).click(function () {
-                NumberPagingBar.on_buttonClick(this, pagingBar);
-            });
+
+            this.numberButtons.forEach(btn => {
+                btn.onclick = () => NumberPagingBar.on_buttonClick(btn, pagingBar);
+            })
+
         }
 
         private static on_buttonClick(button: NumberPagingButton, pagingBar: NumberPagingBar) {

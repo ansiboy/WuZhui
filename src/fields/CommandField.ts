@@ -116,7 +116,6 @@ namespace wuzhui {
                     editButton.className = this.editButtonClass;
 
                 cell.editButton = editButton;
-                // $(editButton).click(this.on_editButtonClick);
                 editButton.addEventListener('click', (e) => this.on_editButtonClick(e));
                 cell.appendChild(editButton);
 
@@ -148,7 +147,7 @@ namespace wuzhui {
                     deleteButton.className = this.deleteButtonClass;
 
                 cell.deleteButton = deleteButton;
-                $(deleteButton).click(this.on_deleteButtonClick);
+                deleteButton.onclick = (e) => this.on_deleteButtonClick(e);
                 cell.appendChild(deleteButton);
             }
             if (this.params().showNewButton) {
@@ -272,13 +271,13 @@ namespace wuzhui {
             if (e.target['_updating'])
                 e.target['_updating'] = true;
 
-            let cellElement = $(e.target).parents('td').first()[0];
+            let cellElement = ElementHelper.findFirstParentByTagName(e.target as HTMLElement, 'td');
             let rowElement = <HTMLTableRowElement>cellElement.parentElement;
             let row = <GridViewDataRow>Control.getControlByElement(rowElement);
 
             //==========================================================
             // 复制 dataItem 副本
-            let dataItem = $.extend({}, row.dataItem || {});
+            let dataItem = Object.assign({}, row.dataItem || {});
             //==========================================================
             let dataSource = row.gridView.dataSource;
 
@@ -306,20 +305,14 @@ namespace wuzhui {
 
             }
         }
-        private on_deleteButtonClick(e: JQueryEventObject) {
-            // if (this._deleting)
-            //     return;
-
-            // this._deleting = true;
-            let rowElement = <HTMLTableRowElement>$(e.target).parents('tr').first()[0];
+        private on_deleteButtonClick(e: Event) {
+            let rowElement = <HTMLTableRowElement>ElementHelper.findFirstParentByTagName(e.target as HTMLElement, "tr");
             let row = <GridViewDataRow>Control.getControlByElement(rowElement);
             let dataSource = row.gridView.dataSource;
             dataSource.delete(row.dataItem)
                 .then(() => {
-                    $(rowElement).remove();
-                    // this._deleting = false;
+                    rowElement.remove();
                 });
-            // .catch(() => this._deleting = false);
         }
 
     }

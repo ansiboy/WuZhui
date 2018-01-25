@@ -197,8 +197,7 @@ namespace wuzhui {
                 labelElement.href = 'javascript:';
 
                 labelElement.innerHTML = this.defaultHeaderText();
-                //$(labelElement).click(() => this.handleSort());
-                labelElement.click = () => this.handleSort();
+                labelElement.onclick = () => this.handleSort();
 
                 this._iconElement = document.createElement('span');
 

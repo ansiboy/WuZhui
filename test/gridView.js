@@ -3,6 +3,10 @@ let baseUrl = 'http://shop.alinq.cn/AdminServices/Shop/Product/';
 let dataSource = new wuzhui.WebDataSource({
     primaryKeys: ['Id'],
     select: () => Promise.resolve([])
+    // select: baseUrl + 'GetProducts',
+    // update: baseUrl + 'SaveProduct',
+    // insert: baseUrl + 'SaveProduct',
+    // delete: baseUrl + 'DeleteProduct'
 });
 let gridView = new wuzhui.GridView({
     dataSource,
