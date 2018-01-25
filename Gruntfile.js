@@ -15,6 +15,24 @@ module.exports = function (grunt) {
                 }
             },
         },
+         // 通过connect任务，创建一个静态服务器
+         connect: {
+            www: {
+                options: {
+                    // 服务器端口号
+                    port: 2217,
+                    // 服务器地址(可以使用主机名localhost，也能使用IP)
+                    // hostname: '192.168.1.7',
+                    hostname: '0.0.0.0',
+                    keepalive: true,
+                    livereload: 20128,
+                    // 物理路径(默认为. 即根目录) 注：使用'.'或'..'为路径的时，可能会返回403 Forbidden. 此时将该值改为相对路径 如：/grunt/reloard。
+                    base: 'docs',
+                    open: true,
+                    // protocol: 'https'
+                }
+            }
+        },
         copy: {
             release_test: {
                 files: [
@@ -38,7 +56,19 @@ module.exports = function (grunt) {
                     { expand: true, src: ['test/content/**/*.css'], dest: release_dir },
                 ]
             },
-        }
+        },
+        less: {
+            css: {
+                options: {
+                    sourceMap: false
+                },
+                files: [{
+                    expand: true,
+                    src: ['docs/css/*.less'],
+                    ext: '.css'
+                },]
+            }
+        },
     };
 
     grunt.initConfig(config);
@@ -46,8 +76,9 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-shell');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-concat');
-    //grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-contrib-connect');
+    grunt.loadNpmTasks('grunt-contrib-less');
 
     grunt.registerTask('default', ['shell', 'copy']);
 

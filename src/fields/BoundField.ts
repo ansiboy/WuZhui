@@ -34,7 +34,6 @@ namespace wuzhui {
             else
                 this._valueType = typeof this.value;
 
-            // $(this._editorElement).hide();
             ElementHelper.hideElement(this._editorElement);
         }
 
