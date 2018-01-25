@@ -40,14 +40,14 @@ namespace wuzhui {
             var pagingBar = this;
             pagingBar.totalRowCount = 1000000;
             dataSource.selected.add((source, args) => {
-                pagingBar._pageSize = args.selectArguments.maximumRows;
+                pagingBar._pageSize = dataSource.selectArguments.maximumRows;
 
-                var totalRowCount = args.selectArguments.totalRowCount;
+                var totalRowCount = args.totalRowCount;
                 if (totalRowCount != null && totalRowCount >= 0) {
                     pagingBar.totalRowCount = totalRowCount;
                 }
 
-                var startRowIndex = args.selectArguments.startRowIndex;
+                var startRowIndex = dataSource.selectArguments.startRowIndex;
                 if (startRowIndex <= 0)
                     startRowIndex = 0;
 
@@ -221,7 +221,7 @@ namespace wuzhui {
         }
 
         private createTotalLabel() {
-            let totalElement = document.createElement('span');
+            let totalElement = document.createElement('div');
             totalElement.className = 'total';
 
             let textElement = document.createElement('span');

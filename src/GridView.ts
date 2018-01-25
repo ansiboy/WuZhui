@@ -139,7 +139,7 @@ namespace wuzhui {
             }
 
             this._dataSource = params.dataSource;
-            this._dataSource.selected.add((sender, e) => this.on_selectExecuted(e.items));
+            this._dataSource.selected.add((sender, e) => this.on_selectExecuted(e.dataItems));
             this._dataSource.updated.add((sender, e) => this.on_updateExecuted(e.item));
             this._dataSource.inserted.add((sender, e) => this.on_insertExecuted(e.item, e.index));
             this._dataSource.deleted.add((sender, e) => this.on_deleteExecuted(e.item));

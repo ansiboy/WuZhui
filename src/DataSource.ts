@@ -24,7 +24,7 @@ namespace wuzhui {
         updating = callbacks<DataSource<T>, { item: T }>();
         updated = callbacks<DataSource<T>, { item: T }>();
         selecting = callbacks<DataSource<T>, { selectArguments: DataSourceSelectArguments }>();
-        selected = callbacks<DataSource<T>, { selectArguments: DataSourceSelectArguments, items: Array<T> }>();
+        selected = callbacks<DataSource<T>, DataSourceSelectResult<T>>();
         error = callbacks<this, DataSourceError>();
 
         constructor(args: DataSourceArguments<T>) {
@@ -139,18 +139,19 @@ namespace wuzhui {
             return this.executeSelect(args).then((data) => {
                 let data_items: Array<T>;
                 let result = data as DataSourceSelectResult<T>;
+                let totalRowCount: number
                 if (Array.isArray(data)) {
                     data_items = <Array<T>>data;
-                    args.totalRowCount = data_items.length;
+                    totalRowCount = data_items.length;
                 }
                 else if (result.dataItems !== undefined && result.totalRowCount !== undefined) {
                     data_items = (<DataSourceSelectResult<T>>data).dataItems;
-                    args.totalRowCount = (<DataSourceSelectResult<T>>data).totalRowCount;
+                    totalRowCount = (<DataSourceSelectResult<T>>data).totalRowCount;
                 }
                 else {
                     throw new Error('Type of the query result is expected as Array or DataSourceSelectResult.');
                 }
-                fireCallback(this.selected, this, { selectArguments: args, items: data_items });
+                fireCallback(this.selected, this, { totalRowCount, dataItems: data_items });
                 return data;
             }).catch(exc => {
                 this.processError(exc, 'select');
@@ -169,7 +170,7 @@ namespace wuzhui {
 
     export class DataSourceSelectArguments {
         startRowIndex?: number;
-        totalRowCount?: number;
+        // totalRowCount?: number;
         maximumRows?: number;
         sortExpression?: string;
         filter?: string;
