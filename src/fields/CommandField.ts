@@ -186,6 +186,21 @@ namespace wuzhui {
             }
             return cell;
         }
+        private showReadStatusButtons(cell: GridViewCommandCell) {
+            if (cell.newButton) {
+                this.showButton(cell.newButton);
+                this.hideButton(cell.insertButton);
+            }
+            if (cell.editButton) {
+                this.showButton(cell.editButton);
+                this.hideButton(cell.updateButton);
+            }
+
+            if (cell.deleteButton)
+                this.showButton(cell.deleteButton);
+
+            this.hideButton(cell.cacelButton);
+        }
         private createEditButton(): HTMLElement {
             let button = document.createElement('a');
             button.innerHTML = this.editButtonHTML;
@@ -316,7 +331,7 @@ namespace wuzhui {
             let editableCells = new Array<GridViewEditableCell>();
             for (let i = 0; i < rowElement.cells.length; i++) {
                 let cell = Control.getControlByElement(<HTMLElement>rowElement.cells[i]);
-                if (cell instanceof GridViewEditableCell) {
+                if (cell instanceof GridViewEditableCell && (cell as GridViewEditableCell).mode == 'edit') {
                     dataItem[(<BoundField>cell.field).dataField] = cell.controlValue;
                     editableCells.push(cell);
                 }
@@ -332,8 +347,7 @@ namespace wuzhui {
                 }
                 editableCells.forEach((item) => item.endEdit());
                 let cell = <GridViewCommandCell>Control.getControlByElement(cellElement);
-                this.hideButton(cell.cacelButton);
-                this.hideButton(cell.updateButton);
+                this.showReadStatusButtons(cell);
                 e.target['_updating'] = false;
 
             }).catch(() => e.target['_updating'] = false);

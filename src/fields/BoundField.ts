@@ -8,6 +8,7 @@ namespace wuzhui {
         private _editorElement: HTMLElement
         private _valueType: string;
         private _field: BoundField;
+        private _mode: 'read' | 'edit';
 
         constructor(field: BoundField, dataItem: any) {
             if (field == null) throw Errors.argumentNull('field');
@@ -33,28 +34,48 @@ namespace wuzhui {
                 this._valueType = typeof this.value;
 
             ElementHelper.hideElement(this._editorElement);
+            this._mode = 'read';
         }
 
         get field() {
             return this._field;
         }
 
+        get mode() {
+            return this._mode;
+        }
+
         beginEdit() {
+            if (this._field.readOnly) {
+                return;
+            }
+
+            this._mode = 'edit';
             ElementHelper.hideElement(this.valueElement);
             ElementHelper.showElement(this._editorElement);
             let value = this._dataItem[this.field.dataField];
             this.controlValue = value;
         }
         endEdit() {
+            if (this._field.readOnly) {
+                return;
+            }
+
+            this._mode = 'read';
             this.value = this.controlValue;
             this._dataItem[this.field.dataField] = this.value;
             ElementHelper.hideElement(this._editorElement);
             ElementHelper.showElement(this.valueElement);
         }
         cancelEdit() {
+            if (this._field.readOnly) {
+                return;
+            }
+
             ElementHelper.hideElement(this._editorElement);
             ElementHelper.showElement(this.valueElement);
         }
+
         //==============================================
         // Virtual Methods
         protected createControl(): HTMLElement {
@@ -86,6 +107,7 @@ namespace wuzhui {
         dataFormatString?: string,
         controlStyle?: CSSStyleDeclaration | string,
         nullText?: string,
+        readOnly?: boolean
     }
 
     export class BoundField extends DataControlField {
@@ -134,6 +156,10 @@ namespace wuzhui {
 
         get controlStyle() {
             return this.params().controlStyle;
+        }
+
+        get readOnly() {
+            return this.params().readOnly;
         }
     }
 }
