@@ -15,8 +15,8 @@ module.exports = function (grunt) {
                 }
             },
         },
-         // 通过connect任务，创建一个静态服务器
-         connect: {
+        // 通过connect任务，创建一个静态服务器
+        connect: {
             www: {
                 options: {
                     // 服务器端口号
@@ -34,28 +34,34 @@ module.exports = function (grunt) {
             }
         },
         copy: {
-            release_test: {
+            docs: {
                 files: [
-                    { src: ['release/wuzhui.js'], dest: 'test/scripts/wuzhui.js' },
-                    { src: ['release/wuzhui.d.ts'], dest: 'test/scripts/typings/wuzhui.d.ts' },
-
-                    { src: ['release/wuzhui.js'], dest: '../ShopCloud/AdminWeb/src/scripts/wuzhui.js' },
-                    { src: ['release/wuzhui.d.ts'], dest: '../ShopCloud/AdminWeb/src/scripts/typings/wuzhui.d.ts' },
-
-                    // { src: ['release/wuzhui.js'], dest: '../ShopCloud/AdminWeb/Shop/scripts/wuzhui.js' },
-                    // { src: ['release/wuzhui.d.ts'], dest: '../ShopCloud/AdminWeb/Shop/scripts/typings/wuzhui.d.ts' },
-
-                    { src: ['release/wuzhui.js'], dest: '../node_auth/src/client/js/wuzhui.js' },
-                    { src: ['release/wuzhui.d.ts'], dest: '../node_auth/src/client/js/typings/wuzhui.d.ts' },
+                    { src: ['release/wuzhui.js'], dest: 'docs/js/wuzhui.js' },
+                    { src: ['release/wuzhui.d.ts'], dest: 'docs/js/wuzhui.d.ts' },
                 ]
-            },
-            test_release: {
-                files: [
-                    { expand: true, src: ['test/**/*.html'], dest: release_dir },
-                    { expand: true, src: ['test/scripts/**/*.js'], dest: release_dir },
-                    { expand: true, src: ['test/content/**/*.css'], dest: release_dir },
-                ]
-            },
+            }
+            // release_test: {
+            //     files: [
+            //         { src: ['release/wuzhui.js'], dest: 'test/scripts/wuzhui.js' },
+            //         { src: ['release/wuzhui.d.ts'], dest: 'test/scripts/typings/wuzhui.d.ts' },
+
+            //         { src: ['release/wuzhui.js'], dest: '../ShopCloud/AdminWeb/src/scripts/wuzhui.js' },
+            //         { src: ['release/wuzhui.d.ts'], dest: '../ShopCloud/AdminWeb/src/scripts/typings/wuzhui.d.ts' },
+
+            //         // { src: ['release/wuzhui.js'], dest: '../ShopCloud/AdminWeb/Shop/scripts/wuzhui.js' },
+            //         // { src: ['release/wuzhui.d.ts'], dest: '../ShopCloud/AdminWeb/Shop/scripts/typings/wuzhui.d.ts' },
+
+            //         { src: ['release/wuzhui.js'], dest: '../node_auth/src/client/js/wuzhui.js' },
+            //         { src: ['release/wuzhui.d.ts'], dest: '../node_auth/src/client/js/typings/wuzhui.d.ts' },
+            //     ]
+            // },
+            // test_release: {
+            //     files: [
+            //         { expand: true, src: ['test/**/*.html'], dest: release_dir },
+            //         { expand: true, src: ['test/scripts/**/*.js'], dest: release_dir },
+            //         { expand: true, src: ['test/content/**/*.css'], dest: release_dir },
+            //     ]
+            // },
         },
         less: {
             css: {
@@ -80,6 +86,6 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-contrib-less');
 
-    grunt.registerTask('default', ['shell', 'copy']);
+    grunt.registerTask('build', ['shell', 'copy']);
 
 };

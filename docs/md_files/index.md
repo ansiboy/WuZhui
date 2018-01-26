@@ -1,4 +1,4 @@
-## 快速入门
+## WUZHUI 使用手册
 
 ### JS 的引用
 
@@ -19,10 +19,11 @@ requirejs(['js/wuzhui.js'])
 ### 数据的加载
 1. [数据的显示](#grid_view/data_read)
 2. [数据的分页](#grid_view/data_paging)
-3. [设置样式]()
+3. [设置样式](#grid_view/style)
+4. [数据格式化]() (TODO)
 
-### 数据的增删改
-1. [添加数据]()
+### 数据的修改
+1. [数据的增删改](#grid_view/data_adu)
 2. [修改数据]()
 3. [删除数据]()
 
