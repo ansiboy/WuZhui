@@ -16,7 +16,7 @@ namespace wuzhui {
         private args: DataSourceArguments<T>;
         private primaryKeys: string[];
 
-        inserting = callbacks<DataSource<T>, { item: T }>();
+        inserting = callbacks<DataSource<T>, { item: T, index: number }>();
         inserted = callbacks<DataSource<T>, { item: T, index: number }>();
 
         deleting = callbacks<DataSource<T>, { item: T }>();
@@ -64,16 +64,16 @@ namespace wuzhui {
             return this._currentSelectArguments;
         }
 
-        insert(item: T) {
+        insert(item: T, index?: number) {
             if (!this.canInsert)
                 throw Errors.dataSourceCanntInsert();
 
             this.checkPrimaryKeys(item);
 
-            fireCallback(this.inserting, this, { item });
+            fireCallback(this.inserting, this, { item, index });
             return this.executeInsert(item).then((data) => {
                 Object.assign(item, data);
-                fireCallback(this.inserted, this, { item });
+                fireCallback(this.inserted, this, { item, index });
                 return data;
             }).catch(exc => {
                 this.processError(exc, 'insert');

@@ -8,6 +8,8 @@ namespace wuzhui {
         editButton: HTMLElement;
         newButton: HTMLElement;
         updateButton: HTMLElement;
+        insertButton: HTMLElement;
+        // cancelAddButton: HTMLElement;
 
         constructor(field: DataControlField) {
             super()
@@ -33,8 +35,6 @@ namespace wuzhui {
         newButtonClass?: string,
         updateButtonClass?: string,
         insertButtonClass?: string,
-
-        handleUpdate?: () => Promise<any>
     }
 
     export class CommandField extends DataControlField {
@@ -52,6 +52,10 @@ namespace wuzhui {
                 this.params().editButtonHTML = '编辑';
             if (!this.params().updateButtonHTML)
                 this.params().updateButtonHTML = '更新';
+            if (!this.params().newButtonHTML)
+                this.params().newButtonHTML = '新增';
+            if (!this.params().insertButtonHTML)
+                this.params().insertButtonHTML = '添加';
         }
 
         private params(): CommandFieldParams {
@@ -126,7 +130,7 @@ namespace wuzhui {
                     updateButton.className = this.updateButtonClass;
 
                 cell.updateButton = updateButton;
-                updateButton.addEventListener('click', (e) => this.on_updateButtonClick(e));
+                updateButton.addEventListener('click', (e) => this.on_insertOrUpdateButtonClick(e));
                 cell.appendChild(updateButton);
 
                 let cancelButton = this.createCancelButton();
@@ -156,8 +160,29 @@ namespace wuzhui {
                 if (this.newButtonClass)
                     newButton.className = this.newButtonClass;
 
+                newButton.onclick = (e) => this.on_newButtonClick(e);
                 cell.newButton = newButton;
                 cell.appendChild(newButton);
+
+                let insertButton = this.createInsertButton();
+                insertButton.style.display = 'none';
+                insertButton.style.marginRight = '4px';
+                insertButton.addEventListener('click', (e) => this.on_insertOrUpdateButtonClick(e));
+                if (this.insertButtonClass)
+                    insertButton.className = this.updateButtonClass;
+
+                cell.insertButton = insertButton;
+                cell.appendChild(insertButton);
+
+                let cancelButton = this.createCancelButton();
+                cancelButton.style.display = 'none';
+                cancelButton.style.marginRight = '4px';
+                cancelButton.addEventListener('click', (e) => this.on_cancelButtonClick(e));
+                if (this.cancelButtonClass)
+                    cancelButton.className = this.cancelButtonClass;
+
+                cell.cacelButton = cancelButton;
+                cell.appendChild(cancelButton);
             }
             return cell;
         }
@@ -248,6 +273,11 @@ namespace wuzhui {
             let cellElement = this.findParentCell(e.target as HTMLElement);
             console.assert(cellElement != null);
             let rowElement = <HTMLTableRowElement>cellElement.parentElement;
+            var row = Control.getControlByElement(rowElement) as GridViewDataRow;
+            if (row["isNew"] == true) {
+                rowElement.remove();
+                return;
+            }
 
             for (let i = 0; i < rowElement.cells.length; i++) {
                 let cell = Control.getControlByElement(<HTMLElement>rowElement.cells[i]);
@@ -266,13 +296,15 @@ namespace wuzhui {
             if (cell.newButton)
                 this.showButton(cell.newButton);
         }
-        private on_updateButtonClick(e: MouseEvent) {
+        private on_insertOrUpdateButtonClick(e: MouseEvent) {
 
             if (e.target['_updating'])
                 e.target['_updating'] = true;
 
             let cellElement = ElementHelper.findFirstParentByTagName(e.target as HTMLElement, 'td');
             let rowElement = <HTMLTableRowElement>cellElement.parentElement;
+
+            let cell = <GridViewCommandCell>Control.getControlByElement(cellElement);
             let row = <GridViewDataRow>Control.getControlByElement(rowElement);
 
             //==========================================================
@@ -282,28 +314,30 @@ namespace wuzhui {
             let dataSource = row.gridView.dataSource;
 
             let editableCells = new Array<GridViewEditableCell>();
-            for (var i = 0; i < rowElement.cells.length; i++) {
-                var cell = Control.getControlByElement(<HTMLElement>rowElement.cells[i]);
+            for (let i = 0; i < rowElement.cells.length; i++) {
+                let cell = Control.getControlByElement(<HTMLElement>rowElement.cells[i]);
                 if (cell instanceof GridViewEditableCell) {
                     dataItem[(<BoundField>cell.field).dataField] = cell.controlValue;
                     editableCells.push(cell);
                 }
             }
-            try {
 
-                return dataSource.update(dataItem)
-                    .then(() => {
-                        editableCells.forEach((item) => item.endEdit());
-                        let cell = <GridViewCommandCell>Control.getControlByElement(cellElement);
-                        this.hideButton(cell.cacelButton);
-                        this.hideButton(cell.updateButton);
-                        e.target['_updating'] = false;
-                    })
-                    .catch(() => e.target['_updating'] = false);
-            }
-            finally {
+            let isInsert = e.target == cell.insertButton;
+            let p = isInsert ? dataSource.insert(dataItem, rowElement.rowIndex) : dataSource.update(dataItem);
 
-            }
+            return p.then(() => {
+                if (isInsert) {
+                    rowElement.remove();
+                    return;
+                }
+                editableCells.forEach((item) => item.endEdit());
+                let cell = <GridViewCommandCell>Control.getControlByElement(cellElement);
+                this.hideButton(cell.cacelButton);
+                this.hideButton(cell.updateButton);
+                e.target['_updating'] = false;
+
+            }).catch(() => e.target['_updating'] = false);
+
         }
         private on_deleteButtonClick(e: Event) {
             let rowElement = <HTMLTableRowElement>ElementHelper.findFirstParentByTagName(e.target as HTMLElement, "tr");
@@ -314,6 +348,28 @@ namespace wuzhui {
                     rowElement.remove();
                 });
         }
+        private on_newButtonClick(e: Event) {
+            let rowElement = ElementHelper.findFirstParentByTagName(e.target as HTMLElement, "tr") as HTMLTableRowElement; //cellElement.parentElement as HTMLTableRowElement;
+            let row = <GridViewRow>wuzhui.Control.getControlByElement(rowElement);
+            let gridView = row.gridView;
 
+            let newRow = gridView.appendDataRow({}, rowElement.rowIndex);
+            newRow["isNew"] = true;
+            let commandCells = newRow.cells.filter(o => o instanceof GridViewCommandCell);
+            newRow.cells.filter(o => o instanceof GridViewEditableCell)
+                .forEach((c: GridViewEditableCell) => c.beginEdit());
+
+            commandCells.forEach((cell: GridViewCommandCell) => {
+                if (cell.deleteButton)
+                    this.hideButton(cell.deleteButton);
+
+                if (cell.editButton)
+                    this.hideButton(cell.editButton);
+
+                this.hideButton(cell.newButton);
+                this.showButton(cell.insertButton);
+                this.showButton(cell.cacelButton);
+            })
+        }
     }
 }

@@ -5,9 +5,7 @@ namespace wuzhui {
     export class GridViewEditableCell extends GridViewDataCell {
 
         private _dataItem: any;
-        // private _valueElement: HTMLElement;
         private _editorElement: HTMLElement
-        // private _value: any;
         private _valueType: string;
         private _field: BoundField;
 
@@ -65,7 +63,8 @@ namespace wuzhui {
             return ctrl;
         }
         set controlValue(value: any) {
-            this._editorElement.querySelector('input').value = value;
+            this._editorElement.querySelector('input').value =
+                value === undefined ? null : value;
         }
         get controlValue() {
             var text = this._editorElement.querySelector('input').value;

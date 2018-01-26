@@ -226,13 +226,15 @@ namespace wuzhui {
             fireCallback(this.rowCreated, this, { row: this._emtpyRow });
         }
 
-        private appendDataRow(dataItem: any, index?: number) {
+        public appendDataRow(dataItem: any, index?: number) {
             var row = new GridViewDataRow(this, dataItem);
             row.element.className = GridView.dataRowClassName;
             this._body.appendChild(row, index);
             fireCallback(this.rowCreated, this, { row });
             if (this._emtpyRow.element.style.display != 'none')
                 this.hideEmptyRow();
+
+            return row;
         }
 
         private on_sort(sender: GridViewHeaderCell, args: any) {
