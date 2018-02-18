@@ -158,6 +158,7 @@ namespace wuzhui {
                         this._dataSource.select();
                     }
                     e.handled = true;
+                    console.error(e.message);                    
                 }
             })
 
