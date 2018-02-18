@@ -79,9 +79,9 @@ namespace wuzhui {
         //     return value;
         // }
 
-        private formatValue(...args): string {
+        private formatValue(format: string, arg): string {//...args
             var result = '';
-            var format = args[0];
+            // var format = args[0];
 
             for (var i = 0; ;) {
                 var open = format.indexOf('{', i);
@@ -113,12 +113,14 @@ namespace wuzhui {
 
 
                 var brace = format.substring(i, close);
-                var colonIndex = brace.indexOf(':');
-                var argNumber = parseInt((colonIndex < 0) ? brace : brace.substring(0, colonIndex), 10) + 1;
-                if (isNaN(argNumber)) throw new Error('Sys.Res.stringFormatInvalid');
-                var argFormat = (colonIndex < 0) ? '' : brace.substring(colonIndex + 1);
+                // var colonIndex = brace.indexOf(':');
+                // var argNumber = parseInt((colonIndex < 0) ? brace : brace.substring(0, colonIndex), 10) + 1;
+                // if (isNaN(argNumber))
+                //     throw new Error(`string format '${format}' error`);
 
-                var arg = args[argNumber];
+                // var argFormat = (colonIndex < 0) ? '' : brace.substring(colonIndex + 1);
+                var argFormat = brace;
+                // var arg = args[argNumber];
                 if (typeof (arg) === "undefined" || arg === null) {
                     arg = '';
                 }
