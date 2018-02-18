@@ -188,14 +188,4 @@ namespace wuzhui {
         update?: ((item: T) => Promise<any>),
         delete?: ((item: T) => Promise<any>)
     };
-
-
-
-    export class WebDataSource<T> extends DataSource<T>{
-
-    }
-
-    export class ArrayDataSource<T> extends DataSource<T> {
-    }
-
 }
