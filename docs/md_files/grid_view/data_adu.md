@@ -13,26 +13,18 @@ var items = [
 var dataSource = new w.DataSource({
     primaryKeys: ['id'],
     select() {
-        return new Promise((resolve, reject) => {
-            resolve(items);
-        })
+        return Promise.resolve(items);
     },
     insert(item) {
-        return new Promise((resolve, reject) => {
-            item.id = items.length;
-            items.push(item);
-            resolve({total: item.price * item.quantity});
-        })
+        item.id = items.length;
+        items.push(item);
+        return Promise.resolve({ total: item.price * item.quantity });
     },
     update(item) {
-        return new Promise((resolve, reject) => {
-            resolve({ total: item.price * item.quantity });
-        })
+        return Promise.resolve({ total: item.price * item.quantity });
     },
     delete(item) {
-        return new Promise((resolve, reject) => {
-            resolve();
-        })
+        return Promise.resolve();
     }
 })
 var gridView = new w.GridView({
