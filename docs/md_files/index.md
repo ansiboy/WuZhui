@@ -20,12 +20,11 @@ requirejs(['js/wuzhui.js'])
 1. [数据的显示](#grid_view/data_read)
 2. [数据的分页](#grid_view/data_paging)
 3. [设置样式](#grid_view/style)
-4. [数据格式化]() (TODO)
+4. [数据格式化](#grid_view/data_format)
 
 ### 数据的修改
 1. [数据的增删改](#grid_view/data_adu)
-2. [修改数据]()
-3. [删除数据]()
+
 
 ### GridView 的使用
 1. [分页栏样式]()
