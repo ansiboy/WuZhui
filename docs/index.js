@@ -6,6 +6,7 @@ requirejs.config({
         }
     },
     paths: {
+        css: 'js/css',
         highlight: 'js/highlight.js/highlight.pack',
         highlight_javascript: 'js/highlight.js/languages/javascript',
     }

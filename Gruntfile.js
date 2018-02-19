@@ -25,7 +25,7 @@ module.exports = function (grunt) {
                     // hostname: '192.168.1.7',
                     hostname: '0.0.0.0',
                     keepalive: true,
-                    livereload: 20128,
+                    livereload: 17024,
                     // 物理路径(默认为. 即根目录) 注：使用'.'或'..'为路径的时，可能会返回403 Forbidden. 此时将该值改为相对路径 如：/grunt/reloard。
                     base: 'docs',
                     open: true,
@@ -75,6 +75,16 @@ module.exports = function (grunt) {
                 },]
             }
         },
+        watch: {
+            livereload: {
+                options: {
+                    livereload: 17024 //监听前面声明的端口  35729
+                },
+                files: [
+                    // `out/es6/**/*`
+                ]
+            }
+        }
     };
 
     grunt.initConfig(config);
@@ -85,7 +95,8 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-contrib-less');
+    grunt.loadNpmTasks('grunt-contrib-watch');
 
     grunt.registerTask('build', ['shell', 'copy']);
-
+    grunt.registerTask('run', ['connect', 'watch']);
 };

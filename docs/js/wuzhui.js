@@ -197,12 +197,6 @@ var wuzhui;
         }
     }
     wuzhui.DataSourceSelectArguments = DataSourceSelectArguments;
-    class WebDataSource extends DataSource {
-    }
-    wuzhui.WebDataSource = WebDataSource;
-    class ArrayDataSource extends DataSource {
-    }
-    wuzhui.ArrayDataSource = ArrayDataSource;
 })(wuzhui || (wuzhui = {}));
 var wuzhui;
 (function (wuzhui) {
@@ -240,7 +234,7 @@ var wuzhui;
 })(wuzhui || (wuzhui = {}));
 var wuzhui;
 (function (wuzhui) {
-    let GridViewRowType;
+    var GridViewRowType;
     (function (GridViewRowType) {
         GridViewRowType[GridViewRowType["Header"] = 0] = "Header";
         GridViewRowType[GridViewRowType["Footer"] = 1] = "Footer";
@@ -351,6 +345,7 @@ var wuzhui;
                         this._dataSource.select();
                     };
                     e.handled = true;
+                    console.error(e.message);
                 }
             });
             if (params.showHeader) {
@@ -518,7 +513,7 @@ var wuzhui;
 })(wuzhui || (wuzhui = {}));
 var wuzhui;
 (function (wuzhui) {
-    let PagerPosition;
+    var PagerPosition;
     (function (PagerPosition) {
         PagerPosition[PagerPosition["Bottom"] = 0] = "Bottom";
         PagerPosition[PagerPosition["Top"] = 1] = "Top";
@@ -583,6 +578,7 @@ var wuzhui;
     }
     wuzhui.PagingBar = PagingBar;
     class NumberPagingBar extends PagingBar {
+        // private buttonWrapper: string;
         constructor(params) {
             if (!params.dataSource)
                 throw wuzhui.Errors.argumentNull('dataSource');
@@ -594,66 +590,98 @@ var wuzhui;
                 lastPageText: '>>',
                 nextPageText: '...',
                 previousPageText: '...',
+                showTotal: true,
             }, params.pagerSettings || {});
             super();
             this.dataSource = params.dataSource;
             this.pagerSettings = pagerSettings;
             this.element = params.element;
+            // this.buttonWrapper = params.pagerSettings.buttonWrapper;
             this.numberButtons = new Array();
-            this.createButton = params.createButton || this.createPagingButton;
-            this.createLabel = params.createTotal || this.createTotalLabel;
+            this.createButton = this.createPagingButton; //params.createButton || 
+            this.createLabel = this.createTotalLabel; //params.createTotal || 
             this.createPreviousButtons();
             this.createNumberButtons();
             this.createNextButtons();
-            this.totalElement = this.createLabel();
-            this.totalElement.visible = false;
+            if (this.pagerSettings.showTotal) {
+                this.totalElement = this.createLabel();
+                this.totalElement.visible = false;
+            }
             this.init(params.dataSource);
         }
         createPagingButton() {
             var pagerSettings = this.pagerSettings;
             let button = document.createElement('a');
             button.href = 'javascript:';
-            this.element.appendChild(button);
+            if (this.pagerSettings.buttonWrapper) {
+                let w = document.createElement(this.pagerSettings.buttonWrapper);
+                w.appendChild(button);
+                this.element.appendChild(w);
+            }
+            else {
+                this.element.appendChild(button);
+            }
             let result = {
+                _button: button,
                 get visible() {
+                    let button = this._button;
                     return button.style.display != 'none';
                 },
                 set visible(value) {
+                    let button = this._button;
+                    let element = pagerSettings.buttonWrapper ? button.parentElement : button;
                     if (value) {
-                        button.style.removeProperty('display');
+                        element.style.removeProperty('display');
                     }
                     else {
-                        button.style.display = 'none';
+                        element.style.display = 'none';
                     }
                 },
                 get pageIndex() {
+                    let button = this._button;
                     return new Number(button.getAttribute('pageIndex')).valueOf();
                 },
                 set pageIndex(value) {
+                    let button = this._button;
                     button.setAttribute('pageIndex', value);
                 },
                 get text() {
+                    let button = this._button;
                     return button.innerHTML;
                 },
                 set text(value) {
+                    let button = this._button;
                     button.innerHTML = value;
                 },
                 get active() {
+                    let button = this._button;
                     return button.href != null;
                 },
                 set active(value) {
+                    let button = this._button;
                     if (value == true) {
                         button.removeAttribute('href');
-                        if (pagerSettings.activeButtonClassName)
-                            button.className = pagerSettings.activeButtonClassName;
+                        if (pagerSettings.activeButtonClassName) {
+                            // button.className = pagerSettings.activeButtonClassName;
+                            this.setClassName(pagerSettings.activeButtonClassName);
+                        }
                         return;
                     }
                     button.href = 'javascript:';
                     if (pagerSettings.buttonClassName)
-                        button.className = pagerSettings.buttonClassName;
+                        this.setClassName(pagerSettings.buttonClassName); //button.className = pagerSettings.buttonClassName;
                     else
-                        button.removeAttribute('class');
-                }
+                        this.setClassName(null); // button.removeAttribute('class');
+                },
+                setClassName(value) {
+                    let button = this._button;
+                    let element = pagerSettings.buttonWrapper ? button.parentElement : button;
+                    if (value)
+                        element.className = value;
+                    else
+                        element.removeAttribute('class');
+                },
+                onclick: null
             };
             button.onclick = () => {
                 if (result.onclick) {
@@ -756,8 +784,10 @@ var wuzhui;
                     this.numberButtons[i].visible = false;
                 }
             }
-            this.totalElement.text = this.totalRowCount;
-            this.totalElement.visible = true;
+            if (this.totalElement) {
+                this.totalElement.text = this.totalRowCount;
+                this.totalElement.visible = true;
+            }
             this.firstPageButton.visible = false;
             this.previousPageButton.visible = false;
             this.lastPageButton.visible = false;
@@ -906,9 +936,9 @@ var wuzhui;
         //         return this.formatValue(this.dataFormatString, value);
         //     return value;
         // }
-        formatValue(...args) {
+        formatValue(format, arg) {
             var result = '';
-            var format = args[0];
+            // var format = args[0];
             for (var i = 0;;) {
                 var open = format.indexOf('{', i);
                 var close = format.indexOf('}', i);
@@ -934,12 +964,13 @@ var wuzhui;
                 if (close < 0)
                     throw new Error('Sys.Res.stringFormatBraceMismatch');
                 var brace = format.substring(i, close);
-                var colonIndex = brace.indexOf(':');
-                var argNumber = parseInt((colonIndex < 0) ? brace : brace.substring(0, colonIndex), 10) + 1;
-                if (isNaN(argNumber))
-                    throw new Error('Sys.Res.stringFormatInvalid');
-                var argFormat = (colonIndex < 0) ? '' : brace.substring(colonIndex + 1);
-                var arg = args[argNumber];
+                // var colonIndex = brace.indexOf(':');
+                // var argNumber = parseInt((colonIndex < 0) ? brace : brace.substring(0, colonIndex), 10) + 1;
+                // if (isNaN(argNumber))
+                //     throw new Error(`string format '${format}' error`);
+                // var argFormat = (colonIndex < 0) ? '' : brace.substring(colonIndex + 1);
+                var argFormat = brace;
+                // var arg = args[argNumber];
                 if (typeof (arg) === "undefined" || arg === null) {
                     arg = '';
                 }

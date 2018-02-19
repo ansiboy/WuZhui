@@ -32,7 +32,7 @@ define(['exports'], function (exports) {
                 new w.BoundField({ dataField: 'name', headerText: '姓名' }),
                 new w.BoundField({ dataField: 'age', headerText: '年龄' })
             ],
-            pageSize: 3
+            pageSize: 3,
         })
     }
 })

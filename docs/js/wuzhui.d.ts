@@ -82,10 +82,6 @@ declare namespace wuzhui {
         update?: ((item: T) => Promise<any>);
         delete?: ((item: T) => Promise<any>);
     };
-    class WebDataSource<T> extends DataSource<T> {
-    }
-    class ArrayDataSource<T> extends DataSource<T> {
-    }
 }
 declare namespace wuzhui {
     class Errors {
@@ -193,8 +189,10 @@ declare namespace wuzhui {
         buttonClassName?: string;
         /** Class name of the active number button. */
         activeButtonClassName?: string;
+        buttonWrapper?: string;
+        showTotal?: boolean;
     }
-    class PagingBar {
+    abstract class PagingBar {
         private _pageIndex;
         private _dataSource;
         private _totalRowCount;
@@ -235,8 +233,6 @@ declare namespace wuzhui {
             dataSource: DataSource<any>;
             element: HTMLElement;
             pagerSettings?: PagerSettings;
-            createTotal?: () => PagingTotalLabel;
-            createButton?: () => NumberPagingButton;
         });
         private createPagingButton();
         private createTotalLabel();
@@ -287,7 +283,7 @@ declare namespace wuzhui {
         protected readonly valueElement: HTMLElement;
         readonly dataField: string;
         value: any;
-        private formatValue(...args);
+        private formatValue(format, arg);
         private formatDate(value, format);
         private formatNumber(value, format);
     }

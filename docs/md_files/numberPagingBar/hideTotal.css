@@ -1,0 +1,9 @@
+#numberPagingBar_hideTotal_table1 .pagingBar {
+    text-align: right;
+}
+#numberPagingBar_hideTotal_table1 .pagingBar a {
+    margin-right: 4px;
+}
+#numberPagingBar_hideTotal_table1 .pagingBar a.active {
+    color: red;
+}

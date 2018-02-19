@@ -1,0 +1,9 @@
+#numberPagingBar_createPagingBar_bar a {
+    margin-right: 4px;
+}
+#numberPagingBar_createPagingBar_bar a.active {
+    color: red;
+}
+#numberPagingBar_createPagingBar_bar .total {
+    float: right;
+} 

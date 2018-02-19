@@ -1,0 +1,9 @@
+#numberPagingBar_style_table1 .pagingBar a {
+    margin-right: 4px;
+}
+#numberPagingBar_style_table1 .pagingBar a.active {
+    color: red;
+}
+#numberPagingBar_style_table1 .pagingBar .total {
+    float: right;
+} 
