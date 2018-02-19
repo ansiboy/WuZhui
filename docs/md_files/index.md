@@ -17,13 +17,14 @@ requirejs(['js/wuzhui.js'])
 ## 示例
 
 ### GridView 的使用
-1. [数据的显示](#grid_view/data_read)
-2. [数据的分页](#grid_view/data_paging)
-3. [设置列的样式](#grid_view/style)
-4. [数据格式化](#grid_view/data_format)
-1. [数据的增删改](#grid_view/data_adu)
+1. [数据的显示](#gridView/data_read)
+2. [数据的分页](#gridView/data_paging)
+3. [设置列的样式](#gridView/style)
+4. [数据格式化](#gridView/data_format)
+1. [数据的增删改](#gridView/data_adu)
 1. [分页栏样式](#numberPagingBar/style)
 1. [隐藏总记录](#numberPagingBar/hideTotal)
+1. [使用数据源更新数据](#gridView/dsUpdate)
 
 ### NumberPagingBar 的使用
 1. [创建分页栏](#numberPagingBar/createPagingBar)
