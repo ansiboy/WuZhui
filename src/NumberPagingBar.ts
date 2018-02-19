@@ -351,7 +351,7 @@ namespace wuzhui {
             var buttonCount = pagerSettings.pageButtonCount;
 
             let pagingBarIndex = Math.floor(this.pageIndex / buttonCount);
-            let pagingBarCount = Math.floor(this.pageCount / buttonCount) + 1;
+            let pagingBarCount = Math.ceil(this.pageCount / buttonCount);
 
             this.previousPageButton.pageIndex = (pagingBarIndex - 1) * buttonCount
             this.nextPageButton.pageIndex = (pagingBarIndex + 1) * buttonCount;
