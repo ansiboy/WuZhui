@@ -25,6 +25,9 @@ requirejs(['js/wuzhui.js'])
 1. [分页栏样式](#numberPagingBar/style)
 1. [隐藏总记录](#numberPagingBar/hideTotal)
 1. [使用数据源更新数据](#gridView/dsUpdate)
+1. [使用数据源添加数据](#gridView/dsInsert)
+1. [使用数据源删除数据](#gridView/dsDelete)
+1. [使用数据源分页数据](#gridView/dsPaging)
 
 ### NumberPagingBar 的使用
 1. [创建分页栏](#numberPagingBar/createPagingBar)
