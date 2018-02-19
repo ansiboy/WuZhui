@@ -22,9 +22,13 @@ namespace wuzhui {
 
         /** Class name of the active number button. */
         activeButtonClassName?: string,
+
+        buttonWrapper?: string,
+
+        showTotal?: boolean,
     }
 
-    export class PagingBar {
+    export abstract class PagingBar {
         private _pageIndex: number;
         private _dataSource: DataSource<any>;
         private _totalRowCount: number;
@@ -124,11 +128,13 @@ namespace wuzhui {
         private lastPageButton: NumberPagingButton;
         private createLabel: () => PagingTotalLabel;
         private createButton: () => NumberPagingButton;
+        // private buttonWrapper: string;
 
         constructor(params: {
             dataSource: DataSource<any>, element: HTMLElement, pagerSettings?: PagerSettings,
-            createTotal?: () => PagingTotalLabel,
-            createButton?: () => NumberPagingButton
+            // createTotal?: () => PagingTotalLabel,
+            // createButton?: () => NumberPagingButton,
+            // buttonWrapper?: string,
         }) {
             if (!params.dataSource) throw Errors.argumentNull('dataSource');
             if (!params.element) throw Errors.argumentNull('element');
@@ -136,8 +142,9 @@ namespace wuzhui {
                 pageButtonCount: 10,
                 firstPageText: '<<',
                 lastPageText: '>>',
-                nextPageText: '...',        //private _buttons: Array<HTMLElement>;
+                nextPageText: '...',
                 previousPageText: '...',
+                showTotal: true,
             }, params.pagerSettings || {});
 
 
@@ -146,71 +153,101 @@ namespace wuzhui {
             this.dataSource = params.dataSource;
             this.pagerSettings = pagerSettings;
             this.element = params.element;
+            // this.buttonWrapper = params.pagerSettings.buttonWrapper;
             this.numberButtons = new Array<NumberPagingButton>();
-
-            this.createButton = params.createButton || this.createPagingButton;
-            this.createLabel = params.createTotal || this.createTotalLabel;
+            this.createButton = this.createPagingButton;//params.createButton || 
+            this.createLabel = this.createTotalLabel;//params.createTotal || 
 
             this.createPreviousButtons();
             this.createNumberButtons();
             this.createNextButtons();
 
-            this.totalElement = this.createLabel();
-            this.totalElement.visible = false;
+            if (this.pagerSettings.showTotal) {
+                this.totalElement = this.createLabel();
+                this.totalElement.visible = false;
+            }
 
             this.init(params.dataSource);
-
-
         }
 
         private createPagingButton(): NumberPagingButton {
             var pagerSettings = this.pagerSettings;
             let button = document.createElement('a');
             button.href = 'javascript:';
-            this.element.appendChild(button);
 
-            let result = <NumberPagingButton>{
+            if (this.pagerSettings.buttonWrapper) {
+                let w = document.createElement(this.pagerSettings.buttonWrapper);
+                w.appendChild(button);
+                this.element.appendChild(w);
+            }
+            else {
+                this.element.appendChild(button);
+            }
+
+            let result = {
+                _button: button,
                 get visible(): boolean {
+                    let button = this._button as HTMLAnchorElement;
                     return button.style.display != 'none';
                 },
                 set visible(value: boolean) {
+                    let button = this._button as HTMLAnchorElement;
+                    let element = pagerSettings.buttonWrapper ? button.parentElement : button;
                     if (value) {
-                        button.style.removeProperty('display');
+                        element.style.removeProperty('display');
                     }
                     else {
-                        button.style.display = 'none';
+                        element.style.display = 'none';
                     }
                 },
                 get pageIndex(): number {
+                    let button = this._button as HTMLAnchorElement;
                     return new Number(button.getAttribute('pageIndex')).valueOf();
                 },
                 set pageIndex(value: number) {
+                    let button = this._button as HTMLAnchorElement;
                     button.setAttribute('pageIndex', value as any);
                 },
                 get text(): string {
+                    let button = this._button as HTMLAnchorElement;
                     return button.innerHTML;
                 },
                 set text(value) {
+                    let button = this._button as HTMLAnchorElement;
                     button.innerHTML = value;
                 },
                 get active(): boolean {
+                    let button = this._button as HTMLAnchorElement;
                     return button.href != null;
                 },
                 set active(value: boolean) {
+                    let button = this._button as HTMLAnchorElement;
                     if (value == true) {
                         button.removeAttribute('href');
-                        if (pagerSettings.activeButtonClassName)
-                            button.className = pagerSettings.activeButtonClassName;
+                        if (pagerSettings.activeButtonClassName) {
+                            // button.className = pagerSettings.activeButtonClassName;
+                            this.setClassName(pagerSettings.activeButtonClassName)
+                        }
 
                         return;
                     }
 
                     button.href = 'javascript:';
                     if (pagerSettings.buttonClassName)
-                        button.className = pagerSettings.buttonClassName;
+                        this.setClassName(pagerSettings.buttonClassName); //button.className = pagerSettings.buttonClassName;
                     else
-                        button.removeAttribute('class');
-                }
+                        this.setClassName(null); // button.removeAttribute('class');
+                },
+                setClassName(value: string) {
+                    let button = this._button as HTMLAnchorElement;
+                    let element = pagerSettings.buttonWrapper ? button.parentElement : button;
+                    if (value)
+                        element.className = value;
+                    else
+                        element.removeAttribute('class');
+
+                },
+                onclick: null as NumberPagingButtonClickEvent
             };
             button.onclick = () => {
                 if (result.onclick) {
@@ -334,8 +371,11 @@ namespace wuzhui {
                 }
             }
 
-            this.totalElement.text = <any>this.totalRowCount;
-            this.totalElement.visible = true;
+            if (this.totalElement) {
+                this.totalElement.text = this.totalRowCount as any;
+                this.totalElement.visible = true;
+            }
+
 
             this.firstPageButton.visible = false;
             this.previousPageButton.visible = false;
