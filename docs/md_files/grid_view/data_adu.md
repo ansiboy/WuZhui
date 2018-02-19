@@ -3,6 +3,12 @@
 
 <table id="data_adu_1" class="table"></table>
 
+## 源码
+### HTML
+```html
+<table id="data_adu_1" class="table"></table>
+```
+### JS
 ```js
 const w = wuzhui;
 var items = [

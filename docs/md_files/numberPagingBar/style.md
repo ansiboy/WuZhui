@@ -1,6 +1,12 @@
-## 分页栏样式
+# 分页栏样式
+
+## 示例
 
 <table id="numberPagingBar_style_table1" class="table"></table>
+
+## 源码
+
+### CSS
 
 ```css
 .pagingBar a {
@@ -11,8 +17,16 @@
 }
 .pagingBar .total {
     float: right;
-} 
+}
 ```
+
+### HTML
+
+```html
+<table id="numberPagingBar_style_table1" class="table"></table>
+```
+
+### JS
 
 ```js
 let w = wuzhui;

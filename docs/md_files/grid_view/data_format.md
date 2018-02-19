@@ -1,4 +1,4 @@
-## 数据格式化
+# 数据格式化
 
 使用 dataFormatString 字段可以设置数据的格式，支持数字和日期的格式化。dataFormatString 字符串由花括号和格式组成，即：{格式}，通过不同在格式，输出相应在字符串。 
 
@@ -15,10 +15,16 @@
 * {T}，表示输出日期 时:分:秒，例如：2:5:12
 
 
-**示例**
+## 示例
 
 <table id="data_format_1" class="table"></table>
 
+## 源码
+### HTML
+```html
+<table id="data_format_1" class="table"></table>
+```
+### JS
 ```js
 const w = wuzhui;
 var items = [

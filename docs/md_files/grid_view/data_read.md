@@ -1,6 +1,16 @@
-## 数据的显示
+# 数据的显示
 
+## 示例
 <table id="data_read_1" class="table"></table>
+
+## 源码
+
+### HTML
+```html
+<table id="data_read_1" class="table"></table>
+```
+
+### JS
 ```js
 const w = wuzhui;
 var dataSource = new w.DataSource({

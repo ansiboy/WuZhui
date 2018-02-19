@@ -1,11 +1,17 @@
-## 设置样式
+# 设置列的样式
 
 通过 DataControlField 的 headerStyle，itemStyle，可以对列的头，项设置样式。可以使用字符串或者对象。
 
-**示例**
+## 示例
 
 <table id="style_1" class="table"></table>
 
+## 源码
+### HTML
+```html
+<table id="style_1" class="table"></table>
+```
+### JS
 ```js
 const w = wuzhui;
 var dataSource = new w.DataSource({

@@ -1,6 +1,6 @@
-## 创建分页栏
+# 创建分页栏
 
-### 典型的使用步骤
+典型的使用步骤
 
 1. 创建数据源
 2. 创建分页栏
@@ -8,12 +8,21 @@
 
 **注意** 第 2, 3 步不分次序，即：第 3 步也可以是第 2 步。
 
-### 示例
+## 示例
 
 <table id="numberPagingBar_createPagingBar_table" class="table"></table>
 <div id="numberPagingBar_createPagingBar_bar"></div>
 
-<hr/>
+## 源码
+
+### HTML
+
+```html
+<table id="numberPagingBar_createPagingBar_table" class="table"></table>
+<div id="numberPagingBar_createPagingBar_bar"></div>
+```
+
+### JS
 
 1. 创建数据源
     ```js
@@ -44,7 +53,7 @@
     })
 
     dataSource.selectArguments.maximumRows = 8;
-    let table = document.getElementById('numberPagingBar_createPagingBar_table'); //document.createElement('table');
+    let table = document.getElementById('numberPagingBar_createPagingBar_table');
     let tbody = document.createElement('tbody');
     table.appendChild(tbody);
 

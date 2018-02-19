@@ -1,7 +1,17 @@
-## 数据的分页
+# 数据的分页
+
+## 示例
 
 <table id="data_paging_1" class="table"></table>
 
+## 源码
+
+### HTML
+```html
+<table id="data_paging_1" class="table"></table>
+```
+
+### JS
 ```js
 const w = wuzhui;
 const totalRowCount = 10;
