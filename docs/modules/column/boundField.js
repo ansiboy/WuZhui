@@ -6,8 +6,8 @@ action(function () {
             { name: 'may', age: 10 }
         ])
     })
-    var gridView = new w.GridView({
-        element: document.getElementById('data_read_1'),
+    new w.GridView({
+        element: document.getElementById('boundField_table'),
         dataSource,
         columns: [
             new w.BoundField({ dataField: 'name', headerText: '姓名' }),
