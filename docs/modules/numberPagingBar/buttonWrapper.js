@@ -2,7 +2,7 @@ requirejs(['css!modules/numberPagingBar/createPagingBar'])
 action(function () {
     let w = wuzhui;
 
-    const totalRowCount = 67;
+    const totalRowCount = 670;
     let dataSource = new w.DataSource({
         select(args) {
             let dataItems = []
@@ -27,7 +27,7 @@ action(function () {
     })
 
     dataSource.selectArguments.maximumRows = 8;
-    let table = document.getElementById('buttonWrapper_table'); //document.createElement('table');
+    let table = document.getElementById('buttonWrapper_table'); 
     let tbody = document.createElement('tbody');
     table.appendChild(tbody);
 
