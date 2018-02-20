@@ -4,7 +4,7 @@
 
 1. columns（必须）
 
-    设置 GridView 在列
+    设置 GridView 的列
 
 1. dataSource（必须）
 

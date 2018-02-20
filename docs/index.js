@@ -45,14 +45,24 @@ requirejs.config({
 
 requirejs(['application'], function (app) {
     app.run()
+    if (!location.hash)
+        location.hash = '#index'
 })
 requirejs(['css!highlight_css'])
 
+
+
 /**
+ * @param {string} name
  * @param {()=>void} func 
  */
-function action(func) {
+function action(name, func) {
+    if (typeof name == 'function') {
+        func = name
+        name = null
+    }
 
+    func = func || (() => { })
     /**
      * @param {chitu.Page} page 
      */
@@ -64,23 +74,32 @@ function action(func) {
             })
             .then(text => {
                 var html_content = marked(text);
-                // var container = document.getElementsByClassName('container')[0];
                 page.element.innerHTML = html_content;
 
-                // if (file_name != 'index') {
-                //     let js_path = 'md_files/' + file_name + '.js';
                 require(['highlight', 'highlight_javascript'], function (hljs, n) {
                     func();
                     page.element.querySelectorAll('code').forEach(block => {
                         hljs.highlightBlock(block);
                     })
                 });
-                // }
             })
     }
 
-    define(['exports'], function (exports) {
-        exports.default = actionFunction
-    });
+    if (name) {
+        define(name, ['exports'], function (exports) {
+            exports.default = actionFunction
+        });
+    }
+    else {
+        define(['exports'], function (exports) {
+            exports.default = actionFunction
+        });
+    }
 }
+
+action('modules/index')
+action('modules/api/boundField')
+action('modules/api/gridView')
+action('modules/api/dataSource')
+action('modules/api/pagerSettings')
 
