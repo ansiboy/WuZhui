@@ -14,13 +14,19 @@
 requirejs(['js/wuzhui.js'])
 ```
 
+## 特点
+
+1. 简洁，易于使用，并且具有良好的语法提示，上手迅速
+1. 轻量级，零依赖，易于与第三方框架配合使用
+1. 基于 MVC 模式设计，视图与数据分离，易于扩展
+
 ## 示例
 
 ### GridView 的使用
 
 1. [数据的显示](#gridView/data_read)
 1. [数据的分页](#gridView/data_paging)
-1. 数据的排序
+1. [数据的排序](#gridView/sort)
 1. [设置列的样式](#gridView/style)
 1. [数据格式化](#gridView/data_format)
 1. [数据的增删改](#gridView/data_adu)
@@ -38,15 +44,15 @@ requirejs(['js/wuzhui.js'])
 1. [使用数据源添加数据](#gridView/dsInsert)
 1. [使用数据源删除数据](#gridView/dsDelete)
 1. [使用数据源分页数据](#gridView/dsPaging)
-1. [数据源数据的过滤](dataSource/filter)
-1. [多视图共享数据源](#gridView/dsPaging)
+1. [数据源数据的过滤](#dataSource/filter)
+1. [多视图共享数据源](#dataSource/mutilView)
 
     #### 数据源事件的引发
 
-    1. 引发更新事件
-    1. 引发插入事件
-    1. 引发删除事件
-    1. 引发选择事件
+    1. [引发更新事件](#dataSource/fireUpdate)
+    1. [引发插入事件](#dataSource/fireInsert)
+    1. [引发删除事件](#dataSource/fireDelete)
+    1. [引发选择事件](#dataSource/fireSelect)
 
 ### 列的使用
 1. [使用数据绑定列](#column/boundField)

@@ -10,6 +10,7 @@ action(function () {
     }
 
     let dataSource = new w.DataSource({
+        primaryKeys: ['id'],
         select(args) {
             let startIndex = args.startRowIndex;
             let count = args.maximumRows;
@@ -19,16 +20,33 @@ action(function () {
                 totalRowCount
             }
             return Promise.resolve(result)
+        },
+        update(value) {
+            return Promise.resolve({})
+        },
+        delete(value) {
+            return Promise.resolve({})
         }
     })
 
-    var gridView = new w.GridView({
-        element: document.getElementById('data_paging_1'),
+    new w.GridView({
         dataSource,
+        element: document.getElementById('dataSource_multiView1'),
         columns: [
-            new w.BoundField({ dataField: 'name', headerText: '名称' }),
-            new w.BoundField({ dataField: 'value', headerText: '值' })
+            new w.BoundField({ dataField: 'name' }),
+            new w.BoundField({ dataField: 'value' }),
+            new w.CommandField({ showEditButton: true, showDeleteButton: true })
         ],
-        pageSize: 3,
+        pageSize: 5
+    })
+
+    new w.GridView({
+        dataSource,
+        element: document.getElementById('dataSource_multiView2'),
+        columns: [
+            new w.BoundField({ dataField: 'name' }),
+            new w.BoundField({ dataField: 'value' })
+        ],
+        pageSize: 5
     })
 })

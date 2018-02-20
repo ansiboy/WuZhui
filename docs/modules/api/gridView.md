@@ -10,7 +10,7 @@
 
     设置 GridView 的数据源
 
-1. element（必须）
+1. element（可选）
 
     设置与 GridView 相对应在 HTMLTableElement
 

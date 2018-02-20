@@ -7,44 +7,44 @@
 ## 源码
 
 ### HTML
+
 ```html
 <table id="data_paging_1" class="table"></table>
 ```
 
 ### JS
+
 ```js
-const w = wuzhui;
-const totalRowCount = 10;
-var dataSource = new w.DataSource({
+const w = wuzhui
+const totalRowCount = 67
+let dataItems = [];
+for (let i = 0; i < totalRowCount; i++) {
+    let id = i;
+    let name = `name ${i}`
+    let value = `value ${i}`
+    dataItems.push({ id, name, value })
+}
+
+let dataSource = new w.DataSource({
     select(args) {
-        var dataItems = []
-
-        let start = args.startRowIndex;
-        for (let i = 0; i < args.maximumRows; i++) {
-            var rowIndex = start + i;
-            if (rowIndex > totalRowCount - 1)
-                break;
-
-            dataItems[i] = {
-                name: `name ${rowIndex}`,
-                age: rowIndex + 1
-            }
+        let startIndex = args.startRowIndex;
+        let count = args.maximumRows;
+        let items = dataItems.filter((o, i) => i >= startIndex && i < startIndex + count)
+        let result = {
+            dataItems: items,
+            totalRowCount
         }
-
-        var result = {
-            totalRowCount,
-            dataItems
-        }
-        return Promise.resolve(result);
+        return Promise.resolve(result)
     }
 })
+
 var gridView = new w.GridView({
     element: document.getElementById('data_paging_1'),
     dataSource,
     columns: [
-        new w.BoundField({ dataField: 'name', headerText: '姓名' }),
-        new w.BoundField({ dataField: 'age', headerText: '年龄' })
+        new w.BoundField({ dataField: 'name', headerText: '名称' }),
+        new w.BoundField({ dataField: 'value', headerText: '值' })
     ],
-    pageSize: 3
+    pageSize: 3,
 })
 ```
