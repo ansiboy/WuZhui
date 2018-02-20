@@ -1,21 +1,11 @@
-define([
-    'require',
-    'chitu',
-    'exports'
-], function (require, c, exports) {
-    'use strict';
-
+define(['chitu'], function () {
     class Application extends chitu.Application {
-        /**
-         * @param {chitu.RouteData} routeData 
-         */
         createPageElement(routeData) {
+            let element = super.createPageElement(routeData);
             let container = document.querySelector('.container')
             console.assert(container)
-            let page_element = document.createElement('div')
-            page_element.className = routeData.pageName
-            container.appendChild(page_element)
-            return page_element
+            container.appendChild(element)
+            return element
         }
     }
 
