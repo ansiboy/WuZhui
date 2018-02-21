@@ -11,19 +11,19 @@ namespace wuzhui {
 
     export type DataMethod = 'select' | 'update' | 'delete' | 'insert';
     export type SelectResult<T> = Array<T> | DataSourceSelectResult<T>;
-    export class DataSource<T> {//extends DataSource<T> {   
+    export class DataSource<T> {
         private _currentSelectArguments: DataSourceSelectArguments;
         private args: DataSourceArguments<T>;
         private primaryKeys: string[];
 
-        inserting = callbacks<DataSource<T>, { item: T, index: number }>();
-        inserted = callbacks<DataSource<T>, { item: T, index: number }>();
+        inserting = callbacks1<DataSource<T>, T, number>();// { item: T, index: number }
+        inserted = callbacks1<DataSource<T>, T, number>();//{ item: T, index: number }
 
-        deleting = callbacks<DataSource<T>, { item: T }>();
-        deleted = callbacks<DataSource<T>, { item: T }>();
-        updating = callbacks<DataSource<T>, { item: T }>();
-        updated = callbacks<DataSource<T>, { item: T }>();
-        selecting = callbacks<DataSource<T>, { selectArguments: DataSourceSelectArguments }>();
+        deleting = callbacks<DataSource<T>, T>();//{ item: T }
+        deleted = callbacks<DataSource<T>, T>();//{ item: T }
+        updating = callbacks<DataSource<T>, T>();//{ item: T }
+        updated = callbacks<DataSource<T>, T>();//{ item: T }
+        selecting = callbacks<DataSource<T>, DataSourceSelectArguments>();//{ selectArguments: DataSourceSelectArguments }
         selected = callbacks<DataSource<T>, DataSourceSelectResult<T>>();
         error = callbacks<this, DataSourceError>();
 
@@ -70,10 +70,11 @@ namespace wuzhui {
 
             this.checkPrimaryKeys(item);
 
-            fireCallback(this.inserting, this, { item, index });
+            this.inserting.fire(this, item, index); // fireCallback(this.inserting, this, { item, index });
             return this.executeInsert(item).then((data) => {
                 Object.assign(item, data);
-                fireCallback(this.inserted, this, { item, index });
+                // fireCallback(this.inserted, this, { item, index });
+                this.inserted.fire(this, item, index);
                 return data;
             }).catch(exc => {
                 this.processError(exc, 'insert');
@@ -85,9 +86,11 @@ namespace wuzhui {
 
             this.checkPrimaryKeys(item);
 
-            fireCallback(this.deleting, this, { item });
+            //fireCallback(this.deleting, this, { item });
+            this.deleting.fire(this, item);
             return this.executeDelete(item).then((data) => {
-                fireCallback(this.deleted, this, { item });
+                // fireCallback(this.deleted, this, { item });
+                this.deleted.fire(this, item);
                 return data;
             }).catch(exc => {
                 this.processError(exc, 'delete');
@@ -99,10 +102,12 @@ namespace wuzhui {
 
             this.checkPrimaryKeys(item);
 
-            fireCallback(this.updating, this, { item });
+            // fireCallback(this.updating, this, { item });
+            this.updating.fire(this, item);
             return this.executeUpdate(item).then((data) => {
                 Object.assign(item, data);
-                fireCallback(this.updated, this, { item });
+                // fireCallback(this.updated, this, { item });
+                this.updated.fire(this, item);
                 return data;
             }).catch((exc: DataSourceError) => {
                 this.processError(exc, 'update');
@@ -135,7 +140,7 @@ namespace wuzhui {
         }
         select() {
             let args = this.selectArguments;
-            fireCallback(this.selecting, this, { selectArguments: args });
+            fireCallback(this.selecting, this, args);
             return this.executeSelect(args).then((data) => {
                 let data_items: Array<T>;
                 let result = data as DataSourceSelectResult<T>;
@@ -151,7 +156,7 @@ namespace wuzhui {
                 else {
                     throw new Error('Type of the query result is expected as Array or DataSourceSelectResult.');
                 }
-                fireCallback(this.selected, this, { totalRowCount, dataItems: data_items });
+                this.selected.fire(this, { totalRowCount, dataItems: data_items });
                 return data;
             }).catch(exc => {
                 this.processError(exc, 'select');

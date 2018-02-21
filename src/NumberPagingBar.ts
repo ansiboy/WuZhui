@@ -30,11 +30,11 @@ namespace wuzhui {
 
     export abstract class PagingBar {
         private _pageIndex: number;
-        private _dataSource: DataSource<any>;
+        private _dataSource: DataSource<{}>;
         private _totalRowCount: number;
         private _pageSize: number;
 
-        init(dataSource: DataSource<any>) {
+        init(dataSource: DataSource<{}>) {
             if (dataSource == null)
                 throw Errors.argumentNull('dataSource');
 
@@ -116,7 +116,7 @@ namespace wuzhui {
 
     export type PagingBarElementType = 'firstButton' | 'lastButton' | 'previousButton' | 'nextButton' | 'numberButton' | 'totalLabel';
     export class NumberPagingBar extends PagingBar {
-        private dataSource: DataSource<any>;
+        private dataSource: DataSource<{}>;
         private pagerSettings: PagerSettings;
         private element: HTMLElement;
         private totalElement: PagingTotalLabel;

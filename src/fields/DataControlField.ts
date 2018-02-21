@@ -184,8 +184,8 @@ namespace wuzhui {
         descHTML = '↓';
         sortingHTML = '...';
 
-        sorting: Callback<GridViewHeaderCell, { sortType: string }>;
-        sorted: Callback<GridViewHeaderCell, { sortType: string }>;
+        sorting: Callback1<GridViewHeaderCell, { sortType: string }>;
+        sorted: Callback1<GridViewHeaderCell, { sortType: string }>;
 
         constructor(field: DataControlField) {
             super(document.createElement('th'));

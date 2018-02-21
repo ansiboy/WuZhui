@@ -20,7 +20,7 @@ module.exports = function (grunt) {
             www: {
                 options: {
                     // 服务器端口号
-                    port: 2217,
+                    port: 2218,
                     // 服务器地址(可以使用主机名localhost，也能使用IP)
                     // hostname: '192.168.1.7',
                     hostname: '0.0.0.0',

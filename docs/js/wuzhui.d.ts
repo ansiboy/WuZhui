@@ -26,31 +26,15 @@ declare namespace wuzhui {
         private _currentSelectArguments;
         private args;
         private primaryKeys;
-        inserting: Callback<DataSource<T>, {
-            item: T;
-            index: number;
-        }>;
-        inserted: Callback<DataSource<T>, {
-            item: T;
-            index: number;
-        }>;
-        deleting: Callback<DataSource<T>, {
-            item: T;
-        }>;
-        deleted: Callback<DataSource<T>, {
-            item: T;
-        }>;
-        updating: Callback<DataSource<T>, {
-            item: T;
-        }>;
-        updated: Callback<DataSource<T>, {
-            item: T;
-        }>;
-        selecting: Callback<DataSource<T>, {
-            selectArguments: DataSourceSelectArguments;
-        }>;
-        selected: Callback<DataSource<T>, DataSourceSelectResult<T>>;
-        error: Callback<this, DataSourceError>;
+        inserting: Callback2<DataSource<T>, T, number>;
+        inserted: Callback2<DataSource<T>, T, number>;
+        deleting: Callback1<DataSource<T>, T>;
+        deleted: Callback1<DataSource<T>, T>;
+        updating: Callback1<DataSource<T>, T>;
+        updated: Callback1<DataSource<T>, T>;
+        selecting: Callback1<DataSource<T>, DataSourceSelectArguments>;
+        selected: Callback1<DataSource<T>, DataSourceSelectResult<T>>;
+        error: Callback1<this, DataSourceError>;
         constructor(args: DataSourceArguments<T>);
         readonly canDelete: boolean;
         readonly canInsert: boolean;
@@ -148,13 +132,13 @@ declare namespace wuzhui {
         private emptyDataHTML;
         private initDataHTML;
         private loadFailHTML;
-        rowCreated: Callback<GridView, {
+        rowCreated: Callback1<GridView, {
             row: GridViewRow;
         }>;
         constructor(params: GridViewArguments);
         private createPagingBar(pagerSettings?);
         readonly columns: DataControlField[];
-        readonly dataSource: DataSource<any>;
+        readonly dataSource: DataSource<{}>;
         private appendEmptyRow();
         appendDataRow(dataItem: any, index?: number): GridViewDataRow;
         private on_sort(sender, args);
@@ -197,7 +181,7 @@ declare namespace wuzhui {
         private _dataSource;
         private _totalRowCount;
         private _pageSize;
-        init(dataSource: DataSource<any>): void;
+        init(dataSource: DataSource<{}>): void;
         readonly pageCount: number;
         pageSize: number;
         pageIndex: number;
@@ -252,15 +236,27 @@ declare namespace wuzhui {
         static findFirstParentByTagName(element: Element, tagName: string): HTMLElement;
     }
     function applyStyle(element: HTMLElement, value: CSSStyleDeclaration | string): void;
-    class Callback<S, A> {
+    class Callback {
         private funcs;
         constructor();
-        add(func: (sender: S, args: A) => any): void;
-        remove(func: (sender: S, args: A) => any): void;
-        fire(sender: S, args: A): void;
+        add(func: (...args: Array<any>) => any): void;
+        remove(func: (...args: Array<any>) => any): void;
+        fire(...args: Array<any>): void;
     }
-    function callbacks<S, A>(): Callback<S, A>;
-    function fireCallback<S, A>(callback: Callback<S, A>, sender: S, args: A): void;
+    interface Callback1<S, A> extends Callback {
+        add(func: (sender: S, arg: A) => any): any;
+        remove(func: (sender: S, arg: A) => any): any;
+        fire(sender: S, arg: A): any;
+    }
+    interface Callback2<S, A, A1> extends Callback {
+        add(func: (sender: S, arg: A, arg1: A1) => any): any;
+        remove(func: (sender: S, arg: A, arg1: A1) => any): any;
+        fire(sender: S, arg: A, arg1: A1): any;
+    }
+    function callbacks<S, A>(): Callback1<S, A>;
+    function callbacks1<S, A, A1>(): Callback2<S, A, A1>;
+    function fireCallback<S, A, B>(callback: Callback2<S, A, B>, sender: S, arg1: A, arg2: B): any;
+    function fireCallback<S, A>(callback: Callback1<S, A>, sender: S, args: A): any;
 }
 declare namespace wuzhui {
     class GridViewCell extends Control<HTMLTableCellElement> {
@@ -303,10 +299,10 @@ declare namespace wuzhui {
         ascHTML: string;
         descHTML: string;
         sortingHTML: string;
-        sorting: Callback<GridViewHeaderCell, {
+        sorting: Callback1<GridViewHeaderCell, {
             sortType: string;
         }>;
-        sorted: Callback<GridViewHeaderCell, {
+        sorted: Callback1<GridViewHeaderCell, {
             sortType: string;
         }>;
         constructor(field: DataControlField);

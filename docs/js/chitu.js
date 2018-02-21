@@ -172,9 +172,11 @@ createPage(routeData) {
         this.error.fire(this, error, sender);
     };
     let page_onloadComplete = (sender, args) => {
-        this.cachePages[sender.name] = { page: sender, hitCount: 1 };
+        if (this.allowCachePage)
+            this.cachePages[sender.name] = { page: sender, hitCount: 1 };
     };
     let page_onclosed = (sender) => {
+        delete this.cachePages[sender.name];
         this.page_stack = this.page_stack.filter(o => o != sender);
         page.closed.remove(page_onclosed);
         page.loadComplete.remove(page_onloadComplete);
@@ -306,11 +308,18 @@ closeCurrentPage() {
         page.hide();
     }
     else {
-        delete this.cachePages[page.name];
         page.close();
     }
 }
 clearPageStack() {
+    if (this.allowCachePage) {
+        this.page_stack.forEach(o => o.hide());
+    }
+    else {
+        this.page_stack.forEach(o => {
+            o.close();
+        });
+    }
     this.page_stack = [];
 }
 redirect(routeString, args) {

@@ -332,9 +332,9 @@ var wuzhui;
             }
             this._dataSource = params.dataSource;
             this._dataSource.selected.add((sender, e) => this.on_selectExecuted(e.dataItems));
-            this._dataSource.updated.add((sender, item) => this.on_updateExecuted(item));
-            this._dataSource.inserted.add((sender, item, index) => this.on_insertExecuted(item, index));
-            this._dataSource.deleted.add((sender, item) => this.on_deleteExecuted(item));
+            this._dataSource.updated.add((sender, e) => this.on_updateExecuted(e.item));
+            this._dataSource.inserted.add((sender, e) => this.on_insertExecuted(e.item, e.index));
+            this._dataSource.deleted.add((sender, e) => this.on_deleteExecuted(e.item));
             this._dataSource.selecting.add((sender, e) => {
                 let display = this._emtpyRow.element.style.display;
                 if (display != 'none') {
