@@ -56,7 +56,7 @@ requirejs(['js/wuzhui.js'])
 
 ### 列的使用
 1. [使用数据绑定列](#column/boundField)
-1. [自定义列的使用]()
+1. [自定义列的使用](#column/customField)
 
     #### 重写数据绑定列
 
