@@ -2,34 +2,35 @@
 
 namespace wuzhui {
 
+    export type ValueType = 'number' | 'date' | 'string' | 'boolean'
     export class GridViewEditableCell extends GridViewDataCell {
 
         private _dataItem: any;
-        // private _editorElement: HTMLElement
         private _valueType: string;
         private _field: BoundField;
         private _mode: 'read' | 'edit';
 
-        constructor(field: BoundField, dataItem: any) {
+        constructor(field: BoundField, dataItem: any, valueType?: ValueType) {
             if (field == null) throw Errors.argumentNull('field');
             if (dataItem == null) throw Errors.argumentNull('dataItem');
 
             super({
-                // dataItem, 
                 dataField: field.dataField,
                 nullText: field.nullText, dataFormatString: field.dataFormatString
             });
 
             this._field = field;
             this._dataItem = dataItem;
-
-            let value = dataItem[field.dataField];
-            if (value instanceof Date)
-                this._valueType = 'date'
-            else
-                this._valueType = typeof value;
-
+            this._valueType = valueType;
             this._mode = 'read';
+
+            if (!this._valueType) {
+                let value = dataItem[field.dataField];
+                if (value instanceof Date)
+                    this._valueType = 'date'
+                else
+                    this._valueType = typeof value;
+            }
         }
 
         get field() {
@@ -71,11 +72,9 @@ namespace wuzhui {
 
         render(value) {
             if (this._mode == 'edit') {
-                this.element.innerHTML = `
-                    <span><input /></span>
-                `;
+                this.element.innerHTML = `<input type="text" />`;
 
-                applyStyle(this.element.querySelector('span'), this._field.controlStyle);
+                applyStyle(this.element.querySelector('input'), this._field.controlStyle);
                 this.element.querySelector('input').value =
                     value === undefined ? null : value;
                 return;
@@ -86,12 +85,6 @@ namespace wuzhui {
 
         //==============================================
         // Virtual Methods
-        protected createControl(): HTMLElement {
-            let ctrl = document.createElement('span');
-            ctrl.appendChild(document.createElement('input'));
-            return ctrl;
-        }
-
         get controlValue() {
             var text = this.element.querySelector('input').value;
             switch (this._valueType) {

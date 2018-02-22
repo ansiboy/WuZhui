@@ -17,7 +17,7 @@ namespace wuzhui {
 
         constructor(params?: {
             dataField?: string,
-            render?: (element: HTMLElement, value) => void,
+            render?: (value) => void,
             nullText?: string, dataFormatString?: string
         }) {
             super();
@@ -26,6 +26,9 @@ namespace wuzhui {
             this.nullText = params.nullText != null ? params.nullText : '';
             this.dataFormatString = params.dataFormatString;
             this.dataField = params.dataField;
+            if (params.render) {
+                this.render = params.render;
+            }
         }
 
         render(value) {
