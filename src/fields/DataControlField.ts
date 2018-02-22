@@ -10,78 +10,38 @@ namespace wuzhui {
 
     export class GridViewDataCell extends GridViewCell {
         private _value: any;
-        private _valueElement: HTMLElement;
         private nullText: string;
         private dataFormatString: string;
-        private _dataField: string;
-        private render: (element: HTMLElement, value: any) => void;
 
-        constructor(params: {
-            dataItem: any, dataField: string,
+        dataField: string;
+
+        constructor(params?: {
+            dataField?: string,
             render?: (element: HTMLElement, value) => void,
             nullText?: string, dataFormatString?: string
         }) {
             super();
 
-            this._valueElement = document.createElement('span');
-            this.element.appendChild(this._valueElement);
+            params = params || {}
             this.nullText = params.nullText != null ? params.nullText : '';
             this.dataFormatString = params.dataFormatString;
-            this._dataField = params.dataField;
-            this.render = params.render || ((element: HTMLElement, value) => {
-                if (!element) throw Errors.argumentNull('element');
-
-                var text: string;
-                if (value == null)
-                    text = this.nullText;
-                else if (this.dataFormatString)
-                    text = this.formatValue(this.dataFormatString, value);
-                else
-                    text = value;
-
-                element.innerHTML = text;
-            });
-
-            this.value = params.dataItem[params.dataField];
-            this.render(this.valueElement, this.value);
+            this.dataField = params.dataField;
         }
 
-        protected get valueElement() {
-            return this._valueElement;
+        render(value) {
+            var text: string;
+            if (value == null)
+                text = this.nullText;
+            else if (this.dataFormatString)
+                text = this.formatValue(this.dataFormatString, value);
+            else
+                text = value;
+
+            this.element.innerHTML = text;
         }
-
-        get dataField() {
-            return this._dataField;
-        }
-
-        set value(value) {
-            if (this._value == value)
-                return;
-
-            this._value = value;
-            // this._valueElement.innerHTML = this.getCellHtml(value);
-            this.render(this._valueElement, value);
-        }
-        get value() {
-            return this._value;
-        }
-
-        // getCellHtml(value: any): string {
-        //     // if (this.html)
-        //     //     return this.html(value);
-
-        //     if (value == null)
-        //         return this.nullText;
-
-        //     if (this.dataFormatString)
-        //         return this.formatValue(this.dataFormatString, value);
-
-        //     return value;
-        // }
 
         private formatValue(format: string, arg): string {//...args
             var result = '';
-            // var format = args[0];
 
             for (var i = 0; ;) {
                 var open = format.indexOf('{', i);

@@ -5,7 +5,7 @@ namespace wuzhui {
     export class GridViewEditableCell extends GridViewDataCell {
 
         private _dataItem: any;
-        private _editorElement: HTMLElement
+        // private _editorElement: HTMLElement
         private _valueType: string;
         private _field: BoundField;
         private _mode: 'read' | 'edit';
@@ -15,25 +15,20 @@ namespace wuzhui {
             if (dataItem == null) throw Errors.argumentNull('dataItem');
 
             super({
-                dataItem, dataField: field.dataField,
+                // dataItem, 
+                dataField: field.dataField,
                 nullText: field.nullText, dataFormatString: field.dataFormatString
             });
 
             this._field = field;
             this._dataItem = dataItem;
 
-            this._editorElement = this.createControl();
-            this.appendChild(this._editorElement);
-
-            applyStyle(this._editorElement, this.field.controlStyle)
-            this.value = dataItem[field.dataField];
-
-            if (this.value instanceof Date)
+            let value = dataItem[field.dataField];
+            if (value instanceof Date)
                 this._valueType = 'date'
             else
-                this._valueType = typeof this.value;
+                this._valueType = typeof value;
 
-            ElementHelper.hideElement(this._editorElement);
             this._mode = 'read';
         }
 
@@ -51,10 +46,8 @@ namespace wuzhui {
             }
 
             this._mode = 'edit';
-            ElementHelper.hideElement(this.valueElement);
-            ElementHelper.showElement(this._editorElement);
             let value = this._dataItem[this.field.dataField];
-            this.controlValue = value;
+            this.render(value);
         }
         endEdit() {
             if (this._field.readOnly) {
@@ -62,18 +55,33 @@ namespace wuzhui {
             }
 
             this._mode = 'read';
-            this.value = this.controlValue;
-            this._dataItem[this.field.dataField] = this.value;
-            ElementHelper.hideElement(this._editorElement);
-            ElementHelper.showElement(this.valueElement);
+            let value = this.controlValue;
+            this._dataItem[this.field.dataField] = value;
+            this.render(value);
         }
         cancelEdit() {
             if (this._field.readOnly) {
                 return;
             }
 
-            ElementHelper.hideElement(this._editorElement);
-            ElementHelper.showElement(this.valueElement);
+            this._mode = 'read';
+            let value = this._dataItem[this.field.dataField];
+            this.render(value);
+        }
+
+        render(value) {
+            if (this._mode == 'edit') {
+                this.element.innerHTML = `
+                    <span><input /></span>
+                `;
+
+                applyStyle(this.element.querySelector('span'), this._field.controlStyle);
+                this.element.querySelector('input').value =
+                    value === undefined ? null : value;
+                return;
+            }
+
+            super.render(value);
         }
 
         //==============================================
@@ -83,12 +91,9 @@ namespace wuzhui {
             ctrl.appendChild(document.createElement('input'));
             return ctrl;
         }
-        set controlValue(value: any) {
-            this._editorElement.querySelector('input').value =
-                value === undefined ? null : value;
-        }
+
         get controlValue() {
-            var text = this._editorElement.querySelector('input').value;
+            var text = this.element.querySelector('input').value;
             switch (this._valueType) {
                 case 'number':
                     return new Number(text).valueOf();

@@ -159,6 +159,7 @@ namespace wuzhui {
                     }
                     e.handled = true;
                     console.error(e.message);
+                    console.log(e.stack)
                 }
             })
 
@@ -231,6 +232,20 @@ namespace wuzhui {
             var row = new GridViewDataRow(this, dataItem);
             row.element.className = GridView.dataRowClassName;
             this._body.appendChild(row, index);
+
+            let cells = row.cells;
+            for (let j = 0; j < cells.length; j++) {
+                let cell = cells[j];
+                if (cell instanceof GridViewDataCell) {
+                    let value = dataItem[cell.dataField];
+                    if (value !== undefined) {
+                        // cell.value = value;
+                        cell.render(value);
+                        dataItem[cell.dataField] = value;
+                    }
+                }
+            }
+
             fireCallback(this.rowCreated, this, { row });
             if (this._emtpyRow.element.style.display != 'none')
                 this.hideEmptyRow();
@@ -306,7 +321,8 @@ namespace wuzhui {
                     if (cell instanceof GridViewDataCell) {
                         let value = item[cell.dataField];
                         if (value !== undefined) {
-                            cell.value = value;
+                            // cell.value = value;
+                            cell.render(value);
                             dataItem[cell.dataField] = value;
                         }
                     }
