@@ -264,21 +264,16 @@ declare namespace wuzhui {
     }
     class GridViewDataCell extends GridViewCell {
         private _value;
-        private _valueElement;
         private nullText;
         private dataFormatString;
-        private _dataField;
-        private render;
-        constructor(params: {
-            dataItem: any;
-            dataField: string;
-            render?: (element: HTMLElement, value) => void;
+        dataField: string;
+        constructor(params?: {
+            dataField?: string;
+            render?: (value) => void;
             nullText?: string;
             dataFormatString?: string;
         });
-        protected readonly valueElement: HTMLElement;
-        readonly dataField: string;
-        value: any;
+        render(value: any): void;
         private formatValue(format, arg);
         private formatDate(value, format);
         private formatNumber(value, format);
@@ -348,20 +343,20 @@ declare namespace wuzhui {
     }
 }
 declare namespace wuzhui {
+    type ValueType = 'number' | 'date' | 'string' | 'boolean';
     class GridViewEditableCell extends GridViewDataCell {
         private _dataItem;
-        private _editorElement;
         private _valueType;
         private _field;
         private _mode;
-        constructor(field: BoundField, dataItem: any);
+        constructor(field: BoundField, dataItem: any, valueType?: ValueType);
         readonly field: BoundField;
         readonly mode: "read" | "edit";
         beginEdit(): void;
         endEdit(): void;
         cancelEdit(): void;
-        protected createControl(): HTMLElement;
-        controlValue: any;
+        render(value: any): void;
+        readonly controlValue: string | number | Date;
     }
     interface BoundFieldParams extends DataControlFieldParams {
         dataField: string;

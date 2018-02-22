@@ -181,7 +181,7 @@ var wuzhui;
                 else {
                     throw new Error('Type of the query result is expected as Array or DataSourceSelectResult.');
                 }
-                wuzhui.fireCallback(this.selected, this, { totalRowCount, dataItems: data_items });
+                this.selected.fire(this, { totalRowCount, dataItems: data_items });
                 return data;
             }).catch(exc => {
                 this.processError(exc, 'select');
@@ -351,6 +351,7 @@ var wuzhui;
                     };
                     e.handled = true;
                     console.error(e.message);
+                    console.log(e.stack);
                 }
             });
             if (params.showHeader) {
@@ -409,6 +410,18 @@ var wuzhui;
             var row = new GridViewDataRow(this, dataItem);
             row.element.className = GridView.dataRowClassName;
             this._body.appendChild(row, index);
+            let cells = row.cells;
+            for (let j = 0; j < cells.length; j++) {
+                let cell = cells[j];
+                if (cell instanceof wuzhui.GridViewDataCell) {
+                    let value = dataItem[cell.dataField];
+                    if (value !== undefined) {
+                        // cell.value = value;
+                        cell.render(value);
+                        dataItem[cell.dataField] = value;
+                    }
+                }
+            }
             wuzhui.fireCallback(this.rowCreated, this, { row });
             if (this._emtpyRow.element.style.display != 'none')
                 this.hideEmptyRow();
@@ -472,7 +485,8 @@ var wuzhui;
                     if (cell instanceof wuzhui.GridViewDataCell) {
                         let value = item[cell.dataField];
                         if (value !== undefined) {
-                            cell.value = value;
+                            // cell.value = value;
+                            cell.render(value);
                             dataItem[cell.dataField] = value;
                         }
                     }
@@ -900,54 +914,26 @@ var wuzhui;
     class GridViewDataCell extends GridViewCell {
         constructor(params) {
             super();
-            this._valueElement = document.createElement('span');
-            this.element.appendChild(this._valueElement);
+            params = params || {};
             this.nullText = params.nullText != null ? params.nullText : '';
             this.dataFormatString = params.dataFormatString;
-            this._dataField = params.dataField;
-            this.render = params.render || ((element, value) => {
-                if (!element)
-                    throw wuzhui.Errors.argumentNull('element');
-                var text;
-                if (value == null)
-                    text = this.nullText;
-                else if (this.dataFormatString)
-                    text = this.formatValue(this.dataFormatString, value);
-                else
-                    text = value;
-                element.innerHTML = text;
-            });
-            this.value = params.dataItem[params.dataField];
-            this.render(this.valueElement, this.value);
+            this.dataField = params.dataField;
+            if (params.render) {
+                this.render = params.render;
+            }
         }
-        get valueElement() {
-            return this._valueElement;
+        render(value) {
+            var text;
+            if (value == null)
+                text = this.nullText;
+            else if (this.dataFormatString)
+                text = this.formatValue(this.dataFormatString, value);
+            else
+                text = value;
+            this.element.innerHTML = text;
         }
-        get dataField() {
-            return this._dataField;
-        }
-        set value(value) {
-            if (this._value == value)
-                return;
-            this._value = value;
-            // this._valueElement.innerHTML = this.getCellHtml(value);
-            this.render(this._valueElement, value);
-        }
-        get value() {
-            return this._value;
-        }
-        // getCellHtml(value: any): string {
-        //     // if (this.html)
-        //     //     return this.html(value);
-        //     if (value == null)
-        //         return this.nullText;
-        //     if (this.dataFormatString)
-        //         return this.formatValue(this.dataFormatString, value);
-        //     return value;
-        // }
         formatValue(format, arg) {
             var result = '';
-            // var format = args[0];
             for (var i = 0;;) {
                 var open = format.indexOf('{', i);
                 var close = format.indexOf('}', i);
@@ -1172,27 +1158,26 @@ var wuzhui;
 var wuzhui;
 (function (wuzhui) {
     class GridViewEditableCell extends wuzhui.GridViewDataCell {
-        constructor(field, dataItem) {
+        constructor(field, dataItem, valueType) {
             if (field == null)
                 throw wuzhui.Errors.argumentNull('field');
             if (dataItem == null)
                 throw wuzhui.Errors.argumentNull('dataItem');
             super({
-                dataItem, dataField: field.dataField,
+                dataField: field.dataField,
                 nullText: field.nullText, dataFormatString: field.dataFormatString
             });
             this._field = field;
             this._dataItem = dataItem;
-            this._editorElement = this.createControl();
-            this.appendChild(this._editorElement);
-            wuzhui.applyStyle(this._editorElement, this.field.controlStyle);
-            this.value = dataItem[field.dataField];
-            if (this.value instanceof Date)
-                this._valueType = 'date';
-            else
-                this._valueType = typeof this.value;
-            wuzhui.ElementHelper.hideElement(this._editorElement);
+            this._valueType = valueType;
             this._mode = 'read';
+            if (!this._valueType) {
+                let value = dataItem[field.dataField];
+                if (value instanceof Date)
+                    this._valueType = 'date';
+                else
+                    this._valueType = typeof value;
+            }
         }
         get field() {
             return this._field;
@@ -1205,41 +1190,40 @@ var wuzhui;
                 return;
             }
             this._mode = 'edit';
-            wuzhui.ElementHelper.hideElement(this.valueElement);
-            wuzhui.ElementHelper.showElement(this._editorElement);
             let value = this._dataItem[this.field.dataField];
-            this.controlValue = value;
+            this.render(value);
         }
         endEdit() {
             if (this._field.readOnly) {
                 return;
             }
             this._mode = 'read';
-            this.value = this.controlValue;
-            this._dataItem[this.field.dataField] = this.value;
-            wuzhui.ElementHelper.hideElement(this._editorElement);
-            wuzhui.ElementHelper.showElement(this.valueElement);
+            let value = this.controlValue;
+            this._dataItem[this.field.dataField] = value;
+            this.render(value);
         }
         cancelEdit() {
             if (this._field.readOnly) {
                 return;
             }
-            wuzhui.ElementHelper.hideElement(this._editorElement);
-            wuzhui.ElementHelper.showElement(this.valueElement);
+            this._mode = 'read';
+            let value = this._dataItem[this.field.dataField];
+            this.render(value);
+        }
+        render(value) {
+            if (this._mode == 'edit') {
+                this.element.innerHTML = `<input type="text" />`;
+                wuzhui.applyStyle(this.element.querySelector('input'), this._field.controlStyle);
+                this.element.querySelector('input').value =
+                    value === undefined ? null : value;
+                return;
+            }
+            super.render(value);
         }
         //==============================================
         // Virtual Methods
-        createControl() {
-            let ctrl = document.createElement('span');
-            ctrl.appendChild(document.createElement('input'));
-            return ctrl;
-        }
-        set controlValue(value) {
-            this._editorElement.querySelector('input').value =
-                value === undefined ? null : value;
-        }
         get controlValue() {
-            var text = this._editorElement.querySelector('input').value;
+            var text = this.element.querySelector('input').value;
             switch (this._valueType) {
                 case 'number':
                     return new Number(text).valueOf();

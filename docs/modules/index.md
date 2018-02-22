@@ -55,13 +55,18 @@ requirejs(['js/wuzhui.js'])
     1. [引发选择事件](#dataSource/fireSelect)
 
 ### 列的使用
+
 1. [使用数据绑定列](#column/boundField)
-1. [自定义列的使用](#column/customField)
 
     #### 重写数据绑定列
 
-    1. 实现勾选框列
+    1. [实现勾选框列](#column/checkboxField)
     1. 实现日期列
+
+1. [自定义列的使用](#column/customField)
+
+    1. [使用 GridViewDataCell（一）](#column/gridViewDataCell)
+    1. [使用 GridViewDataCell（二）](#column/gridViewDataCell1)
 
 ### API
 
