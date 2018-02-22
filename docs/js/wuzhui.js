@@ -1,3 +1,12 @@
+
+/*!
+ * WUZHUI v1.1
+ * https://github.com/ansiboy/WuZhui
+ *
+ * Copyright (c) 2016-2018, shu mai <ansiboy@163.com>
+ * Licensed under the MIT License.
+ *
+ */
 var wuzhui;
 (function (wuzhui) {
     const CONTROL_DATA_NAME = 'Control';

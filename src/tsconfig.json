@@ -2,7 +2,7 @@
     "compilerOptions": {
         "target": "es6",
         "sourceMap": false,
-        "outFile": "../release/wuzhui.js",
+        "outFile": "../out/wuzhui.js",
         "declaration": true,
         "lib": [
             "dom",
