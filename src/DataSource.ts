@@ -70,6 +70,7 @@ namespace wuzhui {
                 return data;
             }).catch(exc => {
                 this.processError(exc, 'insert');
+                throw exc;
             });
         }
         delete(item: T) {
@@ -86,6 +87,7 @@ namespace wuzhui {
                 return data;
             }).catch(exc => {
                 this.processError(exc, 'delete');
+                throw exc;
             });
         }
         update(item: T) {
@@ -103,6 +105,7 @@ namespace wuzhui {
                 return data;
             }).catch((exc: DataSourceError) => {
                 this.processError(exc, 'update');
+                throw exc;
             });
         }
         isSameItem(theItem: T, otherItem: T) {
@@ -131,7 +134,7 @@ namespace wuzhui {
                     throw Errors.primaryKeyNull(key);
             }
         }
-        select() {
+        select(): Promise<T[] | DataSourceSelectResult<T>> {
             let args = this.selectArguments;
             console.assert(args != null);
 
@@ -153,6 +156,7 @@ namespace wuzhui {
                 return data;
             }).catch(exc => {
                 this.processError(exc, 'select');
+                throw exc;
             });
         }
 
