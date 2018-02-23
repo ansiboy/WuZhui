@@ -40,6 +40,7 @@ requirejs(['js/wuzhui.js'])
 
 ### DataSource 的使用
 
+1. [DataSource 概述](#dataSource/summary)
 1. [使用数据源更新数据](#gridView/dsUpdate)
 1. [使用数据源添加数据](#gridView/dsInsert)
 1. [使用数据源删除数据](#gridView/dsDelete)
