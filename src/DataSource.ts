@@ -10,7 +10,7 @@ namespace wuzhui {
     }
 
     export type DataMethod = 'select' | 'update' | 'delete' | 'insert';
-    export type SelectResult<T> = Array<T> | DataSourceSelectResult<T>;
+    // export type SelectResult<T> = Array<T> | DataSourceSelectResult<T>;
     export class DataSource<T> {
         private _currentSelectArguments: DataSourceSelectArguments;
         private args: DataSourceArguments<T>;
@@ -27,7 +27,13 @@ namespace wuzhui {
         selected = callbacks<DataSource<T>, DataSourceSelectResult<T>>();
         error = callbacks<this, DataSourceError>();
 
-        constructor(args: DataSourceArguments<T>) {
+        constructor(args: {
+            primaryKeys?: string[]
+            select: ((args: DataSourceSelectArguments) => Promise<Array<T> | DataSourceSelectResult<T>>),
+            insert?: ((item: T) => Promise<any>),
+            update?: ((item: T) => Promise<any>),
+            delete?: ((item: T) => Promise<any>)
+        }) {
             this.args = args;
             this.primaryKeys = args.primaryKeys || [];
             this._currentSelectArguments = new DataSourceSelectArguments();
@@ -43,23 +49,6 @@ namespace wuzhui {
             return this.args.update != null && this.primaryKeys.length > 0;
         }
 
-        protected executeInsert(item: T): Promise<any> {
-            if (!item) throw Errors.argumentNull("item");
-            return this.args.insert(item);
-        }
-        protected executeDelete(item: T): Promise<any> {
-            if (!item) throw Errors.argumentNull("item");
-            return this.args.delete(item);
-        }
-        protected executeUpdate(item: T): Promise<any> {
-            if (!item) throw Errors.argumentNull("item");
-            return this.args.update(item);
-        }
-        protected executeSelect(args: DataSourceSelectArguments): Promise<SelectResult<T>> {
-            if (!args) throw Errors.argumentNull("args");
-            return this.args.select(args);
-        }
-
         get selectArguments() {
             return this._currentSelectArguments;
         }
@@ -68,12 +57,15 @@ namespace wuzhui {
             if (!this.canInsert)
                 throw Errors.dataSourceCanntInsert();
 
+            if (!item)
+                throw Errors.argumentNull("item");
+
+
             this.checkPrimaryKeys(item);
 
-            this.inserting.fire(this, item, index); // fireCallback(this.inserting, this, { item, index });
-            return this.executeInsert(item).then((data) => {
+            this.inserting.fire(this, item, index);
+            return this.args.insert(item).then((data) => {
                 Object.assign(item, data);
-                // fireCallback(this.inserted, this, { item, index });
                 this.inserted.fire(this, item, index);
                 return data;
             }).catch(exc => {
@@ -84,12 +76,12 @@ namespace wuzhui {
             if (!this.canDelete)
                 throw Errors.dataSourceCanntDelete();
 
-            this.checkPrimaryKeys(item);
+            if (!item)
+                throw Errors.argumentNull("item");
 
-            //fireCallback(this.deleting, this, { item });
+            this.checkPrimaryKeys(item);
             this.deleting.fire(this, item);
-            return this.executeDelete(item).then((data) => {
-                // fireCallback(this.deleted, this, { item });
+            return this.args.delete(item).then((data) => {
                 this.deleted.fire(this, item);
                 return data;
             }).catch(exc => {
@@ -100,13 +92,13 @@ namespace wuzhui {
             if (!this.canUpdate)
                 throw Errors.dataSourceCanntUpdate();
 
-            this.checkPrimaryKeys(item);
+            if (!item)
+                throw Errors.argumentNull("item");
 
-            // fireCallback(this.updating, this, { item });
+            this.checkPrimaryKeys(item);
             this.updating.fire(this, item);
-            return this.executeUpdate(item).then((data) => {
+            return this.args.update(item).then((data) => {
                 Object.assign(item, data);
-                // fireCallback(this.updated, this, { item });
                 this.updated.fire(this, item);
                 return data;
             }).catch((exc: DataSourceError) => {
@@ -120,14 +112,15 @@ namespace wuzhui {
             if (otherItem == null)
                 throw Errors.argumentNull('otherItem');
 
-            if (theItem != otherItem && this.primaryKeys.length == 0)
-                return false;
+            if (this.primaryKeys.length == 0)
+                return theItem == otherItem;
 
-            if (this.primaryKeys.length > 0) {
-                for (let pk of this.primaryKeys) {
-                    if (theItem[pk] != otherItem[pk])
-                        return false;
-                }
+            this.checkPrimaryKeys(theItem);
+            this.checkPrimaryKeys(otherItem);
+
+            for (let pk of this.primaryKeys) {
+                if (theItem[pk] != otherItem[pk])
+                    return false;
             }
 
             return true;
@@ -140,23 +133,23 @@ namespace wuzhui {
         }
         select() {
             let args = this.selectArguments;
+            console.assert(args != null);
+
             fireCallback(this.selecting, this, args);
-            return this.executeSelect(args).then((data) => {
-                let data_items: Array<T>;
-                let result = data as DataSourceSelectResult<T>;
+            return this.args.select(args).then((data) => {
+                let dataItems: Array<T>;
                 let totalRowCount: number
                 if (Array.isArray(data)) {
-                    data_items = <Array<T>>data;
-                    totalRowCount = data_items.length;
+                    totalRowCount = data.length;
                 }
-                else if (result.dataItems !== undefined && result.totalRowCount !== undefined) {
-                    data_items = (<DataSourceSelectResult<T>>data).dataItems;
+                else if (data.dataItems !== undefined && data.totalRowCount !== undefined) {
+                    dataItems = (<DataSourceSelectResult<T>>data).dataItems;
                     totalRowCount = (<DataSourceSelectResult<T>>data).totalRowCount;
                 }
                 else {
-                    throw new Error('Type of the query result is expected as Array or DataSourceSelectResult.');
+                    throw Errors.queryResultTypeError();
                 }
-                this.selected.fire(this, { totalRowCount, dataItems: data_items });
+                this.selected.fire(this, { totalRowCount, dataItems });
                 return data;
             }).catch(exc => {
                 this.processError(exc, 'select');
@@ -171,11 +164,8 @@ namespace wuzhui {
         }
     }
 
-
-
     export class DataSourceSelectArguments {
         startRowIndex?: number;
-        // totalRowCount?: number;
         maximumRows?: number;
         sortExpression?: string;
         filter?: string;
@@ -186,9 +176,9 @@ namespace wuzhui {
         }
     }
 
-    export type DataSourceArguments<T> = {
+    type DataSourceArguments<T> = {
         primaryKeys?: string[]
-        select: ((args: DataSourceSelectArguments) => Promise<SelectResult<T>>),
+        select: ((args: DataSourceSelectArguments) => Promise<Array<T> | DataSourceSelectResult<T>>),
         insert?: ((item: T) => Promise<any>),
         update?: ((item: T) => Promise<any>),
         delete?: ((item: T) => Promise<any>)
