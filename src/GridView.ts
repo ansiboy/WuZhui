@@ -23,7 +23,7 @@ namespace wuzhui {
 
     export class GridViewRow extends Control<HTMLTableRowElement> {
         private _rowType: GridViewRowType;
-        private _gridView: GridView;
+        private _gridView: GridView<any>;
 
         constructor(rowType: GridViewRowType) {
             let element = document.createElement('tr');
@@ -35,11 +35,11 @@ namespace wuzhui {
             return this._rowType;
         }
 
-        get gridView(): GridView {
+        get gridView(): GridView<any> {
             if (this._gridView == null) {
                 let gridViewElement = findParentElement(this.element, 'table');
                 console.assert(gridViewElement != null);
-                this._gridView = <GridView>Control.getControlByElement(gridViewElement);
+                this._gridView = <GridView<any>>Control.getControlByElement(gridViewElement);
                 console.assert(this._gridView != null);
             }
             return this._gridView;
@@ -58,7 +58,7 @@ namespace wuzhui {
 
     export class GridViewDataRow extends GridViewRow {
         private _dataItem;
-        constructor(gridView: GridView, dataItem: any) {
+        constructor(gridView: GridView<any>, dataItem: any) {
             super(GridViewRowType.Data);
             this._dataItem = dataItem;
             for (var i = 0; i < gridView.columns.length; i++) {
@@ -75,9 +75,9 @@ namespace wuzhui {
         }
     }
 
-    export interface GridViewArguments {
-        dataSource: DataSource<any>,
-        columns: Array<DataControlField>,
+    export interface GridViewArguments<T> {
+        dataSource: DataSource<T>,
+        columns: Array<DataControlField<T>>,
         showHeader?: boolean,
         showFooter?: boolean,
         element?: HTMLTableElement,
@@ -89,19 +89,19 @@ namespace wuzhui {
         initDataHTML?: string
     }
 
-    export class GridView extends Control<HTMLTableElement> {
+    export class GridView<T> extends Control<HTMLTableElement> {
         private _pageSize: number;
         private _selectedRowStyle: string;
         private _showFooter: boolean;
         private _showHeader: boolean;
-        private _columns: Array<DataControlField>;
-        private _dataSource: DataSource<{}>;
+        private _columns: Array<DataControlField<T>>;
+        private _dataSource: DataSource<T>;
         private _header: Control<HTMLTableSectionElement>;
         private _footer: Control<HTMLTableSectionElement>;
         private _body: Control<HTMLTableSectionElement>;
         private _emtpyRow: GridViewRow;
-        private _currentSortCell: GridViewHeaderCell;
-        private _params: GridViewArguments;
+        private _currentSortCell: GridViewHeaderCell<T>;
+        private _params: GridViewArguments<T>;
         static emptyRowClassName = 'empty';
         static dataRowClassName = 'data';
         static pagingBarClassName = 'pagingBar';
@@ -118,9 +118,9 @@ namespace wuzhui {
         //private emptyDataRowStyle: string;
         //========================================================
 
-        rowCreated = callbacks<GridView, { row: GridViewRow }>();
+        rowCreated = callbacks<GridView<T>, { row: GridViewRow }>();
 
-        constructor(params: GridViewArguments) {
+        constructor(params: GridViewArguments<T>) {
 
             super(params.element || document.createElement('table'));
 
@@ -253,7 +253,7 @@ namespace wuzhui {
             return row;
         }
 
-        private on_sort(sender: GridViewHeaderCell, args: any) {
+        private on_sort(sender: GridViewHeaderCell<T>, args: any) {
             if (this._currentSortCell != null && this._currentSortCell != sender) {
                 this._currentSortCell.clearSortIcon();
             }
@@ -266,7 +266,7 @@ namespace wuzhui {
                 var column = this.columns[i];
                 let cell = column.createHeaderCell();
                 if (cell instanceof GridViewHeaderCell) {
-                    (cell as GridViewHeaderCell).sorting.add((e, a) => this.on_sort(e, a));
+                    (cell as GridViewHeaderCell<T>).sorting.add((e, a) => this.on_sort(e, a));
                 }
 
                 row.appendChild(cell);

@@ -3,14 +3,14 @@
 namespace wuzhui {
 
     export type ValueType = 'number' | 'date' | 'string' | 'boolean'
-    export class GridViewEditableCell extends GridViewDataCell {
+    export class GridViewEditableCell<T> extends GridViewDataCell<T> {
 
         private _dataItem: any;
         private _valueType: string;
-        private _field: BoundField;
+        private _field: BoundField<T>;
         private _mode: 'read' | 'edit';
 
-        constructor(field: BoundField, dataItem: any, valueType?: ValueType) {
+        constructor(field: BoundField<T>, dataItem: any, valueType?: ValueType) {
             if (field == null) throw Errors.argumentNull('field');
             if (dataItem == null) throw Errors.argumentNull('dataItem');
 
@@ -108,7 +108,7 @@ namespace wuzhui {
         readOnly?: boolean
     }
 
-    export class BoundField extends DataControlField {
+    export class BoundField<T> extends DataControlField<T> {
         private _valueElement: HTMLElement;
 
         constructor(params: BoundFieldParams) {
@@ -131,7 +131,7 @@ namespace wuzhui {
 
 
 
-        createItemCell(dataItem: any): GridViewCell {
+        createItemCell(dataItem: T): GridViewCell {
             let cell = new GridViewEditableCell(this, dataItem);
             cell.style(this.itemStyle);
 

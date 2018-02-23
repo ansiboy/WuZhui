@@ -2,7 +2,7 @@
 
 namespace wuzhui {
 
-    class GridViewCommandCell extends GridViewCell {
+    class GridViewCommandCell<T> extends GridViewCell {
         cacelButton: HTMLElement;
         deleteButton: HTMLElement;
         editButton: HTMLElement;
@@ -11,7 +11,7 @@ namespace wuzhui {
         insertButton: HTMLElement;
         // cancelAddButton: HTMLElement;
 
-        constructor(field: DataControlField) {
+        constructor(field: DataControlField<T>) {
             super()
         }
 
@@ -37,7 +37,7 @@ namespace wuzhui {
         insertButtonClass?: string,
     }
 
-    export class CommandField extends DataControlField {
+    export class CommandField<T> extends DataControlField<T> {
         // private _updating = false;
         // private _deleting = false;
         private currentMode = 'read'
@@ -186,7 +186,7 @@ namespace wuzhui {
             }
             return cell;
         }
-        private showReadStatusButtons(cell: GridViewCommandCell) {
+        private showReadStatusButtons(cell: GridViewCommandCell<T>) {
             if (cell.newButton) {
                 this.showButton(cell.newButton);
                 this.hideButton(cell.insertButton);
@@ -269,11 +269,11 @@ namespace wuzhui {
             for (let i = 0; i < rowElement.cells.length; i++) {
                 let cell = Control.getControlByElement(<HTMLElement>rowElement.cells[i]);
                 if (cell instanceof GridViewEditableCell) {
-                    (<GridViewEditableCell>cell).beginEdit();
+                    (<GridViewEditableCell<T>>cell).beginEdit();
                 }
             }
 
-            let cell = <GridViewCommandCell>Control.getControlByElement(cellElement);
+            let cell = <GridViewCommandCell<T>>Control.getControlByElement(cellElement);
             this.showButton(cell.cacelButton);
             this.showButton(cell.updateButton);
             this.hideButton(cell.editButton);
@@ -297,11 +297,11 @@ namespace wuzhui {
             for (let i = 0; i < rowElement.cells.length; i++) {
                 let cell = Control.getControlByElement(<HTMLElement>rowElement.cells[i]);
                 if (cell instanceof GridViewEditableCell) {
-                    (<GridViewEditableCell>cell).cancelEdit();
+                    (<GridViewEditableCell<T>>cell).cancelEdit();
                 }
             }
 
-            let cell = <GridViewCommandCell>Control.getControlByElement(cellElement);
+            let cell = <GridViewCommandCell<T>>Control.getControlByElement(cellElement);
             this.hideButton(cell.cacelButton);
             this.hideButton(cell.updateButton);
             this.showButton(cell.editButton);
@@ -319,7 +319,7 @@ namespace wuzhui {
             let cellElement = ElementHelper.findFirstParentByTagName(e.target as HTMLElement, 'td');
             let rowElement = <HTMLTableRowElement>cellElement.parentElement;
 
-            let cell = <GridViewCommandCell>Control.getControlByElement(cellElement);
+            let cell = <GridViewCommandCell<T>>Control.getControlByElement(cellElement);
             let row = <GridViewDataRow>Control.getControlByElement(rowElement);
 
             //==========================================================
@@ -328,11 +328,11 @@ namespace wuzhui {
             //==========================================================
             let dataSource = row.gridView.dataSource;
 
-            let editableCells = new Array<GridViewEditableCell>();
+            let editableCells = new Array<GridViewEditableCell<T>>();
             for (let i = 0; i < rowElement.cells.length; i++) {
                 let cell = Control.getControlByElement(<HTMLElement>rowElement.cells[i]);
-                if (cell instanceof GridViewEditableCell && (cell as GridViewEditableCell).mode == 'edit') {
-                    dataItem[(<BoundField>cell.field).dataField] = cell.controlValue;
+                if (cell instanceof GridViewEditableCell && (cell as GridViewEditableCell<T>).mode == 'edit') {
+                    dataItem[(<BoundField<T>>cell.field).dataField] = cell.controlValue;
                     editableCells.push(cell);
                 }
             }
@@ -346,7 +346,7 @@ namespace wuzhui {
                     return;
                 }
                 editableCells.forEach((item) => item.endEdit());
-                let cell = <GridViewCommandCell>Control.getControlByElement(cellElement);
+                let cell = <GridViewCommandCell<T>>Control.getControlByElement(cellElement);
                 this.showReadStatusButtons(cell);
                 e.target['_updating'] = false;
 
@@ -371,9 +371,9 @@ namespace wuzhui {
             newRow["isNew"] = true;
             let commandCells = newRow.cells.filter(o => o instanceof GridViewCommandCell);
             newRow.cells.filter(o => o instanceof GridViewEditableCell)
-                .forEach((c: GridViewEditableCell) => c.beginEdit());
+                .forEach((c: GridViewEditableCell<T>) => c.beginEdit());
 
-            commandCells.forEach((cell: GridViewCommandCell) => {
+            commandCells.forEach((cell: GridViewCommandCell<T>) => {
                 if (cell.deleteButton)
                     this.hideButton(cell.deleteButton);
 

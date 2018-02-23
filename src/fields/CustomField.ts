@@ -7,7 +7,7 @@ namespace wuzhui {
         createItemCell: (dataItem: any) => GridViewCell
     }
 
-    export class CustomField extends DataControlField {
+    export class CustomField<T> extends DataControlField<T> {
         constructor(params: CustomFieldParams) {
             super(params);
         }

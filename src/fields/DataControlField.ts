@@ -8,7 +8,7 @@ namespace wuzhui {
         }
     }
 
-    export class GridViewDataCell extends GridViewCell {
+    export class GridViewDataCell<T> extends GridViewCell {
         private _value: any;
         private nullText: string;
         private dataFormatString: string;
@@ -17,7 +17,7 @@ namespace wuzhui {
 
         constructor(params?: {
             dataField?: string,
-            render?: (value) => void,
+            render?: (value, element: HTMLElement) => void,
             nullText?: string, dataFormatString?: string
         }) {
             super();
@@ -27,7 +27,7 @@ namespace wuzhui {
             this.dataFormatString = params.dataFormatString;
             this.dataField = params.dataField;
             if (params.render) {
-                this.render = params.render;
+                this.render = (value) => params.render(value, this.element);
             }
         }
 
@@ -138,19 +138,19 @@ namespace wuzhui {
         sortExpression?: string
     }
 
-    export class GridViewHeaderCell extends Control<HTMLTableHeaderCellElement> {
+    export class GridViewHeaderCell<T> extends Control<HTMLTableHeaderCellElement> {
         private _sortType: 'asc' | 'desc';
         private _iconElement: HTMLElement;
-        private field: DataControlField;
+        private field: DataControlField<T>;
 
         ascHTML = '↑';
         descHTML = '↓';
         sortingHTML = '...';
 
-        sorting: Callback1<GridViewHeaderCell, { sortType: string }>;
-        sorted: Callback1<GridViewHeaderCell, { sortType: string }>;
+        sorting: Callback1<GridViewHeaderCell<T>, { sortType: string }>;
+        sorted: Callback1<GridViewHeaderCell<T>, { sortType: string }>;
 
-        constructor(field: DataControlField) {
+        constructor(field: DataControlField<T>) {
             super(document.createElement('th'));
 
             this.field = field;
@@ -184,7 +184,7 @@ namespace wuzhui {
             let sortType: 'asc' | 'desc' = this.sortType == 'asc' ? 'desc' : 'asc';
 
             fireCallback(this.sorting, this, { sortType });
-            selectArguments.sortExpression = (this.field as BoundField).sortExpression + ' ' + sortType;
+            selectArguments.sortExpression = (this.field as BoundField<T>).sortExpression + ' ' + sortType;
             return this.field.gridView.dataSource.select()
                 .then(() => {
                     this.sortType = sortType;
@@ -193,7 +193,7 @@ namespace wuzhui {
         }
 
         private defaultHeaderText() {
-            return this.field.headerText || (this.field as BoundField).dataField || '';
+            return this.field.headerText || (this.field as BoundField<T>).dataField || '';
         }
 
         get sortType() {
@@ -220,8 +220,8 @@ namespace wuzhui {
         }
     }
 
-    export class DataControlField {
-        private _gridView: GridView;
+    export class DataControlField<T> {
+        private _gridView: GridView<T>;
         protected _params: DataControlFieldParams;
 
         constructor(params?: DataControlFieldParams) {
@@ -277,10 +277,10 @@ namespace wuzhui {
         get visible(): boolean {
             return this._params.visible;
         }
-        get gridView(): GridView {
+        get gridView(): GridView<any> {
             return this._gridView;
         }
-        set gridView(value: GridView) {
+        set gridView(value: GridView<any>) {
             this._gridView = value;
         }
         /**

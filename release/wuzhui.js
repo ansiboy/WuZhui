@@ -1,6 +1,6 @@
 
 /*!
- * WUZHUI v1.0.0
+ * WUZHUI v1.1.0
  * https://github.com/ansiboy/WuZhui
  *
  * Copyright (c) 2016-2018, shu mai <ansiboy@163.com>
@@ -928,7 +928,7 @@ var wuzhui;
             this.dataFormatString = params.dataFormatString;
             this.dataField = params.dataField;
             if (params.render) {
-                this.render = params.render;
+                this.render = (value) => params.render(value, this.element);
             }
         }
         render(value) {
