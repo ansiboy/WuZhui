@@ -41,12 +41,12 @@ requirejs(['js/wuzhui.js'])
 ### DataSource 的使用
 
 1. [DataSource 概述](#dataSource/summary)
-1. [使用数据源更新数据](#gridView/dsUpdate)
-1. [使用数据源添加数据](#gridView/dsInsert)
-1. [使用数据源删除数据](#gridView/dsDelete)
-1. [使用数据源分页数据](#gridView/dsPaging)
+1. [使用数据源更新数据](#gridView/dsUpdate)
+1. [使用数据源添加数据](#gridView/dsInsert)
+1. [使用数据源删除数据](#gridView/dsDelete)
+1. [使用数据源分页数据](#gridView/dsPaging)
 1. [数据源数据的过滤](#dataSource/filter)
-1. [多视图共享数据源](#dataSource/mutilView)
+1. [多视图共享数据源](#dataSource/mutilView)
 
     #### 数据源事件的引发
 
@@ -59,9 +59,9 @@ requirejs(['js/wuzhui.js'])
 
 1. [使用数据绑定列](#column/boundField)
 
-    #### 重写数据绑定列
+    #### 重写数据绑定列
 
-    1. [实现勾选框列](#column/checkboxField)
+    1. [实现勾选框列](#column/checkboxField)
     1. 实现日期列
 
 1. [自定义列的使用](#column/customField)
