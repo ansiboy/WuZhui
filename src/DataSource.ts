@@ -27,13 +27,7 @@ namespace wuzhui {
         selected = callbacks<DataSource<T>, DataSourceSelectResult<T>>();
         error = callbacks<this, DataSourceError>();
 
-        constructor(args: {
-            primaryKeys?: string[]
-            select: ((args: DataSourceSelectArguments) => Promise<Array<T> | DataSourceSelectResult<T>>),
-            insert?: ((item: T) => Promise<any>),
-            update?: ((item: T) => Promise<any>),
-            delete?: ((item: T) => Promise<any>)
-        }) {
+        constructor(args: DataSourceArguments<T>) {
             this.args = args;
             this.primaryKeys = args.primaryKeys || [];
             this._currentSelectArguments = new DataSourceSelectArguments();
@@ -53,18 +47,25 @@ namespace wuzhui {
             return this._currentSelectArguments;
         }
 
-        insert(item: T, index?: number) {
+        insert(item: T)
+        insert(item: T, index?: number)
+        insert(item: T, args?: any, index?: number) {
             if (!this.canInsert)
                 throw Errors.dataSourceCanntInsert();
 
             if (!item)
                 throw Errors.argumentNull("item");
 
+            if (typeof args == 'number') {
+                index = args;
+                args = null;
+            }
+
 
             this.checkPrimaryKeys(item);
 
             this.inserting.fire(this, item, index);
-            return this.args.insert(item).then((data) => {
+            return this.args.insert(item, args).then((data) => {
                 Object.assign(item, data);
                 this.inserted.fire(this, item, index);
                 return data;
@@ -73,7 +74,7 @@ namespace wuzhui {
                 throw exc;
             });
         }
-        delete(item: T) {
+        delete(item: T, args?: any) {
             if (!this.canDelete)
                 throw Errors.dataSourceCanntDelete();
 
@@ -82,7 +83,7 @@ namespace wuzhui {
 
             this.checkPrimaryKeys(item);
             this.deleting.fire(this, item);
-            return this.args.delete(item).then((data) => {
+            return this.args.delete(item, args).then((data) => {
                 this.deleted.fire(this, item);
                 return data;
             }).catch(exc => {
@@ -90,7 +91,7 @@ namespace wuzhui {
                 throw exc;
             });
         }
-        update(item: T) {
+        update(item: T, args?: any) {
             if (!this.canUpdate)
                 throw Errors.dataSourceCanntUpdate();
 
@@ -99,7 +100,7 @@ namespace wuzhui {
 
             this.checkPrimaryKeys(item);
             this.updating.fire(this, item);
-            return this.args.update(item).then((data) => {
+            return this.args.update(item, args).then((data) => {
                 Object.assign(item, data);
                 this.updated.fire(this, item);
                 return data;
@@ -143,6 +144,7 @@ namespace wuzhui {
                 let dataItems: Array<T>;
                 let totalRowCount: number
                 if (Array.isArray(data)) {
+                    dataItems = data;
                     totalRowCount = data.length;
                 }
                 else if (data.dataItems !== undefined && data.totalRowCount !== undefined) {
@@ -180,11 +182,11 @@ namespace wuzhui {
         }
     }
 
-    type DataSourceArguments<T> = {
+    export type DataSourceArguments<T> = {
         primaryKeys?: string[]
         select: ((args: DataSourceSelectArguments) => Promise<Array<T> | DataSourceSelectResult<T>>),
-        insert?: ((item: T) => Promise<any>),
-        update?: ((item: T) => Promise<any>),
-        delete?: ((item: T) => Promise<any>)
+        insert?: ((item: T, args?: any) => Promise<any>),
+        update?: ((item: T, args?: any) => Promise<any>),
+        delete?: ((item: T, args?: any) => Promise<any>)
     };
 }

@@ -23,6 +23,8 @@ namespace wuzhui {
         /** Class name of the active number button. */
         activeButtonClassName?: string,
 
+        buttonContainerWraper?: string,
+
         buttonWrapper?: string,
 
         showTotal?: boolean,
@@ -127,7 +129,7 @@ namespace wuzhui {
         private nextPageButton: NumberPagingButton;
         private lastPageButton: NumberPagingButton;
         private createLabel: () => PagingTotalLabel;
-        private createButton: () => NumberPagingButton;
+        private createButton: (container: HTMLElement) => NumberPagingButton;
         // private buttonWrapper: string;
 
         constructor(params: {
@@ -153,14 +155,20 @@ namespace wuzhui {
             this.dataSource = params.dataSource;
             this.pagerSettings = pagerSettings;
             this.element = params.element;
-            // this.buttonWrapper = params.pagerSettings.buttonWrapper;
             this.numberButtons = new Array<NumberPagingButton>();
-            this.createButton = this.createPagingButton;//params.createButton || 
-            this.createLabel = this.createTotalLabel;//params.createTotal || 
+            this.createButton = this.createPagingButton;
+            this.createLabel = this.createTotalLabel;
 
-            this.createPreviousButtons();
-            this.createNumberButtons();
-            this.createNextButtons();
+            let buttonContainer = params.pagerSettings.buttonContainerWraper ?
+                document.createElement(params.pagerSettings.buttonContainerWraper) :
+                document.createElement('div');
+
+            buttonContainer.className = "buttons";
+            this.element.appendChild(buttonContainer);
+
+            this.createPreviousButtons(buttonContainer);
+            this.createNumberButtons(buttonContainer);
+            this.createNextButtons(buttonContainer);
 
             if (this.pagerSettings.showTotal) {
                 this.totalElement = this.createLabel();
@@ -170,7 +178,7 @@ namespace wuzhui {
             this.init(params.dataSource);
         }
 
-        private createPagingButton(): NumberPagingButton {
+        private createPagingButton(container: HTMLElement): NumberPagingButton {
             var pagerSettings = this.pagerSettings;
             let button = document.createElement('a');
             button.href = 'javascript:';
@@ -178,10 +186,10 @@ namespace wuzhui {
             if (this.pagerSettings.buttonWrapper) {
                 let w = document.createElement(this.pagerSettings.buttonWrapper);
                 w.appendChild(button);
-                this.element.appendChild(w);
+                container.appendChild(w);
             }
             else {
-                this.element.appendChild(button);
+                container.appendChild(button);
             }
 
             let result = {
@@ -292,36 +300,36 @@ namespace wuzhui {
             }
         }
 
-        private createPreviousButtons() {
+        private createPreviousButtons(buttonContainer: HTMLElement) {
 
-            this.firstPageButton = this.createButton();
+            this.firstPageButton = this.createButton(buttonContainer);
             this.firstPageButton.onclick = NumberPagingBar.on_buttonClick;
             this.firstPageButton.text = this.pagerSettings.firstPageText;
             this.firstPageButton.visible = false;
 
-            this.previousPageButton = this.createButton();
+            this.previousPageButton = this.createButton(buttonContainer);
             this.previousPageButton.onclick = NumberPagingBar.on_buttonClick;
             this.previousPageButton.text = this.pagerSettings.previousPageText;
             this.previousPageButton.visible = false;
         }
 
-        private createNextButtons() {
-            this.nextPageButton = this.createButton();
+        private createNextButtons(buttonContainer: HTMLElement) {
+            this.nextPageButton = this.createButton(buttonContainer);
             this.nextPageButton.onclick = NumberPagingBar.on_buttonClick;
             this.nextPageButton.text = this.pagerSettings.nextPageText;
             this.nextPageButton.visible = false;
 
-            this.lastPageButton = this.createButton();
+            this.lastPageButton = this.createButton(buttonContainer);
             this.lastPageButton.onclick = NumberPagingBar.on_buttonClick;
             this.lastPageButton.text = this.pagerSettings.lastPageText;
             this.lastPageButton.visible = false;
         }
 
-        private createNumberButtons() {
+        private createNumberButtons(buttonContainer: HTMLElement) {
             let pagingBar = this;
             let buttonCount = this.pagerSettings.pageButtonCount;
             for (let i = 0; i < buttonCount; i++) {
-                let button = this.createButton();
+                let button = this.createButton(buttonContainer);
                 button.onclick = NumberPagingBar.on_buttonClick;
                 this.numberButtons[i] = button;
             }
