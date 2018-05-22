@@ -21,7 +21,6 @@ declare namespace wuzhui {
         method: DataMethod;
     }
     type DataMethod = 'select' | 'update' | 'delete' | 'insert';
-    type SelectResult<T> = Array<T> | DataSourceSelectResult<T>;
     class DataSource<T> {
         private _currentSelectArguments;
         private args;
@@ -39,17 +38,18 @@ declare namespace wuzhui {
         readonly canDelete: boolean;
         readonly canInsert: boolean;
         readonly canUpdate: boolean;
-        protected executeInsert(item: T): Promise<any>;
-        protected executeDelete(item: T): Promise<any>;
-        protected executeUpdate(item: T): Promise<any>;
-        protected executeSelect(args: DataSourceSelectArguments): Promise<SelectResult<T>>;
         readonly selectArguments: DataSourceSelectArguments;
-        insert(item: T, index?: number): Promise<any>;
-        delete(item: T): Promise<any>;
-        update(item: T): Promise<any>;
+        executeInsert(item: T, args?: any): Promise<any>;
+        executeDelete(item: T, args?: any): Promise<any>;
+        executeUpdate(item: T, args?: any): Promise<any>;
+        executeSelect(args: DataSourceSelectArguments): Promise<DataSourceSelectResult<T> | T[]>;
+        insert(item: T): any;
+        insert(item: T, index?: number): any;
+        delete(item: T, args?: any): Promise<any>;
+        update(item: T, args?: any): Promise<any>;
         isSameItem(theItem: T, otherItem: T): boolean;
         private checkPrimaryKeys(item);
-        select(): Promise<void | DataSourceSelectResult<T> | T[]>;
+        select(): Promise<T[] | DataSourceSelectResult<T>>;
         private processError(exc, method);
     }
     class DataSourceSelectArguments {
@@ -60,11 +60,11 @@ declare namespace wuzhui {
         constructor();
     }
     type DataSourceArguments<T> = {
-        primaryKeys?: string[];
-        select: ((args: DataSourceSelectArguments) => Promise<SelectResult<T>>);
-        insert?: ((item: T) => Promise<any>);
-        update?: ((item: T) => Promise<any>);
-        delete?: ((item: T) => Promise<any>);
+        primaryKeys?: (keyof T)[];
+        select: ((args: DataSourceSelectArguments) => Promise<Array<T> | DataSourceSelectResult<T>>);
+        insert?: ((item: T, args?: any) => Promise<any>);
+        update?: ((item: T, args?: any) => Promise<any>);
+        delete?: ((item: T, args?: any) => Promise<any>);
     };
 }
 declare namespace wuzhui {
@@ -78,6 +78,7 @@ declare namespace wuzhui {
         static dataSourceCanntUpdate(): Error;
         static dataSourceCanntDelete(): Error;
         static primaryKeyNull(key: string): Error;
+        static queryResultTypeError(): Error;
     }
 }
 declare namespace wuzhui {
@@ -173,6 +174,7 @@ declare namespace wuzhui {
         buttonClassName?: string;
         /** Class name of the active number button. */
         activeButtonClassName?: string;
+        buttonContainerWraper?: string;
         buttonWrapper?: string;
         showTotal?: boolean;
     }
@@ -218,11 +220,11 @@ declare namespace wuzhui {
             element: HTMLElement;
             pagerSettings?: PagerSettings;
         });
-        private createPagingButton();
+        private createPagingButton(container);
         private createTotalLabel();
-        private createPreviousButtons();
-        private createNextButtons();
-        private createNumberButtons();
+        private createPreviousButtons(buttonContainer);
+        private createNextButtons(buttonContainer);
+        private createNumberButtons(buttonContainer);
         private static on_buttonClick(button, pagingBar);
         render(): void;
     }

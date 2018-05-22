@@ -14,7 +14,7 @@ namespace wuzhui {
     export class DataSource<T> {
         private _currentSelectArguments: DataSourceSelectArguments;
         private args: DataSourceArguments<T>;
-        private primaryKeys: string[];
+        private primaryKeys: (keyof T)[];
 
         inserting = callbacks1<DataSource<T>, T, number>();// { item: T, index: number }
         inserted = callbacks1<DataSource<T>, T, number>();//{ item: T, index: number }
@@ -47,6 +47,19 @@ namespace wuzhui {
             return this._currentSelectArguments;
         }
 
+        executeInsert(item: T, args?: any) {
+            return this.args.insert(item, args);
+        }
+        executeDelete(item: T, args?: any) {
+            return this.args.delete(item, args);
+        }
+        executeUpdate(item: T, args?: any) {
+            return this.args.update(item, args);
+        }
+        executeSelect(args: DataSourceSelectArguments) {
+            return this.args.select(args);
+        }
+
         insert(item: T)
         insert(item: T, index?: number)
         insert(item: T, args?: any, index?: number) {
@@ -61,11 +74,9 @@ namespace wuzhui {
                 args = null;
             }
 
-
             this.checkPrimaryKeys(item);
-
             this.inserting.fire(this, item, index);
-            return this.args.insert(item, args).then((data) => {
+            return this.executeInsert(item, args).then((data) => {
                 Object.assign(item, data);
                 this.inserted.fire(this, item, index);
                 return data;
@@ -83,7 +94,7 @@ namespace wuzhui {
 
             this.checkPrimaryKeys(item);
             this.deleting.fire(this, item);
-            return this.args.delete(item, args).then((data) => {
+            return this.executeDelete(item, args).then((data) => {
                 this.deleted.fire(this, item);
                 return data;
             }).catch(exc => {
@@ -183,7 +194,7 @@ namespace wuzhui {
     }
 
     export type DataSourceArguments<T> = {
-        primaryKeys?: string[]
+        primaryKeys?: (keyof T)[]
         select: ((args: DataSourceSelectArguments) => Promise<Array<T> | DataSourceSelectResult<T>>),
         insert?: ((item: T, args?: any) => Promise<any>),
         update?: ((item: T, args?: any) => Promise<any>),
