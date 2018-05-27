@@ -13,10 +13,10 @@ namespace wuzhui {
         private nullText: string;
         private dataFormatString: string;
 
-        dataField: string;
+        dataField: keyof T;
 
         constructor(params?: {
-            dataField?: string,
+            dataField?: keyof T,
             render?: (value, element: HTMLElement) => void,
             nullText?: string, dataFormatString?: string
         }) {

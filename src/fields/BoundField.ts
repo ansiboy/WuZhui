@@ -100,8 +100,8 @@ namespace wuzhui {
 
 
 
-    export interface BoundFieldParams extends DataControlFieldParams {
-        dataField: string,
+    export interface BoundFieldParams<T> extends DataControlFieldParams {
+        dataField: keyof T,
         dataFormatString?: string,
         controlStyle?: CSSStyleDeclaration | string,
         nullText?: string,
@@ -111,15 +111,15 @@ namespace wuzhui {
     export class BoundField<T> extends DataControlField<T> {
         private _valueElement: HTMLElement;
 
-        constructor(params: BoundFieldParams) {
+        constructor(params: BoundFieldParams<T>) {
             super(params);
 
             this._params = params;
             this._valueElement = document.createElement('span');
         }
 
-        private params(): BoundFieldParams {
-            return <BoundFieldParams>this._params;
+        private params(): BoundFieldParams<T> {
+            return <BoundFieldParams<T>>this._params;
         }
 
         /**
@@ -141,7 +141,7 @@ namespace wuzhui {
         /**
          * Gets the field for the value.
          */
-        get dataField(): string {
+        get dataField(): keyof T {
             return this.params().dataField;
         }
 

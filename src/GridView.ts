@@ -237,7 +237,7 @@ namespace wuzhui {
             for (let j = 0; j < cells.length; j++) {
                 let cell = cells[j];
                 if (cell instanceof GridViewDataCell) {
-                    let value = dataItem[cell.dataField];
+                    let value = cell.dataField ? dataItem[cell.dataField] : dataItem;
                     if (value !== undefined) {
                         // cell.value = value;
                         cell.render(value);
@@ -319,7 +319,7 @@ namespace wuzhui {
                 for (let j = 0; j < cells.length; j++) {
                     let cell = cells[j];
                     if (cell instanceof GridViewDataCell) {
-                        let value = item[cell.dataField];
+                        let value = cell.dataField ? item[cell.dataField] : item;
                         if (value !== undefined) {
                             // cell.value = value;
                             cell.render(value);
