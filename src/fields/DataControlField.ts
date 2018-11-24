@@ -76,14 +76,7 @@ namespace wuzhui {
 
 
                 var brace = format.substring(i, close);
-                // var colonIndex = brace.indexOf(':');
-                // var argNumber = parseInt((colonIndex < 0) ? brace : brace.substring(0, colonIndex), 10) + 1;
-                // if (isNaN(argNumber))
-                //     throw new Error(`string format '${format}' error`);
-
-                // var argFormat = (colonIndex < 0) ? '' : brace.substring(colonIndex + 1);
                 var argFormat = brace;
-                // var arg = args[argNumber];
                 if (typeof (arg) === "undefined" || arg === null) {
                     arg = '';
                 }
@@ -193,7 +186,7 @@ namespace wuzhui {
         }
 
         private defaultHeaderText() {
-            return this.field.headerText || (this.field as BoundField<T>).dataField || '';
+            return this.field.headerText || (this.field as BoundField<T>).dataField as string || '';
         }
 
         get sortType() {

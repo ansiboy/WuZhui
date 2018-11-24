@@ -82,7 +82,6 @@ namespace wuzhui {
         fire(sender: S, arg: A, arg1: A1);
     }
 
-
     export function callbacks<S, A>(): Callback1<S, A> {
         return new Callback();
     }

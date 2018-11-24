@@ -10,20 +10,19 @@ namespace wuzhui {
     }
 
     export type DataMethod = 'select' | 'update' | 'delete' | 'insert';
-    // export type SelectResult<T> = Array<T> | DataSourceSelectResult<T>;
     export class DataSource<T> {
         private _currentSelectArguments: DataSourceSelectArguments;
         private args: DataSourceArguments<T>;
         private primaryKeys: (keyof T)[];
 
-        inserting = callbacks1<DataSource<T>, T, number>();// { item: T, index: number }
-        inserted = callbacks1<DataSource<T>, T, number>();//{ item: T, index: number }
+        inserting = callbacks1<DataSource<T>, T, number>();
+        inserted = callbacks1<DataSource<T>, T, number>();
 
-        deleting = callbacks<DataSource<T>, T>();//{ item: T }
-        deleted = callbacks<DataSource<T>, T>();//{ item: T }
-        updating = callbacks<DataSource<T>, T>();//{ item: T }
-        updated = callbacks<DataSource<T>, T>();//{ item: T }
-        selecting = callbacks<DataSource<T>, DataSourceSelectArguments>();//{ selectArguments: DataSourceSelectArguments }
+        deleting = callbacks<DataSource<T>, T>();
+        deleted = callbacks<DataSource<T>, T>();
+        updating = callbacks<DataSource<T>, T>();
+        updated = callbacks<DataSource<T>, T>();
+        selecting = callbacks<DataSource<T>, DataSourceSelectArguments>();
         selected = callbacks<DataSource<T>, DataSourceSelectResult<T>>();
         error = callbacks<this, DataSourceError>();
 
@@ -47,16 +46,16 @@ namespace wuzhui {
             return this._currentSelectArguments;
         }
 
-        executeInsert(item: T, args?: any) {
+        private executeInsert(item: T, args?: any): Promise<any> {
             return this.args.insert(item, args);
         }
-        executeDelete(item: T, args?: any) {
+        private executeDelete(item: T, args?: any): Promise<any> {
             return this.args.delete(item, args);
         }
-        executeUpdate(item: T, args?: any) {
+        private executeUpdate(item: T, args?: any): Promise<any> {
             return this.args.update(item, args);
         }
-        executeSelect(args: DataSourceSelectArguments) {
+        private executeSelect(args: DataSourceSelectArguments): Promise<any> {
             return this.args.select(args);
         }
 
@@ -74,7 +73,6 @@ namespace wuzhui {
                 args = null;
             }
 
-            this.checkPrimaryKeys(item);
             this.inserting.fire(this, item, index);
             return this.executeInsert(item, args).then((data) => {
                 Object.assign(item, data);
@@ -146,7 +144,7 @@ namespace wuzhui {
                     throw Errors.primaryKeyNull(key);
             }
         }
-        select(): Promise<T[] | DataSourceSelectResult<T>> {
+        select(): Promise<DataSourceSelectResult<T>> {
             let args = this.selectArguments;
             console.assert(args != null);
 
@@ -166,7 +164,7 @@ namespace wuzhui {
                     throw Errors.queryResultTypeError();
                 }
                 this.selected.fire(this, { totalRowCount, dataItems });
-                return data;
+                return { totalRowCount, dataItems };
             }).catch(exc => {
                 this.processError(exc, 'select');
                 throw exc;
