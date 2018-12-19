@@ -2,9 +2,11 @@ var release_dir = 'release';
 
 module.exports = function (grunt) {
 
+    let build_dir = 'out';
+    let release_dir = 'dist';
     let pkg = grunt.file.readJSON('package.json');
 
-    let banner = `
+    let license = `
 /*!
  * WUZHUI v${pkg.version}
  * https://github.com/ansiboy/WuZhui
@@ -15,8 +17,29 @@ module.exports = function (grunt) {
  */
 `
 
-    var config = {
+    let lib_name = 'wuzhui'
+    let lib_js_banner = `
+ ${license}
+ (function(factory) { 
+     if (typeof require === 'function' && typeof exports === 'object' && typeof module === 'object') { 
+         // [1] CommonJS/Node.js 
+         var target = module['exports'] || exports;
+         var mod = factory(target, require);
+         Object.assign(target,mod);
+     } else if (typeof define === 'function' && define['amd']) {
+         define(factory); 
+     } else { 
+         factory();
+     } 
+ })(function() {
+ `;
 
+    let lib_js_footer =
+        `\n\window[\'${lib_name}\'] = window[\'${lib_name}\'] || ${lib_name} \n\
+                      \n return ${lib_name};\n\
+      });`
+
+    var config = {
         babel: {
             source: {
                 options: {
@@ -24,8 +47,8 @@ module.exports = function (grunt) {
                     presets: ["es2015"],
                 },
                 files: [{
-                    src: [`out/wuzhui.js`],
-                    dest: `out/wuzhui.es5.js`
+                    src: [`${build_dir}/${lib_name}.js`],
+                    dest: `${release_dir}/${lib_name}.es5.js`
                 }]
             }
         },
@@ -72,31 +95,25 @@ module.exports = function (grunt) {
             }
         },
         concat: {
-            wuzhui: {
+            es6: {
                 options: {
-                    banner
+                    banner: lib_js_banner,
+                    footer: lib_js_footer,
                 },
-                src: ['out/wuzhui.js'],
-                dest: 'release/wuzhui.js'
+                src: [`${build_dir}/${lib_name}.js`],
+                dest: `${release_dir}/${lib_name}.js`
             },
-            wuzhui_min: {
+            declare: {
                 options: {
-                    banner
+                    banner: `
+/// <reference path="../out/${lib_name}.d.ts"/>
+
+declare module "maishu-${lib_name}" { 
+    export = ${lib_name}; 
+}`,
                 },
-                src: ['out/wuzhui.min.js'],
-                dest: 'release/wuzhui.min.js'
-            }
-        },
-        less: {
-            css: {
-                options: {
-                    sourceMap: false
-                },
-                files: [{
-                    expand: true,
-                    src: ['docs/css/*.less'],
-                    ext: '.css'
-                },]
+                src: [],
+                dest: `${release_dir}/${lib_name}.d.ts`
             }
         },
         uglify: {
@@ -105,8 +122,8 @@ module.exports = function (grunt) {
                     mangle: false
                 },
                 files: [{
-                    src: `out/wuzhui.es5.js`,
-                    dest: `out/wuzhui.min.js`
+                    src: `${release_dir}/${lib_name}.es5.js`,
+                    dest: `${release_dir}/${lib_name}.min.js`
                 }]
             }
         },
@@ -124,15 +141,7 @@ module.exports = function (grunt) {
 
     grunt.initConfig(config);
 
-    grunt.loadNpmTasks('grunt-babel');
-    grunt.loadNpmTasks('grunt-shell');
-    grunt.loadNpmTasks('grunt-contrib-uglify');
-    grunt.loadNpmTasks('grunt-contrib-concat');
-    grunt.loadNpmTasks('grunt-contrib-copy');
-    grunt.loadNpmTasks('grunt-contrib-connect');
-    grunt.loadNpmTasks('grunt-contrib-less');
-    grunt.loadNpmTasks('grunt-contrib-watch');
-
-    grunt.registerTask('build', ['shell', 'babel', 'uglify', 'concat', 'copy:release']);// 'copy:docs', 
+    require('load-grunt-tasks')(grunt);
+    grunt.registerTask('build', ['shell', 'concat', 'babel', 'uglify']);// 'copy:docs', //, 'copy:release'
     grunt.registerTask('run', ['connect', 'watch']);
 };

@@ -1,6 +1,7 @@
 {
-  "name": "wuzhui",
-  "version": "1.1.0",
+  "name": "maishu-wuzhui",
+  "version": "1.1.2",
+  "main": "out/wuzhui.js",
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-helper-vue-jsx-merge-props": "^1.0.0",
@@ -11,12 +12,12 @@
     "grunt-babel": "^6.0.0",
     "grunt-contrib-clean": "~1.0.0",
     "grunt-contrib-concat": "~1.0.1",
-    "grunt-contrib-connect": "^1.0.2",
+    "grunt-contrib-connect": "~1.0.0",
     "grunt-contrib-copy": "~1.0.0",
-    "grunt-contrib-less": "~1.0.0",
     "grunt-contrib-uglify": "~1.0.1",
-    "grunt-shell": "~1.0.0",
-    "qunitjs": "^2.0.0-rc1",
-    "grunt-contrib-watch": "~1.0.0"
+    "grunt-contrib-watch": "~1.0.0",
+    "grunt-shell": "^2.1.0",
+    "load-grunt-tasks": "^4.0.0",
+    "qunitjs": "^2.0.0-rc1"
   }
 }
