@@ -1,5 +1,3 @@
-var release_dir = 'release';
-
 module.exports = function (grunt) {
 
     let build_dir = 'out';
@@ -14,8 +12,7 @@ module.exports = function (grunt) {
  * Copyright (c) 2016-2018, shu mai <ansiboy@163.com>
  * Licensed under the MIT License.
  *
- */
-`
+ */`
 
     let lib_name = 'wuzhui'
     let lib_js_banner = `
@@ -85,12 +82,9 @@ module.exports = function (grunt) {
             }
         },
         copy: {
-            release: {
-                files: [{ src: 'out/wuzhui.d.ts', dest: 'release/wuzhui.d.ts' }]
-            },
             docs: {
                 files: [
-                    { expand: true, cwd: 'release', src: ['wuzhui.js', 'wuzhui.d.ts'], dest: 'docs/js' }
+                    { expand: true, cwd: release_dir, src: [`${lib_name}.js`, `${lib_name}.d.ts`], dest: 'docs/js' }
                 ]
             }
         },
@@ -142,6 +136,6 @@ declare module "maishu-${lib_name}" {
     grunt.initConfig(config);
 
     require('load-grunt-tasks')(grunt);
-    grunt.registerTask('build', ['shell', 'concat', 'babel', 'uglify']);// 'copy:docs', //, 'copy:release'
+    grunt.registerTask('build', ['shell', 'concat', 'babel', 'uglify', 'copy']);
     grunt.registerTask('run', ['connect', 'watch']);
 };

@@ -1,13 +1,26 @@
 
+ 
 /*!
- * WUZHUI v1.1
+ * WUZHUI v1.1.2
  * https://github.com/ansiboy/WuZhui
  *
  * Copyright (c) 2016-2018, shu mai <ansiboy@163.com>
  * Licensed under the MIT License.
  *
  */
-var wuzhui;
+ (function(factory) { 
+     if (typeof require === 'function' && typeof exports === 'object' && typeof module === 'object') { 
+         // [1] CommonJS/Node.js 
+         var target = module['exports'] || exports;
+         var mod = factory(target, require);
+         Object.assign(target,mod);
+     } else if (typeof define === 'function' && define['amd']) {
+         define(factory); 
+     } else { 
+         factory();
+     } 
+ })(function() {
+ var wuzhui;
 (function (wuzhui) {
     const CONTROL_DATA_NAME = 'Control';
     class Control {
@@ -63,13 +76,13 @@ var wuzhui;
 (function (wuzhui) {
     class DataSource {
         constructor(args) {
-            this.inserting = wuzhui.callbacks1(); // { item: T, index: number }
-            this.inserted = wuzhui.callbacks1(); //{ item: T, index: number }
-            this.deleting = wuzhui.callbacks(); //{ item: T }
-            this.deleted = wuzhui.callbacks(); //{ item: T }
-            this.updating = wuzhui.callbacks(); //{ item: T }
-            this.updated = wuzhui.callbacks(); //{ item: T }
-            this.selecting = wuzhui.callbacks(); //{ selectArguments: DataSourceSelectArguments }
+            this.inserting = wuzhui.callbacks1();
+            this.inserted = wuzhui.callbacks1();
+            this.deleting = wuzhui.callbacks();
+            this.deleted = wuzhui.callbacks();
+            this.updating = wuzhui.callbacks();
+            this.updated = wuzhui.callbacks();
+            this.selecting = wuzhui.callbacks();
             this.selected = wuzhui.callbacks();
             this.error = wuzhui.callbacks();
             this.args = args;
@@ -85,70 +98,69 @@ var wuzhui;
         get canUpdate() {
             return this.args.update != null && this.primaryKeys.length > 0;
         }
-        executeInsert(item) {
-            if (!item)
-                throw wuzhui.Errors.argumentNull("item");
-            return this.args.insert(item);
-        }
-        executeDelete(item) {
-            if (!item)
-                throw wuzhui.Errors.argumentNull("item");
-            return this.args.delete(item);
-        }
-        executeUpdate(item) {
-            if (!item)
-                throw wuzhui.Errors.argumentNull("item");
-            return this.args.update(item);
-        }
-        executeSelect(args) {
-            if (!args)
-                throw wuzhui.Errors.argumentNull("args");
-            return this.args.select(args);
-        }
         get selectArguments() {
             return this._currentSelectArguments;
         }
-        insert(item, index) {
+        executeInsert(item, args) {
+            return this.args.insert(item, args);
+        }
+        executeDelete(item, args) {
+            return this.args.delete(item, args);
+        }
+        executeUpdate(item, args) {
+            return this.args.update(item, args);
+        }
+        executeSelect(args) {
+            return this.args.select(args);
+        }
+        insert(item, args, index) {
             if (!this.canInsert)
                 throw wuzhui.Errors.dataSourceCanntInsert();
-            this.checkPrimaryKeys(item);
-            this.inserting.fire(this, item, index); // fireCallback(this.inserting, this, { item, index });
-            return this.executeInsert(item).then((data) => {
+            if (!item)
+                throw wuzhui.Errors.argumentNull("item");
+            if (typeof args == 'number') {
+                index = args;
+                args = null;
+            }
+            this.inserting.fire(this, item, index);
+            return this.executeInsert(item, args).then((data) => {
                 Object.assign(item, data);
-                // fireCallback(this.inserted, this, { item, index });
                 this.inserted.fire(this, item, index);
                 return data;
             }).catch(exc => {
                 this.processError(exc, 'insert');
+                throw exc;
             });
         }
-        delete(item) {
+        delete(item, args) {
             if (!this.canDelete)
                 throw wuzhui.Errors.dataSourceCanntDelete();
+            if (!item)
+                throw wuzhui.Errors.argumentNull("item");
             this.checkPrimaryKeys(item);
-            //fireCallback(this.deleting, this, { item });
             this.deleting.fire(this, item);
-            return this.executeDelete(item).then((data) => {
-                // fireCallback(this.deleted, this, { item });
+            return this.executeDelete(item, args).then((data) => {
                 this.deleted.fire(this, item);
                 return data;
             }).catch(exc => {
                 this.processError(exc, 'delete');
+                throw exc;
             });
         }
-        update(item) {
+        update(item, args) {
             if (!this.canUpdate)
                 throw wuzhui.Errors.dataSourceCanntUpdate();
+            if (!item)
+                throw wuzhui.Errors.argumentNull("item");
             this.checkPrimaryKeys(item);
-            // fireCallback(this.updating, this, { item });
             this.updating.fire(this, item);
-            return this.executeUpdate(item).then((data) => {
+            return this.args.update(item, args).then((data) => {
                 Object.assign(item, data);
-                // fireCallback(this.updated, this, { item });
                 this.updated.fire(this, item);
                 return data;
             }).catch((exc) => {
                 this.processError(exc, 'update');
+                throw exc;
             });
         }
         isSameItem(theItem, otherItem) {
@@ -156,13 +168,13 @@ var wuzhui;
                 throw wuzhui.Errors.argumentNull('theItem');
             if (otherItem == null)
                 throw wuzhui.Errors.argumentNull('otherItem');
-            if (theItem != otherItem && this.primaryKeys.length == 0)
-                return false;
-            if (this.primaryKeys.length > 0) {
-                for (let pk of this.primaryKeys) {
-                    if (theItem[pk] != otherItem[pk])
-                        return false;
-                }
+            if (this.primaryKeys.length == 0)
+                return theItem == otherItem;
+            this.checkPrimaryKeys(theItem);
+            this.checkPrimaryKeys(otherItem);
+            for (let pk of this.primaryKeys) {
+                if (theItem[pk] != otherItem[pk])
+                    return false;
             }
             return true;
         }
@@ -174,26 +186,27 @@ var wuzhui;
         }
         select() {
             let args = this.selectArguments;
+            console.assert(args != null);
             wuzhui.fireCallback(this.selecting, this, args);
-            return this.executeSelect(args).then((data) => {
-                let data_items;
-                let result = data;
+            return this.args.select(args).then((data) => {
+                let dataItems;
                 let totalRowCount;
                 if (Array.isArray(data)) {
-                    data_items = data;
-                    totalRowCount = data_items.length;
+                    dataItems = data;
+                    totalRowCount = data.length;
                 }
-                else if (result.dataItems !== undefined && result.totalRowCount !== undefined) {
-                    data_items = data.dataItems;
+                else if (data.dataItems !== undefined && data.totalRowCount !== undefined) {
+                    dataItems = data.dataItems;
                     totalRowCount = data.totalRowCount;
                 }
                 else {
-                    throw new Error('Type of the query result is expected as Array or DataSourceSelectResult.');
+                    throw wuzhui.Errors.queryResultTypeError();
                 }
-                this.selected.fire(this, { totalRowCount, dataItems: data_items });
-                return data;
+                this.selected.fire(this, { totalRowCount, dataItems });
+                return { totalRowCount, dataItems };
             }).catch(exc => {
                 this.processError(exc, 'select');
+                throw exc;
             });
         }
         processError(exc, method) {
@@ -243,12 +256,16 @@ var wuzhui;
             let msg = `Primary key named '${key}' value is null.`;
             return new Error(msg);
         }
+        static queryResultTypeError() {
+            let msg = 'Type of the query result is expected as Array or DataSourceSelectResult.';
+            return new Error(msg);
+        }
     }
     wuzhui.Errors = Errors;
 })(wuzhui || (wuzhui = {}));
 var wuzhui;
 (function (wuzhui) {
-    var GridViewRowType;
+    let GridViewRowType;
     (function (GridViewRowType) {
         GridViewRowType[GridViewRowType["Header"] = 0] = "Header";
         GridViewRowType[GridViewRowType["Footer"] = 1] = "Footer";
@@ -423,7 +440,7 @@ var wuzhui;
             for (let j = 0; j < cells.length; j++) {
                 let cell = cells[j];
                 if (cell instanceof wuzhui.GridViewDataCell) {
-                    let value = dataItem[cell.dataField];
+                    let value = cell.dataField ? dataItem[cell.dataField] : dataItem;
                     if (value !== undefined) {
                         // cell.value = value;
                         cell.render(value);
@@ -492,7 +509,7 @@ var wuzhui;
                 for (let j = 0; j < cells.length; j++) {
                     let cell = cells[j];
                     if (cell instanceof wuzhui.GridViewDataCell) {
-                        let value = item[cell.dataField];
+                        let value = cell.dataField ? item[cell.dataField] : item;
                         if (value !== undefined) {
                             // cell.value = value;
                             cell.render(value);
@@ -541,7 +558,7 @@ var wuzhui;
 })(wuzhui || (wuzhui = {}));
 var wuzhui;
 (function (wuzhui) {
-    var PagerPosition;
+    let PagerPosition;
     (function (PagerPosition) {
         PagerPosition[PagerPosition["Bottom"] = 0] = "Bottom";
         PagerPosition[PagerPosition["Top"] = 1] = "Top";
@@ -624,30 +641,34 @@ var wuzhui;
             this.dataSource = params.dataSource;
             this.pagerSettings = pagerSettings;
             this.element = params.element;
-            // this.buttonWrapper = params.pagerSettings.buttonWrapper;
             this.numberButtons = new Array();
-            this.createButton = this.createPagingButton; //params.createButton || 
-            this.createLabel = this.createTotalLabel; //params.createTotal || 
-            this.createPreviousButtons();
-            this.createNumberButtons();
-            this.createNextButtons();
+            this.createButton = this.createPagingButton;
+            this.createLabel = this.createTotalLabel;
+            let buttonContainer = params.pagerSettings.buttonContainerWraper ?
+                document.createElement(params.pagerSettings.buttonContainerWraper) :
+                document.createElement('div');
+            buttonContainer.className = "buttons";
+            this.element.appendChild(buttonContainer);
+            this.createPreviousButtons(buttonContainer);
+            this.createNumberButtons(buttonContainer);
+            this.createNextButtons(buttonContainer);
             if (this.pagerSettings.showTotal) {
                 this.totalElement = this.createLabel();
                 this.totalElement.visible = false;
             }
             this.init(params.dataSource);
         }
-        createPagingButton() {
+        createPagingButton(container) {
             var pagerSettings = this.pagerSettings;
             let button = document.createElement('a');
             button.href = 'javascript:';
             if (this.pagerSettings.buttonWrapper) {
                 let w = document.createElement(this.pagerSettings.buttonWrapper);
                 w.appendChild(button);
-                this.element.appendChild(w);
+                container.appendChild(w);
             }
             else {
-                this.element.appendChild(button);
+                container.appendChild(button);
             }
             let result = {
                 _button: button,
@@ -748,31 +769,31 @@ var wuzhui;
                 }
             };
         }
-        createPreviousButtons() {
-            this.firstPageButton = this.createButton();
+        createPreviousButtons(buttonContainer) {
+            this.firstPageButton = this.createButton(buttonContainer);
             this.firstPageButton.onclick = NumberPagingBar.on_buttonClick;
             this.firstPageButton.text = this.pagerSettings.firstPageText;
             this.firstPageButton.visible = false;
-            this.previousPageButton = this.createButton();
+            this.previousPageButton = this.createButton(buttonContainer);
             this.previousPageButton.onclick = NumberPagingBar.on_buttonClick;
             this.previousPageButton.text = this.pagerSettings.previousPageText;
             this.previousPageButton.visible = false;
         }
-        createNextButtons() {
-            this.nextPageButton = this.createButton();
+        createNextButtons(buttonContainer) {
+            this.nextPageButton = this.createButton(buttonContainer);
             this.nextPageButton.onclick = NumberPagingBar.on_buttonClick;
             this.nextPageButton.text = this.pagerSettings.nextPageText;
             this.nextPageButton.visible = false;
-            this.lastPageButton = this.createButton();
+            this.lastPageButton = this.createButton(buttonContainer);
             this.lastPageButton.onclick = NumberPagingBar.on_buttonClick;
             this.lastPageButton.text = this.pagerSettings.lastPageText;
             this.lastPageButton.visible = false;
         }
-        createNumberButtons() {
+        createNumberButtons(buttonContainer) {
             let pagingBar = this;
             let buttonCount = this.pagerSettings.pageButtonCount;
             for (let i = 0; i < buttonCount; i++) {
-                let button = this.createButton();
+                let button = this.createButton(buttonContainer);
                 button.onclick = NumberPagingBar.on_buttonClick;
                 this.numberButtons[i] = button;
             }
@@ -928,7 +949,7 @@ var wuzhui;
             this.dataFormatString = params.dataFormatString;
             this.dataField = params.dataField;
             if (params.render) {
-                this.render = params.render;
+                this.render = (value) => params.render(value, this.element);
             }
         }
         render(value) {
@@ -968,13 +989,7 @@ var wuzhui;
                 if (close < 0)
                     throw new Error('Sys.Res.stringFormatBraceMismatch');
                 var brace = format.substring(i, close);
-                // var colonIndex = brace.indexOf(':');
-                // var argNumber = parseInt((colonIndex < 0) ? brace : brace.substring(0, colonIndex), 10) + 1;
-                // if (isNaN(argNumber))
-                //     throw new Error(`string format '${format}' error`);
-                // var argFormat = (colonIndex < 0) ? '' : brace.substring(colonIndex + 1);
                 var argFormat = brace;
-                // var arg = args[argNumber];
                 if (typeof (arg) === "undefined" || arg === null) {
                     arg = '';
                 }
@@ -1627,3 +1642,8 @@ var wuzhui;
     }
     wuzhui.CustomField = CustomField;
 })(wuzhui || (wuzhui = {}));
+
+window['wuzhui'] = window['wuzhui'] || wuzhui 
+                      
+ return wuzhui;
+      });

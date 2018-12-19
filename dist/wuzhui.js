@@ -1,14 +1,13 @@
 
  
 /*!
- * WUZHUI v1.1.0
+ * WUZHUI v1.1.2
  * https://github.com/ansiboy/WuZhui
  *
  * Copyright (c) 2016-2018, shu mai <ansiboy@163.com>
  * Licensed under the MIT License.
  *
  */
-
  (function(factory) { 
      if (typeof require === 'function' && typeof exports === 'object' && typeof module === 'object') { 
          // [1] CommonJS/Node.js 
