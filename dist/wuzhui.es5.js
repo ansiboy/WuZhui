@@ -901,8 +901,7 @@ var wuzhui;
                             return;
                         }
                         button.href = 'javascript:';
-                        if (pagerSettings.buttonClassName) this.setClassName(pagerSettings.buttonClassName); //button.className = pagerSettings.buttonClassName;
-                        else this.setClassName(null); // button.removeAttribute('class');
+                        if (pagerSettings.buttonClassName) this.setClassName(pagerSettings.buttonClassName);else this.setClassName(null);
                     },
                     setClassName: function setClassName(value) {
                         var button = this._button;
@@ -1249,17 +1248,32 @@ var wuzhui;
         }, {
             key: 'formatDate',
             value: function formatDate(value, format) {
+                var TEN = 10;
+                var y = value.getFullYear();
+                var m = value.getMonth() + 1;
+                var d = value.getDate();
+                var h = value.getHours();
+                var M = value.getMinutes();
+                var s = value.getSeconds();
+                var twoDigit = function twoDigit(value) {
+                    if (value < 10) return '0' + value;
+                    return value.toString();
+                };
                 switch (format) {
                     case 'd':
-                        return value.getFullYear() + '-' + (value.getMonth() + 1) + '-' + value.getDate();
+                        return y + '-' + m + '-' + d;
                     case 'g':
-                        return value.getFullYear() + '-' + (value.getMonth() + 1) + '-' + value.getDate() + ' ' + value.getHours() + ':' + value.getMinutes();
+                        return y + '-' + m + '-' + d + ' ' + h + ':' + M;
+                    case 'gg':
+                        return y + '-' + twoDigit(m) + '-' + twoDigit(d) + ' ' + twoDigit(h) + ':' + twoDigit(M);
                     case 'G':
-                        return value.getFullYear() + '-' + (value.getMonth() + 1) + '-' + value.getDate() + ' ' + value.getHours() + ':' + value.getMinutes() + ':' + value.getSeconds();
+                        return y + '-' + m + '-' + d + ' ' + h + ':' + M + ':' + s;
+                    case 'GG':
+                        return y + '-' + twoDigit(m) + '-' + twoDigit(d) + ' ' + twoDigit(h) + ':' + twoDigit(M) + ':' + twoDigit(s);
                     case 't':
-                        return value.getHours() + ':' + value.getMinutes();
+                        return h + ':' + M;
                     case 'T':
-                        return value.getHours() + ':' + value.getMinutes() + ':' + value.getSeconds();
+                        return h + ':' + M + ':' + s;
                 }
                 return value.toString();
             }
