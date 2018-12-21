@@ -27,7 +27,7 @@ action(function () {
     })
 
     dataSource.selectArguments.maximumRows = 8;
-    let table = document.getElementById('buttonWrapper_table'); 
+    let table = document.getElementById('buttonWrapper_table');
     let tbody = document.createElement('tbody');
     table.appendChild(tbody);
 
@@ -56,7 +56,9 @@ action(function () {
         element: document.getElementById('buttonWrapper_bar'),
         pagerSettings: {
             activeButtonClassName: 'active',
+            buttonContainerWraper: 'ul',
             buttonWrapper: 'li',
+            buttonContainerClassName: 'pagination',
             showTotal: false
         }
     })

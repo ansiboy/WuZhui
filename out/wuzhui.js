@@ -1,26 +1,4 @@
-
- 
-/*!
- * WUZHUI v1.1.3
- * https://github.com/ansiboy/WuZhui
- *
- * Copyright (c) 2016-2018, shu mai <ansiboy@163.com>
- * Licensed under the MIT License.
- *
- */
- (function(factory) { 
-     if (typeof require === 'function' && typeof exports === 'object' && typeof module === 'object') { 
-         // [1] CommonJS/Node.js 
-         var target = module['exports'] || exports;
-         var mod = factory(target, require);
-         Object.assign(target,mod);
-     } else if (typeof define === 'function' && define['amd']) {
-         define(factory); 
-     } else { 
-         factory();
-     } 
- })(function() {
- var wuzhui;
+var wuzhui;
 (function (wuzhui) {
     const CONTROL_DATA_NAME = 'Control';
     class Control {
@@ -1642,8 +1620,3 @@ var wuzhui;
     }
     wuzhui.CustomField = CustomField;
 })(wuzhui || (wuzhui = {}));
-
-window['wuzhui'] = window['wuzhui'] || wuzhui 
-                      
- return wuzhui;
-      });

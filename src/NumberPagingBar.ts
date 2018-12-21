@@ -25,6 +25,8 @@ namespace wuzhui {
 
         buttonContainerWraper?: string,
 
+        buttonContainerClassName?: string,
+
         buttonWrapper?: string,
 
         showTotal?: boolean,
@@ -163,7 +165,8 @@ namespace wuzhui {
                 document.createElement(params.pagerSettings.buttonContainerWraper) :
                 document.createElement('div');
 
-            buttonContainer.className = "buttons";
+
+            buttonContainer.className = params.pagerSettings.buttonContainerClassName || "buttons";
             this.element.appendChild(buttonContainer);
 
             this.createPreviousButtons(buttonContainer);
@@ -242,9 +245,9 @@ namespace wuzhui {
 
                     button.href = 'javascript:';
                     if (pagerSettings.buttonClassName)
-                        this.setClassName(pagerSettings.buttonClassName); //button.className = pagerSettings.buttonClassName;
+                        this.setClassName(pagerSettings.buttonClassName); 
                     else
-                        this.setClassName(null); // button.removeAttribute('class');
+                        this.setClassName(null); 
                 },
                 setClassName(value: string) {
                     let button = this._button as HTMLAnchorElement;

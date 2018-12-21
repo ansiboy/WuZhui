@@ -5,14 +5,14 @@
 ## 示例
 
 <table id="buttonWrapper_table" class="table"></table>
-<ul id="buttonWrapper_bar" class="pagination"></ul>
+<div id="buttonWrapper_bar" class="pagination"></div>
 
 ## 源码
 
 ### HTML
 
 ```html
-<ul id="buttonWrapper_bar" class="pagination"></ul>
+<div id="buttonWrapper_bar" class="pagination"></div>
 ```
 
 ### JS

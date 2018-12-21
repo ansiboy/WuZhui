@@ -827,7 +827,7 @@ var wuzhui;
             _this9.createButton = _this9.createPagingButton;
             _this9.createLabel = _this9.createTotalLabel;
             var buttonContainer = params.pagerSettings.buttonContainerWraper ? document.createElement(params.pagerSettings.buttonContainerWraper) : document.createElement('div');
-            buttonContainer.className = "buttons";
+            buttonContainer.className = params.pagerSettings.buttonContainerClassName || "buttons";
             _this9.element.appendChild(buttonContainer);
             _this9.createPreviousButtons(buttonContainer);
             _this9.createNumberButtons(buttonContainer);

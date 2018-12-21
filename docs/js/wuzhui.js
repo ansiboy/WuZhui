@@ -1,7 +1,7 @@
 
  
 /*!
- * WUZHUI v1.1.2
+ * WUZHUI v1.1.3
  * https://github.com/ansiboy/WuZhui
  *
  * Copyright (c) 2016-2018, shu mai <ansiboy@163.com>
@@ -647,7 +647,7 @@ var wuzhui;
             let buttonContainer = params.pagerSettings.buttonContainerWraper ?
                 document.createElement(params.pagerSettings.buttonContainerWraper) :
                 document.createElement('div');
-            buttonContainer.className = "buttons";
+            buttonContainer.className = params.pagerSettings.buttonContainerClassName || "buttons";
             this.element.appendChild(buttonContainer);
             this.createPreviousButtons(buttonContainer);
             this.createNumberButtons(buttonContainer);
