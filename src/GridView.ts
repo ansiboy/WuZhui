@@ -119,6 +119,8 @@ namespace wuzhui {
         //========================================================
 
         rowCreated = callbacks<GridView<T>, { row: GridViewRow }>();
+        private pagingBar: NumberPagingBar;
+        _selectArguments: any;
 
         constructor(params: GridViewArguments<T>) {
 
@@ -155,7 +157,7 @@ namespace wuzhui {
                     var element = this._emtpyRow.cells[0].element;
                     element.innerHTML = this.loadFailHTML;
                     element.onclick = () => {
-                        this._dataSource.select();
+                        this._dataSource.select(this.selectArguments);
                     }
                     e.handled = true;
                     console.error(e.message);
@@ -187,11 +189,16 @@ namespace wuzhui {
 
                 if (allowPaging) {
                     this.createPagingBar(params.pagerSettings);
-                    this.dataSource.selectArguments.maximumRows = params.pageSize;
+                    this.pagingBar.selectArguments.maximumRows = params.pageSize;
                 }
             }
 
-            this.dataSource.select();
+            this._selectArguments = this.pagingBar ? this.pagingBar.selectArguments : new DataSourceSelectArguments()
+            this.dataSource.select(this._selectArguments);
+        }
+
+        get selectArguments() {
+            return this._selectArguments;
         }
 
         private createPagingBar(pagerSettings?: PagerSettings) {
@@ -202,7 +209,7 @@ namespace wuzhui {
             pagingBarContainer.appendChild(pagingBarElement);
             console.assert(this._footer != null);
             this._footer.appendChild(pagingBarContainer);
-            new wuzhui.NumberPagingBar({ dataSource: this.dataSource, element: pagingBarElement, pagerSettings });
+            this.pagingBar = new wuzhui.NumberPagingBar({ dataSource: this.dataSource, element: pagingBarElement, pagerSettings });
         }
 
         get columns() {

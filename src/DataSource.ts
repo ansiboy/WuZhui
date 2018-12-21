@@ -42,9 +42,9 @@ namespace wuzhui {
             return this.args.update != null && this.primaryKeys.length > 0;
         }
 
-        get selectArguments() {
-            return this._currentSelectArguments;
-        }
+        // get selectArguments() {
+        //     return this._currentSelectArguments;
+        // }
 
         private executeInsert(item: T, args?: any): Promise<any> {
             return this.args.insert(item, args);
@@ -144,8 +144,7 @@ namespace wuzhui {
                     throw Errors.primaryKeyNull(key);
             }
         }
-        select(): Promise<DataSourceSelectResult<T>> {
-            let args = this.selectArguments;
+        select(args: DataSourceSelectArguments): Promise<DataSourceSelectResult<T>> {
             console.assert(args != null);
 
             fireCallback(this.selecting, this, args);

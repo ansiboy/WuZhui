@@ -34,28 +34,28 @@ namespace wuzhui {
 
     export abstract class PagingBar {
         private _pageIndex: number;
-        private _dataSource: DataSource<{}>;
         private _totalRowCount: number;
         private _pageSize: number;
+        private _selectArguments;
 
-        init(dataSource: DataSource<{}>) {
+        init(dataSource: DataSource<{}>, selectArguments: DataSourceSelectArguments) {
             if (dataSource == null)
                 throw Errors.argumentNull('dataSource');
 
             this._pageIndex = 0;
-            this._dataSource = dataSource;
+            this._selectArguments = selectArguments || new DataSourceSelectArguments()
 
             var pagingBar = this;
             pagingBar.totalRowCount = 1000000;
             dataSource.selected.add((source, args) => {
-                pagingBar._pageSize = dataSource.selectArguments.maximumRows;
+                pagingBar._pageSize = this._selectArguments.maximumRows;
 
                 var totalRowCount = args.totalRowCount;
                 if (totalRowCount != null && totalRowCount >= 0) {
                     pagingBar.totalRowCount = totalRowCount;
                 }
 
-                var startRowIndex = dataSource.selectArguments.startRowIndex;
+                var startRowIndex = this._selectArguments.startRowIndex;
                 if (startRowIndex <= 0)
                     startRowIndex = 0;
 
@@ -71,6 +71,9 @@ namespace wuzhui {
                 pagingBar.totalRowCount = pagingBar.totalRowCount + 1;
                 pagingBar.render();
             })
+        }
+        get selectArguments() {
+            return this._selectArguments;
         }
         get pageCount() {
             var pageCount = Math.ceil(this.totalRowCount / this.pageSize);
@@ -132,13 +135,10 @@ namespace wuzhui {
         private lastPageButton: NumberPagingButton;
         private createLabel: () => PagingTotalLabel;
         private createButton: (container: HTMLElement) => NumberPagingButton;
-        // private buttonWrapper: string;
 
         constructor(params: {
             dataSource: DataSource<any>, element: HTMLElement, pagerSettings?: PagerSettings,
-            // createTotal?: () => PagingTotalLabel,
-            // createButton?: () => NumberPagingButton,
-            // buttonWrapper?: string,
+            selectArguments?: DataSourceSelectArguments
         }) {
             if (!params.dataSource) throw Errors.argumentNull('dataSource');
             if (!params.element) throw Errors.argumentNull('element');
@@ -161,12 +161,12 @@ namespace wuzhui {
             this.createButton = this.createPagingButton;
             this.createLabel = this.createTotalLabel;
 
-            let buttonContainer = params.pagerSettings.buttonContainerWraper ?
-                document.createElement(params.pagerSettings.buttonContainerWraper) :
+            let buttonContainer = pagerSettings.buttonContainerWraper ?
+                document.createElement(pagerSettings.buttonContainerWraper) :
                 document.createElement('div');
 
 
-            buttonContainer.className = params.pagerSettings.buttonContainerClassName || "buttons";
+            buttonContainer.className = pagerSettings.buttonContainerClassName || "buttons";
             this.element.appendChild(buttonContainer);
 
             this.createPreviousButtons(buttonContainer);
@@ -178,7 +178,7 @@ namespace wuzhui {
                 this.totalElement.visible = false;
             }
 
-            this.init(params.dataSource);
+            this.init(params.dataSource, params.selectArguments);
         }
 
         private createPagingButton(container: HTMLElement): NumberPagingButton {
@@ -245,9 +245,9 @@ namespace wuzhui {
 
                     button.href = 'javascript:';
                     if (pagerSettings.buttonClassName)
-                        this.setClassName(pagerSettings.buttonClassName); 
+                        this.setClassName(pagerSettings.buttonClassName);
                     else
-                        this.setClassName(null); 
+                        this.setClassName(null);
                 },
                 setClassName(value: string) {
                     let button = this._button as HTMLAnchorElement;
@@ -349,12 +349,12 @@ namespace wuzhui {
                 return;
             }
 
-            let args = pagingBar.dataSource.selectArguments;
+            let args = pagingBar.selectArguments;
 
             args.maximumRows = pagingBar.pageSize;
             args.startRowIndex = pageIndex * pagingBar.pageSize;
             pagingBar.pageIndex = pageIndex;
-            pagingBar.dataSource.select();
+            pagingBar.dataSource.select(pagingBar.selectArguments);
         }
 
         render() {

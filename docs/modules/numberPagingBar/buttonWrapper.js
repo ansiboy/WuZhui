@@ -26,12 +26,12 @@ action(function () {
         }
     })
 
-    dataSource.selectArguments.maximumRows = 8;
+    let maximumRows = 8;
     let table = document.getElementById('buttonWrapper_table');
     let tbody = document.createElement('tbody');
     table.appendChild(tbody);
 
-    for (let i = 0; i < dataSource.selectArguments.maximumRows; i++) {
+    for (let i = 0; i < maximumRows; i++) {
         let row = document.createElement('tr');
         let nameCell = document.createElement('td');
         let valueCell = document.createElement('td');
@@ -41,7 +41,7 @@ action(function () {
     }
 
     dataSource.selected.add((sender, args) => {
-        for (let i = 0; i < dataSource.selectArguments.maximumRows; i++) {
+        for (let i = 0; i < maximumRows; i++) {
             let dataItem = args.dataItems[i];
             let cells = tbody.rows.item(i).cells;
             cells.item(0).innerHTML = dataItem ? dataItem.name : '&nbsp;';
@@ -49,7 +49,9 @@ action(function () {
         }
     })
 
-    dataSource.select();
+    let args = new wuzhui.DataSourceSelectArguments()
+    args.maximumRows = maximumRows
+    dataSource.select(args);
 
     new w.NumberPagingBar({
         dataSource,
@@ -60,6 +62,7 @@ action(function () {
             buttonWrapper: 'li',
             buttonContainerClassName: 'pagination',
             showTotal: false
-        }
+        },
+        selectArguments: args
     })
 })

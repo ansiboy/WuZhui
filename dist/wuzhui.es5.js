@@ -97,6 +97,10 @@ var wuzhui;
 
         _createClass(DataSource, [{
             key: 'executeInsert',
+
+            // get selectArguments() {
+            //     return this._currentSelectArguments;
+            // }
             value: function executeInsert(item, args) {
                 return this.args.insert(item, args);
             }
@@ -215,10 +219,9 @@ var wuzhui;
             }
         }, {
             key: 'select',
-            value: function select() {
+            value: function select(args) {
                 var _this4 = this;
 
-                var args = this.selectArguments;
                 console.assert(args != null);
                 wuzhui.fireCallback(this.selecting, this, args);
                 return this.args.select(args).then(function (data) {
@@ -261,11 +264,6 @@ var wuzhui;
             key: 'canUpdate',
             get: function get() {
                 return this.args.update != null && this.primaryKeys.length > 0;
-            }
-        }, {
-            key: 'selectArguments',
-            get: function get() {
-                return this._currentSelectArguments;
             }
         }]);
 
@@ -500,7 +498,7 @@ var wuzhui;
                     var element = _this7._emtpyRow.cells[0].element;
                     element.innerHTML = _this7.loadFailHTML;
                     element.onclick = function () {
-                        _this7._dataSource.select();
+                        _this7._dataSource.select(_this7.selectArguments);
                     };
                     e.handled = true;
                     console.error(e.message);
@@ -524,10 +522,11 @@ var wuzhui;
                 if (params.showFooter) _this7.appendFooterRow();
                 if (allowPaging) {
                     _this7.createPagingBar(params.pagerSettings);
-                    _this7.dataSource.selectArguments.maximumRows = params.pageSize;
+                    _this7.pagingBar.selectArguments.maximumRows = params.pageSize;
                 }
             }
-            _this7.dataSource.select();
+            _this7._selectArguments = _this7.pagingBar ? _this7.pagingBar.selectArguments : new wuzhui.DataSourceSelectArguments();
+            _this7.dataSource.select(_this7._selectArguments);
             return _this7;
         }
 
@@ -541,7 +540,7 @@ var wuzhui;
                 pagingBarContainer.appendChild(pagingBarElement);
                 console.assert(this._footer != null);
                 this._footer.appendChild(pagingBarContainer);
-                new wuzhui.NumberPagingBar({ dataSource: this.dataSource, element: pagingBarElement, pagerSettings: pagerSettings });
+                this.pagingBar = new wuzhui.NumberPagingBar({ dataSource: this.dataSource, element: pagingBarElement, pagerSettings: pagerSettings });
             }
         }, {
             key: 'appendEmptyRow',
@@ -694,6 +693,11 @@ var wuzhui;
                 this._emtpyRow.element.style.display = 'none';
             }
         }, {
+            key: 'selectArguments',
+            get: function get() {
+                return this._selectArguments;
+            }
+        }, {
             key: 'columns',
             get: function get() {
                 return this._columns;
@@ -730,19 +734,21 @@ var wuzhui;
 
         _createClass(PagingBar, [{
             key: 'init',
-            value: function init(dataSource) {
+            value: function init(dataSource, selectArguments) {
+                var _this9 = this;
+
                 if (dataSource == null) throw wuzhui.Errors.argumentNull('dataSource');
                 this._pageIndex = 0;
-                this._dataSource = dataSource;
+                this._selectArguments = selectArguments || new wuzhui.DataSourceSelectArguments();
                 var pagingBar = this;
                 pagingBar.totalRowCount = 1000000;
                 dataSource.selected.add(function (source, args) {
-                    pagingBar._pageSize = dataSource.selectArguments.maximumRows;
+                    pagingBar._pageSize = _this9._selectArguments.maximumRows;
                     var totalRowCount = args.totalRowCount;
                     if (totalRowCount != null && totalRowCount >= 0) {
                         pagingBar.totalRowCount = totalRowCount;
                     }
-                    var startRowIndex = dataSource.selectArguments.startRowIndex;
+                    var startRowIndex = _this9._selectArguments.startRowIndex;
                     if (startRowIndex <= 0) startRowIndex = 0;
                     pagingBar._pageIndex = Math.floor(startRowIndex / pagingBar._pageSize);
                     pagingBar.render();
@@ -762,6 +768,11 @@ var wuzhui;
             // Virtual Method
             value: function render() {
                 throw wuzhui.Errors.notImplemented('The table-row render method is not implemented.');
+            }
+        }, {
+            key: 'selectArguments',
+            get: function get() {
+                return this._selectArguments;
             }
         }, {
             key: 'pageCount',
@@ -803,7 +814,6 @@ var wuzhui;
     var NumberPagingBar = function (_PagingBar) {
         _inherits(NumberPagingBar, _PagingBar);
 
-        // private buttonWrapper: string;
         function NumberPagingBar(params) {
             _classCallCheck(this, NumberPagingBar);
 
@@ -818,32 +828,32 @@ var wuzhui;
                 showTotal: true
             }, params.pagerSettings || {});
 
-            var _this9 = _possibleConstructorReturn(this, (NumberPagingBar.__proto__ || Object.getPrototypeOf(NumberPagingBar)).call(this));
+            var _this10 = _possibleConstructorReturn(this, (NumberPagingBar.__proto__ || Object.getPrototypeOf(NumberPagingBar)).call(this));
 
-            _this9.dataSource = params.dataSource;
-            _this9.pagerSettings = pagerSettings;
-            _this9.element = params.element;
-            _this9.numberButtons = new Array();
-            _this9.createButton = _this9.createPagingButton;
-            _this9.createLabel = _this9.createTotalLabel;
-            var buttonContainer = params.pagerSettings.buttonContainerWraper ? document.createElement(params.pagerSettings.buttonContainerWraper) : document.createElement('div');
-            buttonContainer.className = params.pagerSettings.buttonContainerClassName || "buttons";
-            _this9.element.appendChild(buttonContainer);
-            _this9.createPreviousButtons(buttonContainer);
-            _this9.createNumberButtons(buttonContainer);
-            _this9.createNextButtons(buttonContainer);
-            if (_this9.pagerSettings.showTotal) {
-                _this9.totalElement = _this9.createLabel();
-                _this9.totalElement.visible = false;
+            _this10.dataSource = params.dataSource;
+            _this10.pagerSettings = pagerSettings;
+            _this10.element = params.element;
+            _this10.numberButtons = new Array();
+            _this10.createButton = _this10.createPagingButton;
+            _this10.createLabel = _this10.createTotalLabel;
+            var buttonContainer = pagerSettings.buttonContainerWraper ? document.createElement(pagerSettings.buttonContainerWraper) : document.createElement('div');
+            buttonContainer.className = pagerSettings.buttonContainerClassName || "buttons";
+            _this10.element.appendChild(buttonContainer);
+            _this10.createPreviousButtons(buttonContainer);
+            _this10.createNumberButtons(buttonContainer);
+            _this10.createNextButtons(buttonContainer);
+            if (_this10.pagerSettings.showTotal) {
+                _this10.totalElement = _this10.createLabel();
+                _this10.totalElement.visible = false;
             }
-            _this9.init(params.dataSource);
-            return _this9;
+            _this10.init(params.dataSource, params.selectArguments);
+            return _this10;
         }
 
         _createClass(NumberPagingBar, [{
             key: 'createPagingButton',
             value: function createPagingButton(container) {
-                var _this10 = this;
+                var _this11 = this;
 
                 var pagerSettings = this.pagerSettings;
                 var button = document.createElement('a');
@@ -913,7 +923,7 @@ var wuzhui;
                 };
                 button.onclick = function () {
                     if (result.onclick) {
-                        result.onclick(result, _this10);
+                        result.onclick(result, _this11);
                     }
                 };
                 return result;
@@ -1033,11 +1043,11 @@ var wuzhui;
                 if (!pageIndex == null) {
                     return;
                 }
-                var args = pagingBar.dataSource.selectArguments;
+                var args = pagingBar.selectArguments;
                 args.maximumRows = pagingBar.pageSize;
                 args.startRowIndex = pageIndex * pagingBar.pageSize;
                 pagingBar.pageIndex = pageIndex;
-                pagingBar.dataSource.select();
+                pagingBar.dataSource.select(pagingBar.selectArguments);
             }
         }]);
 
@@ -1187,18 +1197,18 @@ var wuzhui;
         function GridViewDataCell(params) {
             _classCallCheck(this, GridViewDataCell);
 
-            var _this12 = _possibleConstructorReturn(this, (GridViewDataCell.__proto__ || Object.getPrototypeOf(GridViewDataCell)).call(this));
+            var _this13 = _possibleConstructorReturn(this, (GridViewDataCell.__proto__ || Object.getPrototypeOf(GridViewDataCell)).call(this));
 
             params = params || {};
-            _this12.nullText = params.nullText != null ? params.nullText : '';
-            _this12.dataFormatString = params.dataFormatString;
-            _this12.dataField = params.dataField;
+            _this13.nullText = params.nullText != null ? params.nullText : '';
+            _this13.dataFormatString = params.dataFormatString;
+            _this13.dataField = params.dataField;
             if (params.render) {
-                _this12.render = function (value) {
-                    return params.render(value, _this12.element);
+                _this13.render = function (value) {
+                    return params.render(value, _this13.element);
                 };
             }
-            return _this12;
+            return _this13;
         }
 
         _createClass(GridViewDataCell, [{
@@ -1300,49 +1310,49 @@ var wuzhui;
         function GridViewHeaderCell(field) {
             _classCallCheck(this, GridViewHeaderCell);
 
-            var _this13 = _possibleConstructorReturn(this, (GridViewHeaderCell.__proto__ || Object.getPrototypeOf(GridViewHeaderCell)).call(this, document.createElement('th')));
+            var _this14 = _possibleConstructorReturn(this, (GridViewHeaderCell.__proto__ || Object.getPrototypeOf(GridViewHeaderCell)).call(this, document.createElement('th')));
 
-            _this13.ascHTML = '↑';
-            _this13.descHTML = '↓';
-            _this13.sortingHTML = '...';
-            _this13.field = field;
-            _this13.sorting = wuzhui.callbacks();
-            _this13.sorted = wuzhui.callbacks();
+            _this14.ascHTML = '↑';
+            _this14.descHTML = '↓';
+            _this14.sortingHTML = '...';
+            _this14.field = field;
+            _this14.sorting = wuzhui.callbacks();
+            _this14.sorted = wuzhui.callbacks();
             if (field.sortExpression) {
                 var labelElement = document.createElement('a');
                 labelElement.href = 'javascript:';
-                labelElement.innerHTML = _this13.defaultHeaderText();
+                labelElement.innerHTML = _this14.defaultHeaderText();
                 labelElement.onclick = function () {
-                    return _this13.handleSort();
+                    return _this14.handleSort();
                 };
-                _this13._iconElement = document.createElement('span');
-                _this13.appendChild(labelElement);
-                _this13.appendChild(_this13._iconElement);
-                _this13.sorting.add(function () {
-                    return _this13._iconElement.innerHTML = _this13.sortingHTML;
+                _this14._iconElement = document.createElement('span');
+                _this14.appendChild(labelElement);
+                _this14.appendChild(_this14._iconElement);
+                _this14.sorting.add(function () {
+                    return _this14._iconElement.innerHTML = _this14.sortingHTML;
                 });
-                _this13.sorted.add(function () {
-                    return _this13.updateSortIcon();
+                _this14.sorted.add(function () {
+                    return _this14.updateSortIcon();
                 });
             } else {
-                _this13.element.innerHTML = _this13.defaultHeaderText();
+                _this14.element.innerHTML = _this14.defaultHeaderText();
             }
-            _this13.style(field.headerStyle);
-            return _this13;
+            _this14.style(field.headerStyle);
+            return _this14;
         }
 
         _createClass(GridViewHeaderCell, [{
             key: 'handleSort',
             value: function handleSort() {
-                var _this14 = this;
+                var _this15 = this;
 
-                var selectArguments = this.field.gridView.dataSource.selectArguments;
+                var selectArguments = this.field.gridView.selectArguments;
                 var sortType = this.sortType == 'asc' ? 'desc' : 'asc';
                 wuzhui.fireCallback(this.sorting, this, { sortType: sortType });
                 selectArguments.sortExpression = this.field.sortExpression + ' ' + sortType;
-                return this.field.gridView.dataSource.select().then(function () {
-                    _this14.sortType = sortType;
-                    wuzhui.fireCallback(_this14.sorted, _this14, { sortType: sortType });
+                return this.field.gridView.dataSource.select(selectArguments).then(function () {
+                    _this15.sortType = sortType;
+                    wuzhui.fireCallback(_this15.sorted, _this15, { sortType: sortType });
                 });
             }
         }, {
@@ -1515,20 +1525,20 @@ var wuzhui;
             if (field == null) throw wuzhui.Errors.argumentNull('field');
             if (dataItem == null) throw wuzhui.Errors.argumentNull('dataItem');
 
-            var _this15 = _possibleConstructorReturn(this, (GridViewEditableCell.__proto__ || Object.getPrototypeOf(GridViewEditableCell)).call(this, {
+            var _this16 = _possibleConstructorReturn(this, (GridViewEditableCell.__proto__ || Object.getPrototypeOf(GridViewEditableCell)).call(this, {
                 dataField: field.dataField,
                 nullText: field.nullText, dataFormatString: field.dataFormatString
             }));
 
-            _this15._field = field;
-            _this15._dataItem = dataItem;
-            _this15._valueType = valueType;
-            _this15._mode = 'read';
-            if (!_this15._valueType) {
+            _this16._field = field;
+            _this16._dataItem = dataItem;
+            _this16._valueType = valueType;
+            _this16._mode = 'read';
+            if (!_this16._valueType) {
                 var value = dataItem[field.dataField];
-                if (value instanceof Date) _this15._valueType = 'date';else _this15._valueType = typeof value === 'undefined' ? 'undefined' : _typeof(value);
+                if (value instanceof Date) _this16._valueType = 'date';else _this16._valueType = typeof value === 'undefined' ? 'undefined' : _typeof(value);
             }
-            return _this15;
+            return _this16;
         }
 
         _createClass(GridViewEditableCell, [{
@@ -1612,11 +1622,11 @@ var wuzhui;
         function BoundField(params) {
             _classCallCheck(this, BoundField);
 
-            var _this16 = _possibleConstructorReturn(this, (BoundField.__proto__ || Object.getPrototypeOf(BoundField)).call(this, params));
+            var _this17 = _possibleConstructorReturn(this, (BoundField.__proto__ || Object.getPrototypeOf(BoundField)).call(this, params));
 
-            _this16._params = params;
-            _this16._valueElement = document.createElement('span');
-            return _this16;
+            _this17._params = params;
+            _this17._valueElement = document.createElement('span');
+            return _this17;
         }
 
         _createClass(BoundField, [{
@@ -1699,16 +1709,16 @@ var wuzhui;
 
             // private _updating = false;
             // private _deleting = false;
-            var _this18 = _possibleConstructorReturn(this, (CommandField.__proto__ || Object.getPrototypeOf(CommandField)).call(this, params));
+            var _this19 = _possibleConstructorReturn(this, (CommandField.__proto__ || Object.getPrototypeOf(CommandField)).call(this, params));
 
-            _this18.currentMode = 'read';
-            if (!_this18.params().cancelButtonHTML) _this18.params().cancelButtonHTML = '取消';
-            if (!_this18.params().deleteButtonHTML) _this18.params().deleteButtonHTML = '删除';
-            if (!_this18.params().editButtonHTML) _this18.params().editButtonHTML = '编辑';
-            if (!_this18.params().updateButtonHTML) _this18.params().updateButtonHTML = '更新';
-            if (!_this18.params().newButtonHTML) _this18.params().newButtonHTML = '新增';
-            if (!_this18.params().insertButtonHTML) _this18.params().insertButtonHTML = '添加';
-            return _this18;
+            _this19.currentMode = 'read';
+            if (!_this19.params().cancelButtonHTML) _this19.params().cancelButtonHTML = '取消';
+            if (!_this19.params().deleteButtonHTML) _this19.params().deleteButtonHTML = '删除';
+            if (!_this19.params().editButtonHTML) _this19.params().editButtonHTML = '编辑';
+            if (!_this19.params().updateButtonHTML) _this19.params().updateButtonHTML = '更新';
+            if (!_this19.params().newButtonHTML) _this19.params().newButtonHTML = '新增';
+            if (!_this19.params().insertButtonHTML) _this19.params().insertButtonHTML = '添加';
+            return _this19;
         }
 
         _createClass(CommandField, [{
@@ -1719,7 +1729,7 @@ var wuzhui;
         }, {
             key: 'createItemCell',
             value: function createItemCell(dataItem) {
-                var _this19 = this;
+                var _this20 = this;
 
                 var cell = new GridViewCommandCell(this);
                 cell.style(this.itemStyle);
@@ -1729,7 +1739,7 @@ var wuzhui;
                     if (this.editButtonClass) editButton.className = this.editButtonClass;
                     cell.editButton = editButton;
                     editButton.addEventListener('click', function (e) {
-                        return _this19.on_editButtonClick(e);
+                        return _this20.on_editButtonClick(e);
                     });
                     cell.appendChild(editButton);
                     var updateButton = this.createUpdateButton();
@@ -1738,7 +1748,7 @@ var wuzhui;
                     if (this.updateButtonClass) updateButton.className = this.updateButtonClass;
                     cell.updateButton = updateButton;
                     updateButton.addEventListener('click', function (e) {
-                        return _this19.on_insertOrUpdateButtonClick(e);
+                        return _this20.on_insertOrUpdateButtonClick(e);
                     });
                     cell.appendChild(updateButton);
                     var cancelButton = this.createCancelButton();
@@ -1747,7 +1757,7 @@ var wuzhui;
                     if (this.cancelButtonClass) cancelButton.className = this.cancelButtonClass;
                     cell.cacelButton = cancelButton;
                     cancelButton.addEventListener('click', function (e) {
-                        return _this19.on_cancelButtonClick(e);
+                        return _this20.on_cancelButtonClick(e);
                     });
                     cell.appendChild(cancelButton);
                 }
@@ -1757,7 +1767,7 @@ var wuzhui;
                     if (this.deleteButtonClass) deleteButton.className = this.deleteButtonClass;
                     cell.deleteButton = deleteButton;
                     deleteButton.onclick = function (e) {
-                        return _this19.on_deleteButtonClick(e);
+                        return _this20.on_deleteButtonClick(e);
                     };
                     cell.appendChild(deleteButton);
                 }
@@ -1766,7 +1776,7 @@ var wuzhui;
                     newButton.style.marginRight = '4px';
                     if (this.newButtonClass) newButton.className = this.newButtonClass;
                     newButton.onclick = function (e) {
-                        return _this19.on_newButtonClick(e);
+                        return _this20.on_newButtonClick(e);
                     };
                     cell.newButton = newButton;
                     cell.appendChild(newButton);
@@ -1774,7 +1784,7 @@ var wuzhui;
                     insertButton.style.display = 'none';
                     insertButton.style.marginRight = '4px';
                     insertButton.addEventListener('click', function (e) {
-                        return _this19.on_insertOrUpdateButtonClick(e);
+                        return _this20.on_insertOrUpdateButtonClick(e);
                     });
                     if (this.insertButtonClass) insertButton.className = this.updateButtonClass;
                     cell.insertButton = insertButton;
@@ -1783,7 +1793,7 @@ var wuzhui;
                     _cancelButton.style.display = 'none';
                     _cancelButton.style.marginRight = '4px';
                     _cancelButton.addEventListener('click', function (e) {
-                        return _this19.on_cancelButtonClick(e);
+                        return _this20.on_cancelButtonClick(e);
                     });
                     if (this.cancelButtonClass) _cancelButton.className = this.cancelButtonClass;
                     cell.cacelButton = _cancelButton;
@@ -1923,7 +1933,7 @@ var wuzhui;
         }, {
             key: 'on_insertOrUpdateButtonClick',
             value: function on_insertOrUpdateButtonClick(e) {
-                var _this20 = this;
+                var _this21 = this;
 
                 if (e.target['_updating']) e.target['_updating'] = true;
                 var cellElement = wuzhui.ElementHelper.findFirstParentByTagName(e.target, 'td');
@@ -1954,7 +1964,7 @@ var wuzhui;
                         return item.endEdit();
                     });
                     var cell = wuzhui.Control.getControlByElement(cellElement);
-                    _this20.showReadStatusButtons(cell);
+                    _this21.showReadStatusButtons(cell);
                     e.target['_updating'] = false;
                 }).catch(function () {
                     return e.target['_updating'] = false;
@@ -1973,7 +1983,7 @@ var wuzhui;
         }, {
             key: 'on_newButtonClick',
             value: function on_newButtonClick(e) {
-                var _this21 = this;
+                var _this22 = this;
 
                 var rowElement = wuzhui.ElementHelper.findFirstParentByTagName(e.target, "tr"); //cellElement.parentElement as HTMLTableRowElement;
                 var row = wuzhui.Control.getControlByElement(rowElement);
@@ -1989,11 +1999,11 @@ var wuzhui;
                     return c.beginEdit();
                 });
                 commandCells.forEach(function (cell) {
-                    if (cell.deleteButton) _this21.hideButton(cell.deleteButton);
-                    if (cell.editButton) _this21.hideButton(cell.editButton);
-                    _this21.hideButton(cell.newButton);
-                    _this21.showButton(cell.insertButton);
-                    _this21.showButton(cell.cacelButton);
+                    if (cell.deleteButton) _this22.hideButton(cell.deleteButton);
+                    if (cell.editButton) _this22.hideButton(cell.editButton);
+                    _this22.hideButton(cell.newButton);
+                    _this22.showButton(cell.insertButton);
+                    _this22.showButton(cell.cacelButton);
                 });
             }
         }, {

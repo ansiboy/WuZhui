@@ -192,12 +192,12 @@ namespace wuzhui {
         }
 
         handleSort() {
-            let selectArguments = this.field.gridView.dataSource.selectArguments;
+            let selectArguments = this.field.gridView.selectArguments;
             let sortType: 'asc' | 'desc' = this.sortType == 'asc' ? 'desc' : 'asc';
 
             fireCallback(this.sorting, this, { sortType });
             selectArguments.sortExpression = (this.field as BoundField<T>).sortExpression + ' ' + sortType;
-            return this.field.gridView.dataSource.select()
+            return this.field.gridView.dataSource.select(selectArguments)
                 .then(() => {
                     this.sortType = sortType;
                     fireCallback(this.sorted, this, { sortType });

@@ -98,9 +98,9 @@ var wuzhui;
         get canUpdate() {
             return this.args.update != null && this.primaryKeys.length > 0;
         }
-        get selectArguments() {
-            return this._currentSelectArguments;
-        }
+        // get selectArguments() {
+        //     return this._currentSelectArguments;
+        // }
         executeInsert(item, args) {
             return this.args.insert(item, args);
         }
@@ -184,8 +184,7 @@ var wuzhui;
                     throw wuzhui.Errors.primaryKeyNull(key);
             }
         }
-        select() {
-            let args = this.selectArguments;
+        select(args) {
             console.assert(args != null);
             wuzhui.fireCallback(this.selecting, this, args);
             return this.args.select(args).then((data) => {
@@ -373,7 +372,7 @@ var wuzhui;
                     var element = this._emtpyRow.cells[0].element;
                     element.innerHTML = this.loadFailHTML;
                     element.onclick = () => {
-                        this._dataSource.select();
+                        this._dataSource.select(this.selectArguments);
                     };
                     e.handled = true;
                     console.error(e.message);
@@ -398,10 +397,14 @@ var wuzhui;
                     this.appendFooterRow();
                 if (allowPaging) {
                     this.createPagingBar(params.pagerSettings);
-                    this.dataSource.selectArguments.maximumRows = params.pageSize;
+                    this.pagingBar.selectArguments.maximumRows = params.pageSize;
                 }
             }
-            this.dataSource.select();
+            this._selectArguments = this.pagingBar ? this.pagingBar.selectArguments : new wuzhui.DataSourceSelectArguments();
+            this.dataSource.select(this._selectArguments);
+        }
+        get selectArguments() {
+            return this._selectArguments;
         }
         createPagingBar(pagerSettings) {
             var pagingBarContainer = document.createElement('tr');
@@ -411,7 +414,7 @@ var wuzhui;
             pagingBarContainer.appendChild(pagingBarElement);
             console.assert(this._footer != null);
             this._footer.appendChild(pagingBarContainer);
-            new wuzhui.NumberPagingBar({ dataSource: this.dataSource, element: pagingBarElement, pagerSettings });
+            this.pagingBar = new wuzhui.NumberPagingBar({ dataSource: this.dataSource, element: pagingBarElement, pagerSettings });
         }
         get columns() {
             return this._columns;
@@ -566,20 +569,20 @@ var wuzhui;
     })(PagerPosition = wuzhui.PagerPosition || (wuzhui.PagerPosition = {}));
     ;
     class PagingBar {
-        init(dataSource) {
+        init(dataSource, selectArguments) {
             if (dataSource == null)
                 throw wuzhui.Errors.argumentNull('dataSource');
             this._pageIndex = 0;
-            this._dataSource = dataSource;
+            this._selectArguments = selectArguments || new wuzhui.DataSourceSelectArguments();
             var pagingBar = this;
             pagingBar.totalRowCount = 1000000;
             dataSource.selected.add((source, args) => {
-                pagingBar._pageSize = dataSource.selectArguments.maximumRows;
+                pagingBar._pageSize = this._selectArguments.maximumRows;
                 var totalRowCount = args.totalRowCount;
                 if (totalRowCount != null && totalRowCount >= 0) {
                     pagingBar.totalRowCount = totalRowCount;
                 }
-                var startRowIndex = dataSource.selectArguments.startRowIndex;
+                var startRowIndex = this._selectArguments.startRowIndex;
                 if (startRowIndex <= 0)
                     startRowIndex = 0;
                 pagingBar._pageIndex = Math.floor(startRowIndex / pagingBar._pageSize);
@@ -593,6 +596,9 @@ var wuzhui;
                 pagingBar.totalRowCount = pagingBar.totalRowCount + 1;
                 pagingBar.render();
             });
+        }
+        get selectArguments() {
+            return this._selectArguments;
         }
         get pageCount() {
             var pageCount = Math.ceil(this.totalRowCount / this.pageSize);
@@ -623,7 +629,6 @@ var wuzhui;
     }
     wuzhui.PagingBar = PagingBar;
     class NumberPagingBar extends PagingBar {
-        // private buttonWrapper: string;
         constructor(params) {
             if (!params.dataSource)
                 throw wuzhui.Errors.argumentNull('dataSource');
@@ -644,10 +649,10 @@ var wuzhui;
             this.numberButtons = new Array();
             this.createButton = this.createPagingButton;
             this.createLabel = this.createTotalLabel;
-            let buttonContainer = params.pagerSettings.buttonContainerWraper ?
-                document.createElement(params.pagerSettings.buttonContainerWraper) :
+            let buttonContainer = pagerSettings.buttonContainerWraper ?
+                document.createElement(pagerSettings.buttonContainerWraper) :
                 document.createElement('div');
-            buttonContainer.className = params.pagerSettings.buttonContainerClassName || "buttons";
+            buttonContainer.className = pagerSettings.buttonContainerClassName || "buttons";
             this.element.appendChild(buttonContainer);
             this.createPreviousButtons(buttonContainer);
             this.createNumberButtons(buttonContainer);
@@ -656,7 +661,7 @@ var wuzhui;
                 this.totalElement = this.createLabel();
                 this.totalElement.visible = false;
             }
-            this.init(params.dataSource);
+            this.init(params.dataSource, params.selectArguments);
         }
         createPagingButton(container) {
             var pagerSettings = this.pagerSettings;
@@ -806,11 +811,11 @@ var wuzhui;
             if (!pageIndex == null) {
                 return;
             }
-            let args = pagingBar.dataSource.selectArguments;
+            let args = pagingBar.selectArguments;
             args.maximumRows = pagingBar.pageSize;
             args.startRowIndex = pageIndex * pagingBar.pageSize;
             pagingBar.pageIndex = pageIndex;
-            pagingBar.dataSource.select();
+            pagingBar.dataSource.select(pagingBar.selectArguments);
         }
         render() {
             var pagerSettings = this.pagerSettings;
@@ -1070,11 +1075,11 @@ var wuzhui;
             this.style(field.headerStyle);
         }
         handleSort() {
-            let selectArguments = this.field.gridView.dataSource.selectArguments;
+            let selectArguments = this.field.gridView.selectArguments;
             let sortType = this.sortType == 'asc' ? 'desc' : 'asc';
             wuzhui.fireCallback(this.sorting, this, { sortType });
             selectArguments.sortExpression = this.field.sortExpression + ' ' + sortType;
-            return this.field.gridView.dataSource.select()
+            return this.field.gridView.dataSource.select(selectArguments)
                 .then(() => {
                 this.sortType = sortType;
                 wuzhui.fireCallback(this.sorted, this, { sortType });

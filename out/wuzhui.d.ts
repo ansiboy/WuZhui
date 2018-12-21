@@ -38,7 +38,6 @@ declare namespace wuzhui {
         readonly canDelete: boolean;
         readonly canInsert: boolean;
         readonly canUpdate: boolean;
-        readonly selectArguments: DataSourceSelectArguments;
         private executeInsert;
         private executeDelete;
         private executeUpdate;
@@ -49,7 +48,7 @@ declare namespace wuzhui {
         update(item: T, args?: any): Promise<any>;
         isSameItem(theItem: T, otherItem: T): boolean;
         private checkPrimaryKeys;
-        select(): Promise<DataSourceSelectResult<T>>;
+        select(args: DataSourceSelectArguments): Promise<DataSourceSelectResult<T>>;
         private processError;
     }
     class DataSourceSelectArguments {
@@ -136,7 +135,10 @@ declare namespace wuzhui {
         rowCreated: Callback1<GridView<T>, {
             row: GridViewRow;
         }>;
+        private pagingBar;
+        _selectArguments: any;
         constructor(params: GridViewArguments<T>);
+        readonly selectArguments: any;
         private createPagingBar;
         readonly columns: DataControlField<T>[];
         readonly dataSource: DataSource<T>;
@@ -181,10 +183,11 @@ declare namespace wuzhui {
     }
     abstract class PagingBar {
         private _pageIndex;
-        private _dataSource;
         private _totalRowCount;
         private _pageSize;
-        init(dataSource: DataSource<{}>): void;
+        private _selectArguments;
+        init(dataSource: DataSource<{}>, selectArguments: DataSourceSelectArguments): void;
+        readonly selectArguments: any;
         readonly pageCount: number;
         pageSize: number;
         pageIndex: number;
@@ -220,6 +223,7 @@ declare namespace wuzhui {
             dataSource: DataSource<any>;
             element: HTMLElement;
             pagerSettings?: PagerSettings;
+            selectArguments?: DataSourceSelectArguments;
         });
         private createPagingButton;
         private createTotalLabel;
