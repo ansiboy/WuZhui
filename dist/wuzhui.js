@@ -1,7 +1,7 @@
 
  
 /*!
- * WUZHUI v1.1.5
+ * WUZHUI v1.1.8
  * https://github.com/ansiboy/WuZhui
  *
  * Copyright (c) 2016-2018, shu mai <ansiboy@163.com>
@@ -98,9 +98,6 @@ var wuzhui;
         get canUpdate() {
             return this.args.update != null && this.primaryKeys.length > 0;
         }
-        // get selectArguments() {
-        //     return this._currentSelectArguments;
-        // }
         executeInsert(item, args) {
             return this.args.insert(item, args);
         }
@@ -154,7 +151,7 @@ var wuzhui;
                 throw wuzhui.Errors.argumentNull("item");
             this.checkPrimaryKeys(item);
             this.updating.fire(this, item);
-            return this.args.update(item, args).then((data) => {
+            return this.executeUpdate(item, args).then((data) => {
                 Object.assign(item, data);
                 this.updated.fire(this, item);
                 return data;
@@ -187,7 +184,7 @@ var wuzhui;
         select(args) {
             console.assert(args != null);
             wuzhui.fireCallback(this.selecting, this, args);
-            return this.args.select(args).then((data) => {
+            return this.executeSelect(args).then((data) => {
                 let dataItems;
                 let totalRowCount;
                 if (Array.isArray(data)) {
@@ -444,11 +441,10 @@ var wuzhui;
                 let cell = cells[j];
                 if (cell instanceof wuzhui.GridViewDataCell) {
                     let value = cell.dataField ? dataItem[cell.dataField] : dataItem;
-                    if (value !== undefined) {
-                        // cell.value = value;
-                        cell.render(value);
-                        dataItem[cell.dataField] = value;
-                    }
+                    // if (value !== undefined) {
+                    cell.render(value);
+                    // dataItem[cell.dataField] = value;
+                    // }
                 }
             }
             wuzhui.fireCallback(this.rowCreated, this, { row });
@@ -513,11 +509,9 @@ var wuzhui;
                     let cell = cells[j];
                     if (cell instanceof wuzhui.GridViewDataCell) {
                         let value = cell.dataField ? item[cell.dataField] : item;
-                        if (value !== undefined) {
-                            // cell.value = value;
-                            cell.render(value);
+                        cell.render(value);
+                        if (cell.dataField)
                             dataItem[cell.dataField] = value;
-                        }
                     }
                 }
                 break;

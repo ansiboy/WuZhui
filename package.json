@@ -1,6 +1,6 @@
 {
   "name": "maishu-wuzhui",
-  "version": "1.1.5",
+  "version": "1.1.8",
   "main": "dist/wuzhui.js",
   "scripts": {
     "build": "grunt build"

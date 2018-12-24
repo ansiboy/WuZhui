@@ -38,10 +38,10 @@ declare namespace wuzhui {
         readonly canDelete: boolean;
         readonly canInsert: boolean;
         readonly canUpdate: boolean;
-        private executeInsert;
-        private executeDelete;
-        private executeUpdate;
-        private executeSelect;
+        executeInsert(item: T, args?: any): Promise<any>;
+        executeDelete(item: T, args?: any): Promise<any>;
+        executeUpdate(item: T, args?: any): Promise<any>;
+        executeSelect(args: DataSourceSelectArguments): Promise<any>;
         insert(item: T): any;
         insert(item: T, index?: number): any;
         delete(item: T, args?: any): Promise<any>;
