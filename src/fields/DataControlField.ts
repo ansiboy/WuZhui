@@ -95,7 +95,6 @@ namespace wuzhui {
         }
 
         private formatDate(value: Date, format: string): string {
-            const TEN = 10
             let y = value.getFullYear()
             let m = value.getMonth() + 1
             let d = value.getDate()
@@ -104,7 +103,8 @@ namespace wuzhui {
             let s = value.getSeconds()
 
             let twoDigit = function (value: number): string {
-                if (value < 10)
+                const TEN = 10
+                if (value < TEN)
                     return `0` + value
 
                 return value.toString()
