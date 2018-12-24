@@ -245,11 +245,10 @@ namespace wuzhui {
                 let cell = cells[j];
                 if (cell instanceof GridViewDataCell) {
                     let value = cell.dataField ? dataItem[cell.dataField] : dataItem;
-                    if (value !== undefined) {
-                        // cell.value = value;
-                        cell.render(value);
-                        dataItem[cell.dataField] = value;
-                    }
+                    // if (value !== undefined) {
+                    cell.render(value);
+                    // dataItem[cell.dataField] = value;
+                    // }
                 }
             }
 
@@ -327,11 +326,9 @@ namespace wuzhui {
                     let cell = cells[j];
                     if (cell instanceof GridViewDataCell) {
                         let value = cell.dataField ? item[cell.dataField] : item;
-                        if (value !== undefined) {
-                            // cell.value = value;
-                            cell.render(value);
+                        cell.render(value);
+                        if (cell.dataField)
                             dataItem[cell.dataField] = value;
-                        }
                     }
                 }
 
