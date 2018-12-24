@@ -42,20 +42,16 @@ namespace wuzhui {
             return this.args.update != null && this.primaryKeys.length > 0;
         }
 
-        // get selectArguments() {
-        //     return this._currentSelectArguments;
-        // }
-
-        private executeInsert(item: T, args?: any): Promise<any> {
+        executeInsert(item: T, args?: any): Promise<any> {
             return this.args.insert(item, args);
         }
-        private executeDelete(item: T, args?: any): Promise<any> {
+        executeDelete(item: T, args?: any): Promise<any> {
             return this.args.delete(item, args);
         }
-        private executeUpdate(item: T, args?: any): Promise<any> {
+        executeUpdate(item: T, args?: any): Promise<any> {
             return this.args.update(item, args);
         }
-        private executeSelect(args: DataSourceSelectArguments): Promise<any> {
+        executeSelect(args: DataSourceSelectArguments): Promise<any> {
             return this.args.select(args);
         }
 
@@ -109,7 +105,7 @@ namespace wuzhui {
 
             this.checkPrimaryKeys(item);
             this.updating.fire(this, item);
-            return this.args.update(item, args).then((data) => {
+            return this.executeUpdate(item, args).then((data) => {
                 Object.assign(item, data);
                 this.updated.fire(this, item);
                 return data;
@@ -148,7 +144,7 @@ namespace wuzhui {
             console.assert(args != null);
 
             fireCallback(this.selecting, this, args);
-            return this.args.select(args).then((data) => {
+            return this.executeSelect(args).then((data) => {
                 let dataItems: Array<T>;
                 let totalRowCount: number
                 if (Array.isArray(data)) {
