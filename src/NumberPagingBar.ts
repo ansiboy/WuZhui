@@ -36,7 +36,7 @@ namespace wuzhui {
         private _pageIndex: number;
         private _totalRowCount: number;
         private _pageSize: number;
-        private _selectArguments;
+        private _selectArguments: DataSourceSelectArguments;
 
         init(dataSource: DataSource<{}>, selectArguments: DataSourceSelectArguments) {
             if (dataSource == null)

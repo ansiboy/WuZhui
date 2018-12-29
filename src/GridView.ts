@@ -90,10 +90,6 @@ namespace wuzhui {
     }
 
     export class GridView<T> extends Control<HTMLTableElement> {
-        private _pageSize: number;
-        private _selectedRowStyle: string;
-        private _showFooter: boolean;
-        private _showHeader: boolean;
         private _columns: Array<DataControlField<T>>;
         private _dataSource: DataSource<T>;
         private _header: Control<HTMLTableSectionElement>;
@@ -120,7 +116,8 @@ namespace wuzhui {
 
         rowCreated = callbacks<GridView<T>, { row: GridViewRow }>();
         private pagingBar: NumberPagingBar;
-        _selectArguments: any;
+
+        readonly selectArguments: DataSourceSelectArguments;
 
         constructor(params: GridViewArguments<T>) {
 
@@ -193,13 +190,13 @@ namespace wuzhui {
                 }
             }
 
-            this._selectArguments = this.pagingBar ? this.pagingBar.selectArguments : new DataSourceSelectArguments()
-            this.dataSource.select(this._selectArguments);
+            this.selectArguments = this.pagingBar ? this.pagingBar.selectArguments : new DataSourceSelectArguments()
+            this.dataSource.select(this.selectArguments);
         }
 
-        get selectArguments() {
-            return this._selectArguments;
-        }
+        // get selectArguments() {
+        //     return this._selectArguments;
+        // }
 
         private createPagingBar(pagerSettings?: PagerSettings) {
             var pagingBarContainer = document.createElement('tr');

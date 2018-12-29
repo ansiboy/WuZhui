@@ -42,16 +42,16 @@ namespace wuzhui {
             return this.args.update != null && this.primaryKeys.length > 0;
         }
 
-        executeInsert(item: T, args?: any): Promise<any> {
+        executeInsert(item: T, args?: any) {
             return this.args.insert(item, args);
         }
-        executeDelete(item: T, args?: any): Promise<any> {
+        executeDelete(item: T, args?: any) {
             return this.args.delete(item, args);
         }
-        executeUpdate(item: T, args?: any): Promise<any> {
+        executeUpdate(item: T, args?: any) {
             return this.args.update(item, args);
         }
-        executeSelect(args: DataSourceSelectArguments): Promise<any> {
+        executeSelect(args: DataSourceSelectArguments) {
             return this.args.select(args);
         }
 
@@ -188,9 +188,24 @@ namespace wuzhui {
 
     export type DataSourceArguments<T> = {
         primaryKeys?: (keyof T)[]
-        select: ((args: DataSourceSelectArguments) => Promise<Array<T> | DataSourceSelectResult<T>>),
+        select: ((args: DataSourceSelectArguments) => Promise<DataSourceSelectResult<T> | T[]>),
         insert?: ((item: T, args?: any) => Promise<any>),
         update?: ((item: T, args?: any) => Promise<any>),
         delete?: ((item: T, args?: any) => Promise<any>)
     };
+
+    export class ArrayDataSource<T> extends DataSource<T> {
+        constructor(items: T[]) {
+            super({
+                async select(args) {
+                    if (args.sortExpression) {
+
+                    }
+                    let dataItems = items.slice(args.startRowIndex, args.startRowIndex + args.maximumRows)
+                    let result = { dataItems, totalRowCount: items.length }
+                    return result
+                }
+            })
+        }
+    }
 }
