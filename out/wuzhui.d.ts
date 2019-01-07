@@ -7,7 +7,7 @@ declare namespace wuzhui {
         visible: boolean;
         readonly element: T;
         appendChild(child: Control<any> | HTMLElement, index?: number): void;
-        style(value: CSSStyleDeclaration | string): void;
+        style(value: Partial<CSSStyleDeclaration> | string): void;
         static getControlByElement(element: HTMLElement): Control<any>;
     }
 }
@@ -41,7 +41,7 @@ declare namespace wuzhui {
         executeInsert(item: T, args?: any): Promise<any>;
         executeDelete(item: T, args?: any): Promise<any>;
         executeUpdate(item: T, args?: any): Promise<any>;
-        executeSelect(args: DataSourceSelectArguments): Promise<any>;
+        executeSelect(args: DataSourceSelectArguments): Promise<DataSourceSelectResult<T> | T[]>;
         insert(item: T): any;
         insert(item: T, index?: number): any;
         delete(item: T, args?: any): Promise<any>;
@@ -60,11 +60,14 @@ declare namespace wuzhui {
     }
     type DataSourceArguments<T> = {
         primaryKeys?: (keyof T)[];
-        select: ((args: DataSourceSelectArguments) => Promise<Array<T> | DataSourceSelectResult<T>>);
+        select: ((args: DataSourceSelectArguments) => Promise<DataSourceSelectResult<T> | T[]>);
         insert?: ((item: T, args?: any) => Promise<any>);
         update?: ((item: T, args?: any) => Promise<any>);
         delete?: ((item: T, args?: any) => Promise<any>);
     };
+    class ArrayDataSource<T> extends DataSource<T> {
+        constructor(items: T[]);
+    }
 }
 declare namespace wuzhui {
     class Errors {
@@ -114,10 +117,6 @@ declare namespace wuzhui {
         initDataHTML?: string;
     }
     class GridView<T> extends Control<HTMLTableElement> {
-        private _pageSize;
-        private _selectedRowStyle;
-        private _showFooter;
-        private _showHeader;
         private _columns;
         private _dataSource;
         private _header;
@@ -136,9 +135,8 @@ declare namespace wuzhui {
             row: GridViewRow;
         }>;
         private pagingBar;
-        _selectArguments: any;
+        readonly selectArguments: DataSourceSelectArguments;
         constructor(params: GridViewArguments<T>);
-        readonly selectArguments: any;
         private createPagingBar;
         readonly columns: DataControlField<T>[];
         readonly dataSource: DataSource<T>;
@@ -187,7 +185,7 @@ declare namespace wuzhui {
         private _pageSize;
         private _selectArguments;
         init(dataSource: DataSource<{}>, selectArguments: DataSourceSelectArguments): void;
-        readonly selectArguments: any;
+        readonly selectArguments: DataSourceSelectArguments;
         readonly pageCount: number;
         pageSize: number;
         pageIndex: number;
@@ -242,7 +240,7 @@ declare namespace wuzhui {
         static data(element: HTMLElement, name: string, value?: any): any;
         static findFirstParentByTagName(element: Element, tagName: string): HTMLElement;
     }
-    function applyStyle(element: HTMLElement, value: CSSStyleDeclaration | string): void;
+    function applyStyle(element: HTMLElement, value: Partial<CSSStyleDeclaration> | string): void;
     class Callback {
         private funcs;
         constructor();
@@ -288,9 +286,9 @@ declare namespace wuzhui {
     interface DataControlFieldParams {
         footerText?: string;
         headerText?: string;
-        itemStyle?: string | CSSStyleDeclaration;
-        headerStyle?: string | CSSStyleDeclaration;
-        footerStyle?: string | CSSStyleDeclaration;
+        itemStyle?: string | Partial<CSSStyleDeclaration>;
+        headerStyle?: string | Partial<CSSStyleDeclaration>;
+        footerStyle?: string | Partial<CSSStyleDeclaration>;
         visible?: boolean;
         sortExpression?: string;
     }
@@ -332,9 +330,9 @@ declare namespace wuzhui {
         * Sets the text that is displayed in the header item of a data control field.
         */
         headerText: string;
-        itemStyle: string | CSSStyleDeclaration;
-        footerStyle: string | CSSStyleDeclaration;
-        headerStyle: string | CSSStyleDeclaration;
+        itemStyle: string | Partial<CSSStyleDeclaration>;
+        footerStyle: string | Partial<CSSStyleDeclaration>;
+        headerStyle: string | Partial<CSSStyleDeclaration>;
         readonly visible: boolean;
         gridView: GridView<any>;
         /**

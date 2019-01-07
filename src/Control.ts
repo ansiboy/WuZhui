@@ -50,12 +50,12 @@ namespace wuzhui {
             }
         }
 
-        style(value: CSSStyleDeclaration | string) {
+        style(value: Partial<CSSStyleDeclaration> | string) {
             applyStyle(this.element, value);
         }
 
         static getControlByElement(element: HTMLElement): Control<any> {
-            return ElementHelper.data(element, CONTROL_DATA_NAME); 
+            return ElementHelper.data(element, CONTROL_DATA_NAME);
         }
     }
 }

@@ -12,6 +12,30 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) {
+            try {
+                step(generator.next(value));
+            } catch (e) {
+                reject(e);
+            }
+        }
+        function rejected(value) {
+            try {
+                step(generator["throw"](value));
+            } catch (e) {
+                reject(e);
+            }
+        }
+        function step(result) {
+            result.done ? resolve(result.value) : new P(function (resolve) {
+                resolve(result.value);
+            }).then(fulfilled, rejected);
+        }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var wuzhui;
 (function (wuzhui) {
     var CONTROL_DATA_NAME = 'Control';
@@ -276,6 +300,41 @@ var wuzhui;
     };
 
     wuzhui.DataSourceSelectArguments = DataSourceSelectArguments;
+
+    var ArrayDataSource = function (_DataSource) {
+        _inherits(ArrayDataSource, _DataSource);
+
+        function ArrayDataSource(items) {
+            _classCallCheck(this, ArrayDataSource);
+
+            return _possibleConstructorReturn(this, (ArrayDataSource.__proto__ || Object.getPrototypeOf(ArrayDataSource)).call(this, {
+                select: function select(args) {
+                    return __awaiter(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+                        var dataItems, result;
+                        return regeneratorRuntime.wrap(function _callee$(_context) {
+                            while (1) {
+                                switch (_context.prev = _context.next) {
+                                    case 0:
+                                        if (args.sortExpression) {}
+                                        dataItems = items.slice(args.startRowIndex, args.startRowIndex + args.maximumRows);
+                                        result = { dataItems: dataItems, totalRowCount: items.length };
+                                        return _context.abrupt('return', result);
+
+                                    case 4:
+                                    case 'end':
+                                        return _context.stop();
+                                }
+                            }
+                        }, _callee, this);
+                    }));
+                }
+            }));
+        }
+
+        return ArrayDataSource;
+    }(DataSource);
+
+    wuzhui.ArrayDataSource = ArrayDataSource;
 })(wuzhui || (wuzhui = {}));
 var wuzhui;
 (function (wuzhui) {
@@ -368,10 +427,10 @@ var wuzhui;
 
             var element = document.createElement('tr');
 
-            var _this5 = _possibleConstructorReturn(this, (GridViewRow.__proto__ || Object.getPrototypeOf(GridViewRow)).call(this, element));
+            var _this6 = _possibleConstructorReturn(this, (GridViewRow.__proto__ || Object.getPrototypeOf(GridViewRow)).call(this, element));
 
-            _this5._rowType = rowType;
-            return _this5;
+            _this6._rowType = rowType;
+            return _this6;
         }
 
         _createClass(GridViewRow, [{
@@ -414,16 +473,16 @@ var wuzhui;
         function GridViewDataRow(gridView, dataItem) {
             _classCallCheck(this, GridViewDataRow);
 
-            var _this6 = _possibleConstructorReturn(this, (GridViewDataRow.__proto__ || Object.getPrototypeOf(GridViewDataRow)).call(this, GridViewRowType.Data));
+            var _this7 = _possibleConstructorReturn(this, (GridViewDataRow.__proto__ || Object.getPrototypeOf(GridViewDataRow)).call(this, GridViewRowType.Data));
 
-            _this6._dataItem = dataItem;
+            _this7._dataItem = dataItem;
             for (var i = 0; i < gridView.columns.length; i++) {
                 var column = gridView.columns[i];
                 var cell = column.createItemCell(dataItem);
                 cell.visible = column.visible;
-                _this6.appendChild(cell);
+                _this7.appendChild(cell);
             }
-            return _this6;
+            return _this7;
         }
 
         _createClass(GridViewDataRow, [{
@@ -444,11 +503,11 @@ var wuzhui;
         function GridView(params) {
             _classCallCheck(this, GridView);
 
-            var _this7 = _possibleConstructorReturn(this, (GridView.__proto__ || Object.getPrototypeOf(GridView)).call(this, params.element || document.createElement('table')));
+            var _this8 = _possibleConstructorReturn(this, (GridView.__proto__ || Object.getPrototypeOf(GridView)).call(this, params.element || document.createElement('table')));
 
-            _this7.emptyDataHTML = '暂无记录';
-            _this7.initDataHTML = '数据正在加载中...';
-            _this7.loadFailHTML = '加载数据失败，点击重新加载。';
+            _this8.emptyDataHTML = '暂无记录';
+            _this8.initDataHTML = '数据正在加载中...';
+            _this8.loadFailHTML = '加载数据失败，点击重新加载。';
             //========================================================
             // 样式
             // headerStyle: string;
@@ -457,44 +516,44 @@ var wuzhui;
             // alternatingRowStyle: string;
             //private emptyDataRowStyle: string;
             //========================================================
-            _this7.rowCreated = wuzhui.callbacks();
+            _this8.rowCreated = wuzhui.callbacks();
             params = Object.assign({
                 showHeader: true, showFooter: false,
                 allowPaging: false
             }, params);
-            _this7._params = params;
-            _this7._columns = params.columns || [];
-            if (_this7._columns.length == 0) throw wuzhui.Errors.columnsCanntEmpty();
-            for (var i = 0; i < _this7._columns.length; i++) {
-                var column = _this7._columns[i];
-                column.gridView = _this7;
+            _this8._params = params;
+            _this8._columns = params.columns || [];
+            if (_this8._columns.length == 0) throw wuzhui.Errors.columnsCanntEmpty();
+            for (var i = 0; i < _this8._columns.length; i++) {
+                var column = _this8._columns[i];
+                column.gridView = _this8;
             }
-            _this7._dataSource = params.dataSource;
-            _this7._dataSource.selected.add(function (sender, e) {
-                return _this7.on_selectExecuted(e.dataItems);
+            _this8._dataSource = params.dataSource;
+            _this8._dataSource.selected.add(function (sender, e) {
+                return _this8.on_selectExecuted(e.dataItems);
             });
-            _this7._dataSource.updated.add(function (sender, item) {
-                return _this7.on_updateExecuted(item);
+            _this8._dataSource.updated.add(function (sender, item) {
+                return _this8.on_updateExecuted(item);
             });
-            _this7._dataSource.inserted.add(function (sender, item, index) {
-                return _this7.on_insertExecuted(item, index);
+            _this8._dataSource.inserted.add(function (sender, item, index) {
+                return _this8.on_insertExecuted(item, index);
             });
-            _this7._dataSource.deleted.add(function (sender, item) {
-                return _this7.on_deleteExecuted(item);
+            _this8._dataSource.deleted.add(function (sender, item) {
+                return _this8.on_deleteExecuted(item);
             });
-            _this7._dataSource.selecting.add(function (sender, e) {
-                var display = _this7._emtpyRow.element.style.display;
+            _this8._dataSource.selecting.add(function (sender, e) {
+                var display = _this8._emtpyRow.element.style.display;
                 if (display != 'none') {
-                    _this7._emtpyRow.element.cells[0].innerHTML = _this7.initDataHTML;
+                    _this8._emtpyRow.element.cells[0].innerHTML = _this8.initDataHTML;
                 }
             });
-            _this7._dataSource.error.add(function (sender, e) {
+            _this8._dataSource.error.add(function (sender, e) {
                 if (e.method == 'select') {
-                    _this7.on_selectExecuted([]);
-                    var element = _this7._emtpyRow.cells[0].element;
-                    element.innerHTML = _this7.loadFailHTML;
+                    _this8.on_selectExecuted([]);
+                    var element = _this8._emtpyRow.cells[0].element;
+                    element.innerHTML = _this8.loadFailHTML;
                     element.onclick = function () {
-                        _this7._dataSource.select(_this7.selectArguments);
+                        _this8._dataSource.select(_this8.selectArguments);
                     };
                     e.handled = true;
                     console.error(e.message);
@@ -502,29 +561,33 @@ var wuzhui;
                 }
             });
             if (params.showHeader) {
-                _this7._header = new wuzhui.Control(document.createElement('thead'));
-                _this7.appendChild(_this7._header);
-                _this7.appendHeaderRow();
+                _this8._header = new wuzhui.Control(document.createElement('thead'));
+                _this8.appendChild(_this8._header);
+                _this8.appendHeaderRow();
             }
-            _this7.emptyDataHTML = params.emptyDataHTML || _this7.emptyDataHTML;
-            _this7.initDataHTML = params.initDataHTML || _this7.initDataHTML;
-            _this7._body = new wuzhui.Control(document.createElement('tbody'));
-            _this7.appendChild(_this7._body);
-            _this7.appendEmptyRow();
+            _this8.emptyDataHTML = params.emptyDataHTML || _this8.emptyDataHTML;
+            _this8.initDataHTML = params.initDataHTML || _this8.initDataHTML;
+            _this8._body = new wuzhui.Control(document.createElement('tbody'));
+            _this8.appendChild(_this8._body);
+            _this8.appendEmptyRow();
             var allowPaging = params.pageSize;
             if (params.showFooter || allowPaging) {
-                _this7._footer = new wuzhui.Control(document.createElement('tfoot'));
-                _this7.appendChild(_this7._footer);
-                if (params.showFooter) _this7.appendFooterRow();
+                _this8._footer = new wuzhui.Control(document.createElement('tfoot'));
+                _this8.appendChild(_this8._footer);
+                if (params.showFooter) _this8.appendFooterRow();
                 if (allowPaging) {
-                    _this7.createPagingBar(params.pagerSettings);
-                    _this7.pagingBar.selectArguments.maximumRows = params.pageSize;
+                    _this8.createPagingBar(params.pagerSettings);
+                    _this8.pagingBar.selectArguments.maximumRows = params.pageSize;
                 }
             }
-            _this7._selectArguments = _this7.pagingBar ? _this7.pagingBar.selectArguments : new wuzhui.DataSourceSelectArguments();
-            _this7.dataSource.select(_this7._selectArguments);
-            return _this7;
+            _this8.selectArguments = _this8.pagingBar ? _this8.pagingBar.selectArguments : new wuzhui.DataSourceSelectArguments();
+            _this8.dataSource.select(_this8.selectArguments);
+            return _this8;
         }
+        // get selectArguments() {
+        //     return this._selectArguments;
+        // }
+
 
         _createClass(GridView, [{
             key: 'createPagingBar',
@@ -585,7 +648,7 @@ var wuzhui;
         }, {
             key: 'appendHeaderRow',
             value: function appendHeaderRow() {
-                var _this8 = this;
+                var _this9 = this;
 
                 var row = new GridViewRow(GridViewRowType.Header);
                 for (var i = 0; i < this.columns.length; i++) {
@@ -593,7 +656,7 @@ var wuzhui;
                     var cell = column.createHeaderCell();
                     if (cell instanceof wuzhui.GridViewHeaderCell) {
                         cell.sorting.add(function (e, a) {
-                            return _this8.on_sort(e, a);
+                            return _this9.on_sort(e, a);
                         });
                     }
                     row.appendChild(cell);
@@ -685,11 +748,6 @@ var wuzhui;
                 this._emtpyRow.element.style.display = 'none';
             }
         }, {
-            key: 'selectArguments',
-            get: function get() {
-                return this._selectArguments;
-            }
-        }, {
             key: 'columns',
             get: function get() {
                 return this._columns;
@@ -727,7 +785,7 @@ var wuzhui;
         _createClass(PagingBar, [{
             key: 'init',
             value: function init(dataSource, selectArguments) {
-                var _this9 = this;
+                var _this10 = this;
 
                 if (dataSource == null) throw wuzhui.Errors.argumentNull('dataSource');
                 this._pageIndex = 0;
@@ -735,12 +793,12 @@ var wuzhui;
                 var pagingBar = this;
                 pagingBar.totalRowCount = 1000000;
                 dataSource.selected.add(function (source, args) {
-                    pagingBar._pageSize = _this9._selectArguments.maximumRows;
+                    pagingBar._pageSize = _this10._selectArguments.maximumRows;
                     var totalRowCount = args.totalRowCount;
                     if (totalRowCount != null && totalRowCount >= 0) {
                         pagingBar.totalRowCount = totalRowCount;
                     }
-                    var startRowIndex = _this9._selectArguments.startRowIndex;
+                    var startRowIndex = _this10._selectArguments.startRowIndex;
                     if (startRowIndex <= 0) startRowIndex = 0;
                     pagingBar._pageIndex = Math.floor(startRowIndex / pagingBar._pageSize);
                     pagingBar.render();
@@ -820,32 +878,32 @@ var wuzhui;
                 showTotal: true
             }, params.pagerSettings || {});
 
-            var _this10 = _possibleConstructorReturn(this, (NumberPagingBar.__proto__ || Object.getPrototypeOf(NumberPagingBar)).call(this));
+            var _this11 = _possibleConstructorReturn(this, (NumberPagingBar.__proto__ || Object.getPrototypeOf(NumberPagingBar)).call(this));
 
-            _this10.dataSource = params.dataSource;
-            _this10.pagerSettings = pagerSettings;
-            _this10.element = params.element;
-            _this10.numberButtons = new Array();
-            _this10.createButton = _this10.createPagingButton;
-            _this10.createLabel = _this10.createTotalLabel;
+            _this11.dataSource = params.dataSource;
+            _this11.pagerSettings = pagerSettings;
+            _this11.element = params.element;
+            _this11.numberButtons = new Array();
+            _this11.createButton = _this11.createPagingButton;
+            _this11.createLabel = _this11.createTotalLabel;
             var buttonContainer = pagerSettings.buttonContainerWraper ? document.createElement(pagerSettings.buttonContainerWraper) : document.createElement('div');
             buttonContainer.className = pagerSettings.buttonContainerClassName || "buttons";
-            _this10.element.appendChild(buttonContainer);
-            _this10.createPreviousButtons(buttonContainer);
-            _this10.createNumberButtons(buttonContainer);
-            _this10.createNextButtons(buttonContainer);
-            if (_this10.pagerSettings.showTotal) {
-                _this10.totalElement = _this10.createLabel();
-                _this10.totalElement.visible = false;
+            _this11.element.appendChild(buttonContainer);
+            _this11.createPreviousButtons(buttonContainer);
+            _this11.createNumberButtons(buttonContainer);
+            _this11.createNextButtons(buttonContainer);
+            if (_this11.pagerSettings.showTotal) {
+                _this11.totalElement = _this11.createLabel();
+                _this11.totalElement.visible = false;
             }
-            _this10.init(params.dataSource, params.selectArguments);
-            return _this10;
+            _this11.init(params.dataSource, params.selectArguments);
+            return _this11;
         }
 
         _createClass(NumberPagingBar, [{
             key: 'createPagingButton',
             value: function createPagingButton(container) {
-                var _this11 = this;
+                var _this12 = this;
 
                 var pagerSettings = this.pagerSettings;
                 var button = document.createElement('a');
@@ -915,7 +973,7 @@ var wuzhui;
                 };
                 button.onclick = function () {
                     if (result.onclick) {
-                        result.onclick(result, _this11);
+                        result.onclick(result, _this12);
                     }
                 };
                 return result;
@@ -1189,18 +1247,18 @@ var wuzhui;
         function GridViewDataCell(params) {
             _classCallCheck(this, GridViewDataCell);
 
-            var _this13 = _possibleConstructorReturn(this, (GridViewDataCell.__proto__ || Object.getPrototypeOf(GridViewDataCell)).call(this));
+            var _this14 = _possibleConstructorReturn(this, (GridViewDataCell.__proto__ || Object.getPrototypeOf(GridViewDataCell)).call(this));
 
             params = params || {};
-            _this13.nullText = params.nullText != null ? params.nullText : '';
-            _this13.dataFormatString = params.dataFormatString;
-            _this13.dataField = params.dataField;
+            _this14.nullText = params.nullText != null ? params.nullText : '';
+            _this14.dataFormatString = params.dataFormatString;
+            _this14.dataField = params.dataField;
             if (params.render) {
-                _this13.render = function (value) {
-                    return params.render(value, _this13.element);
+                _this14.render = function (value) {
+                    return params.render(value, _this14.element);
                 };
             }
-            return _this13;
+            return _this14;
         }
 
         _createClass(GridViewDataCell, [{
@@ -1250,7 +1308,6 @@ var wuzhui;
         }, {
             key: 'formatDate',
             value: function formatDate(value, format) {
-                var TEN = 10;
                 var y = value.getFullYear();
                 var m = value.getMonth() + 1;
                 var d = value.getDate();
@@ -1258,7 +1315,8 @@ var wuzhui;
                 var M = value.getMinutes();
                 var s = value.getSeconds();
                 var twoDigit = function twoDigit(value) {
-                    if (value < 10) return '0' + value;
+                    var TEN = 10;
+                    if (value < TEN) return '0' + value;
                     return value.toString();
                 };
                 switch (format) {
@@ -1302,49 +1360,49 @@ var wuzhui;
         function GridViewHeaderCell(field) {
             _classCallCheck(this, GridViewHeaderCell);
 
-            var _this14 = _possibleConstructorReturn(this, (GridViewHeaderCell.__proto__ || Object.getPrototypeOf(GridViewHeaderCell)).call(this, document.createElement('th')));
+            var _this15 = _possibleConstructorReturn(this, (GridViewHeaderCell.__proto__ || Object.getPrototypeOf(GridViewHeaderCell)).call(this, document.createElement('th')));
 
-            _this14.ascHTML = '↑';
-            _this14.descHTML = '↓';
-            _this14.sortingHTML = '...';
-            _this14.field = field;
-            _this14.sorting = wuzhui.callbacks();
-            _this14.sorted = wuzhui.callbacks();
+            _this15.ascHTML = '↑';
+            _this15.descHTML = '↓';
+            _this15.sortingHTML = '...';
+            _this15.field = field;
+            _this15.sorting = wuzhui.callbacks();
+            _this15.sorted = wuzhui.callbacks();
             if (field.sortExpression) {
                 var labelElement = document.createElement('a');
                 labelElement.href = 'javascript:';
-                labelElement.innerHTML = _this14.defaultHeaderText();
+                labelElement.innerHTML = _this15.defaultHeaderText();
                 labelElement.onclick = function () {
-                    return _this14.handleSort();
+                    return _this15.handleSort();
                 };
-                _this14._iconElement = document.createElement('span');
-                _this14.appendChild(labelElement);
-                _this14.appendChild(_this14._iconElement);
-                _this14.sorting.add(function () {
-                    return _this14._iconElement.innerHTML = _this14.sortingHTML;
+                _this15._iconElement = document.createElement('span');
+                _this15.appendChild(labelElement);
+                _this15.appendChild(_this15._iconElement);
+                _this15.sorting.add(function () {
+                    return _this15._iconElement.innerHTML = _this15.sortingHTML;
                 });
-                _this14.sorted.add(function () {
-                    return _this14.updateSortIcon();
+                _this15.sorted.add(function () {
+                    return _this15.updateSortIcon();
                 });
             } else {
-                _this14.element.innerHTML = _this14.defaultHeaderText();
+                _this15.element.innerHTML = _this15.defaultHeaderText();
             }
-            _this14.style(field.headerStyle);
-            return _this14;
+            _this15.style(field.headerStyle);
+            return _this15;
         }
 
         _createClass(GridViewHeaderCell, [{
             key: 'handleSort',
             value: function handleSort() {
-                var _this15 = this;
+                var _this16 = this;
 
                 var selectArguments = this.field.gridView.selectArguments;
                 var sortType = this.sortType == 'asc' ? 'desc' : 'asc';
                 wuzhui.fireCallback(this.sorting, this, { sortType: sortType });
                 selectArguments.sortExpression = this.field.sortExpression + ' ' + sortType;
                 return this.field.gridView.dataSource.select(selectArguments).then(function () {
-                    _this15.sortType = sortType;
-                    wuzhui.fireCallback(_this15.sorted, _this15, { sortType: sortType });
+                    _this16.sortType = sortType;
+                    wuzhui.fireCallback(_this16.sorted, _this16, { sortType: sortType });
                 });
             }
         }, {
@@ -1517,20 +1575,20 @@ var wuzhui;
             if (field == null) throw wuzhui.Errors.argumentNull('field');
             if (dataItem == null) throw wuzhui.Errors.argumentNull('dataItem');
 
-            var _this16 = _possibleConstructorReturn(this, (GridViewEditableCell.__proto__ || Object.getPrototypeOf(GridViewEditableCell)).call(this, {
+            var _this17 = _possibleConstructorReturn(this, (GridViewEditableCell.__proto__ || Object.getPrototypeOf(GridViewEditableCell)).call(this, {
                 dataField: field.dataField,
                 nullText: field.nullText, dataFormatString: field.dataFormatString
             }));
 
-            _this16._field = field;
-            _this16._dataItem = dataItem;
-            _this16._valueType = valueType;
-            _this16._mode = 'read';
-            if (!_this16._valueType) {
+            _this17._field = field;
+            _this17._dataItem = dataItem;
+            _this17._valueType = valueType;
+            _this17._mode = 'read';
+            if (!_this17._valueType) {
                 var value = dataItem[field.dataField];
-                if (value instanceof Date) _this16._valueType = 'date';else _this16._valueType = typeof value === 'undefined' ? 'undefined' : _typeof(value);
+                if (value instanceof Date) _this17._valueType = 'date';else _this17._valueType = typeof value === 'undefined' ? 'undefined' : _typeof(value);
             }
-            return _this16;
+            return _this17;
         }
 
         _createClass(GridViewEditableCell, [{
@@ -1614,11 +1672,11 @@ var wuzhui;
         function BoundField(params) {
             _classCallCheck(this, BoundField);
 
-            var _this17 = _possibleConstructorReturn(this, (BoundField.__proto__ || Object.getPrototypeOf(BoundField)).call(this, params));
+            var _this18 = _possibleConstructorReturn(this, (BoundField.__proto__ || Object.getPrototypeOf(BoundField)).call(this, params));
 
-            _this17._params = params;
-            _this17._valueElement = document.createElement('span');
-            return _this17;
+            _this18._params = params;
+            _this18._valueElement = document.createElement('span');
+            return _this18;
         }
 
         _createClass(BoundField, [{
@@ -1701,16 +1759,16 @@ var wuzhui;
 
             // private _updating = false;
             // private _deleting = false;
-            var _this19 = _possibleConstructorReturn(this, (CommandField.__proto__ || Object.getPrototypeOf(CommandField)).call(this, params));
+            var _this20 = _possibleConstructorReturn(this, (CommandField.__proto__ || Object.getPrototypeOf(CommandField)).call(this, params));
 
-            _this19.currentMode = 'read';
-            if (!_this19.params().cancelButtonHTML) _this19.params().cancelButtonHTML = '取消';
-            if (!_this19.params().deleteButtonHTML) _this19.params().deleteButtonHTML = '删除';
-            if (!_this19.params().editButtonHTML) _this19.params().editButtonHTML = '编辑';
-            if (!_this19.params().updateButtonHTML) _this19.params().updateButtonHTML = '更新';
-            if (!_this19.params().newButtonHTML) _this19.params().newButtonHTML = '新增';
-            if (!_this19.params().insertButtonHTML) _this19.params().insertButtonHTML = '添加';
-            return _this19;
+            _this20.currentMode = 'read';
+            if (!_this20.params().cancelButtonHTML) _this20.params().cancelButtonHTML = '取消';
+            if (!_this20.params().deleteButtonHTML) _this20.params().deleteButtonHTML = '删除';
+            if (!_this20.params().editButtonHTML) _this20.params().editButtonHTML = '编辑';
+            if (!_this20.params().updateButtonHTML) _this20.params().updateButtonHTML = '更新';
+            if (!_this20.params().newButtonHTML) _this20.params().newButtonHTML = '新增';
+            if (!_this20.params().insertButtonHTML) _this20.params().insertButtonHTML = '添加';
+            return _this20;
         }
 
         _createClass(CommandField, [{
@@ -1721,7 +1779,7 @@ var wuzhui;
         }, {
             key: 'createItemCell',
             value: function createItemCell(dataItem) {
-                var _this20 = this;
+                var _this21 = this;
 
                 var cell = new GridViewCommandCell(this);
                 cell.style(this.itemStyle);
@@ -1731,7 +1789,7 @@ var wuzhui;
                     if (this.editButtonClass) editButton.className = this.editButtonClass;
                     cell.editButton = editButton;
                     editButton.addEventListener('click', function (e) {
-                        return _this20.on_editButtonClick(e);
+                        return _this21.on_editButtonClick(e);
                     });
                     cell.appendChild(editButton);
                     var updateButton = this.createUpdateButton();
@@ -1740,7 +1798,7 @@ var wuzhui;
                     if (this.updateButtonClass) updateButton.className = this.updateButtonClass;
                     cell.updateButton = updateButton;
                     updateButton.addEventListener('click', function (e) {
-                        return _this20.on_insertOrUpdateButtonClick(e);
+                        return _this21.on_insertOrUpdateButtonClick(e);
                     });
                     cell.appendChild(updateButton);
                     var cancelButton = this.createCancelButton();
@@ -1749,7 +1807,7 @@ var wuzhui;
                     if (this.cancelButtonClass) cancelButton.className = this.cancelButtonClass;
                     cell.cacelButton = cancelButton;
                     cancelButton.addEventListener('click', function (e) {
-                        return _this20.on_cancelButtonClick(e);
+                        return _this21.on_cancelButtonClick(e);
                     });
                     cell.appendChild(cancelButton);
                 }
@@ -1759,7 +1817,7 @@ var wuzhui;
                     if (this.deleteButtonClass) deleteButton.className = this.deleteButtonClass;
                     cell.deleteButton = deleteButton;
                     deleteButton.onclick = function (e) {
-                        return _this20.on_deleteButtonClick(e);
+                        return _this21.on_deleteButtonClick(e);
                     };
                     cell.appendChild(deleteButton);
                 }
@@ -1768,7 +1826,7 @@ var wuzhui;
                     newButton.style.marginRight = '4px';
                     if (this.newButtonClass) newButton.className = this.newButtonClass;
                     newButton.onclick = function (e) {
-                        return _this20.on_newButtonClick(e);
+                        return _this21.on_newButtonClick(e);
                     };
                     cell.newButton = newButton;
                     cell.appendChild(newButton);
@@ -1776,7 +1834,7 @@ var wuzhui;
                     insertButton.style.display = 'none';
                     insertButton.style.marginRight = '4px';
                     insertButton.addEventListener('click', function (e) {
-                        return _this20.on_insertOrUpdateButtonClick(e);
+                        return _this21.on_insertOrUpdateButtonClick(e);
                     });
                     if (this.insertButtonClass) insertButton.className = this.updateButtonClass;
                     cell.insertButton = insertButton;
@@ -1785,7 +1843,7 @@ var wuzhui;
                     _cancelButton.style.display = 'none';
                     _cancelButton.style.marginRight = '4px';
                     _cancelButton.addEventListener('click', function (e) {
-                        return _this20.on_cancelButtonClick(e);
+                        return _this21.on_cancelButtonClick(e);
                     });
                     if (this.cancelButtonClass) _cancelButton.className = this.cancelButtonClass;
                     cell.cacelButton = _cancelButton;
@@ -1925,7 +1983,7 @@ var wuzhui;
         }, {
             key: 'on_insertOrUpdateButtonClick',
             value: function on_insertOrUpdateButtonClick(e) {
-                var _this21 = this;
+                var _this22 = this;
 
                 if (e.target['_updating']) e.target['_updating'] = true;
                 var cellElement = wuzhui.ElementHelper.findFirstParentByTagName(e.target, 'td');
@@ -1956,7 +2014,7 @@ var wuzhui;
                         return item.endEdit();
                     });
                     var cell = wuzhui.Control.getControlByElement(cellElement);
-                    _this21.showReadStatusButtons(cell);
+                    _this22.showReadStatusButtons(cell);
                     e.target['_updating'] = false;
                 }).catch(function () {
                     return e.target['_updating'] = false;
@@ -1975,7 +2033,7 @@ var wuzhui;
         }, {
             key: 'on_newButtonClick',
             value: function on_newButtonClick(e) {
-                var _this22 = this;
+                var _this23 = this;
 
                 var rowElement = wuzhui.ElementHelper.findFirstParentByTagName(e.target, "tr"); //cellElement.parentElement as HTMLTableRowElement;
                 var row = wuzhui.Control.getControlByElement(rowElement);
@@ -1991,11 +2049,11 @@ var wuzhui;
                     return c.beginEdit();
                 });
                 commandCells.forEach(function (cell) {
-                    if (cell.deleteButton) _this22.hideButton(cell.deleteButton);
-                    if (cell.editButton) _this22.hideButton(cell.editButton);
-                    _this22.hideButton(cell.newButton);
-                    _this22.showButton(cell.insertButton);
-                    _this22.showButton(cell.cacelButton);
+                    if (cell.deleteButton) _this23.hideButton(cell.deleteButton);
+                    if (cell.editButton) _this23.hideButton(cell.editButton);
+                    _this23.hideButton(cell.newButton);
+                    _this23.showButton(cell.insertButton);
+                    _this23.showButton(cell.cacelButton);
                 });
             }
         }, {
@@ -2106,7 +2164,7 @@ var wuzhui;
             key: 'createItemCell',
             value: function createItemCell(dataItem) {
                 if (this.params().createItemCell) {
-                    var cell = this.params().createItemCell(dataItem);
+                    var cell = this.params().createItemCell.apply(this, [dataItem]);
                     cell.style(this.params().itemStyle);
                     return cell;
                 }

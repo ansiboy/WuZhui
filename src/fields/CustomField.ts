@@ -34,7 +34,7 @@ namespace wuzhui {
         }
         createItemCell(dataItem: any): GridViewCell {
             if (this.params().createItemCell) {
-                let cell = this.params().createItemCell(dataItem);
+                let cell = this.params().createItemCell.apply(this, [dataItem]);
                 cell.style(this.params().itemStyle);
                 return cell;
             }

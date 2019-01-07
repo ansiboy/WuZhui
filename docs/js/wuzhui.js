@@ -1,7 +1,7 @@
 
  
 /*!
- * WUZHUI v1.1.8
+ * WUZHUI v1.1.9
  * https://github.com/ansiboy/WuZhui
  *
  * Copyright (c) 2016-2018, shu mai <ansiboy@163.com>
@@ -20,7 +20,15 @@
          factory();
      } 
  })(function() {
- var wuzhui;
+ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var wuzhui;
 (function (wuzhui) {
     const CONTROL_DATA_NAME = 'Control';
     class Control {
@@ -220,6 +228,22 @@ var wuzhui;
         }
     }
     wuzhui.DataSourceSelectArguments = DataSourceSelectArguments;
+    class ArrayDataSource extends DataSource {
+        constructor(items) {
+            super({
+                select(args) {
+                    return __awaiter(this, void 0, void 0, function* () {
+                        if (args.sortExpression) {
+                        }
+                        let dataItems = items.slice(args.startRowIndex, args.startRowIndex + args.maximumRows);
+                        let result = { dataItems, totalRowCount: items.length };
+                        return result;
+                    });
+                }
+            });
+        }
+    }
+    wuzhui.ArrayDataSource = ArrayDataSource;
 })(wuzhui || (wuzhui = {}));
 var wuzhui;
 (function (wuzhui) {
@@ -397,12 +421,12 @@ var wuzhui;
                     this.pagingBar.selectArguments.maximumRows = params.pageSize;
                 }
             }
-            this._selectArguments = this.pagingBar ? this.pagingBar.selectArguments : new wuzhui.DataSourceSelectArguments();
-            this.dataSource.select(this._selectArguments);
+            this.selectArguments = this.pagingBar ? this.pagingBar.selectArguments : new wuzhui.DataSourceSelectArguments();
+            this.dataSource.select(this.selectArguments);
         }
-        get selectArguments() {
-            return this._selectArguments;
-        }
+        // get selectArguments() {
+        //     return this._selectArguments;
+        // }
         createPagingBar(pagerSettings) {
             var pagingBarContainer = document.createElement('tr');
             var pagingBarElement = document.createElement('td');
@@ -1003,7 +1027,6 @@ var wuzhui;
             return result;
         }
         formatDate(value, format) {
-            const TEN = 10;
             let y = value.getFullYear();
             let m = value.getMonth() + 1;
             let d = value.getDate();
@@ -1011,7 +1034,8 @@ var wuzhui;
             let M = value.getMinutes();
             let s = value.getSeconds();
             let twoDigit = function (value) {
-                if (value < 10)
+                const TEN = 10;
+                if (value < TEN)
                     return `0` + value;
                 return value.toString();
             };
@@ -1648,7 +1672,7 @@ var wuzhui;
         }
         createItemCell(dataItem) {
             if (this.params().createItemCell) {
-                let cell = this.params().createItemCell(dataItem);
+                let cell = this.params().createItemCell.apply(this, [dataItem]);
                 cell.style(this.params().itemStyle);
                 return cell;
             }

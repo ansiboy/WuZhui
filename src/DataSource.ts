@@ -11,7 +11,6 @@ namespace wuzhui {
 
     export type DataMethod = 'select' | 'update' | 'delete' | 'insert';
     export class DataSource<T> {
-        private _currentSelectArguments: DataSourceSelectArguments;
         private args: DataSourceArguments<T>;
         private primaryKeys: (keyof T)[];
 
@@ -29,8 +28,6 @@ namespace wuzhui {
         constructor(args: DataSourceArguments<T>) {
             this.args = args;
             this.primaryKeys = args.primaryKeys || [];
-            this._currentSelectArguments = new DataSourceSelectArguments();
-
         }
         get canDelete() {
             return this.args.delete != null && this.primaryKeys.length > 0;

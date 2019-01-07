@@ -143,9 +143,9 @@ namespace wuzhui {
     export interface DataControlFieldParams {
         footerText?: string,
         headerText?: string,
-        itemStyle?: string | CSSStyleDeclaration;
-        headerStyle?: string | CSSStyleDeclaration;
-        footerStyle?: string | CSSStyleDeclaration;
+        itemStyle?: string | Partial<CSSStyleDeclaration>;
+        headerStyle?: string | Partial<CSSStyleDeclaration>;
+        footerStyle?: string | Partial<CSSStyleDeclaration>;
         visible?: boolean,
         sortExpression?: string
     }
@@ -268,22 +268,22 @@ namespace wuzhui {
             this._params.headerText = value;
         }
 
-        public get itemStyle(): string | CSSStyleDeclaration {
+        public get itemStyle(): string | Partial<CSSStyleDeclaration> {
             return this._params.itemStyle;
         }
-        public set itemStyle(value: string | CSSStyleDeclaration) {
+        public set itemStyle(value: string | Partial<CSSStyleDeclaration>) {
             this._params.itemStyle = value;
         }
-        public get footerStyle(): string | CSSStyleDeclaration {
+        public get footerStyle(): string | Partial<CSSStyleDeclaration> {
             return this._params.footerStyle;
         }
-        public set footerStyle(value: string | CSSStyleDeclaration) {
+        public set footerStyle(value: string | Partial<CSSStyleDeclaration>) {
             this._params.footerStyle = value;
         }
-        public get headerStyle(): string | CSSStyleDeclaration {
+        public get headerStyle(): string | Partial<CSSStyleDeclaration> {
             return this._params.headerStyle;
         }
-        public set headerStyle(value: string | CSSStyleDeclaration) {
+        public set headerStyle(value: string | Partial<CSSStyleDeclaration>) {
             this._params.headerStyle = value;
         }
         get visible(): boolean {

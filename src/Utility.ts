@@ -40,7 +40,7 @@ namespace wuzhui {
         }
     }
 
-    export function applyStyle(element: HTMLElement, value: CSSStyleDeclaration | string) {
+    export function applyStyle(element: HTMLElement, value: Partial<CSSStyleDeclaration> | string) {
         let style = value || '';
         if (typeof style == 'string') {
             element.setAttribute('style', style);
