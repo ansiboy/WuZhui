@@ -1,7 +1,7 @@
 
  
 /*!
- * WUZHUI v1.1.9
+ * WUZHUI v1.1.11
  * https://github.com/ansiboy/WuZhui
  *
  * Copyright (c) 2016-2018, shu mai <ansiboy@163.com>
@@ -95,7 +95,6 @@ var wuzhui;
             this.error = wuzhui.callbacks();
             this.args = args;
             this.primaryKeys = args.primaryKeys || [];
-            this._currentSelectArguments = new DataSourceSelectArguments();
         }
         get canDelete() {
             return this.args.delete != null && this.primaryKeys.length > 0;
@@ -464,9 +463,9 @@ var wuzhui;
             for (let j = 0; j < cells.length; j++) {
                 let cell = cells[j];
                 if (cell instanceof wuzhui.GridViewDataCell) {
-                    let value = cell.dataField ? dataItem[cell.dataField] : dataItem;
+                    // let value = cell.dataField ? dataItem[cell.dataField] : dataItem;
                     // if (value !== undefined) {
-                    cell.render(value);
+                    cell.render(dataItem);
                     // dataItem[cell.dataField] = value;
                     // }
                 }
@@ -526,16 +525,20 @@ var wuzhui;
                 if (!(row instanceof GridViewDataRow))
                     continue;
                 let dataItem = row.dataItem;
-                if (!this.dataSource.isSameItem(item, dataItem))
+                if (!this.dataSource.isSameItem(dataItem, item))
                     continue;
+                if (dataItem != item) {
+                    Object.assign(dataItem, item);
+                }
                 let cells = row.cells;
                 for (let j = 0; j < cells.length; j++) {
                     let cell = cells[j];
                     if (cell instanceof wuzhui.GridViewDataCell) {
-                        let value = cell.dataField ? item[cell.dataField] : item;
-                        cell.render(value);
-                        if (cell.dataField)
-                            dataItem[cell.dataField] = value;
+                        // let value = cell.dataField ? item[cell.dataField] : item;
+                        // let value = Object.assign({}, dataItem, item);
+                        cell.render(dataItem);
+                        // if (cell.dataField)
+                        //     dataItem[cell.dataField] = value;
                     }
                 }
                 break;
@@ -967,22 +970,23 @@ var wuzhui;
     class GridViewDataCell extends GridViewCell {
         constructor(params) {
             super();
-            params = params || {};
-            this.nullText = params.nullText != null ? params.nullText : '';
-            this.dataFormatString = params.dataFormatString;
-            this.dataField = params.dataField;
-            if (params.render) {
-                this.render = (value) => params.render(value, this.element);
+            let p = params;
+            this.nullText = p.nullText != null ? p.nullText : '';
+            this.dataFormatString = p.dataFormatString;
+            this.dataField = p.dataField;
+            if (p.render) {
+                this.render = (dataItem) => p.render(dataItem, this.element);
             }
         }
-        render(value) {
+        render(dataItem) {
+            let value = dataItem[this.dataField];
             var text;
             if (value == null)
                 text = this.nullText;
             else if (this.dataFormatString)
                 text = this.formatValue(this.dataFormatString, value);
             else
-                text = value;
+                text = `${value}`;
             this.element.innerHTML = text;
         }
         formatValue(format, arg) {
@@ -1253,8 +1257,8 @@ var wuzhui;
                 return;
             }
             this._mode = 'edit';
-            let value = this._dataItem[this.field.dataField];
-            this.render(value);
+            // let value = this._dataItem[this.field.dataField];
+            this.render(this._dataItem);
         }
         endEdit() {
             if (this._field.readOnly) {
@@ -1262,26 +1266,28 @@ var wuzhui;
             }
             this._mode = 'read';
             let value = this.controlValue;
-            this._dataItem[this.field.dataField] = value;
-            this.render(value);
+            // this._dataItem[this.field.dataField] = value;
+            this.render(this._dataItem);
         }
         cancelEdit() {
             if (this._field.readOnly) {
                 return;
             }
             this._mode = 'read';
-            let value = this._dataItem[this.field.dataField];
-            this.render(value);
+            // let value = this._dataItem[this.field.dataField];
+            this.render(this._dataItem);
         }
-        render(value) {
+        render(dataItem) {
+            //value
+            let value = dataItem[this.field.dataField];
             if (this._mode == 'edit') {
                 this.element.innerHTML = `<input type="text" />`;
                 wuzhui.applyStyle(this.element.querySelector('input'), this._field.controlStyle);
                 this.element.querySelector('input').value =
-                    value === undefined ? null : value;
+                    value === undefined ? null : `${value}`;
                 return;
             }
-            super.render(value);
+            super.render(dataItem);
         }
         //==============================================
         // Virtual Methods

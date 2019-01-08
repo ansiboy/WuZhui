@@ -241,9 +241,9 @@ namespace wuzhui {
             for (let j = 0; j < cells.length; j++) {
                 let cell = cells[j];
                 if (cell instanceof GridViewDataCell) {
-                    let value = cell.dataField ? dataItem[cell.dataField] : dataItem;
+                    // let value = cell.dataField ? dataItem[cell.dataField] : dataItem;
                     // if (value !== undefined) {
-                    cell.render(value);
+                    cell.render(dataItem);
                     // dataItem[cell.dataField] = value;
                     // }
                 }
@@ -305,7 +305,7 @@ namespace wuzhui {
             }
         }
 
-        private on_updateExecuted(item: any) {
+        private on_updateExecuted(item: Partial<T>) {
             console.assert(item != null);
             for (let i = 0; i < this._body.element.rows.length; i++) {
                 let row_element = this._body.element.rows[i] as HTMLElement;
@@ -315,17 +315,22 @@ namespace wuzhui {
 
 
                 let dataItem = (row as GridViewDataRow).dataItem;
-                if (!this.dataSource.isSameItem(item, dataItem))
+                if (!this.dataSource.isSameItem(dataItem, item))
                     continue;
+
+                if (dataItem != item) {
+                    Object.assign(dataItem, item)
+                }
 
                 let cells = row.cells;
                 for (let j = 0; j < cells.length; j++) {
                     let cell = cells[j];
                     if (cell instanceof GridViewDataCell) {
-                        let value = cell.dataField ? item[cell.dataField] : item;
-                        cell.render(value);
-                        if (cell.dataField)
-                            dataItem[cell.dataField] = value;
+                        // let value = cell.dataField ? item[cell.dataField] : item;
+                        // let value = Object.assign({}, dataItem, item);
+                        cell.render(dataItem);
+                        // if (cell.dataField)
+                        //     dataItem[cell.dataField] = value;
                     }
                 }
 

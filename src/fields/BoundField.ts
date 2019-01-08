@@ -47,8 +47,8 @@ namespace wuzhui {
             }
 
             this._mode = 'edit';
-            let value = this._dataItem[this.field.dataField];
-            this.render(value);
+            // let value = this._dataItem[this.field.dataField];
+            this.render(this._dataItem);
         }
         endEdit() {
             if (this._field.readOnly) {
@@ -57,8 +57,8 @@ namespace wuzhui {
 
             this._mode = 'read';
             let value = this.controlValue;
-            this._dataItem[this.field.dataField] = value;
-            this.render(value);
+            // this._dataItem[this.field.dataField] = value;
+            this.render(this._dataItem);
         }
         cancelEdit() {
             if (this._field.readOnly) {
@@ -66,21 +66,23 @@ namespace wuzhui {
             }
 
             this._mode = 'read';
-            let value = this._dataItem[this.field.dataField];
-            this.render(value);
+            // let value = this._dataItem[this.field.dataField];
+            this.render(this._dataItem);
         }
 
-        render(value) {
+        render(dataItem: T) {
+            //value
+            let value = dataItem[this.field.dataField];
             if (this._mode == 'edit') {
                 this.element.innerHTML = `<input type="text" />`;
 
                 applyStyle(this.element.querySelector('input'), this._field.controlStyle);
                 this.element.querySelector('input').value =
-                    value === undefined ? null : value;
+                    value === undefined ? null : `${value}`;
                 return;
             }
 
-            super.render(value);
+            super.render(dataItem);
         }
 
         //==============================================

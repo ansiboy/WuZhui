@@ -22,7 +22,6 @@ declare namespace wuzhui {
     }
     type DataMethod = 'select' | 'update' | 'delete' | 'insert';
     class DataSource<T> {
-        private _currentSelectArguments;
         private args;
         private primaryKeys;
         inserting: Callback2<DataSource<T>, T, number>;
@@ -41,12 +40,12 @@ declare namespace wuzhui {
         executeInsert(item: T, args?: any): Promise<any>;
         executeDelete(item: T, args?: any): Promise<any>;
         executeUpdate(item: T, args?: any): Promise<any>;
-        executeSelect(args: DataSourceSelectArguments): Promise<DataSourceSelectResult<T> | T[]>;
+        executeSelect(args: DataSourceSelectArguments): Promise<DataSourceSelectResult<T>>;
         insert(item: T): any;
         insert(item: T, index?: number): any;
         delete(item: T, args?: any): Promise<any>;
         update(item: T, args?: any): Promise<any>;
-        isSameItem(theItem: T, otherItem: T): boolean;
+        isSameItem(theItem: T, otherItem: Partial<T>): boolean;
         private checkPrimaryKeys;
         select(args: DataSourceSelectArguments): Promise<DataSourceSelectResult<T>>;
         private processError;
@@ -60,10 +59,10 @@ declare namespace wuzhui {
     }
     type DataSourceArguments<T> = {
         primaryKeys?: (keyof T)[];
-        select: ((args: DataSourceSelectArguments) => Promise<DataSourceSelectResult<T> | T[]>);
-        insert?: ((item: T, args?: any) => Promise<any>);
-        update?: ((item: T, args?: any) => Promise<any>);
-        delete?: ((item: T, args?: any) => Promise<any>);
+        select: ((args: DataSourceSelectArguments) => Promise<DataSourceSelectResult<T>>);
+        insert?: ((item: Partial<T>, args?: any) => Promise<any>);
+        update?: ((item: Partial<T>, args?: any) => Promise<any>);
+        delete?: ((item: Partial<T>, args?: any) => Promise<any>);
     };
     class ArrayDataSource<T> extends DataSource<T> {
         constructor(items: T[]);
@@ -267,18 +266,20 @@ declare namespace wuzhui {
     class GridViewCell extends Control<HTMLTableCellElement> {
         constructor();
     }
+    type GridViewDataCellArgument1<T> = {
+        dataField: keyof T;
+        nullText?: string;
+        dataFormatString?: string;
+    };
+    type GridViewDataCellArgument2<T> = {
+        render: (dataItem: Partial<T>, element: HTMLElement) => void;
+    };
     class GridViewDataCell<T> extends GridViewCell {
-        private _value;
         private nullText;
         private dataFormatString;
         dataField: keyof T;
-        constructor(params?: {
-            dataField?: keyof T;
-            render?: (value: any, element: HTMLElement) => void;
-            nullText?: string;
-            dataFormatString?: string;
-        });
-        render(value: any): void;
+        constructor(params: GridViewDataCellArgument1<T> | GridViewDataCellArgument2<T>);
+        render(dataItem: Partial<T>): void;
         private formatValue;
         private formatDate;
         private formatNumber;
@@ -360,7 +361,7 @@ declare namespace wuzhui {
         beginEdit(): void;
         endEdit(): void;
         cancelEdit(): void;
-        render(value: any): void;
+        render(dataItem: T): void;
         readonly controlValue: string | number | Date;
     }
     interface BoundFieldParams<T> extends DataControlFieldParams {

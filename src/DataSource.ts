@@ -111,7 +111,7 @@ namespace wuzhui {
                 throw exc;
             });
         }
-        isSameItem(theItem: T, otherItem: T) {
+        isSameItem(theItem: T, otherItem: Partial<T>) {
             if (theItem == null)
                 throw Errors.argumentNull('theItem');
 
@@ -131,7 +131,7 @@ namespace wuzhui {
 
             return true;
         }
-        private checkPrimaryKeys(item: T) {
+        private checkPrimaryKeys(item: Partial<T>) {
             for (let key in item) {
                 if (item[key] == null && this.primaryKeys.indexOf(key) >= 0)
                     throw Errors.primaryKeyNull(key);
@@ -185,10 +185,10 @@ namespace wuzhui {
 
     export type DataSourceArguments<T> = {
         primaryKeys?: (keyof T)[]
-        select: ((args: DataSourceSelectArguments) => Promise<DataSourceSelectResult<T> | T[]>),
-        insert?: ((item: T, args?: any) => Promise<any>),
-        update?: ((item: T, args?: any) => Promise<any>),
-        delete?: ((item: T, args?: any) => Promise<any>)
+        select: ((args: DataSourceSelectArguments) => Promise<DataSourceSelectResult<T>>),
+        insert?: ((item: Partial<T>, args?: any) => Promise<any>),
+        update?: ((item: Partial<T>, args?: any) => Promise<any>),
+        delete?: ((item: Partial<T>, args?: any) => Promise<any>)
     };
 
     export class ArrayDataSource<T> extends DataSource<T> {

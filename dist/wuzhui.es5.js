@@ -116,7 +116,6 @@ var wuzhui;
             this.error = wuzhui.callbacks();
             this.args = args;
             this.primaryKeys = args.primaryKeys || [];
-            this._currentSelectArguments = new DataSourceSelectArguments();
         }
 
         _createClass(DataSource, [{
@@ -626,9 +625,9 @@ var wuzhui;
                 for (var j = 0; j < cells.length; j++) {
                     var cell = cells[j];
                     if (cell instanceof wuzhui.GridViewDataCell) {
-                        var value = cell.dataField ? dataItem[cell.dataField] : dataItem;
+                        // let value = cell.dataField ? dataItem[cell.dataField] : dataItem;
                         // if (value !== undefined) {
-                        cell.render(value);
+                        cell.render(dataItem);
                         // dataItem[cell.dataField] = value;
                         // }
                     }
@@ -700,14 +699,19 @@ var wuzhui;
                     ;
                     if (!(row instanceof GridViewDataRow)) continue;
                     var dataItem = row.dataItem;
-                    if (!this.dataSource.isSameItem(item, dataItem)) continue;
+                    if (!this.dataSource.isSameItem(dataItem, item)) continue;
+                    if (dataItem != item) {
+                        Object.assign(dataItem, item);
+                    }
                     var cells = row.cells;
                     for (var j = 0; j < cells.length; j++) {
                         var cell = cells[j];
                         if (cell instanceof wuzhui.GridViewDataCell) {
-                            var value = cell.dataField ? item[cell.dataField] : item;
-                            cell.render(value);
-                            if (cell.dataField) dataItem[cell.dataField] = value;
+                            // let value = cell.dataField ? item[cell.dataField] : item;
+                            // let value = Object.assign({}, dataItem, item);
+                            cell.render(dataItem);
+                            // if (cell.dataField)
+                            //     dataItem[cell.dataField] = value;
                         }
                     }
                     break;
@@ -1249,13 +1253,13 @@ var wuzhui;
 
             var _this14 = _possibleConstructorReturn(this, (GridViewDataCell.__proto__ || Object.getPrototypeOf(GridViewDataCell)).call(this));
 
-            params = params || {};
-            _this14.nullText = params.nullText != null ? params.nullText : '';
-            _this14.dataFormatString = params.dataFormatString;
-            _this14.dataField = params.dataField;
-            if (params.render) {
-                _this14.render = function (value) {
-                    return params.render(value, _this14.element);
+            var p = params;
+            _this14.nullText = p.nullText != null ? p.nullText : '';
+            _this14.dataFormatString = p.dataFormatString;
+            _this14.dataField = p.dataField;
+            if (p.render) {
+                _this14.render = function (dataItem) {
+                    return p.render(dataItem, _this14.element);
                 };
             }
             return _this14;
@@ -1263,9 +1267,10 @@ var wuzhui;
 
         _createClass(GridViewDataCell, [{
             key: 'render',
-            value: function render(value) {
+            value: function render(dataItem) {
+                var value = dataItem[this.dataField];
                 var text;
-                if (value == null) text = this.nullText;else if (this.dataFormatString) text = this.formatValue(this.dataFormatString, value);else text = value;
+                if (value == null) text = this.nullText;else if (this.dataFormatString) text = this.formatValue(this.dataFormatString, value);else text = '' + value;
                 this.element.innerHTML = text;
             }
         }, {
@@ -1598,8 +1603,8 @@ var wuzhui;
                     return;
                 }
                 this._mode = 'edit';
-                var value = this._dataItem[this.field.dataField];
-                this.render(value);
+                // let value = this._dataItem[this.field.dataField];
+                this.render(this._dataItem);
             }
         }, {
             key: 'endEdit',
@@ -1609,8 +1614,8 @@ var wuzhui;
                 }
                 this._mode = 'read';
                 var value = this.controlValue;
-                this._dataItem[this.field.dataField] = value;
-                this.render(value);
+                // this._dataItem[this.field.dataField] = value;
+                this.render(this._dataItem);
             }
         }, {
             key: 'cancelEdit',
@@ -1619,19 +1624,21 @@ var wuzhui;
                     return;
                 }
                 this._mode = 'read';
-                var value = this._dataItem[this.field.dataField];
-                this.render(value);
+                // let value = this._dataItem[this.field.dataField];
+                this.render(this._dataItem);
             }
         }, {
             key: 'render',
-            value: function render(value) {
+            value: function render(dataItem) {
+                //value
+                var value = dataItem[this.field.dataField];
                 if (this._mode == 'edit') {
                     this.element.innerHTML = '<input type="text" />';
                     wuzhui.applyStyle(this.element.querySelector('input'), this._field.controlStyle);
-                    this.element.querySelector('input').value = value === undefined ? null : value;
+                    this.element.querySelector('input').value = value === undefined ? null : '' + value;
                     return;
                 }
-                _get(GridViewEditableCell.prototype.__proto__ || Object.getPrototypeOf(GridViewEditableCell.prototype), 'render', this).call(this, value);
+                _get(GridViewEditableCell.prototype.__proto__ || Object.getPrototypeOf(GridViewEditableCell.prototype), 'render', this).call(this, dataItem);
             }
             //==============================================
             // Virtual Methods

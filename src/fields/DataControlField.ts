@@ -8,37 +8,44 @@ namespace wuzhui {
         }
     }
 
+
+    type GridViewDataCellArgument1<T> = {
+        dataField: keyof T,
+        nullText?: string, dataFormatString?: string
+    }
+
+    type GridViewDataCellArgument2<T> = {
+        render: (dataItem: Partial<T>, element: HTMLElement) => void
+    }
+
     export class GridViewDataCell<T> extends GridViewCell {
-        private _value: any;
         private nullText: string;
         private dataFormatString: string;
 
         dataField: keyof T;
 
-        constructor(params?: {
-            dataField?: keyof T,
-            render?: (value, element: HTMLElement) => void,
-            nullText?: string, dataFormatString?: string
-        }) {
+        constructor(params: GridViewDataCellArgument1<T> | GridViewDataCellArgument2<T>) {
             super();
 
-            params = params || {}
-            this.nullText = params.nullText != null ? params.nullText : '';
-            this.dataFormatString = params.dataFormatString;
-            this.dataField = params.dataField;
-            if (params.render) {
-                this.render = (value) => params.render(value, this.element);
+
+            let p = params as (GridViewDataCellArgument1<T> & GridViewDataCellArgument2<T>)
+            this.nullText = p.nullText != null ? p.nullText : '';
+            this.dataFormatString = p.dataFormatString;
+            this.dataField = p.dataField;
+            if (p.render) {
+                this.render = (dataItem) => p.render(dataItem, this.element);
             }
         }
 
-        render(value) {
+        render(dataItem: Partial<T>) {
+            let value = dataItem[this.dataField];
             var text: string;
             if (value == null)
                 text = this.nullText;
             else if (this.dataFormatString)
                 text = this.formatValue(this.dataFormatString, value);
             else
-                text = value;
+                text = `${value}`;
 
             this.element.innerHTML = text;
         }
