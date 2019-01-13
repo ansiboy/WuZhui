@@ -33,7 +33,7 @@ namespace wuzhui {
             this.dataFormatString = p.dataFormatString;
             this.dataField = p.dataField;
             if (p.render) {
-                this.render = (dataItem) => p.render(dataItem, this.element);
+                this.render = (dataItem) => p.render.apply(this, [dataItem, this.element]);
             }
         }
 

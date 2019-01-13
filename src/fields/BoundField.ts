@@ -47,7 +47,6 @@ namespace wuzhui {
             }
 
             this._mode = 'edit';
-            // let value = this._dataItem[this.field.dataField];
             this.render(this._dataItem);
         }
         endEdit() {
@@ -57,7 +56,6 @@ namespace wuzhui {
 
             this._mode = 'read';
             let value = this.controlValue;
-            // this._dataItem[this.field.dataField] = value;
             this.render(this._dataItem);
         }
         cancelEdit() {

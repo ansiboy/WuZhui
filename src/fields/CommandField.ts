@@ -9,7 +9,6 @@ namespace wuzhui {
         newButton: HTMLElement;
         updateButton: HTMLElement;
         insertButton: HTMLElement;
-        // cancelAddButton: HTMLElement;
 
         constructor(field: DataControlField<T>) {
             super()
@@ -38,10 +37,6 @@ namespace wuzhui {
     }
 
     export class CommandField<T> extends DataControlField<T> {
-        // private _updating = false;
-        // private _deleting = false;
-        private currentMode = 'read'
-
         constructor(params?: CommandFieldParams) {
             super(params);
             if (!this.params().cancelButtonHTML)

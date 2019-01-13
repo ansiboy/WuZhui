@@ -194,10 +194,6 @@ namespace wuzhui {
             this.dataSource.select(this.selectArguments);
         }
 
-        // get selectArguments() {
-        //     return this._selectArguments;
-        // }
-
         private createPagingBar(pagerSettings?: PagerSettings) {
             var pagingBarContainer = document.createElement('tr');
             var pagingBarElement = document.createElement('td');
@@ -223,7 +219,6 @@ namespace wuzhui {
 
             let cell = new GridViewCell();
             cell.element.colSpan = this.columns.length;
-            // cell.element.innerHTML = this.initDataHTML;
             if (!this._params.emptyDataRowStyle) {
                 applyStyle(cell.element, this._params.emptyDataRowStyle);
             }
@@ -241,11 +236,7 @@ namespace wuzhui {
             for (let j = 0; j < cells.length; j++) {
                 let cell = cells[j];
                 if (cell instanceof GridViewDataCell) {
-                    // let value = cell.dataField ? dataItem[cell.dataField] : dataItem;
-                    // if (value !== undefined) {
                     cell.render(dataItem);
-                    // dataItem[cell.dataField] = value;
-                    // }
                 }
             }
 
