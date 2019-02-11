@@ -56,7 +56,7 @@ namespace wuzhui {
                 }
 
                 var startRowIndex = this._selectArguments.startRowIndex;
-                if (startRowIndex <= 0)
+                if (startRowIndex == null || startRowIndex <= 0)
                     startRowIndex = 0;
 
                 pagingBar._pageIndex = Math.floor(startRowIndex / pagingBar._pageSize);
