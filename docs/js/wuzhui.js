@@ -1,7 +1,7 @@
 
  
 /*!
- * WUZHUI v1.1.11
+ * WUZHUI v1.1.12
  * https://github.com/ansiboy/WuZhui
  *
  * Copyright (c) 2016-2018, shu mai <ansiboy@163.com>
@@ -423,9 +423,6 @@ var wuzhui;
             this.selectArguments = this.pagingBar ? this.pagingBar.selectArguments : new wuzhui.DataSourceSelectArguments();
             this.dataSource.select(this.selectArguments);
         }
-        // get selectArguments() {
-        //     return this._selectArguments;
-        // }
         createPagingBar(pagerSettings) {
             var pagingBarContainer = document.createElement('tr');
             var pagingBarElement = document.createElement('td');
@@ -447,7 +444,6 @@ var wuzhui;
             this._emtpyRow.element.className = GridView.emptyRowClassName;
             let cell = new wuzhui.GridViewCell();
             cell.element.colSpan = this.columns.length;
-            // cell.element.innerHTML = this.initDataHTML;
             if (!this._params.emptyDataRowStyle) {
                 wuzhui.applyStyle(cell.element, this._params.emptyDataRowStyle);
             }
@@ -463,11 +459,7 @@ var wuzhui;
             for (let j = 0; j < cells.length; j++) {
                 let cell = cells[j];
                 if (cell instanceof wuzhui.GridViewDataCell) {
-                    // let value = cell.dataField ? dataItem[cell.dataField] : dataItem;
-                    // if (value !== undefined) {
                     cell.render(dataItem);
-                    // dataItem[cell.dataField] = value;
-                    // }
                 }
             }
             wuzhui.fireCallback(this.rowCreated, this, { row });
@@ -604,7 +596,7 @@ var wuzhui;
                     pagingBar.totalRowCount = totalRowCount;
                 }
                 var startRowIndex = this._selectArguments.startRowIndex;
-                if (startRowIndex <= 0)
+                if (startRowIndex == null || startRowIndex <= 0)
                     startRowIndex = 0;
                 pagingBar._pageIndex = Math.floor(startRowIndex / pagingBar._pageSize);
                 pagingBar.render();
@@ -975,7 +967,7 @@ var wuzhui;
             this.dataFormatString = p.dataFormatString;
             this.dataField = p.dataField;
             if (p.render) {
-                this.render = (dataItem) => p.render(dataItem, this.element);
+                this.render = (dataItem) => p.render.apply(this, [dataItem, this.element]);
             }
         }
         render(dataItem) {
@@ -1257,7 +1249,6 @@ var wuzhui;
                 return;
             }
             this._mode = 'edit';
-            // let value = this._dataItem[this.field.dataField];
             this.render(this._dataItem);
         }
         endEdit() {
@@ -1266,7 +1257,6 @@ var wuzhui;
             }
             this._mode = 'read';
             let value = this.controlValue;
-            // this._dataItem[this.field.dataField] = value;
             this.render(this._dataItem);
         }
         cancelEdit() {
@@ -1349,7 +1339,6 @@ var wuzhui;
 var wuzhui;
 (function (wuzhui) {
     class GridViewCommandCell extends wuzhui.GridViewCell {
-        // cancelAddButton: HTMLElement;
         constructor(field) {
             super();
         }
@@ -1357,9 +1346,6 @@ var wuzhui;
     class CommandField extends wuzhui.DataControlField {
         constructor(params) {
             super(params);
-            // private _updating = false;
-            // private _deleting = false;
-            this.currentMode = 'read';
             if (!this.params().cancelButtonHTML)
                 this.params().cancelButtonHTML = '取消';
             if (!this.params().deleteButtonHTML)

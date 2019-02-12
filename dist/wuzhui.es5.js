@@ -583,10 +583,6 @@ var wuzhui;
             _this8.dataSource.select(_this8.selectArguments);
             return _this8;
         }
-        // get selectArguments() {
-        //     return this._selectArguments;
-        // }
-
 
         _createClass(GridView, [{
             key: 'createPagingBar',
@@ -607,7 +603,6 @@ var wuzhui;
                 this._emtpyRow.element.className = GridView.emptyRowClassName;
                 var cell = new wuzhui.GridViewCell();
                 cell.element.colSpan = this.columns.length;
-                // cell.element.innerHTML = this.initDataHTML;
                 if (!this._params.emptyDataRowStyle) {
                     wuzhui.applyStyle(cell.element, this._params.emptyDataRowStyle);
                 }
@@ -625,11 +620,7 @@ var wuzhui;
                 for (var j = 0; j < cells.length; j++) {
                     var cell = cells[j];
                     if (cell instanceof wuzhui.GridViewDataCell) {
-                        // let value = cell.dataField ? dataItem[cell.dataField] : dataItem;
-                        // if (value !== undefined) {
                         cell.render(dataItem);
-                        // dataItem[cell.dataField] = value;
-                        // }
                     }
                 }
                 wuzhui.fireCallback(this.rowCreated, this, { row: row });
@@ -803,7 +794,7 @@ var wuzhui;
                         pagingBar.totalRowCount = totalRowCount;
                     }
                     var startRowIndex = _this10._selectArguments.startRowIndex;
-                    if (startRowIndex <= 0) startRowIndex = 0;
+                    if (startRowIndex == null || startRowIndex <= 0) startRowIndex = 0;
                     pagingBar._pageIndex = Math.floor(startRowIndex / pagingBar._pageSize);
                     pagingBar.render();
                 });
@@ -1259,7 +1250,7 @@ var wuzhui;
             _this14.dataField = p.dataField;
             if (p.render) {
                 _this14.render = function (dataItem) {
-                    return p.render(dataItem, _this14.element);
+                    return p.render.apply(_this14, [dataItem, _this14.element]);
                 };
             }
             return _this14;
@@ -1603,7 +1594,6 @@ var wuzhui;
                     return;
                 }
                 this._mode = 'edit';
-                // let value = this._dataItem[this.field.dataField];
                 this.render(this._dataItem);
             }
         }, {
@@ -1614,7 +1604,6 @@ var wuzhui;
                 }
                 this._mode = 'read';
                 var value = this.controlValue;
-                // this._dataItem[this.field.dataField] = value;
                 this.render(this._dataItem);
             }
         }, {
@@ -1748,7 +1737,6 @@ var wuzhui;
     var GridViewCommandCell = function (_wuzhui$GridViewCell) {
         _inherits(GridViewCommandCell, _wuzhui$GridViewCell);
 
-        // cancelAddButton: HTMLElement;
         function GridViewCommandCell(field) {
             _classCallCheck(this, GridViewCommandCell);
 
@@ -1764,11 +1752,8 @@ var wuzhui;
         function CommandField(params) {
             _classCallCheck(this, CommandField);
 
-            // private _updating = false;
-            // private _deleting = false;
             var _this20 = _possibleConstructorReturn(this, (CommandField.__proto__ || Object.getPrototypeOf(CommandField)).call(this, params));
 
-            _this20.currentMode = 'read';
             if (!_this20.params().cancelButtonHTML) _this20.params().cancelButtonHTML = '取消';
             if (!_this20.params().deleteButtonHTML) _this20.params().deleteButtonHTML = '删除';
             if (!_this20.params().editButtonHTML) _this20.params().editButtonHTML = '编辑';

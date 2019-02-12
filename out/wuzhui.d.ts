@@ -411,7 +411,6 @@ declare namespace wuzhui {
         insertButtonClass?: string;
     }
     class CommandField<T> extends DataControlField<T> {
-        private currentMode;
         constructor(params?: CommandFieldParams);
         private params;
         readonly cancelButtonHTML: string;
