@@ -165,6 +165,7 @@ namespace wuzhui {
         ascHTML = '↑';
         descHTML = '↓';
         sortingHTML = '...';
+        toSortHTML = '↕'
 
         sorting: Callback1<GridViewHeaderCell<T>, { sortType: string }>;
         sorted: Callback1<GridViewHeaderCell<T>, { sortType: string }>;
@@ -184,6 +185,7 @@ namespace wuzhui {
                 labelElement.onclick = () => this.handleSort();
 
                 this._iconElement = document.createElement('span');
+                this._iconElement.innerHTML = this.toSortHTML
 
                 this.appendChild(labelElement);
                 this.appendChild(this._iconElement);
@@ -223,18 +225,18 @@ namespace wuzhui {
         }
 
         clearSortIcon() {
-            this._iconElement.innerHTML = '';
+            this._iconElement.innerHTML = this.toSortHTML;
         }
 
         private updateSortIcon() {
             if (this.sortType == 'asc') {
-                this._iconElement.innerHTML = '↑';
+                this._iconElement.innerHTML = this.ascHTML;
             }
             else if (this.sortType == 'desc') {
-                this._iconElement.innerHTML = '↓';
+                this._iconElement.innerHTML = this.descHTML;
             }
             else {
-                this._iconElement.innerHTML = '';
+                this._iconElement.innerHTML = this.toSortHTML;
             }
         }
     }
