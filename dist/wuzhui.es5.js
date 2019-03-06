@@ -1361,6 +1361,7 @@ var wuzhui;
             _this15.ascHTML = '↑';
             _this15.descHTML = '↓';
             _this15.sortingHTML = '...';
+            _this15.toSortHTML = '↕';
             _this15.field = field;
             _this15.sorting = wuzhui.callbacks();
             _this15.sorted = wuzhui.callbacks();
@@ -1372,6 +1373,7 @@ var wuzhui;
                     return _this15.handleSort();
                 };
                 _this15._iconElement = document.createElement('span');
+                _this15._iconElement.innerHTML = _this15.toSortHTML;
                 _this15.appendChild(labelElement);
                 _this15.appendChild(_this15._iconElement);
                 _this15.sorting.add(function () {
@@ -1409,17 +1411,17 @@ var wuzhui;
         }, {
             key: 'clearSortIcon',
             value: function clearSortIcon() {
-                this._iconElement.innerHTML = '';
+                this._iconElement.innerHTML = this.toSortHTML;
             }
         }, {
             key: 'updateSortIcon',
             value: function updateSortIcon() {
                 if (this.sortType == 'asc') {
-                    this._iconElement.innerHTML = '↑';
+                    this._iconElement.innerHTML = this.ascHTML;
                 } else if (this.sortType == 'desc') {
-                    this._iconElement.innerHTML = '↓';
+                    this._iconElement.innerHTML = this.descHTML;
                 } else {
-                    this._iconElement.innerHTML = '';
+                    this._iconElement.innerHTML = this.toSortHTML;
                 }
             }
         }, {

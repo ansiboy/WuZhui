@@ -300,6 +300,7 @@ declare namespace wuzhui {
         ascHTML: string;
         descHTML: string;
         sortingHTML: string;
+        toSortHTML: string;
         sorting: Callback1<GridViewHeaderCell<T>, {
             sortType: string;
         }>;
