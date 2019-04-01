@@ -183,7 +183,7 @@ declare namespace wuzhui {
         private _totalRowCount;
         private _pageSize;
         private _selectArguments;
-        init(dataSource: DataSource<{}>, selectArguments: DataSourceSelectArguments): void;
+        init(dataSource?: DataSource<any>, selectArguments?: DataSourceSelectArguments): void;
         readonly selectArguments: DataSourceSelectArguments;
         readonly pageCount: number;
         pageSize: number;
@@ -191,18 +191,18 @@ declare namespace wuzhui {
         totalRowCount: number;
         render(): void;
     }
-    interface NumberPagingButton {
+    interface NumberPagingButton<T extends PagingBar> {
         visible: boolean;
         pageIndex: number;
         text: string;
         active: boolean;
-        onclick: NumberPagingButtonClickEvent;
+        onclick: NumberPagingButtonClickEvent<T>;
     }
     interface PagingTotalLabel {
         text: string;
         visible: boolean;
     }
-    type NumberPagingButtonClickEvent = (sender: NumberPagingButton, pagingBar: NumberPagingBar) => void;
+    type NumberPagingButtonClickEvent<T extends PagingBar> = (sender: NumberPagingButton<T>, pagingBar: T) => void;
     type PagingBarElementType = 'firstButton' | 'lastButton' | 'previousButton' | 'nextButton' | 'numberButton' | 'totalLabel';
     class NumberPagingBar extends PagingBar {
         private dataSource;
@@ -217,7 +217,33 @@ declare namespace wuzhui {
         private createLabel;
         private createButton;
         constructor(params: {
-            dataSource: DataSource<any>;
+            dataSource?: DataSource<any>;
+            element: HTMLElement;
+            pagerSettings?: PagerSettings;
+            selectArguments?: DataSourceSelectArguments;
+        });
+        private createPagingButton;
+        private createTotalLabel;
+        private createPreviousButtons;
+        private createNextButtons;
+        private createNumberButtons;
+        private static on_buttonClick;
+        render(): void;
+    }
+    class StaticNumberPagingBar extends PagingBar {
+        private pagerSettings;
+        private element;
+        private totalElement;
+        private numberButtons;
+        private firstPageButton;
+        private previousPageButton;
+        private nextPageButton;
+        private lastPageButton;
+        private createLabel;
+        private createButton;
+        private loadData;
+        constructor(params: {
+            loadData: (pageIndex: number) => void;
             element: HTMLElement;
             pagerSettings?: PagerSettings;
             selectArguments?: DataSourceSelectArguments;
