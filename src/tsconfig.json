@@ -2,12 +2,14 @@
     "compilerOptions": {
         "target": "es6",
         "sourceMap": false,
-        "outFile": "../out/wuzhui.js",
+        // "outFile": "../out/wuzhui.js",
         "declaration": true,
+        "module": "amd",
         "lib": [
             "dom",
             "scripthost",
             "es2015"
-        ]
+        ],
+        "outDir": "../out"
     }
 }
