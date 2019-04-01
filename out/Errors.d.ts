@@ -1,5 +1,4 @@
 export declare class Errors {
-    constructor(parameters: any);
     static notImplemented(message?: string): Error;
     static argumentNull(paramName: any): Error;
     static controllBelonsAnother(): Error;

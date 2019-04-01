@@ -1,12 +1,12 @@
 import { Control } from "./Control";
 import { Errors } from "./Errors";
 
-export type TextBoxArguments<T> = {
+export type TextBoxParams<T> = {
     element: HTMLInputElement, dataField: keyof T, dataItem: T,
     valueType: 'string' | 'int' | 'float'
 }
 export class TextBox<T> extends Control<HTMLInputElement>{
-    constructor(params: TextBoxArguments<T>) {
+    constructor(params: TextBoxParams<T>) {
         if (params == null) throw Errors.argumentNull("params")
         if (!params.element) throw Errors.argumentFieldNull("params", "element")
         if (!params.dataField) throw Errors.argumentFieldNull("params", "dataField")

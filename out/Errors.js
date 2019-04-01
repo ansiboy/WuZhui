@@ -3,8 +3,6 @@ define(["require", "exports"], function (require, exports) {
     Object.defineProperty(exports, "__esModule", { value: true });
     // namespace wuzhui {
     class Errors {
-        constructor(parameters) {
-        }
         static notImplemented(message) {
             message = message || "Not implemented";
             return new Error(message);

@@ -1,4 +1,4 @@
-define(["require", "exports", "./GridView", "./fields/BoundField", "./fields/CommandField", "./fields/CustomField", "./fields/DataControlField", "./DropDown", "./TextBox"], function (require, exports, GridView_1, BoundField_1, CommandField_1, CustomField_1, DataControlField_1, DropDown_1, TextBox_1) {
+define(["require", "exports", "./GridView", "./fields/BoundField", "./fields/CommandField", "./fields/CustomField", "./fields/DataControlField", "./DropDown", "./TextBox", "./DataSource"], function (require, exports, GridView_1, BoundField_1, CommandField_1, CustomField_1, DataControlField_1, DropDown_1, TextBox_1, DataSource_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.GridView = GridView_1.GridView;
@@ -10,4 +10,5 @@ define(["require", "exports", "./GridView", "./fields/BoundField", "./fields/Com
     exports.DataControlField = DataControlField_1.DataControlField;
     exports.DropDown = DropDown_1.DropDown;
     exports.TextBox = TextBox_1.TextBox;
+    exports.DataSource = DataSource_1.DataSource;
 });

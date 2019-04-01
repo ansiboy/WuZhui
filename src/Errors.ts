@@ -1,9 +1,5 @@
 // namespace wuzhui {
 export class Errors {
-    constructor(parameters) {
-
-    }
-
     static notImplemented(message?: string) {
         message = message || "Not implemented";
         return new Error(message);

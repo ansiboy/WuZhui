@@ -2,7 +2,7 @@ import { DataSource } from "./DataSource";
 import { Control } from "./Control";
 import { Errors } from "./Errors";
 
-export interface DropDownArguments<T> {
+export interface DropDownParams<T> {
     dataSource: DataSource<T>
     element: HTMLSelectElement
     nameField?: keyof T
@@ -10,7 +10,7 @@ export interface DropDownArguments<T> {
 }
 
 export class DropDown<T> extends Control<HTMLSelectElement> {
-    constructor(params: DropDownArguments<T>) {
+    constructor(params: DropDownParams<T>) {
         super(params.element)
 
         if (params == null) throw Errors.argumentNull('params')
@@ -20,7 +20,7 @@ export class DropDown<T> extends Control<HTMLSelectElement> {
         this.init<T>(params)
     }
 
-    async init<T>(params: DropDownArguments<T>) {
+    async init<T>(params: DropDownParams<T>) {
         let r = await params.dataSource.select({})
         r.dataItems.forEach(dataItem => {
             let option = document.createElement('option')
