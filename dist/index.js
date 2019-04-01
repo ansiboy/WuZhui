@@ -1,5 +1,5 @@
 /*!
- * WUZHUI v1.2.1
+ * WUZHUI v1.2.4
  * https://github.com/ansiboy/WuZhui
  * 
  * Copyright (c) 2016-2018, shu mai <ansiboy@163.com>
@@ -203,6 +203,17 @@ eval("var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/// <refer
 
 /***/ }),
 
+/***/ "./out/fields/CustomField.js":
+/*!***********************************!*\
+  !*** ./out/fields/CustomField.js ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ./DataControlField */ \"./out/fields/DataControlField.js\")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, DataControlField_1) {\r\n    \"use strict\";\r\n    Object.defineProperty(exports, \"__esModule\", { value: true });\r\n    class CustomField extends DataControlField_1.DataControlField {\r\n        constructor(params) {\r\n            super(params);\r\n        }\r\n        params() {\r\n            return this._params;\r\n        }\r\n        createHeaderCell() {\r\n            if (this.params().createHeaderCell) {\r\n                let cell = this.params().createHeaderCell();\r\n                cell.style(this.headerStyle);\r\n                return cell;\r\n            }\r\n            return super.createHeaderCell();\r\n        }\r\n        createFooterCell() {\r\n            if (this.params().createFooterCell) {\r\n                let cell = this.params().createFooterCell();\r\n                cell.style(this.params().footerStyle);\r\n                return cell;\r\n            }\r\n            return super.createFooterCell();\r\n        }\r\n        createItemCell(dataItem) {\r\n            if (this.params().createItemCell) {\r\n                let cell = this.params().createItemCell.apply(this, [dataItem]);\r\n                cell.style(this.params().itemStyle);\r\n                return cell;\r\n            }\r\n            return super.createItemCell(dataItem);\r\n        }\r\n    }\r\n    exports.CustomField = CustomField;\r\n}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),\n\t\t\t\t__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));\r\n\n\n//# sourceURL=webpack:///./out/fields/CustomField.js?");
+
+/***/ }),
+
 /***/ "./out/fields/DataControlField.js":
 /*!****************************************!*\
   !*** ./out/fields/DataControlField.js ***!
@@ -221,7 +232,7 @@ eval("var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPAC
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ./GridView */ \"./out/GridView.js\"), __webpack_require__(/*! ./fields/BoundField */ \"./out/fields/BoundField.js\"), __webpack_require__(/*! ./fields/CommandField */ \"./out/fields/CommandField.js\"), __webpack_require__(/*! ./fields/DataControlField */ \"./out/fields/DataControlField.js\"), __webpack_require__(/*! ./DropDown */ \"./out/DropDown.js\"), __webpack_require__(/*! ./TextBox */ \"./out/TextBox.js\")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, GridView_1, BoundField_1, CommandField_1, DataControlField_1, DropDown_1, TextBox_1) {\r\n    \"use strict\";\r\n    Object.defineProperty(exports, \"__esModule\", { value: true });\r\n    exports.GridView = GridView_1.GridView;\r\n    exports.GridViewDataRow = GridView_1.GridViewDataRow;\r\n    exports.BoundField = BoundField_1.BoundField;\r\n    exports.CommandField = CommandField_1.CommandField;\r\n    exports.GridViewCell = DataControlField_1.GridViewCell;\r\n    exports.DataControlField = DataControlField_1.DataControlField;\r\n    exports.DropDown = DropDown_1.DropDown;\r\n    exports.TextBox = TextBox_1.TextBox;\r\n}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),\n\t\t\t\t__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));\r\n\n\n//# sourceURL=webpack:///./out/index.js?");
+eval("var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ./GridView */ \"./out/GridView.js\"), __webpack_require__(/*! ./fields/BoundField */ \"./out/fields/BoundField.js\"), __webpack_require__(/*! ./fields/CommandField */ \"./out/fields/CommandField.js\"), __webpack_require__(/*! ./fields/CustomField */ \"./out/fields/CustomField.js\"), __webpack_require__(/*! ./fields/DataControlField */ \"./out/fields/DataControlField.js\"), __webpack_require__(/*! ./DropDown */ \"./out/DropDown.js\"), __webpack_require__(/*! ./TextBox */ \"./out/TextBox.js\")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, GridView_1, BoundField_1, CommandField_1, CustomField_1, DataControlField_1, DropDown_1, TextBox_1) {\r\n    \"use strict\";\r\n    Object.defineProperty(exports, \"__esModule\", { value: true });\r\n    exports.GridView = GridView_1.GridView;\r\n    exports.GridViewDataRow = GridView_1.GridViewDataRow;\r\n    exports.BoundField = BoundField_1.BoundField;\r\n    exports.CommandField = CommandField_1.CommandField;\r\n    exports.CustomField = CustomField_1.CustomField;\r\n    exports.GridViewCell = DataControlField_1.GridViewCell;\r\n    exports.DataControlField = DataControlField_1.DataControlField;\r\n    exports.DropDown = DropDown_1.DropDown;\r\n    exports.TextBox = TextBox_1.TextBox;\r\n}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),\n\t\t\t\t__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));\r\n\n\n//# sourceURL=webpack:///./out/index.js?");
 
 /***/ })
 

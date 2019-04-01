@@ -147,7 +147,7 @@ module.exports = function (grunt) {
         copy: {
             dist: {
                 files: [
-                    { expand: true, cwd: 'out', src: [`*.d.ts`], dest: 'dist' }
+                    { expand: true, cwd: 'out', src: [`**/*.d.ts`], dest: 'dist' }
                 ]
             }
         },
