@@ -1,5 +1,5 @@
 /*!
- * WUZHUI v1.2.0
+ * WUZHUI v1.2.1
  * https://github.com/ansiboy/WuZhui
  * 
  * Copyright (c) 2016-2018, shu mai <ansiboy@163.com>
