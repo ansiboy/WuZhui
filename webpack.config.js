@@ -1,22 +1,21 @@
-const path = require('path');
 const webpack = require('webpack');
-const grunt = require('grunt')
-let pkg = grunt.file.readJSON('package.json');
-
-let license = `WUZHUI v${pkg.version}
-https://github.com/ansiboy/WuZhui
-
-Copyright (c) 2016-2018, shu mai <ansiboy@163.com>
-Licensed under the MIT License.`
-
+let pkg = require("./package.json");
+let license = `
+ ${pkg.name} v${pkg.version}
+ https://github.com/ansiboy/wuzhui
+ 
+ Copyright (c) 2016-2018, shu mai <ansiboy@163.com>
+ Licensed under the MIT License.
+`;
 module.exports = {
-    entry: './out/index.js',
+    entry: __dirname + "/out/index.js",//已多次提及的唯一入口文件
     output: {
-        path: path.resolve(__dirname, 'dist'),
-        filename: 'index.js'
+        path: __dirname + "/dist",//打包后的文件存放的地方
+        filename: "index.js",//打包后输出文件的文件名
+        libraryTarget: 'amd'
     },
-    mode: 'development', // production
+    mode: 'development',
     plugins: [
-        new webpack.BannerPlugin(license)
-    ]
+        new webpack.BannerPlugin(license),
+    ],
 }
