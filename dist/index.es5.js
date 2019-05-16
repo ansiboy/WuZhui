@@ -1,6 +1,6 @@
 /*!
  * 
- *  maishu-wuzhui v1.3.4
+ *  maishu-wuzhui v1.3.5
  *  https://github.com/ansiboy/wuzhui
  *  
  *  Copyright (c) 2016-2018, shu mai <ansiboy@163.com>
@@ -103,7 +103,89 @@ define(function() { return /******/ (function(modules) { // webpackBootstrap
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-eval("var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;\n\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\nfunction _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if (\"value\" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }\n\nfunction _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }\n\n!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ./Errors */ \"./out-es5/Errors.js\"), __webpack_require__(/*! ./Utility */ \"./out-es5/Utility.js\")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, Errors_1, Utility_1) {\n  \"use strict\";\n\n  Object.defineProperty(exports, \"__esModule\", {\n    value: true\n  }); // namespace wuzhui {\n\n  var CONTROL_DATA_NAME = 'Control';\n\n  var Control =\n  /*#__PURE__*/\n  function () {\n    function Control(element) {\n      _classCallCheck(this, Control);\n\n      if (!element) throw Errors_1.Errors.argumentNull('element');\n      this._element = element;\n      Utility_1.ElementHelper.data(element, CONTROL_DATA_NAME, this);\n    }\n\n    _createClass(Control, [{\n      key: \"appendChild\",\n      value: function appendChild(child, index) {\n        if (child == null) throw Errors_1.Errors.argumentNull('child');\n        var childElement;\n        if (child instanceof Control) childElement = child.element;else childElement = child;\n        var placeChild;\n\n        if (index != null) {\n          placeChild = this.element.children[index];\n        }\n\n        if (placeChild == null) {\n          this.element.appendChild(childElement);\n        } else {\n          this.element.insertBefore(childElement, placeChild);\n        }\n      }\n    }, {\n      key: \"style\",\n      value: function style(value) {\n        Utility_1.applyStyle(this.element, value);\n      }\n    }, {\n      key: \"visible\",\n      get: function get() {\n        return Utility_1.ElementHelper.isVisible(this._element);\n      },\n      set: function set(value) {\n        if (value) {\n          Utility_1.ElementHelper.showElement(this._element);\n        } else {\n          Utility_1.ElementHelper.hideElement(this._element);\n        }\n      }\n    }, {\n      key: \"element\",\n      get: function get() {\n        return this._element;\n      }\n    }], [{\n      key: \"getControlByElement\",\n      value: function getControlByElement(element) {\n        return Utility_1.ElementHelper.data(element, CONTROL_DATA_NAME);\n      }\n    }]);\n\n    return Control;\n  }();\n\n  exports.Control = Control;\n}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),\n\t\t\t\t__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__)); // }\n//# sourceMappingURL=Control.js.map\n\n\n//# sourceURL=webpack:///./out-es5/Control.js?");
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ./Errors */ "./out-es5/Errors.js"), __webpack_require__(/*! ./Utility */ "./out-es5/Utility.js")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, Errors_1, Utility_1) {
+  "use strict";
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  }); // namespace wuzhui {
+
+  var CONTROL_DATA_NAME = 'Control';
+
+  var Control =
+  /*#__PURE__*/
+  function () {
+    function Control(element) {
+      _classCallCheck(this, Control);
+
+      if (!element) throw Errors_1.Errors.argumentNull('element');
+      this._element = element;
+      Utility_1.ElementHelper.data(element, CONTROL_DATA_NAME, this);
+    }
+
+    _createClass(Control, [{
+      key: "appendChild",
+      value: function appendChild(child, index) {
+        if (child == null) throw Errors_1.Errors.argumentNull('child');
+        var childElement;
+        if (child instanceof Control) childElement = child.element;else childElement = child;
+        var placeChild;
+
+        if (index != null) {
+          placeChild = this.element.children[index];
+        }
+
+        if (placeChild == null) {
+          this.element.appendChild(childElement);
+        } else {
+          this.element.insertBefore(childElement, placeChild);
+        }
+      }
+    }, {
+      key: "style",
+      value: function style(value) {
+        Utility_1.applyStyle(this.element, value);
+      }
+    }, {
+      key: "visible",
+      get: function get() {
+        return Utility_1.ElementHelper.isVisible(this._element);
+      },
+      set: function set(value) {
+        if (value) {
+          Utility_1.ElementHelper.showElement(this._element);
+        } else {
+          Utility_1.ElementHelper.hideElement(this._element);
+        }
+      }
+    }, {
+      key: "element",
+      get: function get() {
+        return this._element;
+      }
+    }], [{
+      key: "getControlByElement",
+      value: function getControlByElement(element) {
+        return Utility_1.ElementHelper.data(element, CONTROL_DATA_NAME);
+      }
+    }]);
+
+    return Control;
+  }();
+
+  exports.Control = Control;
+}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__)); // }
+//# sourceMappingURL=Control.js.map
+
 
 /***/ }),
 
@@ -115,7 +197,327 @@ eval("var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;\n\nfuncti
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-eval("var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;\n\nfunction _typeof(obj) { if (typeof Symbol === \"function\" && typeof Symbol.iterator === \"symbol\") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === \"function\" && obj.constructor === Symbol && obj !== Symbol.prototype ? \"symbol\" : typeof obj; }; } return _typeof(obj); }\n\nfunction _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === \"object\" || typeof call === \"function\")) { return call; } return _assertThisInitialized(self); }\n\nfunction _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError(\"this hasn't been initialised - super() hasn't been called\"); } return self; }\n\nfunction _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }\n\nfunction _inherits(subClass, superClass) { if (typeof superClass !== \"function\" && superClass !== null) { throw new TypeError(\"Super expression must either be null or a function\"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }\n\nfunction _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }\n\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\nfunction _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if (\"value\" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }\n\nfunction _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }\n\nvar __awaiter = void 0 && (void 0).__awaiter || function (thisArg, _arguments, P, generator) {\n  return new (P || (P = Promise))(function (resolve, reject) {\n    function fulfilled(value) {\n      try {\n        step(generator.next(value));\n      } catch (e) {\n        reject(e);\n      }\n    }\n\n    function rejected(value) {\n      try {\n        step(generator[\"throw\"](value));\n      } catch (e) {\n        reject(e);\n      }\n    }\n\n    function step(result) {\n      result.done ? resolve(result.value) : new P(function (resolve) {\n        resolve(result.value);\n      }).then(fulfilled, rejected);\n    }\n\n    step((generator = generator.apply(thisArg, _arguments || [])).next());\n  });\n};\n\n!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ./Errors */ \"./out-es5/Errors.js\"), __webpack_require__(/*! ./Utility */ \"./out-es5/Utility.js\")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, Errors_1, Utility_1) {\n  \"use strict\";\n\n  Object.defineProperty(exports, \"__esModule\", {\n    value: true\n  });\n\n  var DataSource =\n  /*#__PURE__*/\n  function () {\n    function DataSource(args) {\n      _classCallCheck(this, DataSource);\n\n      this.inserting = Utility_1.callbacks1();\n      this.inserted = Utility_1.callbacks1();\n      this.deleting = Utility_1.callbacks();\n      this.deleted = Utility_1.callbacks();\n      this.updating = Utility_1.callbacks();\n      this.updated = Utility_1.callbacks();\n      this.selecting = Utility_1.callbacks();\n      this.selected = Utility_1.callbacks();\n      this.error = Utility_1.callbacks();\n      this.args = args;\n      this.primaryKeys = args.primaryKeys || [];\n    }\n\n    _createClass(DataSource, [{\n      key: \"executeInsert\",\n      value: function executeInsert(item, args) {\n        return this.args.insert(item, args);\n      }\n    }, {\n      key: \"executeDelete\",\n      value: function executeDelete(item, args) {\n        return this.args.delete(item, args);\n      }\n    }, {\n      key: \"executeUpdate\",\n      value: function executeUpdate(item, args) {\n        return this.args.update(item, args);\n      }\n    }, {\n      key: \"executeSelect\",\n      value: function executeSelect(args) {\n        return this.args.select(args);\n      }\n    }, {\n      key: \"insert\",\n      value: function insert(item, args, index) {\n        var _this = this;\n\n        if (!this.canInsert) throw Errors_1.Errors.dataSourceCanntInsert();\n        if (!item) throw Errors_1.Errors.argumentNull(\"item\");\n\n        if (typeof args == 'number') {\n          index = args;\n          args = null;\n        }\n\n        this.inserting.fire(this, item, index);\n        return this.executeInsert(item, args).then(function (data) {\n          Object.assign(item, data);\n\n          _this.inserted.fire(_this, item, index);\n\n          return data;\n        }).catch(function (exc) {\n          _this.processError(exc, 'insert');\n\n          throw exc;\n        });\n      }\n    }, {\n      key: \"delete\",\n      value: function _delete(item, args) {\n        var _this2 = this;\n\n        if (!this.canDelete) throw Errors_1.Errors.dataSourceCanntDelete();\n        if (!item) throw Errors_1.Errors.argumentNull(\"item\");\n        this.checkPrimaryKeys(item);\n        this.deleting.fire(this, item);\n        return this.executeDelete(item, args).then(function (data) {\n          _this2.deleted.fire(_this2, item);\n\n          return data;\n        }).catch(function (exc) {\n          _this2.processError(exc, 'delete');\n\n          throw exc;\n        });\n      }\n    }, {\n      key: \"update\",\n      value: function update(item, args) {\n        var _this3 = this;\n\n        if (!this.canUpdate) throw Errors_1.Errors.dataSourceCanntUpdate();\n        if (!item) throw Errors_1.Errors.argumentNull(\"item\");\n        this.checkPrimaryKeys(item);\n        this.updating.fire(this, item);\n        return this.executeUpdate(item, args).then(function (data) {\n          Object.assign(item, data);\n\n          _this3.updated.fire(_this3, item);\n\n          return data;\n        }).catch(function (exc) {\n          _this3.processError(exc, 'update');\n\n          throw exc;\n        });\n      }\n    }, {\n      key: \"isSameItem\",\n      value: function isSameItem(theItem, otherItem) {\n        if (theItem == null) throw Errors_1.Errors.argumentNull('theItem');\n        if (otherItem == null) throw Errors_1.Errors.argumentNull('otherItem');\n        if (this.primaryKeys.length == 0) return theItem == otherItem;\n        this.checkPrimaryKeys(theItem);\n        this.checkPrimaryKeys(otherItem);\n        var _iteratorNormalCompletion = true;\n        var _didIteratorError = false;\n        var _iteratorError = undefined;\n\n        try {\n          for (var _iterator = this.primaryKeys[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {\n            var pk = _step.value;\n            if (theItem[pk] != otherItem[pk]) return false;\n          }\n        } catch (err) {\n          _didIteratorError = true;\n          _iteratorError = err;\n        } finally {\n          try {\n            if (!_iteratorNormalCompletion && _iterator.return != null) {\n              _iterator.return();\n            }\n          } finally {\n            if (_didIteratorError) {\n              throw _iteratorError;\n            }\n          }\n        }\n\n        return true;\n      }\n    }, {\n      key: \"checkPrimaryKeys\",\n      value: function checkPrimaryKeys(item) {\n        for (var key in item) {\n          if (item[key] == null && this.primaryKeys.indexOf(key) >= 0) throw Errors_1.Errors.primaryKeyNull(key);\n        }\n      }\n    }, {\n      key: \"select\",\n      value: function select(args) {\n        var _this4 = this;\n\n        console.assert(args != null);\n        Utility_1.fireCallback(this.selecting, this, args);\n        return this.executeSelect(args).then(function (data) {\n          var dataItems;\n          var totalRowCount;\n\n          if (Array.isArray(data)) {\n            dataItems = data;\n            totalRowCount = data.length;\n          } else if (data.dataItems !== undefined && data.totalRowCount !== undefined) {\n            dataItems = data.dataItems;\n            totalRowCount = data.totalRowCount;\n          } else {\n            throw Errors_1.Errors.queryResultTypeError();\n          }\n\n          _this4.selected.fire(_this4, {\n            totalRowCount: totalRowCount,\n            dataItems: dataItems\n          });\n\n          return {\n            totalRowCount: totalRowCount,\n            dataItems: dataItems\n          };\n        }).catch(function (exc) {\n          _this4.processError(exc, 'select');\n\n          throw exc;\n        });\n      }\n    }, {\n      key: \"processError\",\n      value: function processError(exc, method) {\n        exc.method = method;\n        this.error.fire(this, exc);\n        if (!exc.handled) throw exc;\n      }\n    }, {\n      key: \"canDelete\",\n      get: function get() {\n        return this.args.delete != null && this.primaryKeys.length > 0;\n      }\n    }, {\n      key: \"canInsert\",\n      get: function get() {\n        return this.args.insert != null && this.primaryKeys.length > 0;\n      }\n    }, {\n      key: \"canUpdate\",\n      get: function get() {\n        return this.args.update != null && this.primaryKeys.length > 0;\n      }\n    }]);\n\n    return DataSource;\n  }();\n\n  exports.DataSource = DataSource;\n\n  var DataSourceSelectArguments = function DataSourceSelectArguments() {\n    _classCallCheck(this, DataSourceSelectArguments);\n\n    this.startRowIndex = 0;\n    this.maximumRows = 2147483647;\n  };\n\n  exports.DataSourceSelectArguments = DataSourceSelectArguments;\n\n  var ArrayDataSource =\n  /*#__PURE__*/\n  function (_DataSource) {\n    _inherits(ArrayDataSource, _DataSource);\n\n    function ArrayDataSource(items) {\n      _classCallCheck(this, ArrayDataSource);\n\n      return _possibleConstructorReturn(this, _getPrototypeOf(ArrayDataSource).call(this, {\n        select: function select(args) {\n          return __awaiter(this, void 0, void 0,\n          /*#__PURE__*/\n          regeneratorRuntime.mark(function _callee() {\n            var dataItems, result;\n            return regeneratorRuntime.wrap(function _callee$(_context) {\n              while (1) {\n                switch (_context.prev = _context.next) {\n                  case 0:\n                    if (args.sortExpression) {}\n\n                    dataItems = items.slice(args.startRowIndex, args.startRowIndex + args.maximumRows);\n                    result = {\n                      dataItems: dataItems,\n                      totalRowCount: items.length\n                    };\n                    return _context.abrupt(\"return\", result);\n\n                  case 4:\n                  case \"end\":\n                    return _context.stop();\n                }\n              }\n            }, _callee);\n          }));\n        }\n      }));\n    }\n\n    return ArrayDataSource;\n  }(DataSource);\n\n  exports.ArrayDataSource = ArrayDataSource;\n}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),\n\t\t\t\t__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__)); // }\n//# sourceMappingURL=DataSource.js.map\n\n\n//# sourceURL=webpack:///./out-es5/DataSource.js?");
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
+
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var __awaiter = void 0 && (void 0).__awaiter || function (thisArg, _arguments, P, generator) {
+  return new (P || (P = Promise))(function (resolve, reject) {
+    function fulfilled(value) {
+      try {
+        step(generator.next(value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+
+    function rejected(value) {
+      try {
+        step(generator["throw"](value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+
+    function step(result) {
+      result.done ? resolve(result.value) : new P(function (resolve) {
+        resolve(result.value);
+      }).then(fulfilled, rejected);
+    }
+
+    step((generator = generator.apply(thisArg, _arguments || [])).next());
+  });
+};
+
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ./Errors */ "./out-es5/Errors.js"), __webpack_require__(/*! ./Utility */ "./out-es5/Utility.js")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, Errors_1, Utility_1) {
+  "use strict";
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+
+  var DataSource =
+  /*#__PURE__*/
+  function () {
+    function DataSource(args) {
+      _classCallCheck(this, DataSource);
+
+      this.inserting = Utility_1.callbacks1();
+      this.inserted = Utility_1.callbacks1();
+      this.deleting = Utility_1.callbacks();
+      this.deleted = Utility_1.callbacks();
+      this.updating = Utility_1.callbacks();
+      this.updated = Utility_1.callbacks();
+      this.selecting = Utility_1.callbacks();
+      this.selected = Utility_1.callbacks();
+      this.error = Utility_1.callbacks();
+      this.args = args;
+      this.primaryKeys = args.primaryKeys || [];
+    }
+
+    _createClass(DataSource, [{
+      key: "executeInsert",
+      value: function executeInsert(item, args) {
+        return this.args.insert(item, args);
+      }
+    }, {
+      key: "executeDelete",
+      value: function executeDelete(item, args) {
+        return this.args.delete(item, args);
+      }
+    }, {
+      key: "executeUpdate",
+      value: function executeUpdate(item, args) {
+        return this.args.update(item, args);
+      }
+    }, {
+      key: "executeSelect",
+      value: function executeSelect(args) {
+        return this.args.select(args);
+      }
+    }, {
+      key: "insert",
+      value: function insert(item, args, index) {
+        var _this = this;
+
+        if (!this.canInsert) throw Errors_1.Errors.dataSourceCanntInsert();
+        if (!item) throw Errors_1.Errors.argumentNull("item");
+
+        if (typeof args == 'number') {
+          index = args;
+          args = null;
+        }
+
+        this.inserting.fire(this, item, index);
+        return this.executeInsert(item, args).then(function (data) {
+          Object.assign(item, data);
+
+          _this.inserted.fire(_this, item, index);
+
+          return data;
+        }).catch(function (exc) {
+          _this.processError(exc, 'insert');
+
+          throw exc;
+        });
+      }
+    }, {
+      key: "delete",
+      value: function _delete(item, args) {
+        var _this2 = this;
+
+        if (!this.canDelete) throw Errors_1.Errors.dataSourceCanntDelete();
+        if (!item) throw Errors_1.Errors.argumentNull("item");
+        this.checkPrimaryKeys(item);
+        this.deleting.fire(this, item);
+        return this.executeDelete(item, args).then(function (data) {
+          _this2.deleted.fire(_this2, item);
+
+          return data;
+        }).catch(function (exc) {
+          _this2.processError(exc, 'delete');
+
+          throw exc;
+        });
+      }
+    }, {
+      key: "update",
+      value: function update(item, args) {
+        var _this3 = this;
+
+        if (!this.canUpdate) throw Errors_1.Errors.dataSourceCanntUpdate();
+        if (!item) throw Errors_1.Errors.argumentNull("item");
+        this.checkPrimaryKeys(item);
+        this.updating.fire(this, item);
+        return this.executeUpdate(item, args).then(function (data) {
+          Object.assign(item, data);
+
+          _this3.updated.fire(_this3, item);
+
+          return data;
+        }).catch(function (exc) {
+          _this3.processError(exc, 'update');
+
+          throw exc;
+        });
+      }
+    }, {
+      key: "isSameItem",
+      value: function isSameItem(theItem, otherItem) {
+        if (theItem == null) throw Errors_1.Errors.argumentNull('theItem');
+        if (otherItem == null) throw Errors_1.Errors.argumentNull('otherItem');
+        if (this.primaryKeys.length == 0) return theItem == otherItem;
+        this.checkPrimaryKeys(theItem);
+        this.checkPrimaryKeys(otherItem);
+        var _iteratorNormalCompletion = true;
+        var _didIteratorError = false;
+        var _iteratorError = undefined;
+
+        try {
+          for (var _iterator = this.primaryKeys[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+            var pk = _step.value;
+            if (theItem[pk] != otherItem[pk]) return false;
+          }
+        } catch (err) {
+          _didIteratorError = true;
+          _iteratorError = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion && _iterator.return != null) {
+              _iterator.return();
+            }
+          } finally {
+            if (_didIteratorError) {
+              throw _iteratorError;
+            }
+          }
+        }
+
+        return true;
+      }
+    }, {
+      key: "checkPrimaryKeys",
+      value: function checkPrimaryKeys(item) {
+        for (var key in item) {
+          if (item[key] == null && this.primaryKeys.indexOf(key) >= 0) throw Errors_1.Errors.primaryKeyNull(key);
+        }
+      }
+    }, {
+      key: "select",
+      value: function select(args) {
+        var _this4 = this;
+
+        console.assert(args != null);
+        Utility_1.fireCallback(this.selecting, this, args);
+        return this.executeSelect(args).then(function (data) {
+          var dataItems;
+          var totalRowCount;
+
+          if (Array.isArray(data)) {
+            dataItems = data;
+            totalRowCount = data.length;
+          } else if (data.dataItems !== undefined && data.totalRowCount !== undefined) {
+            dataItems = data.dataItems;
+            totalRowCount = data.totalRowCount;
+          } else {
+            throw Errors_1.Errors.queryResultTypeError();
+          }
+
+          _this4.selected.fire(_this4, {
+            totalRowCount: totalRowCount,
+            dataItems: dataItems
+          });
+
+          return {
+            totalRowCount: totalRowCount,
+            dataItems: dataItems
+          };
+        }).catch(function (exc) {
+          _this4.processError(exc, 'select');
+
+          throw exc;
+        });
+      }
+    }, {
+      key: "processError",
+      value: function processError(exc, method) {
+        exc.method = method;
+        this.error.fire(this, exc);
+        if (!exc.handled) throw exc;
+      }
+    }, {
+      key: "canDelete",
+      get: function get() {
+        return this.args.delete != null && this.primaryKeys.length > 0;
+      }
+    }, {
+      key: "canInsert",
+      get: function get() {
+        return this.args.insert != null && this.primaryKeys.length > 0;
+      }
+    }, {
+      key: "canUpdate",
+      get: function get() {
+        return this.args.update != null && this.primaryKeys.length > 0;
+      }
+    }]);
+
+    return DataSource;
+  }();
+
+  exports.DataSource = DataSource;
+
+  var DataSourceSelectArguments = function DataSourceSelectArguments() {
+    _classCallCheck(this, DataSourceSelectArguments);
+
+    this.startRowIndex = 0;
+    this.maximumRows = 2147483647;
+  };
+
+  exports.DataSourceSelectArguments = DataSourceSelectArguments;
+
+  var ArrayDataSource =
+  /*#__PURE__*/
+  function (_DataSource) {
+    _inherits(ArrayDataSource, _DataSource);
+
+    function ArrayDataSource(items) {
+      _classCallCheck(this, ArrayDataSource);
+
+      return _possibleConstructorReturn(this, _getPrototypeOf(ArrayDataSource).call(this, {
+        select: function select(args) {
+          return __awaiter(this, void 0, void 0,
+          /*#__PURE__*/
+          regeneratorRuntime.mark(function _callee() {
+            var dataItems, result;
+            return regeneratorRuntime.wrap(function _callee$(_context) {
+              while (1) {
+                switch (_context.prev = _context.next) {
+                  case 0:
+                    if (args.sortExpression) {}
+
+                    dataItems = items.slice(args.startRowIndex, args.startRowIndex + args.maximumRows);
+                    result = {
+                      dataItems: dataItems,
+                      totalRowCount: items.length
+                    };
+                    return _context.abrupt("return", result);
+
+                  case 4:
+                  case "end":
+                    return _context.stop();
+                }
+              }
+            }, _callee);
+          }));
+        }
+      }));
+    }
+
+    return ArrayDataSource;
+  }(DataSource);
+
+  exports.ArrayDataSource = ArrayDataSource;
+}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__)); // }
+//# sourceMappingURL=DataSource.js.map
+
 
 /***/ }),
 
@@ -127,7 +529,129 @@ eval("var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;\n\nfuncti
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-eval("var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;\n\nfunction _typeof(obj) { if (typeof Symbol === \"function\" && typeof Symbol.iterator === \"symbol\") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === \"function\" && obj.constructor === Symbol && obj !== Symbol.prototype ? \"symbol\" : typeof obj; }; } return _typeof(obj); }\n\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\nfunction _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if (\"value\" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }\n\nfunction _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }\n\nfunction _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === \"object\" || typeof call === \"function\")) { return call; } return _assertThisInitialized(self); }\n\nfunction _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError(\"this hasn't been initialised - super() hasn't been called\"); } return self; }\n\nfunction _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }\n\nfunction _inherits(subClass, superClass) { if (typeof superClass !== \"function\" && superClass !== null) { throw new TypeError(\"Super expression must either be null or a function\"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }\n\nfunction _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }\n\nvar __awaiter = void 0 && (void 0).__awaiter || function (thisArg, _arguments, P, generator) {\n  return new (P || (P = Promise))(function (resolve, reject) {\n    function fulfilled(value) {\n      try {\n        step(generator.next(value));\n      } catch (e) {\n        reject(e);\n      }\n    }\n\n    function rejected(value) {\n      try {\n        step(generator[\"throw\"](value));\n      } catch (e) {\n        reject(e);\n      }\n    }\n\n    function step(result) {\n      result.done ? resolve(result.value) : new P(function (resolve) {\n        resolve(result.value);\n      }).then(fulfilled, rejected);\n    }\n\n    step((generator = generator.apply(thisArg, _arguments || [])).next());\n  });\n};\n\n!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ./Control */ \"./out-es5/Control.js\"), __webpack_require__(/*! ./Errors */ \"./out-es5/Errors.js\")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, Control_1, Errors_1) {\n  \"use strict\";\n\n  Object.defineProperty(exports, \"__esModule\", {\n    value: true\n  });\n\n  var DropDown =\n  /*#__PURE__*/\n  function (_Control_1$Control) {\n    _inherits(DropDown, _Control_1$Control);\n\n    function DropDown(params) {\n      var _this;\n\n      _classCallCheck(this, DropDown);\n\n      _this = _possibleConstructorReturn(this, _getPrototypeOf(DropDown).call(this, params.element));\n      if (params == null) throw Errors_1.Errors.argumentNull('params');\n      if (params.dataSource == null) throw Errors_1.Errors.argumentFieldNull('params', 'dataSource');\n      if (params.element == null) throw Errors_1.Errors.argumentFieldNull('params', 'element');\n\n      _this.init(params);\n\n      return _this;\n    }\n\n    _createClass(DropDown, [{\n      key: \"init\",\n      value: function init(params) {\n        return __awaiter(this, void 0, void 0,\n        /*#__PURE__*/\n        regeneratorRuntime.mark(function _callee() {\n          var _this2 = this;\n\n          var r;\n          return regeneratorRuntime.wrap(function _callee$(_context) {\n            while (1) {\n              switch (_context.prev = _context.next) {\n                case 0:\n                  _context.next = 2;\n                  return params.dataSource.select({});\n\n                case 2:\n                  r = _context.sent;\n                  r.dataItems.forEach(function (dataItem) {\n                    var option = document.createElement('option');\n                    var name = params.nameField ? dataItem[params.nameField] : dataItem;\n                    var value = params.valueField ? dataItem[params.valueField] : dataItem;\n                    if (name == null) name = '';\n                    if (value == null) value = '';\n                    option.innerHTML = name;\n                    option.value = value;\n\n                    _this2.element.appendChild(option);\n                  });\n\n                case 4:\n                case \"end\":\n                  return _context.stop();\n              }\n            }\n          }, _callee);\n        }));\n      }\n    }]);\n\n    return DropDown;\n  }(Control_1.Control);\n\n  exports.DropDown = DropDown;\n}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),\n\t\t\t\t__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));\n//# sourceMappingURL=DropDown.js.map\n\n\n//# sourceURL=webpack:///./out-es5/DropDown.js?");
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
+
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+var __awaiter = void 0 && (void 0).__awaiter || function (thisArg, _arguments, P, generator) {
+  return new (P || (P = Promise))(function (resolve, reject) {
+    function fulfilled(value) {
+      try {
+        step(generator.next(value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+
+    function rejected(value) {
+      try {
+        step(generator["throw"](value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+
+    function step(result) {
+      result.done ? resolve(result.value) : new P(function (resolve) {
+        resolve(result.value);
+      }).then(fulfilled, rejected);
+    }
+
+    step((generator = generator.apply(thisArg, _arguments || [])).next());
+  });
+};
+
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ./Control */ "./out-es5/Control.js"), __webpack_require__(/*! ./Errors */ "./out-es5/Errors.js")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, Control_1, Errors_1) {
+  "use strict";
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+
+  var DropDown =
+  /*#__PURE__*/
+  function (_Control_1$Control) {
+    _inherits(DropDown, _Control_1$Control);
+
+    function DropDown(params) {
+      var _this;
+
+      _classCallCheck(this, DropDown);
+
+      _this = _possibleConstructorReturn(this, _getPrototypeOf(DropDown).call(this, params.element));
+      if (params == null) throw Errors_1.Errors.argumentNull('params');
+      if (params.dataSource == null) throw Errors_1.Errors.argumentFieldNull('params', 'dataSource');
+      if (params.element == null) throw Errors_1.Errors.argumentFieldNull('params', 'element');
+
+      _this.init(params);
+
+      return _this;
+    }
+
+    _createClass(DropDown, [{
+      key: "init",
+      value: function init(params) {
+        return __awaiter(this, void 0, void 0,
+        /*#__PURE__*/
+        regeneratorRuntime.mark(function _callee() {
+          var _this2 = this;
+
+          var r;
+          return regeneratorRuntime.wrap(function _callee$(_context) {
+            while (1) {
+              switch (_context.prev = _context.next) {
+                case 0:
+                  _context.next = 2;
+                  return params.dataSource.select({});
+
+                case 2:
+                  r = _context.sent;
+                  r.dataItems.forEach(function (dataItem) {
+                    var option = document.createElement('option');
+                    var name = params.nameField ? dataItem[params.nameField] : dataItem;
+                    var value = params.valueField ? dataItem[params.valueField] : dataItem;
+                    if (name == null) name = '';
+                    if (value == null) value = '';
+                    option.innerHTML = name;
+                    option.value = value;
+
+                    _this2.element.appendChild(option);
+                  });
+
+                case 4:
+                case "end":
+                  return _context.stop();
+              }
+            }
+          }, _callee);
+        }));
+      }
+    }]);
+
+    return DropDown;
+  }(Control_1.Control);
+
+  exports.DropDown = DropDown;
+}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+//# sourceMappingURL=DropDown.js.map
+
 
 /***/ }),
 
@@ -139,7 +663,92 @@ eval("var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;\n\nfuncti
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-eval("var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;\n\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\nfunction _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if (\"value\" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }\n\nfunction _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }\n\n!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports) {\n  \"use strict\";\n\n  Object.defineProperty(exports, \"__esModule\", {\n    value: true\n  }); // namespace wuzhui {\n\n  var Errors =\n  /*#__PURE__*/\n  function () {\n    function Errors() {\n      _classCallCheck(this, Errors);\n    }\n\n    _createClass(Errors, null, [{\n      key: \"notImplemented\",\n      value: function notImplemented(message) {\n        message = message || \"Not implemented\";\n        return new Error(message);\n      }\n    }, {\n      key: \"argumentNull\",\n      value: function argumentNull(paramName) {\n        return new Error(\"Argument '\" + paramName + \"' can not be null.\");\n      }\n    }, {\n      key: \"controllBelonsAnother\",\n      value: function controllBelonsAnother() {\n        return new Error(\"The control is belongs another control.\");\n      }\n    }, {\n      key: \"columnsCanntEmpty\",\n      value: function columnsCanntEmpty() {\n        return new Error(\"Columns cannt empty.\");\n      }\n    }, {\n      key: \"dataSourceCanntInsert\",\n      value: function dataSourceCanntInsert() {\n        return new Error(\"DataSource can not insert.\");\n      }\n    }, {\n      key: \"dataSourceCanntUpdate\",\n      value: function dataSourceCanntUpdate() {\n        return new Error(\"DataSource can not update.\");\n      }\n    }, {\n      key: \"dataSourceCanntDelete\",\n      value: function dataSourceCanntDelete() {\n        return new Error(\"DataSource can not delete.\");\n      }\n    }, {\n      key: \"primaryKeyNull\",\n      value: function primaryKeyNull(key) {\n        var msg = \"Primary key named '\".concat(key, \"' value is null.\");\n        return new Error(msg);\n      }\n    }, {\n      key: \"queryResultTypeError\",\n      value: function queryResultTypeError() {\n        var msg = 'Type of the query result is expected as Array or DataSourceSelectResult.';\n        return new Error(msg);\n      }\n    }, {\n      key: \"argumentFieldNull\",\n      value: function argumentFieldNull(argumentName, fieldName) {\n        var msg = \"Argument \".concat(argumentName, \" \").concat(fieldName, \" field can not be null or empty.\");\n        return new Error(msg);\n      }\n    }]);\n\n    return Errors;\n  }();\n\n  exports.Errors = Errors;\n}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),\n\t\t\t\t__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__)); // }\n//# sourceMappingURL=Errors.js.map\n\n\n//# sourceURL=webpack:///./out-es5/Errors.js?");
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports) {
+  "use strict";
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  }); // namespace wuzhui {
+
+  var Errors =
+  /*#__PURE__*/
+  function () {
+    function Errors() {
+      _classCallCheck(this, Errors);
+    }
+
+    _createClass(Errors, null, [{
+      key: "notImplemented",
+      value: function notImplemented(message) {
+        message = message || "Not implemented";
+        return new Error(message);
+      }
+    }, {
+      key: "argumentNull",
+      value: function argumentNull(paramName) {
+        return new Error("Argument '" + paramName + "' can not be null.");
+      }
+    }, {
+      key: "controllBelonsAnother",
+      value: function controllBelonsAnother() {
+        return new Error("The control is belongs another control.");
+      }
+    }, {
+      key: "columnsCanntEmpty",
+      value: function columnsCanntEmpty() {
+        return new Error("Columns cannt empty.");
+      }
+    }, {
+      key: "dataSourceCanntInsert",
+      value: function dataSourceCanntInsert() {
+        return new Error("DataSource can not insert.");
+      }
+    }, {
+      key: "dataSourceCanntUpdate",
+      value: function dataSourceCanntUpdate() {
+        return new Error("DataSource can not update.");
+      }
+    }, {
+      key: "dataSourceCanntDelete",
+      value: function dataSourceCanntDelete() {
+        return new Error("DataSource can not delete.");
+      }
+    }, {
+      key: "primaryKeyNull",
+      value: function primaryKeyNull(key) {
+        var msg = "Primary key named '".concat(key, "' value is null.");
+        return new Error(msg);
+      }
+    }, {
+      key: "queryResultTypeError",
+      value: function queryResultTypeError() {
+        var msg = 'Type of the query result is expected as Array or DataSourceSelectResult.';
+        return new Error(msg);
+      }
+    }, {
+      key: "argumentFieldNull",
+      value: function argumentFieldNull(argumentName, fieldName) {
+        var msg = "Argument ".concat(argumentName, " ").concat(fieldName, " field can not be null or empty.");
+        return new Error(msg);
+      }
+    }]);
+
+    return Errors;
+  }();
+
+  exports.Errors = Errors;
+}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__)); // }
+//# sourceMappingURL=Errors.js.map
+
 
 /***/ }),
 
@@ -151,7 +760,482 @@ eval("var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;\n\nfuncti
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-eval("var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;\n\nfunction _typeof(obj) { if (typeof Symbol === \"function\" && typeof Symbol.iterator === \"symbol\") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === \"function\" && obj.constructor === Symbol && obj !== Symbol.prototype ? \"symbol\" : typeof obj; }; } return _typeof(obj); }\n\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\nfunction _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if (\"value\" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }\n\nfunction _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }\n\nfunction _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === \"object\" || typeof call === \"function\")) { return call; } return _assertThisInitialized(self); }\n\nfunction _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError(\"this hasn't been initialised - super() hasn't been called\"); } return self; }\n\nfunction _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }\n\nfunction _inherits(subClass, superClass) { if (typeof superClass !== \"function\" && superClass !== null) { throw new TypeError(\"Super expression must either be null or a function\"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }\n\nfunction _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }\n\n!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ./Control */ \"./out-es5/Control.js\"), __webpack_require__(/*! ./DataSource */ \"./out-es5/DataSource.js\"), __webpack_require__(/*! ./fields/DataControlField */ \"./out-es5/fields/DataControlField.js\"), __webpack_require__(/*! ./NumberPagingBar */ \"./out-es5/NumberPagingBar.js\"), __webpack_require__(/*! ./Utility */ \"./out-es5/Utility.js\"), __webpack_require__(/*! ./Errors */ \"./out-es5/Errors.js\")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, Control_1, DataSource_1, DataControlField_1, NumberPagingBar_1, Utility_1, Errors_1) {\n  \"use strict\";\n\n  Object.defineProperty(exports, \"__esModule\", {\n    value: true\n  }); // namespace wuzhui {\n\n  var GridViewRowType;\n\n  (function (GridViewRowType) {\n    GridViewRowType[GridViewRowType[\"Header\"] = 0] = \"Header\";\n    GridViewRowType[GridViewRowType[\"Footer\"] = 1] = \"Footer\";\n    GridViewRowType[GridViewRowType[\"Data\"] = 2] = \"Data\";\n    GridViewRowType[GridViewRowType[\"Paging\"] = 3] = \"Paging\";\n    GridViewRowType[GridViewRowType[\"Empty\"] = 4] = \"Empty\";\n  })(GridViewRowType = exports.GridViewRowType || (exports.GridViewRowType = {}));\n\n  function findParentElement(element, parentTagName) {\n    console.assert(element != null);\n    console.assert(parentTagName != null);\n    parentTagName = parentTagName.toUpperCase();\n    var p = element.parentElement;\n\n    while (p) {\n      if (p.tagName == parentTagName) return p;\n      p = p.parentElement;\n    }\n  }\n\n  var GridViewRow =\n  /*#__PURE__*/\n  function (_Control_1$Control) {\n    _inherits(GridViewRow, _Control_1$Control);\n\n    function GridViewRow(rowType) {\n      var _this;\n\n      _classCallCheck(this, GridViewRow);\n\n      var element = document.createElement('tr');\n      _this = _possibleConstructorReturn(this, _getPrototypeOf(GridViewRow).call(this, element));\n      _this._rowType = rowType;\n      return _this;\n    }\n\n    _createClass(GridViewRow, [{\n      key: \"rowType\",\n      get: function get() {\n        return this._rowType;\n      }\n    }, {\n      key: \"gridView\",\n      get: function get() {\n        if (this._gridView == null) {\n          var gridViewElement = findParentElement(this.element, 'table');\n          console.assert(gridViewElement != null);\n          this._gridView = Control_1.Control.getControlByElement(gridViewElement);\n          console.assert(this._gridView != null);\n        }\n\n        return this._gridView;\n      }\n    }, {\n      key: \"cells\",\n      get: function get() {\n        var cells = new Array();\n\n        for (var i = 0; i < this.element.cells.length; i++) {\n          var cell = Control_1.Control.getControlByElement(this.element.cells[i]);\n          console.assert(cell != null);\n          cells[i] = cell;\n        }\n\n        return cells;\n      }\n    }]);\n\n    return GridViewRow;\n  }(Control_1.Control);\n\n  exports.GridViewRow = GridViewRow;\n\n  var GridViewDataRow =\n  /*#__PURE__*/\n  function (_GridViewRow) {\n    _inherits(GridViewDataRow, _GridViewRow);\n\n    function GridViewDataRow(gridView, dataItem) {\n      var _this2;\n\n      _classCallCheck(this, GridViewDataRow);\n\n      _this2 = _possibleConstructorReturn(this, _getPrototypeOf(GridViewDataRow).call(this, GridViewRowType.Data));\n      _this2._dataItem = dataItem;\n\n      for (var i = 0; i < gridView.columns.length; i++) {\n        var column = gridView.columns[i];\n        var cell = column.createItemCell(dataItem);\n        cell.visible = column.visible;\n\n        _this2.appendChild(cell);\n      }\n\n      return _this2;\n    }\n\n    _createClass(GridViewDataRow, [{\n      key: \"dataItem\",\n      get: function get() {\n        return this._dataItem;\n      }\n    }]);\n\n    return GridViewDataRow;\n  }(GridViewRow);\n\n  exports.GridViewDataRow = GridViewDataRow;\n\n  var GridView =\n  /*#__PURE__*/\n  function (_Control_1$Control2) {\n    _inherits(GridView, _Control_1$Control2);\n\n    function GridView(params) {\n      var _this3;\n\n      _classCallCheck(this, GridView);\n\n      _this3 = _possibleConstructorReturn(this, _getPrototypeOf(GridView).call(this, params.element || document.createElement('table')));\n      _this3.emptyDataHTML = '暂无记录';\n      _this3.initDataHTML = '数据正在加载中...';\n      _this3.loadFailHTML = '加载数据失败，点击重新加载。'; //========================================================\n      // 样式\n      // headerStyle: string;\n      // footerStyle: string;\n      // rowStyle: string;\n      // alternatingRowStyle: string;\n      //private emptyDataRowStyle: string;\n      //========================================================\n\n      _this3.rowCreated = Utility_1.callbacks();\n      params = Object.assign({\n        showHeader: true,\n        showFooter: false,\n        allowPaging: false\n      }, params);\n      _this3._params = params;\n      _this3._columns = params.columns || [];\n      if (_this3._columns.length == 0) throw Errors_1.Errors.columnsCanntEmpty();\n\n      for (var i = 0; i < _this3._columns.length; i++) {\n        var column = _this3._columns[i];\n        column.gridView = _assertThisInitialized(_this3);\n      }\n\n      _this3._dataSource = params.dataSource;\n\n      _this3._dataSource.selected.add(function (sender, e) {\n        return _this3.on_selectExecuted(e.dataItems);\n      });\n\n      _this3._dataSource.updated.add(function (sender, item) {\n        return _this3.on_updateExecuted(item);\n      });\n\n      _this3._dataSource.inserted.add(function (sender, item, index) {\n        return _this3.on_insertExecuted(item, index);\n      });\n\n      _this3._dataSource.deleted.add(function (sender, item) {\n        return _this3.on_deleteExecuted(item);\n      });\n\n      _this3._dataSource.selecting.add(function (sender, e) {\n        var display = _this3._emtpyRow.element.style.display;\n\n        if (display != 'none') {\n          _this3._emtpyRow.element.cells[0].innerHTML = _this3.initDataHTML;\n        }\n      });\n\n      _this3._dataSource.error.add(function (sender, e) {\n        if (e.method == 'select') {\n          _this3.on_selectExecuted([]);\n\n          var element = _this3._emtpyRow.cells[0].element;\n          element.innerHTML = _this3.loadFailHTML;\n\n          element.onclick = function () {\n            _this3._dataSource.select(_this3.selectArguments);\n          };\n\n          e.handled = true;\n          console.error(e.message);\n          console.log(e.stack);\n        }\n      });\n\n      if (params.showHeader) {\n        _this3._header = new Control_1.Control(document.createElement('thead'));\n\n        _this3.appendChild(_this3._header);\n\n        _this3.appendHeaderRow();\n      }\n\n      _this3.emptyDataHTML = params.emptyDataHTML || _this3.emptyDataHTML;\n      _this3.initDataHTML = params.initDataHTML || _this3.initDataHTML;\n      _this3._body = new Control_1.Control(document.createElement('tbody'));\n\n      _this3.appendChild(_this3._body);\n\n      _this3.appendEmptyRow();\n\n      var allowPaging = params.pageSize;\n\n      if (params.showFooter || allowPaging) {\n        _this3._footer = new Control_1.Control(document.createElement('tfoot'));\n\n        _this3.appendChild(_this3._footer);\n\n        if (params.showFooter) _this3.appendFooterRow();\n\n        if (allowPaging) {\n          _this3.createPagingBar(params.pagerSettings);\n\n          _this3.pagingBar.selectArguments.maximumRows = params.pageSize;\n        }\n      }\n\n      _this3.selectArguments = _this3.pagingBar ? _this3.pagingBar.selectArguments : new DataSource_1.DataSourceSelectArguments();\n\n      _this3.dataSource.select(_this3.selectArguments);\n\n      return _this3;\n    }\n\n    _createClass(GridView, [{\n      key: \"createPagingBar\",\n      value: function createPagingBar(pagerSettings) {\n        var pagingBarContainer = document.createElement('tr');\n        var pagingBarElement = document.createElement('td');\n        pagingBarElement.className = GridView.pagingBarClassName;\n        pagingBarElement.colSpan = this.columns.length;\n        pagingBarContainer.appendChild(pagingBarElement);\n        console.assert(this._footer != null);\n\n        this._footer.appendChild(pagingBarContainer);\n\n        this.pagingBar = new NumberPagingBar_1.DataSourcePagingBar({\n          dataSource: this.dataSource,\n          element: pagingBarElement,\n          pagerSettings: pagerSettings\n        });\n      }\n    }, {\n      key: \"appendEmptyRow\",\n      value: function appendEmptyRow() {\n        this._emtpyRow = new GridViewRow(GridViewRowType.Empty);\n        this._emtpyRow.element.className = GridView.emptyRowClassName;\n        var cell = new DataControlField_1.GridViewCell();\n        cell.element.colSpan = this.columns.length;\n\n        if (!this._params.emptyDataRowStyle) {\n          Utility_1.applyStyle(cell.element, this._params.emptyDataRowStyle);\n        }\n\n        this._emtpyRow.appendChild(cell);\n\n        this._body.appendChild(this._emtpyRow);\n\n        Utility_1.fireCallback(this.rowCreated, this, {\n          row: this._emtpyRow\n        });\n      }\n    }, {\n      key: \"appendDataRow\",\n      value: function appendDataRow(dataItem, index) {\n        var row = new GridViewDataRow(this, dataItem);\n        row.element.className = GridView.dataRowClassName;\n\n        this._body.appendChild(row, index);\n\n        var cells = row.cells;\n\n        for (var j = 0; j < cells.length; j++) {\n          var cell = cells[j];\n\n          if (cell instanceof DataControlField_1.GridViewDataCell) {\n            cell.render(dataItem);\n          }\n        }\n\n        Utility_1.fireCallback(this.rowCreated, this, {\n          row: row\n        });\n        if (this._emtpyRow.element.style.display != 'none') this.hideEmptyRow();\n        return row;\n      }\n    }, {\n      key: \"on_sort\",\n      value: function on_sort(sender, args) {\n        if (this._currentSortCell != null && this._currentSortCell != sender) {\n          this._currentSortCell.clearSortIcon();\n        }\n\n        this._currentSortCell = sender;\n      }\n    }, {\n      key: \"appendHeaderRow\",\n      value: function appendHeaderRow() {\n        var _this4 = this;\n\n        var row = new GridViewRow(GridViewRowType.Header);\n\n        for (var i = 0; i < this.columns.length; i++) {\n          var column = this.columns[i];\n          var cell = column.createHeaderCell();\n\n          if (cell instanceof DataControlField_1.GridViewHeaderCell) {\n            cell.sorting.add(function (e, a) {\n              return _this4.on_sort(e, a);\n            });\n          }\n\n          row.appendChild(cell);\n          cell.visible = this.columns[i].visible;\n        }\n\n        this._header.appendChild(row);\n      }\n    }, {\n      key: \"appendFooterRow\",\n      value: function appendFooterRow() {\n        var row = new GridViewRow(GridViewRowType.Footer);\n\n        for (var i = 0; i < this.columns.length; i++) {\n          var column = this.columns[i];\n          var cell = column.createFooterCell();\n          row.appendChild(cell);\n          cell.visible = column.visible;\n        }\n\n        this._footer.appendChild(row);\n      }\n    }, {\n      key: \"on_selectExecuted\",\n      value: function on_selectExecuted(items) {\n        var rows = this._body.element.querySelectorAll(\".\".concat(GridView.dataRowClassName));\n\n        for (var i = 0; i < rows.length; i++) {\n          this._body.element.removeChild(rows[i]);\n        }\n\n        if (items.length == 0) {\n          this.showEmptyRow();\n          return;\n        }\n\n        for (var _i = 0; _i < items.length; _i++) {\n          this.appendDataRow(items[_i]);\n        }\n      }\n    }, {\n      key: \"on_updateExecuted\",\n      value: function on_updateExecuted(item) {\n        console.assert(item != null);\n\n        for (var i = 0; i < this._body.element.rows.length; i++) {\n          var row_element = this._body.element.rows[i];\n          var row = Control_1.Control.getControlByElement(row_element);\n          ;\n          if (!(row instanceof GridViewDataRow)) continue;\n          var dataItem = row.dataItem;\n          if (!this.dataSource.isSameItem(dataItem, item)) continue;\n\n          if (dataItem != item) {\n            Object.assign(dataItem, item);\n          }\n\n          var cells = row.cells;\n\n          for (var j = 0; j < cells.length; j++) {\n            var cell = cells[j];\n\n            if (cell instanceof DataControlField_1.GridViewDataCell) {\n              // let value = cell.dataField ? item[cell.dataField] : item;\n              // let value = Object.assign({}, dataItem, item);\n              cell.render(dataItem); // if (cell.dataField)\n              //     dataItem[cell.dataField] = value;\n            }\n          }\n\n          break;\n        }\n      }\n    }, {\n      key: \"on_insertExecuted\",\n      value: function on_insertExecuted(item, index) {\n        if (index == null) index = 0;\n        this.appendDataRow(item, index);\n      }\n    }, {\n      key: \"on_deleteExecuted\",\n      value: function on_deleteExecuted(item) {\n        var dataRowsCount = 0;\n        var rows = this._body.element.rows;\n        var dataRows = new Array();\n\n        for (var i = 0; i < rows.length; i++) {\n          var row = Control_1.Control.getControlByElement(rows.item(i));\n          if (row instanceof GridViewDataRow) dataRows.push(row);\n        }\n\n        for (var _i2 = 0; _i2 < dataRows.length; _i2++) {\n          var dataRow = dataRows[_i2];\n          if (!this.dataSource.isSameItem(item, dataRow.dataItem)) continue;\n          dataRow.element.remove();\n          if (dataRows.length == 1) this.showEmptyRow();\n        }\n      }\n    }, {\n      key: \"showEmptyRow\",\n      value: function showEmptyRow() {\n        this._emtpyRow.element.cells[0].innerHTML = this.emptyDataHTML;\n\n        this._emtpyRow.element.style.removeProperty('display');\n      }\n    }, {\n      key: \"hideEmptyRow\",\n      value: function hideEmptyRow() {\n        this._emtpyRow.element.style.display = 'none';\n      }\n    }, {\n      key: \"columns\",\n      get: function get() {\n        return this._columns;\n      }\n    }, {\n      key: \"dataSource\",\n      get: function get() {\n        return this._dataSource;\n      }\n    }]);\n\n    return GridView;\n  }(Control_1.Control);\n\n  GridView.emptyRowClassName = 'empty';\n  GridView.dataRowClassName = 'data';\n  GridView.pagingBarClassName = 'pagingBar';\n  exports.GridView = GridView;\n}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),\n\t\t\t\t__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__)); // }\n//# sourceMappingURL=GridView.js.map\n\n\n//# sourceURL=webpack:///./out-es5/GridView.js?");
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
+
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ./Control */ "./out-es5/Control.js"), __webpack_require__(/*! ./DataSource */ "./out-es5/DataSource.js"), __webpack_require__(/*! ./fields/DataControlField */ "./out-es5/fields/DataControlField.js"), __webpack_require__(/*! ./NumberPagingBar */ "./out-es5/NumberPagingBar.js"), __webpack_require__(/*! ./Utility */ "./out-es5/Utility.js"), __webpack_require__(/*! ./Errors */ "./out-es5/Errors.js")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, Control_1, DataSource_1, DataControlField_1, NumberPagingBar_1, Utility_1, Errors_1) {
+  "use strict";
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  }); // namespace wuzhui {
+
+  var GridViewRowType;
+
+  (function (GridViewRowType) {
+    GridViewRowType[GridViewRowType["Header"] = 0] = "Header";
+    GridViewRowType[GridViewRowType["Footer"] = 1] = "Footer";
+    GridViewRowType[GridViewRowType["Data"] = 2] = "Data";
+    GridViewRowType[GridViewRowType["Paging"] = 3] = "Paging";
+    GridViewRowType[GridViewRowType["Empty"] = 4] = "Empty";
+  })(GridViewRowType = exports.GridViewRowType || (exports.GridViewRowType = {}));
+
+  function findParentElement(element, parentTagName) {
+    console.assert(element != null);
+    console.assert(parentTagName != null);
+    parentTagName = parentTagName.toUpperCase();
+    var p = element.parentElement;
+
+    while (p) {
+      if (p.tagName == parentTagName) return p;
+      p = p.parentElement;
+    }
+  }
+
+  var GridViewRow =
+  /*#__PURE__*/
+  function (_Control_1$Control) {
+    _inherits(GridViewRow, _Control_1$Control);
+
+    function GridViewRow(rowType) {
+      var _this;
+
+      _classCallCheck(this, GridViewRow);
+
+      var element = document.createElement('tr');
+      _this = _possibleConstructorReturn(this, _getPrototypeOf(GridViewRow).call(this, element));
+      _this._rowType = rowType;
+      return _this;
+    }
+
+    _createClass(GridViewRow, [{
+      key: "rowType",
+      get: function get() {
+        return this._rowType;
+      }
+    }, {
+      key: "gridView",
+      get: function get() {
+        if (this._gridView == null) {
+          var gridViewElement = findParentElement(this.element, 'table');
+          console.assert(gridViewElement != null);
+          this._gridView = Control_1.Control.getControlByElement(gridViewElement);
+          console.assert(this._gridView != null);
+        }
+
+        return this._gridView;
+      }
+    }, {
+      key: "cells",
+      get: function get() {
+        var cells = new Array();
+
+        for (var i = 0; i < this.element.cells.length; i++) {
+          var cell = Control_1.Control.getControlByElement(this.element.cells[i]);
+          console.assert(cell != null);
+          cells[i] = cell;
+        }
+
+        return cells;
+      }
+    }]);
+
+    return GridViewRow;
+  }(Control_1.Control);
+
+  exports.GridViewRow = GridViewRow;
+
+  var GridViewDataRow =
+  /*#__PURE__*/
+  function (_GridViewRow) {
+    _inherits(GridViewDataRow, _GridViewRow);
+
+    function GridViewDataRow(gridView, dataItem) {
+      var _this2;
+
+      _classCallCheck(this, GridViewDataRow);
+
+      _this2 = _possibleConstructorReturn(this, _getPrototypeOf(GridViewDataRow).call(this, GridViewRowType.Data));
+      _this2._dataItem = dataItem;
+
+      for (var i = 0; i < gridView.columns.length; i++) {
+        var column = gridView.columns[i];
+        var cell = column.createItemCell(dataItem);
+        cell.visible = column.visible;
+
+        _this2.appendChild(cell);
+      }
+
+      return _this2;
+    }
+
+    _createClass(GridViewDataRow, [{
+      key: "dataItem",
+      get: function get() {
+        return this._dataItem;
+      }
+    }]);
+
+    return GridViewDataRow;
+  }(GridViewRow);
+
+  exports.GridViewDataRow = GridViewDataRow;
+
+  var GridView =
+  /*#__PURE__*/
+  function (_Control_1$Control2) {
+    _inherits(GridView, _Control_1$Control2);
+
+    function GridView(params) {
+      var _this3;
+
+      _classCallCheck(this, GridView);
+
+      _this3 = _possibleConstructorReturn(this, _getPrototypeOf(GridView).call(this, params.element || document.createElement('table')));
+      _this3.emptyDataHTML = '暂无记录';
+      _this3.initDataHTML = '数据正在加载中...';
+      _this3.loadFailHTML = '加载数据失败，点击重新加载。'; //========================================================
+      // 样式
+      // headerStyle: string;
+      // footerStyle: string;
+      // rowStyle: string;
+      // alternatingRowStyle: string;
+      //private emptyDataRowStyle: string;
+      //========================================================
+
+      _this3.rowCreated = Utility_1.callbacks();
+      params = Object.assign({
+        showHeader: true,
+        showFooter: false,
+        allowPaging: false
+      }, params);
+      _this3._params = params;
+      _this3._columns = params.columns || [];
+      if (_this3._columns.length == 0) throw Errors_1.Errors.columnsCanntEmpty();
+
+      for (var i = 0; i < _this3._columns.length; i++) {
+        var column = _this3._columns[i];
+        column.gridView = _assertThisInitialized(_this3);
+      }
+
+      _this3._dataSource = params.dataSource;
+
+      _this3._dataSource.selected.add(function (sender, e) {
+        return _this3.on_selectExecuted(e.dataItems);
+      });
+
+      _this3._dataSource.updated.add(function (sender, item) {
+        return _this3.on_updateExecuted(item);
+      });
+
+      _this3._dataSource.inserted.add(function (sender, item, index) {
+        return _this3.on_insertExecuted(item, index);
+      });
+
+      _this3._dataSource.deleted.add(function (sender, item) {
+        return _this3.on_deleteExecuted(item);
+      });
+
+      _this3._dataSource.selecting.add(function (sender, e) {
+        var display = _this3._emtpyRow.element.style.display;
+
+        if (display != 'none') {
+          _this3._emtpyRow.element.cells[0].innerHTML = _this3.initDataHTML;
+        }
+      });
+
+      _this3._dataSource.error.add(function (sender, e) {
+        if (e.method == 'select') {
+          _this3.on_selectExecuted([]);
+
+          var element = _this3._emtpyRow.cells[0].element;
+          element.innerHTML = _this3.loadFailHTML;
+
+          element.onclick = function () {
+            _this3._dataSource.select(_this3.selectArguments);
+          };
+
+          e.handled = true;
+          console.error(e.message);
+          console.log(e.stack);
+        }
+      });
+
+      if (params.showHeader) {
+        _this3._header = new Control_1.Control(document.createElement('thead'));
+
+        _this3.appendChild(_this3._header);
+
+        _this3.appendHeaderRow();
+      }
+
+      _this3.emptyDataHTML = params.emptyDataHTML || _this3.emptyDataHTML;
+      _this3.initDataHTML = params.initDataHTML || _this3.initDataHTML;
+      _this3._body = new Control_1.Control(document.createElement('tbody'));
+
+      _this3.appendChild(_this3._body);
+
+      _this3.appendEmptyRow();
+
+      var allowPaging = params.pageSize;
+
+      if (params.showFooter || allowPaging) {
+        _this3._footer = new Control_1.Control(document.createElement('tfoot'));
+
+        _this3.appendChild(_this3._footer);
+
+        if (params.showFooter) _this3.appendFooterRow();
+
+        if (allowPaging) {
+          _this3.createPagingBar(params.pagerSettings);
+
+          _this3.pagingBar.selectArguments.maximumRows = params.pageSize;
+        }
+      }
+
+      _this3.selectArguments = _this3.pagingBar ? _this3.pagingBar.selectArguments : new DataSource_1.DataSourceSelectArguments();
+
+      _this3.dataSource.select(_this3.selectArguments);
+
+      return _this3;
+    }
+
+    _createClass(GridView, [{
+      key: "createPagingBar",
+      value: function createPagingBar(pagerSettings) {
+        var pagingBarContainer = document.createElement('tr');
+        var pagingBarElement = document.createElement('td');
+        pagingBarElement.className = GridView.pagingBarClassName;
+        pagingBarElement.colSpan = this.columns.length;
+        pagingBarContainer.appendChild(pagingBarElement);
+        console.assert(this._footer != null);
+
+        this._footer.appendChild(pagingBarContainer);
+
+        this.pagingBar = new NumberPagingBar_1.DataSourcePagingBar({
+          dataSource: this.dataSource,
+          element: pagingBarElement,
+          pagerSettings: pagerSettings
+        });
+      }
+    }, {
+      key: "appendEmptyRow",
+      value: function appendEmptyRow() {
+        this._emtpyRow = new GridViewRow(GridViewRowType.Empty);
+        this._emtpyRow.element.className = GridView.emptyRowClassName;
+        var cell = new DataControlField_1.GridViewCell();
+        cell.element.colSpan = this.columns.length;
+
+        if (!this._params.emptyDataRowStyle) {
+          Utility_1.applyStyle(cell.element, this._params.emptyDataRowStyle);
+        }
+
+        this._emtpyRow.appendChild(cell);
+
+        this._body.appendChild(this._emtpyRow);
+
+        Utility_1.fireCallback(this.rowCreated, this, {
+          row: this._emtpyRow
+        });
+      }
+    }, {
+      key: "appendDataRow",
+      value: function appendDataRow(dataItem, index) {
+        var row = new GridViewDataRow(this, dataItem);
+        row.element.className = GridView.dataRowClassName;
+
+        this._body.appendChild(row, index);
+
+        var cells = row.cells;
+
+        for (var j = 0; j < cells.length; j++) {
+          var cell = cells[j];
+
+          if (cell instanceof DataControlField_1.GridViewDataCell) {
+            cell.render(dataItem);
+          }
+        }
+
+        Utility_1.fireCallback(this.rowCreated, this, {
+          row: row
+        });
+        if (this._emtpyRow.element.style.display != 'none') this.hideEmptyRow();
+        return row;
+      }
+    }, {
+      key: "on_sort",
+      value: function on_sort(sender, args) {
+        if (this._currentSortCell != null && this._currentSortCell != sender) {
+          this._currentSortCell.clearSortIcon();
+        }
+
+        this._currentSortCell = sender;
+      }
+    }, {
+      key: "appendHeaderRow",
+      value: function appendHeaderRow() {
+        var _this4 = this;
+
+        var row = new GridViewRow(GridViewRowType.Header);
+
+        for (var i = 0; i < this.columns.length; i++) {
+          var column = this.columns[i];
+          var cell = column.createHeaderCell();
+
+          if (cell instanceof DataControlField_1.GridViewHeaderCell) {
+            cell.sorting.add(function (e, a) {
+              return _this4.on_sort(e, a);
+            });
+          }
+
+          row.appendChild(cell);
+          cell.visible = this.columns[i].visible;
+        }
+
+        this._header.appendChild(row);
+      }
+    }, {
+      key: "appendFooterRow",
+      value: function appendFooterRow() {
+        var row = new GridViewRow(GridViewRowType.Footer);
+
+        for (var i = 0; i < this.columns.length; i++) {
+          var column = this.columns[i];
+          var cell = column.createFooterCell();
+          row.appendChild(cell);
+          cell.visible = column.visible;
+        }
+
+        this._footer.appendChild(row);
+      }
+    }, {
+      key: "on_selectExecuted",
+      value: function on_selectExecuted(items) {
+        var rows = this._body.element.querySelectorAll(".".concat(GridView.dataRowClassName));
+
+        for (var i = 0; i < rows.length; i++) {
+          this._body.element.removeChild(rows[i]);
+        }
+
+        if (items.length == 0) {
+          this.showEmptyRow();
+          return;
+        }
+
+        for (var _i = 0; _i < items.length; _i++) {
+          this.appendDataRow(items[_i]);
+        }
+      }
+    }, {
+      key: "on_updateExecuted",
+      value: function on_updateExecuted(item) {
+        console.assert(item != null);
+
+        for (var i = 0; i < this._body.element.rows.length; i++) {
+          var row_element = this._body.element.rows[i];
+          var row = Control_1.Control.getControlByElement(row_element);
+          ;
+          if (!(row instanceof GridViewDataRow)) continue;
+          var dataItem = row.dataItem;
+          if (!this.dataSource.isSameItem(dataItem, item)) continue;
+
+          if (dataItem != item) {
+            Object.assign(dataItem, item);
+          }
+
+          var cells = row.cells;
+
+          for (var j = 0; j < cells.length; j++) {
+            var cell = cells[j];
+
+            if (cell instanceof DataControlField_1.GridViewDataCell) {
+              // let value = cell.dataField ? item[cell.dataField] : item;
+              // let value = Object.assign({}, dataItem, item);
+              cell.render(dataItem); // if (cell.dataField)
+              //     dataItem[cell.dataField] = value;
+            }
+          }
+
+          break;
+        }
+      }
+    }, {
+      key: "on_insertExecuted",
+      value: function on_insertExecuted(item, index) {
+        if (index == null) index = 0;
+        this.appendDataRow(item, index);
+      }
+    }, {
+      key: "on_deleteExecuted",
+      value: function on_deleteExecuted(item) {
+        var dataRowsCount = 0;
+        var rows = this._body.element.rows;
+        var dataRows = new Array();
+
+        for (var i = 0; i < rows.length; i++) {
+          var row = Control_1.Control.getControlByElement(rows.item(i));
+          if (row instanceof GridViewDataRow) dataRows.push(row);
+        }
+
+        for (var _i2 = 0; _i2 < dataRows.length; _i2++) {
+          var dataRow = dataRows[_i2];
+          if (!this.dataSource.isSameItem(item, dataRow.dataItem)) continue;
+          dataRow.element.remove();
+          if (dataRows.length == 1) this.showEmptyRow();
+        }
+      }
+    }, {
+      key: "showEmptyRow",
+      value: function showEmptyRow() {
+        this._emtpyRow.element.cells[0].innerHTML = this.emptyDataHTML;
+
+        this._emtpyRow.element.style.removeProperty('display');
+      }
+    }, {
+      key: "hideEmptyRow",
+      value: function hideEmptyRow() {
+        this._emtpyRow.element.style.display = 'none';
+      }
+    }, {
+      key: "columns",
+      get: function get() {
+        return this._columns;
+      }
+    }, {
+      key: "dataSource",
+      get: function get() {
+        return this._dataSource;
+      }
+    }]);
+
+    return GridView;
+  }(Control_1.Control);
+
+  GridView.emptyRowClassName = 'empty';
+  GridView.dataRowClassName = 'data';
+  GridView.pagingBarClassName = 'pagingBar';
+  exports.GridView = GridView;
+}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__)); // }
+//# sourceMappingURL=GridView.js.map
+
 
 /***/ }),
 
@@ -163,7 +1247,708 @@ eval("var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;\n\nfuncti
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-eval("var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;\n\nfunction _typeof(obj) { if (typeof Symbol === \"function\" && typeof Symbol.iterator === \"symbol\") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === \"function\" && obj.constructor === Symbol && obj !== Symbol.prototype ? \"symbol\" : typeof obj; }; } return _typeof(obj); }\n\nfunction _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === \"object\" || typeof call === \"function\")) { return call; } return _assertThisInitialized(self); }\n\nfunction _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError(\"this hasn't been initialised - super() hasn't been called\"); } return self; }\n\nfunction _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }\n\nfunction _inherits(subClass, superClass) { if (typeof superClass !== \"function\" && superClass !== null) { throw new TypeError(\"Super expression must either be null or a function\"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }\n\nfunction _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }\n\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\nfunction _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if (\"value\" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }\n\nfunction _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }\n\n!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ./Errors */ \"./out-es5/Errors.js\"), __webpack_require__(/*! ./DataSource */ \"./out-es5/DataSource.js\")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, Errors_1, DataSource_1) {\n  \"use strict\";\n\n  Object.defineProperty(exports, \"__esModule\", {\n    value: true\n  }); // namespace wuzhui {\n\n  var PagerPosition;\n\n  (function (PagerPosition) {\n    PagerPosition[PagerPosition[\"Bottom\"] = 0] = \"Bottom\";\n    PagerPosition[PagerPosition[\"Top\"] = 1] = \"Top\";\n    PagerPosition[PagerPosition[\"TopAndBottom\"] = 2] = \"TopAndBottom\";\n  })(PagerPosition = exports.PagerPosition || (exports.PagerPosition = {}));\n\n  ;\n\n  var PagingBar =\n  /*#__PURE__*/\n  function () {\n    function PagingBar() {\n      _classCallCheck(this, PagingBar);\n    }\n\n    _createClass(PagingBar, [{\n      key: \"init\",\n      value: function init(dataSource, selectArguments) {\n        var _this = this;\n\n        // if (dataSource == null)\n        //     throw Errors.argumentNull('dataSource');\n        this._pageIndex = 0;\n        this._selectArguments = selectArguments || new DataSource_1.DataSourceSelectArguments();\n        var pagingBar = this;\n        pagingBar.totalRowCount = 1000000;\n\n        if (dataSource) {\n          dataSource.selected.add(function (source, args) {\n            pagingBar.pageSize = _this._selectArguments.maximumRows;\n            var totalRowCount = args.totalRowCount;\n\n            if (totalRowCount != null && totalRowCount >= 0) {\n              pagingBar.totalRowCount = totalRowCount;\n            }\n\n            var startRowIndex = _this._selectArguments.startRowIndex;\n            if (startRowIndex == null || startRowIndex <= 0) startRowIndex = 0;\n            pagingBar.pageIndex = Math.floor(startRowIndex / pagingBar.pageSize);\n            pagingBar.render();\n          });\n          dataSource.deleted.add(function () {\n            pagingBar.totalRowCount = pagingBar.totalRowCount - 1;\n            pagingBar.render();\n          });\n          dataSource.inserted.add(function () {\n            pagingBar.totalRowCount = pagingBar.totalRowCount + 1;\n            pagingBar.render();\n          });\n        }\n      }\n    }, {\n      key: \"render\",\n      // Virtual Method\n      value: function render() {\n        throw Errors_1.Errors.notImplemented('The table-row render method is not implemented.');\n      }\n    }, {\n      key: \"selectArguments\",\n      get: function get() {\n        return this._selectArguments;\n      }\n    }, {\n      key: \"pageCount\",\n      get: function get() {\n        var pageCount = Math.ceil(this.totalRowCount / this.pageSize);\n        return pageCount;\n      }\n    }, {\n      key: \"pageSize\",\n      get: function get() {\n        return this._pageSize;\n      },\n      set: function set(value) {\n        this._pageSize = value;\n      }\n    }, {\n      key: \"pageIndex\",\n      get: function get() {\n        return this._pageIndex;\n      },\n      set: function set(value) {\n        this._pageIndex = value;\n      }\n    }, {\n      key: \"totalRowCount\",\n      get: function get() {\n        return this._totalRowCount;\n      },\n      set: function set(value) {\n        this._totalRowCount = value;\n      }\n    }]);\n\n    return PagingBar;\n  }();\n\n  exports.PagingBar = PagingBar;\n\n  var DataSourcePagingBar =\n  /*#__PURE__*/\n  function (_PagingBar) {\n    _inherits(DataSourcePagingBar, _PagingBar);\n\n    function DataSourcePagingBar(params) {\n      var _this2;\n\n      _classCallCheck(this, DataSourcePagingBar);\n\n      if (!params.dataSource) throw Errors_1.Errors.argumentNull('dataSource');\n      if (!params.element) throw Errors_1.Errors.argumentNull('element');\n      var pagerSettings = Object.assign({\n        pageButtonCount: 10,\n        firstPageText: '<<',\n        lastPageText: '>>',\n        nextPageText: '...',\n        previousPageText: '...',\n        showTotal: true\n      }, params.pagerSettings || {});\n      _this2 = _possibleConstructorReturn(this, _getPrototypeOf(DataSourcePagingBar).call(this));\n      _this2.dataSource = params.dataSource;\n      _this2.pagerSettings = pagerSettings;\n      _this2.element = params.element;\n      _this2.numberButtons = new Array();\n      _this2.createButton = _this2.createPagingButton;\n      _this2.createLabel = _this2.createTotalLabel;\n      var buttonContainer = pagerSettings.buttonContainerWraper ? document.createElement(pagerSettings.buttonContainerWraper) : document.createElement('div');\n      buttonContainer.className = pagerSettings.buttonContainerClassName || \"buttons\";\n\n      _this2.element.appendChild(buttonContainer);\n\n      _this2.createPreviousButtons(buttonContainer);\n\n      _this2.createNumberButtons(buttonContainer);\n\n      _this2.createNextButtons(buttonContainer);\n\n      if (_this2.pagerSettings.showTotal) {\n        _this2.totalElement = _this2.createLabel();\n        _this2.totalElement.visible = false;\n      }\n\n      _this2.init(params.dataSource, params.selectArguments);\n\n      return _this2;\n    }\n\n    _createClass(DataSourcePagingBar, [{\n      key: \"createPagingButton\",\n      value: function createPagingButton(container) {\n        var _this3 = this;\n\n        var pagerSettings = this.pagerSettings;\n        var button = document.createElement('a');\n        button.href = 'javascript:';\n\n        if (this.pagerSettings.buttonWrapper) {\n          var w = document.createElement(this.pagerSettings.buttonWrapper);\n          w.appendChild(button);\n          container.appendChild(w);\n        } else {\n          container.appendChild(button);\n        }\n\n        var result = {\n          _button: button,\n\n          get visible() {\n            var button = this._button;\n            return button.style.display != 'none';\n          },\n\n          set visible(value) {\n            var button = this._button;\n            var element = pagerSettings.buttonWrapper ? button.parentElement : button;\n\n            if (value) {\n              element.style.removeProperty('display');\n            } else {\n              element.style.display = 'none';\n            }\n          },\n\n          get pageIndex() {\n            var button = this._button;\n            return new Number(button.getAttribute('pageIndex')).valueOf();\n          },\n\n          set pageIndex(value) {\n            var button = this._button;\n            button.setAttribute('pageIndex', value);\n          },\n\n          get text() {\n            var button = this._button;\n            return button.innerHTML;\n          },\n\n          set text(value) {\n            var button = this._button;\n            button.innerHTML = value;\n          },\n\n          get active() {\n            var button = this._button;\n            return button.href != null;\n          },\n\n          set active(value) {\n            var button = this._button;\n\n            if (value == true) {\n              button.removeAttribute('href');\n\n              if (pagerSettings.activeButtonClassName) {\n                // button.className = pagerSettings.activeButtonClassName;\n                this.setClassName(pagerSettings.activeButtonClassName);\n              }\n\n              return;\n            }\n\n            button.href = 'javascript:';\n            if (pagerSettings.buttonClassName) this.setClassName(pagerSettings.buttonClassName);else this.setClassName(null);\n          },\n\n          setClassName: function setClassName(value) {\n            var button = this._button;\n            var element = pagerSettings.buttonWrapper ? button.parentElement : button;\n            if (value) element.className = value;else element.removeAttribute('class');\n          },\n          onclick: null\n        };\n\n        button.onclick = function () {\n          if (result.onclick) {\n            result.onclick(result, _this3);\n          }\n        };\n\n        return result;\n      }\n    }, {\n      key: \"createTotalLabel\",\n      value: function createTotalLabel() {\n        var totalElement = document.createElement('div');\n        totalElement.className = 'total';\n        var textElement = document.createElement('span');\n        textElement.className = 'text';\n        textElement.innerHTML = '总记录：';\n        totalElement.appendChild(textElement);\n        var numberElement = document.createElement('span');\n        numberElement.className = 'number';\n        totalElement.appendChild(numberElement);\n        this.element.appendChild(totalElement);\n        return {\n          get text() {\n            return numberElement.innerHTML;\n          },\n\n          set text(value) {\n            numberElement.innerHTML = value;\n          },\n\n          get visible() {\n            var display = totalElement.style.display;\n            return display != 'none';\n          },\n\n          set visible(value) {\n            if (value == true) totalElement.style.display = 'block';else totalElement.style.display = 'node';\n          }\n\n        };\n      }\n    }, {\n      key: \"createPreviousButtons\",\n      value: function createPreviousButtons(buttonContainer) {\n        this.firstPageButton = this.createButton(buttonContainer);\n        this.firstPageButton.onclick = DataSourcePagingBar.on_buttonClick;\n        this.firstPageButton.text = this.pagerSettings.firstPageText;\n        this.firstPageButton.visible = false;\n        this.previousPageButton = this.createButton(buttonContainer);\n        this.previousPageButton.onclick = DataSourcePagingBar.on_buttonClick;\n        this.previousPageButton.text = this.pagerSettings.previousPageText;\n        this.previousPageButton.visible = false;\n      }\n    }, {\n      key: \"createNextButtons\",\n      value: function createNextButtons(buttonContainer) {\n        this.nextPageButton = this.createButton(buttonContainer);\n        this.nextPageButton.onclick = DataSourcePagingBar.on_buttonClick;\n        this.nextPageButton.text = this.pagerSettings.nextPageText;\n        this.nextPageButton.visible = false;\n        this.lastPageButton = this.createButton(buttonContainer);\n        this.lastPageButton.onclick = DataSourcePagingBar.on_buttonClick;\n        this.lastPageButton.text = this.pagerSettings.lastPageText;\n        this.lastPageButton.visible = false;\n      }\n    }, {\n      key: \"createNumberButtons\",\n      value: function createNumberButtons(buttonContainer) {\n        var pagingBar = this;\n        var buttonCount = this.pagerSettings.pageButtonCount;\n\n        for (var i = 0; i < buttonCount; i++) {\n          var button = this.createButton(buttonContainer);\n          button.onclick = DataSourcePagingBar.on_buttonClick;\n          this.numberButtons[i] = button;\n        }\n\n        this.numberButtons.forEach(function (btn) {\n          btn.onclick = function () {\n            return DataSourcePagingBar.on_buttonClick(btn, pagingBar);\n          };\n        });\n      }\n    }, {\n      key: \"render\",\n      value: function render() {\n        var pagerSettings = this.pagerSettings;\n        var buttonCount = pagerSettings.pageButtonCount;\n        var pagingBarIndex = Math.floor(this.pageIndex / buttonCount);\n        var pagingBarCount = Math.ceil(this.pageCount / buttonCount);\n        this.previousPageButton.pageIndex = (pagingBarIndex - 1) * buttonCount;\n        this.nextPageButton.pageIndex = (pagingBarIndex + 1) * buttonCount;\n        this.firstPageButton.pageIndex = 0;\n        this.lastPageButton.pageIndex = this.pageCount - 1;\n\n        for (var i = 0; i < this.numberButtons.length; i++) {\n          var pageIndex = pagingBarIndex * buttonCount + i;\n\n          if (pageIndex < this.pageCount) {\n            this.numberButtons[i].pageIndex = pageIndex;\n            this.numberButtons[i].text = (pagingBarIndex * buttonCount + i + 1).toString();\n            this.numberButtons[i].visible = true;\n            this.numberButtons[i].active = pageIndex == this.pageIndex;\n          } else {\n            this.numberButtons[i].visible = false;\n          }\n        }\n\n        if (this.totalElement) {\n          this.totalElement.text = this.totalRowCount;\n          this.totalElement.visible = true;\n        }\n\n        this.firstPageButton.visible = false;\n        this.previousPageButton.visible = false;\n        this.lastPageButton.visible = false;\n        this.nextPageButton.visible = false;\n\n        if (pagingBarIndex > 0) {\n          this.firstPageButton.visible = true;\n          this.previousPageButton.visible = true;\n        }\n\n        if (pagingBarIndex < pagingBarCount - 1) {\n          this.lastPageButton.visible = true;\n          this.nextPageButton.visible = true;\n        }\n      }\n    }], [{\n      key: \"on_buttonClick\",\n      value: function on_buttonClick(button, pagingBar) {\n        var pageIndex = button.pageIndex;\n\n        if (!pageIndex == null) {\n          return;\n        }\n\n        var args = pagingBar.selectArguments;\n        args.maximumRows = pagingBar.pageSize;\n        args.startRowIndex = pageIndex * pagingBar.pageSize;\n        pagingBar.pageIndex = pageIndex;\n        pagingBar.dataSource.select(pagingBar.selectArguments);\n      }\n    }]);\n\n    return DataSourcePagingBar;\n  }(PagingBar);\n\n  exports.DataSourcePagingBar = DataSourcePagingBar;\n\n  var NumberPagingBar =\n  /*#__PURE__*/\n  function (_PagingBar2) {\n    _inherits(NumberPagingBar, _PagingBar2);\n\n    function NumberPagingBar(params) {\n      var _this4;\n\n      _classCallCheck(this, NumberPagingBar);\n\n      if (!params.loadData) throw Errors_1.Errors.argumentNull('loadData');\n      if (!params.element) throw Errors_1.Errors.argumentNull('element');\n      var pagerSettings = Object.assign({\n        pageButtonCount: 10,\n        firstPageText: '<<',\n        lastPageText: '>>',\n        nextPageText: '...',\n        previousPageText: '...',\n        showTotal: true\n      }, params.pagerSettings || {});\n      _this4 = _possibleConstructorReturn(this, _getPrototypeOf(NumberPagingBar).call(this));\n      _this4.loadData = params.loadData;\n      _this4.pagerSettings = pagerSettings;\n      _this4.element = params.element;\n      _this4.numberButtons = new Array();\n      _this4.createButton = _this4.createPagingButton;\n      _this4.createLabel = _this4.createTotalLabel;\n      var buttonContainer = pagerSettings.buttonContainerWraper ? document.createElement(pagerSettings.buttonContainerWraper) : document.createElement('div');\n      buttonContainer.className = pagerSettings.buttonContainerClassName || \"buttons\";\n\n      _this4.element.appendChild(buttonContainer);\n\n      _this4.createPreviousButtons(buttonContainer);\n\n      _this4.createNumberButtons(buttonContainer);\n\n      _this4.createNextButtons(buttonContainer);\n\n      if (_this4.pagerSettings.showTotal) {\n        _this4.totalElement = _this4.createLabel();\n        _this4.totalElement.visible = false;\n      }\n\n      _this4.init(null, params.selectArguments);\n\n      return _this4;\n    }\n\n    _createClass(NumberPagingBar, [{\n      key: \"createPagingButton\",\n      value: function createPagingButton(container) {\n        var _this5 = this;\n\n        var pagerSettings = this.pagerSettings;\n        var button = document.createElement('a');\n        button.href = 'javascript:';\n\n        if (this.pagerSettings.buttonWrapper) {\n          var w = document.createElement(this.pagerSettings.buttonWrapper);\n          w.appendChild(button);\n          container.appendChild(w);\n        } else {\n          container.appendChild(button);\n        }\n\n        var result = {\n          _button: button,\n\n          get visible() {\n            var button = this._button;\n            return button.style.display != 'none';\n          },\n\n          set visible(value) {\n            var button = this._button;\n            var element = pagerSettings.buttonWrapper ? button.parentElement : button;\n\n            if (value) {\n              element.style.removeProperty('display');\n            } else {\n              element.style.display = 'none';\n            }\n          },\n\n          get pageIndex() {\n            var button = this._button;\n            return new Number(button.getAttribute('pageIndex')).valueOf();\n          },\n\n          set pageIndex(value) {\n            var button = this._button;\n            button.setAttribute('pageIndex', value);\n          },\n\n          get text() {\n            var button = this._button;\n            return button.innerHTML;\n          },\n\n          set text(value) {\n            var button = this._button;\n            button.innerHTML = value;\n          },\n\n          get active() {\n            var button = this._button;\n            return button.href != null;\n          },\n\n          set active(value) {\n            var button = this._button;\n\n            if (value == true) {\n              button.removeAttribute('href');\n\n              if (pagerSettings.activeButtonClassName) {\n                // button.className = pagerSettings.activeButtonClassName;\n                this.setClassName(pagerSettings.activeButtonClassName);\n              }\n\n              return;\n            }\n\n            button.href = 'javascript:';\n            if (pagerSettings.buttonClassName) this.setClassName(pagerSettings.buttonClassName);else this.setClassName(null);\n          },\n\n          setClassName: function setClassName(value) {\n            var button = this._button;\n            var element = pagerSettings.buttonWrapper ? button.parentElement : button;\n            if (value) element.className = value;else element.removeAttribute('class');\n          },\n          onclick: null\n        };\n\n        button.onclick = function () {\n          if (result.onclick) {\n            result.onclick(result, _this5);\n          }\n        };\n\n        return result;\n      }\n    }, {\n      key: \"createTotalLabel\",\n      value: function createTotalLabel() {\n        var totalElement = document.createElement('div');\n        totalElement.className = 'total';\n        var textElement = document.createElement('span');\n        textElement.className = 'text';\n        textElement.innerHTML = '总记录：';\n        totalElement.appendChild(textElement);\n        var numberElement = document.createElement('span');\n        numberElement.className = 'number';\n        totalElement.appendChild(numberElement);\n        this.element.appendChild(totalElement);\n        return {\n          get text() {\n            return numberElement.innerHTML;\n          },\n\n          set text(value) {\n            numberElement.innerHTML = value;\n          },\n\n          get visible() {\n            var display = totalElement.style.display;\n            return display != 'none';\n          },\n\n          set visible(value) {\n            if (value == true) totalElement.style.display = 'block';else totalElement.style.display = 'node';\n          }\n\n        };\n      }\n    }, {\n      key: \"createPreviousButtons\",\n      value: function createPreviousButtons(buttonContainer) {\n        this.firstPageButton = this.createButton(buttonContainer);\n        this.firstPageButton.onclick = NumberPagingBar.on_buttonClick;\n        this.firstPageButton.text = this.pagerSettings.firstPageText;\n        this.firstPageButton.visible = false;\n        this.previousPageButton = this.createButton(buttonContainer);\n        this.previousPageButton.onclick = NumberPagingBar.on_buttonClick;\n        this.previousPageButton.text = this.pagerSettings.previousPageText;\n        this.previousPageButton.visible = false;\n      }\n    }, {\n      key: \"createNextButtons\",\n      value: function createNextButtons(buttonContainer) {\n        this.nextPageButton = this.createButton(buttonContainer);\n        this.nextPageButton.onclick = NumberPagingBar.on_buttonClick;\n        this.nextPageButton.text = this.pagerSettings.nextPageText;\n        this.nextPageButton.visible = false;\n        this.lastPageButton = this.createButton(buttonContainer);\n        this.lastPageButton.onclick = NumberPagingBar.on_buttonClick;\n        this.lastPageButton.text = this.pagerSettings.lastPageText;\n        this.lastPageButton.visible = false;\n      }\n    }, {\n      key: \"createNumberButtons\",\n      value: function createNumberButtons(buttonContainer) {\n        var pagingBar = this;\n        var buttonCount = this.pagerSettings.pageButtonCount;\n\n        for (var i = 0; i < buttonCount; i++) {\n          var button = this.createButton(buttonContainer);\n          button.onclick = NumberPagingBar.on_buttonClick;\n          this.numberButtons[i] = button;\n        }\n\n        this.numberButtons.forEach(function (btn) {\n          btn.onclick = function () {\n            return NumberPagingBar.on_buttonClick(btn, pagingBar);\n          };\n        });\n      }\n    }, {\n      key: \"render\",\n      value: function render() {\n        var pagerSettings = this.pagerSettings;\n        var buttonCount = pagerSettings.pageButtonCount;\n        var pagingBarIndex = Math.floor(this.pageIndex / buttonCount);\n        var pagingBarCount = Math.ceil(this.pageCount / buttonCount);\n        this.previousPageButton.pageIndex = (pagingBarIndex - 1) * buttonCount;\n        this.nextPageButton.pageIndex = (pagingBarIndex + 1) * buttonCount;\n        this.firstPageButton.pageIndex = 0;\n        this.lastPageButton.pageIndex = this.pageCount - 1;\n\n        for (var i = 0; i < this.numberButtons.length; i++) {\n          var pageIndex = pagingBarIndex * buttonCount + i;\n\n          if (pageIndex < this.pageCount) {\n            this.numberButtons[i].pageIndex = pageIndex;\n            this.numberButtons[i].text = (pagingBarIndex * buttonCount + i + 1).toString();\n            this.numberButtons[i].visible = true;\n            this.numberButtons[i].active = pageIndex == this.pageIndex;\n          } else {\n            this.numberButtons[i].visible = false;\n          }\n        }\n\n        if (this.totalElement) {\n          this.totalElement.text = this.totalRowCount;\n          this.totalElement.visible = true;\n        }\n\n        this.firstPageButton.visible = false;\n        this.previousPageButton.visible = false;\n        this.lastPageButton.visible = false;\n        this.nextPageButton.visible = false;\n\n        if (pagingBarIndex > 0) {\n          this.firstPageButton.visible = true;\n          this.previousPageButton.visible = true;\n        }\n\n        if (pagingBarIndex < pagingBarCount - 1) {\n          this.lastPageButton.visible = true;\n          this.nextPageButton.visible = true;\n        }\n      }\n    }], [{\n      key: \"on_buttonClick\",\n      value: function on_buttonClick(button, pagingBar) {\n        var pageIndex = button.pageIndex;\n\n        if (!pageIndex == null) {\n          return;\n        }\n\n        var args = pagingBar.selectArguments;\n        args.maximumRows = pagingBar.pageSize;\n        args.startRowIndex = pageIndex * pagingBar.pageSize;\n        pagingBar.pageIndex = pageIndex; //pagingBar.dataSource.select(pagingBar.selectArguments);\n\n        pagingBar.loadData(pageIndex);\n      }\n    }]);\n\n    return NumberPagingBar;\n  }(PagingBar);\n\n  exports.NumberPagingBar = NumberPagingBar;\n}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),\n\t\t\t\t__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__)); // }\n//# sourceMappingURL=NumberPagingBar.js.map\n\n\n//# sourceURL=webpack:///./out-es5/NumberPagingBar.js?");
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
+
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ./Errors */ "./out-es5/Errors.js"), __webpack_require__(/*! ./DataSource */ "./out-es5/DataSource.js")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, Errors_1, DataSource_1) {
+  "use strict";
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  }); // namespace wuzhui {
+
+  var PagerPosition;
+
+  (function (PagerPosition) {
+    PagerPosition[PagerPosition["Bottom"] = 0] = "Bottom";
+    PagerPosition[PagerPosition["Top"] = 1] = "Top";
+    PagerPosition[PagerPosition["TopAndBottom"] = 2] = "TopAndBottom";
+  })(PagerPosition = exports.PagerPosition || (exports.PagerPosition = {}));
+
+  ;
+
+  var PagingBar =
+  /*#__PURE__*/
+  function () {
+    function PagingBar() {
+      _classCallCheck(this, PagingBar);
+    }
+
+    _createClass(PagingBar, [{
+      key: "init",
+      value: function init(dataSource, selectArguments) {
+        var _this = this;
+
+        // if (dataSource == null)
+        //     throw Errors.argumentNull('dataSource');
+        this._pageIndex = 0;
+        this._selectArguments = selectArguments || new DataSource_1.DataSourceSelectArguments();
+        var pagingBar = this;
+        pagingBar.totalRowCount = 1000000;
+
+        if (dataSource) {
+          dataSource.selected.add(function (source, args) {
+            pagingBar.pageSize = _this._selectArguments.maximumRows;
+            var totalRowCount = args.totalRowCount;
+
+            if (totalRowCount != null && totalRowCount >= 0) {
+              pagingBar.totalRowCount = totalRowCount;
+            }
+
+            var startRowIndex = _this._selectArguments.startRowIndex;
+            if (startRowIndex == null || startRowIndex <= 0) startRowIndex = 0;
+            pagingBar.pageIndex = Math.floor(startRowIndex / pagingBar.pageSize);
+            pagingBar.render();
+          });
+          dataSource.deleted.add(function () {
+            pagingBar.totalRowCount = pagingBar.totalRowCount - 1;
+            pagingBar.render();
+          });
+          dataSource.inserted.add(function () {
+            pagingBar.totalRowCount = pagingBar.totalRowCount + 1;
+            pagingBar.render();
+          });
+        }
+      }
+    }, {
+      key: "render",
+      // Virtual Method
+      value: function render() {
+        throw Errors_1.Errors.notImplemented('The table-row render method is not implemented.');
+      }
+    }, {
+      key: "selectArguments",
+      get: function get() {
+        return this._selectArguments;
+      }
+    }, {
+      key: "pageCount",
+      get: function get() {
+        var pageCount = Math.ceil(this.totalRowCount / this.pageSize);
+        return pageCount;
+      }
+    }, {
+      key: "pageSize",
+      get: function get() {
+        return this._pageSize;
+      },
+      set: function set(value) {
+        this._pageSize = value;
+      }
+    }, {
+      key: "pageIndex",
+      get: function get() {
+        return this._pageIndex;
+      },
+      set: function set(value) {
+        this._pageIndex = value;
+      }
+    }, {
+      key: "totalRowCount",
+      get: function get() {
+        return this._totalRowCount;
+      },
+      set: function set(value) {
+        this._totalRowCount = value;
+      }
+    }]);
+
+    return PagingBar;
+  }();
+
+  exports.PagingBar = PagingBar;
+
+  var DataSourcePagingBar =
+  /*#__PURE__*/
+  function (_PagingBar) {
+    _inherits(DataSourcePagingBar, _PagingBar);
+
+    function DataSourcePagingBar(params) {
+      var _this2;
+
+      _classCallCheck(this, DataSourcePagingBar);
+
+      if (!params.dataSource) throw Errors_1.Errors.argumentNull('dataSource');
+      if (!params.element) throw Errors_1.Errors.argumentNull('element');
+      var pagerSettings = Object.assign({
+        pageButtonCount: 10,
+        firstPageText: '<<',
+        lastPageText: '>>',
+        nextPageText: '...',
+        previousPageText: '...',
+        showTotal: true
+      }, params.pagerSettings || {});
+      _this2 = _possibleConstructorReturn(this, _getPrototypeOf(DataSourcePagingBar).call(this));
+      _this2.dataSource = params.dataSource;
+      _this2.pagerSettings = pagerSettings;
+      _this2.element = params.element;
+      _this2.numberButtons = new Array();
+      _this2.createButton = _this2.createPagingButton;
+      _this2.createLabel = _this2.createTotalLabel;
+      var buttonContainer = pagerSettings.buttonContainerWraper ? document.createElement(pagerSettings.buttonContainerWraper) : document.createElement('div');
+      buttonContainer.className = pagerSettings.buttonContainerClassName || "buttons";
+
+      _this2.element.appendChild(buttonContainer);
+
+      _this2.createPreviousButtons(buttonContainer);
+
+      _this2.createNumberButtons(buttonContainer);
+
+      _this2.createNextButtons(buttonContainer);
+
+      if (_this2.pagerSettings.showTotal) {
+        _this2.totalElement = _this2.createLabel();
+        _this2.totalElement.visible = false;
+      }
+
+      _this2.init(params.dataSource, params.selectArguments);
+
+      return _this2;
+    }
+
+    _createClass(DataSourcePagingBar, [{
+      key: "createPagingButton",
+      value: function createPagingButton(container) {
+        var _this3 = this;
+
+        var pagerSettings = this.pagerSettings;
+        var button = document.createElement('a');
+        button.href = 'javascript:';
+
+        if (this.pagerSettings.buttonWrapper) {
+          var w = document.createElement(this.pagerSettings.buttonWrapper);
+          w.appendChild(button);
+          container.appendChild(w);
+        } else {
+          container.appendChild(button);
+        }
+
+        var result = {
+          _button: button,
+
+          get visible() {
+            var button = this._button;
+            return button.style.display != 'none';
+          },
+
+          set visible(value) {
+            var button = this._button;
+            var element = pagerSettings.buttonWrapper ? button.parentElement : button;
+
+            if (value) {
+              element.style.removeProperty('display');
+            } else {
+              element.style.display = 'none';
+            }
+          },
+
+          get pageIndex() {
+            var button = this._button;
+            return new Number(button.getAttribute('pageIndex')).valueOf();
+          },
+
+          set pageIndex(value) {
+            var button = this._button;
+            button.setAttribute('pageIndex', value);
+          },
+
+          get text() {
+            var button = this._button;
+            return button.innerHTML;
+          },
+
+          set text(value) {
+            var button = this._button;
+            button.innerHTML = value;
+          },
+
+          get active() {
+            var button = this._button;
+            return button.href != null;
+          },
+
+          set active(value) {
+            var button = this._button;
+
+            if (value == true) {
+              button.removeAttribute('href');
+
+              if (pagerSettings.activeButtonClassName) {
+                // button.className = pagerSettings.activeButtonClassName;
+                this.setClassName(pagerSettings.activeButtonClassName);
+              }
+
+              return;
+            }
+
+            button.href = 'javascript:';
+            if (pagerSettings.buttonClassName) this.setClassName(pagerSettings.buttonClassName);else this.setClassName(null);
+          },
+
+          setClassName: function setClassName(value) {
+            var button = this._button;
+            var element = pagerSettings.buttonWrapper ? button.parentElement : button;
+            if (value) element.className = value;else element.removeAttribute('class');
+          },
+          onclick: null
+        };
+
+        button.onclick = function () {
+          if (result.onclick) {
+            result.onclick(result, _this3);
+          }
+        };
+
+        return result;
+      }
+    }, {
+      key: "createTotalLabel",
+      value: function createTotalLabel() {
+        var totalElement = document.createElement('div');
+        totalElement.className = 'total';
+        var textElement = document.createElement('span');
+        textElement.className = 'text';
+        textElement.innerHTML = '总记录：';
+        totalElement.appendChild(textElement);
+        var numberElement = document.createElement('span');
+        numberElement.className = 'number';
+        totalElement.appendChild(numberElement);
+        this.element.appendChild(totalElement);
+        return {
+          get text() {
+            return numberElement.innerHTML;
+          },
+
+          set text(value) {
+            numberElement.innerHTML = value;
+          },
+
+          get visible() {
+            var display = totalElement.style.display;
+            return display != 'none';
+          },
+
+          set visible(value) {
+            if (value == true) totalElement.style.display = 'block';else totalElement.style.display = 'node';
+          }
+
+        };
+      }
+    }, {
+      key: "createPreviousButtons",
+      value: function createPreviousButtons(buttonContainer) {
+        this.firstPageButton = this.createButton(buttonContainer);
+        this.firstPageButton.onclick = DataSourcePagingBar.on_buttonClick;
+        this.firstPageButton.text = this.pagerSettings.firstPageText;
+        this.firstPageButton.visible = false;
+        this.previousPageButton = this.createButton(buttonContainer);
+        this.previousPageButton.onclick = DataSourcePagingBar.on_buttonClick;
+        this.previousPageButton.text = this.pagerSettings.previousPageText;
+        this.previousPageButton.visible = false;
+      }
+    }, {
+      key: "createNextButtons",
+      value: function createNextButtons(buttonContainer) {
+        this.nextPageButton = this.createButton(buttonContainer);
+        this.nextPageButton.onclick = DataSourcePagingBar.on_buttonClick;
+        this.nextPageButton.text = this.pagerSettings.nextPageText;
+        this.nextPageButton.visible = false;
+        this.lastPageButton = this.createButton(buttonContainer);
+        this.lastPageButton.onclick = DataSourcePagingBar.on_buttonClick;
+        this.lastPageButton.text = this.pagerSettings.lastPageText;
+        this.lastPageButton.visible = false;
+      }
+    }, {
+      key: "createNumberButtons",
+      value: function createNumberButtons(buttonContainer) {
+        var pagingBar = this;
+        var buttonCount = this.pagerSettings.pageButtonCount;
+
+        for (var i = 0; i < buttonCount; i++) {
+          var button = this.createButton(buttonContainer);
+          button.onclick = DataSourcePagingBar.on_buttonClick;
+          this.numberButtons[i] = button;
+        }
+
+        this.numberButtons.forEach(function (btn) {
+          btn.onclick = function () {
+            return DataSourcePagingBar.on_buttonClick(btn, pagingBar);
+          };
+        });
+      }
+    }, {
+      key: "render",
+      value: function render() {
+        var pagerSettings = this.pagerSettings;
+        var buttonCount = pagerSettings.pageButtonCount;
+        var pagingBarIndex = Math.floor(this.pageIndex / buttonCount);
+        var pagingBarCount = Math.ceil(this.pageCount / buttonCount);
+        this.previousPageButton.pageIndex = (pagingBarIndex - 1) * buttonCount;
+        this.nextPageButton.pageIndex = (pagingBarIndex + 1) * buttonCount;
+        this.firstPageButton.pageIndex = 0;
+        this.lastPageButton.pageIndex = this.pageCount - 1;
+
+        for (var i = 0; i < this.numberButtons.length; i++) {
+          var pageIndex = pagingBarIndex * buttonCount + i;
+
+          if (pageIndex < this.pageCount) {
+            this.numberButtons[i].pageIndex = pageIndex;
+            this.numberButtons[i].text = (pagingBarIndex * buttonCount + i + 1).toString();
+            this.numberButtons[i].visible = true;
+            this.numberButtons[i].active = pageIndex == this.pageIndex;
+          } else {
+            this.numberButtons[i].visible = false;
+          }
+        }
+
+        if (this.totalElement) {
+          this.totalElement.text = this.totalRowCount;
+          this.totalElement.visible = true;
+        }
+
+        this.firstPageButton.visible = false;
+        this.previousPageButton.visible = false;
+        this.lastPageButton.visible = false;
+        this.nextPageButton.visible = false;
+
+        if (pagingBarIndex > 0) {
+          this.firstPageButton.visible = true;
+          this.previousPageButton.visible = true;
+        }
+
+        if (pagingBarIndex < pagingBarCount - 1) {
+          this.lastPageButton.visible = true;
+          this.nextPageButton.visible = true;
+        }
+      }
+    }], [{
+      key: "on_buttonClick",
+      value: function on_buttonClick(button, pagingBar) {
+        var pageIndex = button.pageIndex;
+
+        if (!pageIndex == null) {
+          return;
+        }
+
+        var args = pagingBar.selectArguments;
+        args.maximumRows = pagingBar.pageSize;
+        args.startRowIndex = pageIndex * pagingBar.pageSize;
+        pagingBar.pageIndex = pageIndex;
+        pagingBar.dataSource.select(pagingBar.selectArguments);
+      }
+    }]);
+
+    return DataSourcePagingBar;
+  }(PagingBar);
+
+  exports.DataSourcePagingBar = DataSourcePagingBar;
+
+  var NumberPagingBar =
+  /*#__PURE__*/
+  function (_PagingBar2) {
+    _inherits(NumberPagingBar, _PagingBar2);
+
+    function NumberPagingBar(params) {
+      var _this4;
+
+      _classCallCheck(this, NumberPagingBar);
+
+      if (!params.loadData) throw Errors_1.Errors.argumentNull('loadData');
+      if (!params.element) throw Errors_1.Errors.argumentNull('element');
+      var pagerSettings = Object.assign({
+        pageButtonCount: 10,
+        firstPageText: '<<',
+        lastPageText: '>>',
+        nextPageText: '...',
+        previousPageText: '...',
+        showTotal: true
+      }, params.pagerSettings || {});
+      _this4 = _possibleConstructorReturn(this, _getPrototypeOf(NumberPagingBar).call(this));
+      _this4.loadData = params.loadData;
+      _this4.pagerSettings = pagerSettings;
+      _this4.element = params.element;
+      _this4.numberButtons = new Array();
+      _this4.createButton = _this4.createPagingButton;
+      _this4.createLabel = _this4.createTotalLabel;
+      var buttonContainer = pagerSettings.buttonContainerWraper ? document.createElement(pagerSettings.buttonContainerWraper) : document.createElement('div');
+      buttonContainer.className = pagerSettings.buttonContainerClassName || "buttons";
+
+      _this4.element.appendChild(buttonContainer);
+
+      _this4.createPreviousButtons(buttonContainer);
+
+      _this4.createNumberButtons(buttonContainer);
+
+      _this4.createNextButtons(buttonContainer);
+
+      if (_this4.pagerSettings.showTotal) {
+        _this4.totalElement = _this4.createLabel();
+        _this4.totalElement.visible = false;
+      }
+
+      _this4.init(null, params.selectArguments);
+
+      return _this4;
+    }
+
+    _createClass(NumberPagingBar, [{
+      key: "createPagingButton",
+      value: function createPagingButton(container) {
+        var _this5 = this;
+
+        var pagerSettings = this.pagerSettings;
+        var button = document.createElement('a');
+        button.href = 'javascript:';
+
+        if (this.pagerSettings.buttonWrapper) {
+          var w = document.createElement(this.pagerSettings.buttonWrapper);
+          w.appendChild(button);
+          container.appendChild(w);
+        } else {
+          container.appendChild(button);
+        }
+
+        var result = {
+          _button: button,
+
+          get visible() {
+            var button = this._button;
+            return button.style.display != 'none';
+          },
+
+          set visible(value) {
+            var button = this._button;
+            var element = pagerSettings.buttonWrapper ? button.parentElement : button;
+
+            if (value) {
+              element.style.removeProperty('display');
+            } else {
+              element.style.display = 'none';
+            }
+          },
+
+          get pageIndex() {
+            var button = this._button;
+            return new Number(button.getAttribute('pageIndex')).valueOf();
+          },
+
+          set pageIndex(value) {
+            var button = this._button;
+            button.setAttribute('pageIndex', value);
+          },
+
+          get text() {
+            var button = this._button;
+            return button.innerHTML;
+          },
+
+          set text(value) {
+            var button = this._button;
+            button.innerHTML = value;
+          },
+
+          get active() {
+            var button = this._button;
+            return button.href != null;
+          },
+
+          set active(value) {
+            var button = this._button;
+
+            if (value == true) {
+              button.removeAttribute('href');
+
+              if (pagerSettings.activeButtonClassName) {
+                // button.className = pagerSettings.activeButtonClassName;
+                this.setClassName(pagerSettings.activeButtonClassName);
+              }
+
+              return;
+            }
+
+            button.href = 'javascript:';
+            if (pagerSettings.buttonClassName) this.setClassName(pagerSettings.buttonClassName);else this.setClassName(null);
+          },
+
+          setClassName: function setClassName(value) {
+            var button = this._button;
+            var element = pagerSettings.buttonWrapper ? button.parentElement : button;
+            if (value) element.className = value;else element.removeAttribute('class');
+          },
+          onclick: null
+        };
+
+        button.onclick = function () {
+          if (result.onclick) {
+            result.onclick(result, _this5);
+          }
+        };
+
+        return result;
+      }
+    }, {
+      key: "createTotalLabel",
+      value: function createTotalLabel() {
+        var totalElement = document.createElement('div');
+        totalElement.className = 'total';
+        var textElement = document.createElement('span');
+        textElement.className = 'text';
+        textElement.innerHTML = '总记录：';
+        totalElement.appendChild(textElement);
+        var numberElement = document.createElement('span');
+        numberElement.className = 'number';
+        totalElement.appendChild(numberElement);
+        this.element.appendChild(totalElement);
+        return {
+          get text() {
+            return numberElement.innerHTML;
+          },
+
+          set text(value) {
+            numberElement.innerHTML = value;
+          },
+
+          get visible() {
+            var display = totalElement.style.display;
+            return display != 'none';
+          },
+
+          set visible(value) {
+            if (value == true) totalElement.style.display = 'block';else totalElement.style.display = 'node';
+          }
+
+        };
+      }
+    }, {
+      key: "createPreviousButtons",
+      value: function createPreviousButtons(buttonContainer) {
+        this.firstPageButton = this.createButton(buttonContainer);
+        this.firstPageButton.onclick = NumberPagingBar.on_buttonClick;
+        this.firstPageButton.text = this.pagerSettings.firstPageText;
+        this.firstPageButton.visible = false;
+        this.previousPageButton = this.createButton(buttonContainer);
+        this.previousPageButton.onclick = NumberPagingBar.on_buttonClick;
+        this.previousPageButton.text = this.pagerSettings.previousPageText;
+        this.previousPageButton.visible = false;
+      }
+    }, {
+      key: "createNextButtons",
+      value: function createNextButtons(buttonContainer) {
+        this.nextPageButton = this.createButton(buttonContainer);
+        this.nextPageButton.onclick = NumberPagingBar.on_buttonClick;
+        this.nextPageButton.text = this.pagerSettings.nextPageText;
+        this.nextPageButton.visible = false;
+        this.lastPageButton = this.createButton(buttonContainer);
+        this.lastPageButton.onclick = NumberPagingBar.on_buttonClick;
+        this.lastPageButton.text = this.pagerSettings.lastPageText;
+        this.lastPageButton.visible = false;
+      }
+    }, {
+      key: "createNumberButtons",
+      value: function createNumberButtons(buttonContainer) {
+        var pagingBar = this;
+        var buttonCount = this.pagerSettings.pageButtonCount;
+
+        for (var i = 0; i < buttonCount; i++) {
+          var button = this.createButton(buttonContainer);
+          button.onclick = NumberPagingBar.on_buttonClick;
+          this.numberButtons[i] = button;
+        }
+
+        this.numberButtons.forEach(function (btn) {
+          btn.onclick = function () {
+            return NumberPagingBar.on_buttonClick(btn, pagingBar);
+          };
+        });
+      }
+    }, {
+      key: "render",
+      value: function render() {
+        var pagerSettings = this.pagerSettings;
+        var buttonCount = pagerSettings.pageButtonCount;
+        var pagingBarIndex = Math.floor(this.pageIndex / buttonCount);
+        var pagingBarCount = Math.ceil(this.pageCount / buttonCount);
+        this.previousPageButton.pageIndex = (pagingBarIndex - 1) * buttonCount;
+        this.nextPageButton.pageIndex = (pagingBarIndex + 1) * buttonCount;
+        this.firstPageButton.pageIndex = 0;
+        this.lastPageButton.pageIndex = this.pageCount - 1;
+
+        for (var i = 0; i < this.numberButtons.length; i++) {
+          var pageIndex = pagingBarIndex * buttonCount + i;
+
+          if (pageIndex < this.pageCount) {
+            this.numberButtons[i].pageIndex = pageIndex;
+            this.numberButtons[i].text = (pagingBarIndex * buttonCount + i + 1).toString();
+            this.numberButtons[i].visible = true;
+            this.numberButtons[i].active = pageIndex == this.pageIndex;
+          } else {
+            this.numberButtons[i].visible = false;
+          }
+        }
+
+        if (this.totalElement) {
+          this.totalElement.text = this.totalRowCount;
+          this.totalElement.visible = true;
+        }
+
+        this.firstPageButton.visible = false;
+        this.previousPageButton.visible = false;
+        this.lastPageButton.visible = false;
+        this.nextPageButton.visible = false;
+
+        if (pagingBarIndex > 0) {
+          this.firstPageButton.visible = true;
+          this.previousPageButton.visible = true;
+        }
+
+        if (pagingBarIndex < pagingBarCount - 1) {
+          this.lastPageButton.visible = true;
+          this.nextPageButton.visible = true;
+        }
+      }
+    }], [{
+      key: "on_buttonClick",
+      value: function on_buttonClick(button, pagingBar) {
+        var pageIndex = button.pageIndex;
+
+        if (!pageIndex == null) {
+          return;
+        }
+
+        var args = pagingBar.selectArguments;
+        args.maximumRows = pagingBar.pageSize;
+        args.startRowIndex = pageIndex * pagingBar.pageSize;
+        pagingBar.pageIndex = pageIndex; //pagingBar.dataSource.select(pagingBar.selectArguments);
+
+        pagingBar.loadData(pageIndex);
+      }
+    }]);
+
+    return NumberPagingBar;
+  }(PagingBar);
+
+  exports.NumberPagingBar = NumberPagingBar;
+}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__)); // }
+//# sourceMappingURL=NumberPagingBar.js.map
+
 
 /***/ }),
 
@@ -175,7 +1960,73 @@ eval("var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;\n\nfuncti
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-eval("var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;\n\nfunction _typeof(obj) { if (typeof Symbol === \"function\" && typeof Symbol.iterator === \"symbol\") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === \"function\" && obj.constructor === Symbol && obj !== Symbol.prototype ? \"symbol\" : typeof obj; }; } return _typeof(obj); }\n\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\nfunction _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === \"object\" || typeof call === \"function\")) { return call; } return _assertThisInitialized(self); }\n\nfunction _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError(\"this hasn't been initialised - super() hasn't been called\"); } return self; }\n\nfunction _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }\n\nfunction _inherits(subClass, superClass) { if (typeof superClass !== \"function\" && superClass !== null) { throw new TypeError(\"Super expression must either be null or a function\"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }\n\nfunction _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }\n\n!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ./Control */ \"./out-es5/Control.js\"), __webpack_require__(/*! ./Errors */ \"./out-es5/Errors.js\")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, Control_1, Errors_1) {\n  \"use strict\";\n\n  Object.defineProperty(exports, \"__esModule\", {\n    value: true\n  });\n\n  var TextBox =\n  /*#__PURE__*/\n  function (_Control_1$Control) {\n    _inherits(TextBox, _Control_1$Control);\n\n    function TextBox(params) {\n      var _this;\n\n      _classCallCheck(this, TextBox);\n\n      if (params == null) throw Errors_1.Errors.argumentNull(\"params\");\n      if (!params.element) throw Errors_1.Errors.argumentFieldNull(\"params\", \"element\");\n      if (!params.dataField) throw Errors_1.Errors.argumentFieldNull(\"params\", \"dataField\");\n      if (!params.dataItem) throw Errors_1.Errors.argumentFieldNull(\"params\", \"dataItem\");\n      if (!params.valueType) throw Errors_1.Errors.argumentFieldNull(\"params\", \"valuetype\");\n      _this = _possibleConstructorReturn(this, _getPrototypeOf(TextBox).call(this, params.element));\n      var element = params.element,\n          dataField = params.dataField,\n          dataItem = params.dataItem,\n          valueType = params.valueType;\n      var value = dataItem[dataField];\n      element.value = \"\".concat(value);\n\n      element.onchange = function () {\n        if (valueType == 'int') {\n          dataItem[dataField] = Number.parseInt(element.value);\n        } else if (valueType == 'float') {\n          dataItem[dataField] = Number.parseFloat(element.value);\n        } else {\n          dataItem[dataField] = element.value;\n        }\n      };\n\n      return _this;\n    }\n\n    return TextBox;\n  }(Control_1.Control);\n\n  exports.TextBox = TextBox;\n}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),\n\t\t\t\t__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));\n//# sourceMappingURL=TextBox.js.map\n\n\n//# sourceURL=webpack:///./out-es5/TextBox.js?");
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
+
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ./Control */ "./out-es5/Control.js"), __webpack_require__(/*! ./Errors */ "./out-es5/Errors.js")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, Control_1, Errors_1) {
+  "use strict";
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+
+  var TextBox =
+  /*#__PURE__*/
+  function (_Control_1$Control) {
+    _inherits(TextBox, _Control_1$Control);
+
+    function TextBox(params) {
+      var _this;
+
+      _classCallCheck(this, TextBox);
+
+      if (params == null) throw Errors_1.Errors.argumentNull("params");
+      if (!params.element) throw Errors_1.Errors.argumentFieldNull("params", "element");
+      if (!params.dataField) throw Errors_1.Errors.argumentFieldNull("params", "dataField");
+      if (!params.dataItem) throw Errors_1.Errors.argumentFieldNull("params", "dataItem");
+      if (!params.valueType) throw Errors_1.Errors.argumentFieldNull("params", "valuetype");
+      _this = _possibleConstructorReturn(this, _getPrototypeOf(TextBox).call(this, params.element));
+      var element = params.element,
+          dataField = params.dataField,
+          dataItem = params.dataItem,
+          valueType = params.valueType;
+      var value = dataItem[dataField];
+      element.value = "".concat(value);
+
+      element.onchange = function () {
+        if (valueType == 'int') {
+          dataItem[dataField] = Number.parseInt(element.value);
+        } else if (valueType == 'float') {
+          dataItem[dataField] = Number.parseFloat(element.value);
+        } else {
+          dataItem[dataField] = element.value;
+        }
+      };
+
+      return _this;
+    }
+
+    return TextBox;
+  }(Control_1.Control);
+
+  exports.TextBox = TextBox;
+}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+//# sourceMappingURL=TextBox.js.map
+
 
 /***/ }),
 
@@ -187,7 +2038,155 @@ eval("var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;\n\nfuncti
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-eval("var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;\n\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\nfunction _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if (\"value\" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }\n\nfunction _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }\n\n!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ./Errors */ \"./out-es5/Errors.js\")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, Errors_1) {\n  \"use strict\";\n\n  Object.defineProperty(exports, \"__esModule\", {\n    value: true\n  });\n\n  var ElementHelper =\n  /*#__PURE__*/\n  function () {\n    function ElementHelper() {\n      _classCallCheck(this, ElementHelper);\n    }\n\n    _createClass(ElementHelper, null, [{\n      key: \"showElement\",\n      value: function showElement(element) {\n        if (!element) throw Errors_1.Errors.argumentNull('element');\n        element.style.removeProperty('display');\n      }\n    }, {\n      key: \"hideElement\",\n      value: function hideElement(element) {\n        if (!element) throw Errors_1.Errors.argumentNull('element');\n        element.style.display = 'none';\n      }\n    }, {\n      key: \"isVisible\",\n      value: function isVisible(element) {\n        var display = element.style.display;\n        return !display || display != 'none';\n      }\n    }, {\n      key: \"data\",\n      value: function data(element, name, value) {\n        element['data'] = element['data'] || {};\n        if (value == null) return element['data'].name;\n        element['data'].name = value;\n      }\n    }, {\n      key: \"findFirstParentByTagName\",\n      value: function findFirstParentByTagName(element, tagName) {\n        if (element == null) throw Errors_1.Errors.argumentNull(\"element\");\n        if (!tagName) throw Errors_1.Errors.argumentNull('tagName');\n        var parent = element.parentElement;\n\n        while (parent != null) {\n          if (parent.tagName.toLowerCase() == tagName.toLowerCase()) {\n            return parent;\n          }\n\n          parent = parent.parentElement;\n        }\n\n        return null;\n      }\n    }]);\n\n    return ElementHelper;\n  }();\n\n  exports.ElementHelper = ElementHelper;\n\n  function applyStyle(element, value) {\n    var style = value || '';\n\n    if (typeof style == 'string') {\n      element.setAttribute('style', style);\n    } else {\n      for (var key in style) {\n        element.style[key] = style[key];\n      }\n    }\n  }\n\n  exports.applyStyle = applyStyle;\n\n  var Callback =\n  /*#__PURE__*/\n  function () {\n    function Callback() {\n      _classCallCheck(this, Callback);\n\n      this.funcs = new Array();\n    }\n\n    _createClass(Callback, [{\n      key: \"add\",\n      value: function add(func) {\n        this.funcs.push(func);\n      }\n    }, {\n      key: \"remove\",\n      value: function remove(func) {\n        this.funcs = this.funcs.filter(function (o) {\n          return o != func;\n        });\n      }\n    }, {\n      key: \"fire\",\n      value: function fire() {\n        for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {\n          args[_key] = arguments[_key];\n        }\n\n        this.funcs.forEach(function (o) {\n          return o.apply(void 0, args);\n        });\n      }\n    }]);\n\n    return Callback;\n  }();\n\n  exports.Callback = Callback;\n\n  function callbacks() {\n    return new Callback();\n  }\n\n  exports.callbacks = callbacks;\n\n  function callbacks1() {\n    return new Callback();\n  }\n\n  exports.callbacks1 = callbacks1;\n\n  function fireCallback(callback) {\n    for (var _len2 = arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {\n      args[_key2 - 1] = arguments[_key2];\n    }\n\n    callback.fire.apply(callback, args);\n  }\n\n  exports.fireCallback = fireCallback;\n}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),\n\t\t\t\t__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__)); // }\n//# sourceMappingURL=Utility.js.map\n\n\n//# sourceURL=webpack:///./out-es5/Utility.js?");
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ./Errors */ "./out-es5/Errors.js")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, Errors_1) {
+  "use strict";
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+
+  var ElementHelper =
+  /*#__PURE__*/
+  function () {
+    function ElementHelper() {
+      _classCallCheck(this, ElementHelper);
+    }
+
+    _createClass(ElementHelper, null, [{
+      key: "showElement",
+      value: function showElement(element) {
+        if (!element) throw Errors_1.Errors.argumentNull('element');
+        element.style.removeProperty('display');
+      }
+    }, {
+      key: "hideElement",
+      value: function hideElement(element) {
+        if (!element) throw Errors_1.Errors.argumentNull('element');
+        element.style.display = 'none';
+      }
+    }, {
+      key: "isVisible",
+      value: function isVisible(element) {
+        var display = element.style.display;
+        return !display || display != 'none';
+      }
+    }, {
+      key: "data",
+      value: function data(element, name, value) {
+        element['data'] = element['data'] || {};
+        if (value == null) return element['data'].name;
+        element['data'].name = value;
+      }
+    }, {
+      key: "findFirstParentByTagName",
+      value: function findFirstParentByTagName(element, tagName) {
+        if (element == null) throw Errors_1.Errors.argumentNull("element");
+        if (!tagName) throw Errors_1.Errors.argumentNull('tagName');
+        var parent = element.parentElement;
+
+        while (parent != null) {
+          if (parent.tagName.toLowerCase() == tagName.toLowerCase()) {
+            return parent;
+          }
+
+          parent = parent.parentElement;
+        }
+
+        return null;
+      }
+    }]);
+
+    return ElementHelper;
+  }();
+
+  exports.ElementHelper = ElementHelper;
+
+  function applyStyle(element, value) {
+    var style = value || '';
+
+    if (typeof style == 'string') {
+      element.setAttribute('style', style);
+    } else {
+      for (var key in style) {
+        element.style[key] = style[key];
+      }
+    }
+  }
+
+  exports.applyStyle = applyStyle;
+
+  var Callback =
+  /*#__PURE__*/
+  function () {
+    function Callback() {
+      _classCallCheck(this, Callback);
+
+      this.funcs = new Array();
+    }
+
+    _createClass(Callback, [{
+      key: "add",
+      value: function add(func) {
+        this.funcs.push(func);
+      }
+    }, {
+      key: "remove",
+      value: function remove(func) {
+        this.funcs = this.funcs.filter(function (o) {
+          return o != func;
+        });
+      }
+    }, {
+      key: "fire",
+      value: function fire() {
+        for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+          args[_key] = arguments[_key];
+        }
+
+        this.funcs.forEach(function (o) {
+          return o.apply(void 0, args);
+        });
+      }
+    }]);
+
+    return Callback;
+  }();
+
+  exports.Callback = Callback;
+
+  function callbacks() {
+    return new Callback();
+  }
+
+  exports.callbacks = callbacks;
+
+  function callbacks1() {
+    return new Callback();
+  }
+
+  exports.callbacks1 = callbacks1;
+
+  function fireCallback(callback) {
+    for (var _len2 = arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+      args[_key2 - 1] = arguments[_key2];
+    }
+
+    callback.fire.apply(callback, args);
+  }
+
+  exports.fireCallback = fireCallback;
+}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__)); // }
+//# sourceMappingURL=Utility.js.map
+
 
 /***/ }),
 
@@ -199,7 +2198,225 @@ eval("var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;\n\nfuncti
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-eval("var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;\n\nfunction _typeof(obj) { if (typeof Symbol === \"function\" && typeof Symbol.iterator === \"symbol\") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === \"function\" && obj.constructor === Symbol && obj !== Symbol.prototype ? \"symbol\" : typeof obj; }; } return _typeof(obj); }\n\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\nfunction _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if (\"value\" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }\n\nfunction _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }\n\nfunction _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === \"object\" || typeof call === \"function\")) { return call; } return _assertThisInitialized(self); }\n\nfunction _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError(\"this hasn't been initialised - super() hasn't been called\"); } return self; }\n\nfunction _get(target, property, receiver) { if (typeof Reflect !== \"undefined\" && Reflect.get) { _get = Reflect.get; } else { _get = function _get(target, property, receiver) { var base = _superPropBase(target, property); if (!base) return; var desc = Object.getOwnPropertyDescriptor(base, property); if (desc.get) { return desc.get.call(receiver); } return desc.value; }; } return _get(target, property, receiver || target); }\n\nfunction _superPropBase(object, property) { while (!Object.prototype.hasOwnProperty.call(object, property)) { object = _getPrototypeOf(object); if (object === null) break; } return object; }\n\nfunction _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }\n\nfunction _inherits(subClass, superClass) { if (typeof superClass !== \"function\" && superClass !== null) { throw new TypeError(\"Super expression must either be null or a function\"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }\n\nfunction _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }\n\n/// <reference path=\"DataControlField.ts\"/>\n!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ./DataControlField */ \"./out-es5/fields/DataControlField.js\"), __webpack_require__(/*! ../Errors */ \"./out-es5/Errors.js\"), __webpack_require__(/*! ../Utility */ \"./out-es5/Utility.js\")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, DataControlField_1, Errors_1, Utility_1) {\n  \"use strict\";\n\n  Object.defineProperty(exports, \"__esModule\", {\n    value: true\n  });\n\n  var GridViewEditableCell =\n  /*#__PURE__*/\n  function (_DataControlField_1$G) {\n    _inherits(GridViewEditableCell, _DataControlField_1$G);\n\n    function GridViewEditableCell(field, dataItem, valueType) {\n      var _this;\n\n      _classCallCheck(this, GridViewEditableCell);\n\n      if (field == null) throw Errors_1.Errors.argumentNull('field');\n      if (dataItem == null) throw Errors_1.Errors.argumentNull('dataItem');\n      _this = _possibleConstructorReturn(this, _getPrototypeOf(GridViewEditableCell).call(this, {\n        dataField: field.dataField,\n        nullText: field.nullText,\n        dataFormatString: field.dataFormatString\n      }));\n      _this._field = field;\n      _this._dataItem = dataItem;\n      _this._valueType = valueType;\n      _this._mode = 'read';\n\n      if (!_this._valueType) {\n        var value = dataItem[field.dataField];\n        if (value instanceof Date) _this._valueType = 'date';else _this._valueType = _typeof(value);\n      }\n\n      return _this;\n    }\n\n    _createClass(GridViewEditableCell, [{\n      key: \"beginEdit\",\n      value: function beginEdit() {\n        if (this._field.readOnly) {\n          return;\n        }\n\n        this._mode = 'edit';\n        this.render(this._dataItem);\n      }\n    }, {\n      key: \"endEdit\",\n      value: function endEdit() {\n        if (this._field.readOnly) {\n          return;\n        }\n\n        this._mode = 'read';\n        var value = this.controlValue;\n        this.render(this._dataItem);\n      }\n    }, {\n      key: \"cancelEdit\",\n      value: function cancelEdit() {\n        if (this._field.readOnly) {\n          return;\n        }\n\n        this._mode = 'read'; // let value = this._dataItem[this.field.dataField];\n\n        this.render(this._dataItem);\n      }\n    }, {\n      key: \"render\",\n      value: function render(dataItem) {\n        //value\n        var value = dataItem[this.field.dataField];\n\n        if (this._mode == 'edit') {\n          this.element.innerHTML = \"<input type=\\\"text\\\" />\";\n          Utility_1.applyStyle(this.element.querySelector('input'), this._field.controlStyle);\n          this.element.querySelector('input').value = value === undefined ? null : \"\".concat(value);\n          return;\n        }\n\n        _get(_getPrototypeOf(GridViewEditableCell.prototype), \"render\", this).call(this, dataItem);\n      } //==============================================\n      // Virtual Methods\n\n    }, {\n      key: \"field\",\n      get: function get() {\n        return this._field;\n      }\n    }, {\n      key: \"mode\",\n      get: function get() {\n        return this._mode;\n      }\n    }, {\n      key: \"controlValue\",\n      get: function get() {\n        var text = this.element.querySelector('input').value;\n\n        switch (this._valueType) {\n          case 'number':\n            return new Number(text).valueOf();\n\n          case 'date':\n            return new Date(text);\n\n          default:\n            return text;\n        }\n      }\n    }]);\n\n    return GridViewEditableCell;\n  }(DataControlField_1.GridViewDataCell);\n\n  exports.GridViewEditableCell = GridViewEditableCell;\n\n  var BoundField =\n  /*#__PURE__*/\n  function (_DataControlField_1$D) {\n    _inherits(BoundField, _DataControlField_1$D);\n\n    function BoundField(params) {\n      var _this2;\n\n      _classCallCheck(this, BoundField);\n\n      _this2 = _possibleConstructorReturn(this, _getPrototypeOf(BoundField).call(this, params));\n      _this2._params = params;\n      _this2._valueElement = document.createElement('span');\n      return _this2;\n    }\n\n    _createClass(BoundField, [{\n      key: \"params\",\n      value: function params() {\n        return this._params;\n      }\n      /**\r\n       * Gets the caption displayed for a field when the field's value is null.\r\n       */\n\n    }, {\n      key: \"createItemCell\",\n      value: function createItemCell(dataItem) {\n        var cell = new GridViewEditableCell(this, dataItem);\n        cell.style(this.itemStyle);\n        return cell;\n      }\n      /**\r\n       * Gets the field for the value.\r\n       */\n\n    }, {\n      key: \"nullText\",\n      get: function get() {\n        return this.params().nullText;\n      }\n    }, {\n      key: \"dataField\",\n      get: function get() {\n        return this.params().dataField;\n      }\n      /**\r\n       * Gets the string that specifies the display format for the value of the field.\r\n       */\n\n    }, {\n      key: \"dataFormatString\",\n      get: function get() {\n        return this.params().dataFormatString;\n      }\n    }, {\n      key: \"controlStyle\",\n      get: function get() {\n        return this.params().controlStyle;\n      }\n    }, {\n      key: \"readOnly\",\n      get: function get() {\n        return this.params().readOnly;\n      }\n    }]);\n\n    return BoundField;\n  }(DataControlField_1.DataControlField);\n\n  exports.BoundField = BoundField;\n}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),\n\t\t\t\t__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));\n//# sourceMappingURL=BoundField.js.map\n\n\n//# sourceURL=webpack:///./out-es5/fields/BoundField.js?");
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
+
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _get(target, property, receiver) { if (typeof Reflect !== "undefined" && Reflect.get) { _get = Reflect.get; } else { _get = function _get(target, property, receiver) { var base = _superPropBase(target, property); if (!base) return; var desc = Object.getOwnPropertyDescriptor(base, property); if (desc.get) { return desc.get.call(receiver); } return desc.value; }; } return _get(target, property, receiver || target); }
+
+function _superPropBase(object, property) { while (!Object.prototype.hasOwnProperty.call(object, property)) { object = _getPrototypeOf(object); if (object === null) break; } return object; }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+/// <reference path="DataControlField.ts"/>
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ./DataControlField */ "./out-es5/fields/DataControlField.js"), __webpack_require__(/*! ../Errors */ "./out-es5/Errors.js"), __webpack_require__(/*! ../Utility */ "./out-es5/Utility.js")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, DataControlField_1, Errors_1, Utility_1) {
+  "use strict";
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+
+  var GridViewEditableCell =
+  /*#__PURE__*/
+  function (_DataControlField_1$G) {
+    _inherits(GridViewEditableCell, _DataControlField_1$G);
+
+    function GridViewEditableCell(field, dataItem, valueType) {
+      var _this;
+
+      _classCallCheck(this, GridViewEditableCell);
+
+      if (field == null) throw Errors_1.Errors.argumentNull('field');
+      if (dataItem == null) throw Errors_1.Errors.argumentNull('dataItem');
+      _this = _possibleConstructorReturn(this, _getPrototypeOf(GridViewEditableCell).call(this, {
+        dataField: field.dataField,
+        nullText: field.nullText,
+        dataFormatString: field.dataFormatString
+      }));
+      _this._field = field;
+      _this._dataItem = dataItem;
+      _this._valueType = valueType;
+      _this._mode = 'read';
+
+      if (!_this._valueType) {
+        var value = dataItem[field.dataField];
+        if (value instanceof Date) _this._valueType = 'date';else _this._valueType = _typeof(value);
+      }
+
+      return _this;
+    }
+
+    _createClass(GridViewEditableCell, [{
+      key: "beginEdit",
+      value: function beginEdit() {
+        if (this._field.readOnly) {
+          return;
+        }
+
+        this._mode = 'edit';
+        this.render(this._dataItem);
+      }
+    }, {
+      key: "endEdit",
+      value: function endEdit() {
+        if (this._field.readOnly) {
+          return;
+        }
+
+        this._mode = 'read';
+        var value = this.controlValue;
+        this.render(this._dataItem);
+      }
+    }, {
+      key: "cancelEdit",
+      value: function cancelEdit() {
+        if (this._field.readOnly) {
+          return;
+        }
+
+        this._mode = 'read'; // let value = this._dataItem[this.field.dataField];
+
+        this.render(this._dataItem);
+      }
+    }, {
+      key: "render",
+      value: function render(dataItem) {
+        //value
+        var value = dataItem[this.field.dataField];
+
+        if (this._mode == 'edit') {
+          this.element.innerHTML = "<input type=\"text\" />";
+          Utility_1.applyStyle(this.element.querySelector('input'), this._field.controlStyle);
+          this.element.querySelector('input').value = value === undefined ? null : "".concat(value);
+          return;
+        }
+
+        _get(_getPrototypeOf(GridViewEditableCell.prototype), "render", this).call(this, dataItem);
+      } //==============================================
+      // Virtual Methods
+
+    }, {
+      key: "field",
+      get: function get() {
+        return this._field;
+      }
+    }, {
+      key: "mode",
+      get: function get() {
+        return this._mode;
+      }
+    }, {
+      key: "controlValue",
+      get: function get() {
+        var text = this.element.querySelector('input').value;
+
+        switch (this._valueType) {
+          case 'number':
+            return new Number(text).valueOf();
+
+          case 'date':
+            return new Date(text);
+
+          default:
+            return text;
+        }
+      }
+    }]);
+
+    return GridViewEditableCell;
+  }(DataControlField_1.GridViewDataCell);
+
+  exports.GridViewEditableCell = GridViewEditableCell;
+
+  var BoundField =
+  /*#__PURE__*/
+  function (_DataControlField_1$D) {
+    _inherits(BoundField, _DataControlField_1$D);
+
+    function BoundField(params) {
+      var _this2;
+
+      _classCallCheck(this, BoundField);
+
+      _this2 = _possibleConstructorReturn(this, _getPrototypeOf(BoundField).call(this, params));
+      _this2._params = params;
+      _this2._valueElement = document.createElement('span');
+      return _this2;
+    }
+
+    _createClass(BoundField, [{
+      key: "params",
+      value: function params() {
+        return this._params;
+      }
+      /**
+       * Gets the caption displayed for a field when the field's value is null.
+       */
+
+    }, {
+      key: "createItemCell",
+      value: function createItemCell(dataItem) {
+        var cell = new GridViewEditableCell(this, dataItem);
+        cell.style(this.itemStyle);
+        return cell;
+      }
+      /**
+       * Gets the field for the value.
+       */
+
+    }, {
+      key: "nullText",
+      get: function get() {
+        return this.params().nullText;
+      }
+    }, {
+      key: "dataField",
+      get: function get() {
+        return this.params().dataField;
+      }
+      /**
+       * Gets the string that specifies the display format for the value of the field.
+       */
+
+    }, {
+      key: "dataFormatString",
+      get: function get() {
+        return this.params().dataFormatString;
+      }
+    }, {
+      key: "controlStyle",
+      get: function get() {
+        return this.params().controlStyle;
+      }
+    }, {
+      key: "readOnly",
+      get: function get() {
+        return this.params().readOnly;
+      }
+    }]);
+
+    return BoundField;
+  }(DataControlField_1.DataControlField);
+
+  exports.BoundField = BoundField;
+}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+//# sourceMappingURL=BoundField.js.map
+
 
 /***/ }),
 
@@ -211,7 +2428,457 @@ eval("var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;\n\nfuncti
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-eval("var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;\n\nfunction _typeof(obj) { if (typeof Symbol === \"function\" && typeof Symbol.iterator === \"symbol\") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === \"function\" && obj.constructor === Symbol && obj !== Symbol.prototype ? \"symbol\" : typeof obj; }; } return _typeof(obj); }\n\nfunction _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if (\"value\" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }\n\nfunction _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }\n\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\nfunction _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === \"object\" || typeof call === \"function\")) { return call; } return _assertThisInitialized(self); }\n\nfunction _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError(\"this hasn't been initialised - super() hasn't been called\"); } return self; }\n\nfunction _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }\n\nfunction _inherits(subClass, superClass) { if (typeof superClass !== \"function\" && superClass !== null) { throw new TypeError(\"Super expression must either be null or a function\"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }\n\nfunction _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }\n\n/// <reference path=\"DataControlField.ts\"/>\n!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ./DataControlField */ \"./out-es5/fields/DataControlField.js\"), __webpack_require__(/*! ../Control */ \"./out-es5/Control.js\"), __webpack_require__(/*! ./BoundField */ \"./out-es5/fields/BoundField.js\"), __webpack_require__(/*! ../Utility */ \"./out-es5/Utility.js\")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, DataControlField_1, Control_1, BoundField_1, Utility_1) {\n  \"use strict\";\n\n  Object.defineProperty(exports, \"__esModule\", {\n    value: true\n  });\n\n  var GridViewCommandCell =\n  /*#__PURE__*/\n  function (_DataControlField_1$G) {\n    _inherits(GridViewCommandCell, _DataControlField_1$G);\n\n    function GridViewCommandCell(field) {\n      _classCallCheck(this, GridViewCommandCell);\n\n      return _possibleConstructorReturn(this, _getPrototypeOf(GridViewCommandCell).call(this));\n    }\n\n    return GridViewCommandCell;\n  }(DataControlField_1.GridViewCell);\n\n  var CommandField =\n  /*#__PURE__*/\n  function (_DataControlField_1$D) {\n    _inherits(CommandField, _DataControlField_1$D);\n\n    function CommandField(params) {\n      var _this;\n\n      _classCallCheck(this, CommandField);\n\n      _this = _possibleConstructorReturn(this, _getPrototypeOf(CommandField).call(this, params));\n      if (!_this.params().cancelButtonHTML) _this.params().cancelButtonHTML = '取消';\n      if (!_this.params().deleteButtonHTML) _this.params().deleteButtonHTML = '删除';\n      if (!_this.params().editButtonHTML) _this.params().editButtonHTML = '编辑';\n      if (!_this.params().updateButtonHTML) _this.params().updateButtonHTML = '更新';\n      if (!_this.params().newButtonHTML) _this.params().newButtonHTML = '新增';\n      if (!_this.params().insertButtonHTML) _this.params().insertButtonHTML = '添加';\n      return _this;\n    }\n\n    _createClass(CommandField, [{\n      key: \"params\",\n      value: function params() {\n        return this._params;\n      }\n    }, {\n      key: \"createItemCell\",\n      value: function createItemCell(dataItem) {\n        var _this2 = this;\n\n        var cell = new GridViewCommandCell(this);\n        cell.style(this.itemStyle);\n\n        if (this.params().showEditButton) {\n          var editButton = this.createEditButton();\n          editButton.style.marginRight = '4px';\n          if (this.editButtonClass) editButton.className = this.editButtonClass;\n          cell.editButton = editButton;\n          editButton.addEventListener('click', function (e) {\n            return _this2.on_editButtonClick(e);\n          });\n          cell.appendChild(editButton);\n          var updateButton = this.createUpdateButton();\n          updateButton.style.display = 'none';\n          updateButton.style.marginRight = '4px';\n          if (this.updateButtonClass) updateButton.className = this.updateButtonClass;\n          cell.updateButton = updateButton;\n          updateButton.addEventListener('click', function (e) {\n            return _this2.on_insertOrUpdateButtonClick(e);\n          });\n          cell.appendChild(updateButton);\n          var cancelButton = this.createCancelButton();\n          cancelButton.style.display = 'none';\n          cancelButton.style.marginRight = '4px';\n          if (this.cancelButtonClass) cancelButton.className = this.cancelButtonClass;\n          cell.cacelButton = cancelButton;\n          cancelButton.addEventListener('click', function (e) {\n            return _this2.on_cancelButtonClick(e);\n          });\n          cell.appendChild(cancelButton);\n        }\n\n        if (this.params().showDeleteButton) {\n          var deleteButton = this.createDeleteButton();\n          deleteButton.style.marginRight = '4px';\n          if (this.deleteButtonClass) deleteButton.className = this.deleteButtonClass;\n          cell.deleteButton = deleteButton;\n\n          deleteButton.onclick = function (e) {\n            return _this2.on_deleteButtonClick(e);\n          };\n\n          cell.appendChild(deleteButton);\n        }\n\n        if (this.params().showNewButton) {\n          var newButton = this.createNewButton();\n          newButton.style.marginRight = '4px';\n          if (this.newButtonClass) newButton.className = this.newButtonClass;\n\n          newButton.onclick = function (e) {\n            return _this2.on_newButtonClick(e);\n          };\n\n          cell.newButton = newButton;\n          cell.appendChild(newButton);\n          var insertButton = this.createInsertButton();\n          insertButton.style.display = 'none';\n          insertButton.style.marginRight = '4px';\n          insertButton.addEventListener('click', function (e) {\n            return _this2.on_insertOrUpdateButtonClick(e);\n          });\n          if (this.insertButtonClass) insertButton.className = this.updateButtonClass;\n          cell.insertButton = insertButton;\n          cell.appendChild(insertButton);\n\n          var _cancelButton = this.createCancelButton();\n\n          _cancelButton.style.display = 'none';\n          _cancelButton.style.marginRight = '4px';\n\n          _cancelButton.addEventListener('click', function (e) {\n            return _this2.on_cancelButtonClick(e);\n          });\n\n          if (this.cancelButtonClass) _cancelButton.className = this.cancelButtonClass;\n          cell.cacelButton = _cancelButton;\n          cell.appendChild(_cancelButton);\n        }\n\n        return cell;\n      }\n    }, {\n      key: \"showReadStatusButtons\",\n      value: function showReadStatusButtons(cell) {\n        if (cell.newButton) {\n          this.showButton(cell.newButton);\n          this.hideButton(cell.insertButton);\n        }\n\n        if (cell.editButton) {\n          this.showButton(cell.editButton);\n          this.hideButton(cell.updateButton);\n        }\n\n        if (cell.deleteButton) this.showButton(cell.deleteButton);\n        this.hideButton(cell.cacelButton);\n      }\n    }, {\n      key: \"createEditButton\",\n      value: function createEditButton() {\n        var button = document.createElement('a');\n        button.innerHTML = this.editButtonHTML;\n        button.href = 'javascript:';\n        return button;\n      }\n    }, {\n      key: \"createDeleteButton\",\n      value: function createDeleteButton() {\n        var button = document.createElement('a');\n        button.innerHTML = this.deleteButtonHTML;\n        button.href = 'javascript:';\n        return button;\n      }\n    }, {\n      key: \"createInsertButton\",\n      value: function createInsertButton() {\n        var button = document.createElement('a');\n        button.innerHTML = this.insertButtonHTML;\n        button.href = 'javascript:';\n        return button;\n      }\n    }, {\n      key: \"createUpdateButton\",\n      value: function createUpdateButton() {\n        var button = document.createElement('a');\n        button.innerHTML = this.updateButtonHTML;\n        button.href = 'javascript:';\n        return button;\n      }\n    }, {\n      key: \"createCancelButton\",\n      value: function createCancelButton() {\n        var button = document.createElement('a');\n        button.innerHTML = this.cancelButtonHTML;\n        button.href = 'javascript:';\n        return button;\n      }\n    }, {\n      key: \"createNewButton\",\n      value: function createNewButton() {\n        var button = document.createElement('a');\n        button.innerHTML = this.newButtonHTML;\n        button.href = 'javascript:';\n        return button;\n      }\n    }, {\n      key: \"hideButton\",\n      value: function hideButton(button) {\n        button.style.display = 'none';\n      }\n    }, {\n      key: \"showButton\",\n      value: function showButton(button) {\n        button.style.removeProperty('display');\n      }\n    }, {\n      key: \"findParentCell\",\n      value: function findParentCell(element) {\n        var cellElement;\n        var p = element.parentElement;\n\n        while (p) {\n          if (p.tagName == 'TD') {\n            cellElement = p;\n            break;\n          }\n\n          p = p.parentElement;\n        }\n\n        return cellElement;\n      }\n    }, {\n      key: \"on_editButtonClick\",\n      value: function on_editButtonClick(e) {\n        var cellElement = this.findParentCell(e.target);\n        console.assert(cellElement != null);\n        var rowElement = cellElement.parentElement;\n\n        for (var i = 0; i < rowElement.cells.length; i++) {\n          var _cell = Control_1.Control.getControlByElement(rowElement.cells[i]);\n\n          if (_cell instanceof BoundField_1.GridViewEditableCell) {\n            _cell.beginEdit();\n          }\n        }\n\n        var cell = Control_1.Control.getControlByElement(cellElement);\n        this.showButton(cell.cacelButton);\n        this.showButton(cell.updateButton);\n        this.hideButton(cell.editButton);\n        if (cell.deleteButton) this.hideButton(cell.deleteButton);\n        if (cell.newButton) this.hideButton(cell.newButton);\n      }\n    }, {\n      key: \"on_cancelButtonClick\",\n      value: function on_cancelButtonClick(e) {\n        var cellElement = this.findParentCell(e.target);\n        console.assert(cellElement != null);\n        var rowElement = cellElement.parentElement;\n        var row = Control_1.Control.getControlByElement(rowElement);\n\n        if (row[\"isNew\"] == true) {\n          rowElement.remove();\n          return;\n        }\n\n        for (var i = 0; i < rowElement.cells.length; i++) {\n          var _cell2 = Control_1.Control.getControlByElement(rowElement.cells[i]);\n\n          if (_cell2 instanceof BoundField_1.GridViewEditableCell) {\n            _cell2.cancelEdit();\n          }\n        }\n\n        var cell = Control_1.Control.getControlByElement(cellElement);\n        this.hideButton(cell.cacelButton);\n        this.hideButton(cell.updateButton);\n        this.showButton(cell.editButton);\n        if (cell.deleteButton) this.showButton(cell.deleteButton);\n        if (cell.newButton) this.showButton(cell.newButton);\n      }\n    }, {\n      key: \"on_insertOrUpdateButtonClick\",\n      value: function on_insertOrUpdateButtonClick(e) {\n        var _this3 = this;\n\n        if (e.target['_updating']) e.target['_updating'] = true;\n        var cellElement = Utility_1.ElementHelper.findFirstParentByTagName(e.target, 'td');\n        var rowElement = cellElement.parentElement;\n        var cell = Control_1.Control.getControlByElement(cellElement);\n        var row = Control_1.Control.getControlByElement(rowElement); //==========================================================\n        // 复制 dataItem 副本\n\n        var dataItem = Object.assign({}, row.dataItem || {}); //==========================================================\n\n        var dataSource = row.gridView.dataSource;\n        var editableCells = new Array();\n\n        for (var i = 0; i < rowElement.cells.length; i++) {\n          var _cell3 = Control_1.Control.getControlByElement(rowElement.cells[i]);\n\n          if (_cell3 instanceof BoundField_1.GridViewEditableCell && _cell3.mode == 'edit') {\n            dataItem[_cell3.field.dataField] = _cell3.controlValue;\n            editableCells.push(_cell3);\n          }\n        }\n\n        var isInsert = e.target == cell.insertButton;\n        var p = isInsert ? dataSource.insert(dataItem, rowElement.rowIndex) : dataSource.update(dataItem);\n        return p.then(function () {\n          if (isInsert) {\n            rowElement.remove();\n            return;\n          }\n\n          editableCells.forEach(function (item) {\n            return item.endEdit();\n          });\n          var cell = Control_1.Control.getControlByElement(cellElement);\n\n          _this3.showReadStatusButtons(cell);\n\n          e.target['_updating'] = false;\n        }).catch(function () {\n          return e.target['_updating'] = false;\n        });\n      }\n    }, {\n      key: \"on_deleteButtonClick\",\n      value: function on_deleteButtonClick(e) {\n        var rowElement = Utility_1.ElementHelper.findFirstParentByTagName(e.target, \"tr\");\n        var row = Control_1.Control.getControlByElement(rowElement);\n        var dataSource = row.gridView.dataSource;\n        dataSource.delete(row.dataItem).then(function () {\n          rowElement.remove();\n        });\n      }\n    }, {\n      key: \"on_newButtonClick\",\n      value: function on_newButtonClick(e) {\n        var _this4 = this;\n\n        var rowElement = Utility_1.ElementHelper.findFirstParentByTagName(e.target, \"tr\"); //cellElement.parentElement as HTMLTableRowElement;\n\n        var row = Control_1.Control.getControlByElement(rowElement);\n        var gridView = row.gridView;\n        var newRow = gridView.appendDataRow({}, rowElement.rowIndex);\n        newRow[\"isNew\"] = true;\n        var commandCells = newRow.cells.filter(function (o) {\n          return o instanceof GridViewCommandCell;\n        });\n        newRow.cells.filter(function (o) {\n          return o instanceof BoundField_1.GridViewEditableCell;\n        }).forEach(function (c) {\n          return c.beginEdit();\n        });\n        commandCells.forEach(function (cell) {\n          if (cell.deleteButton) _this4.hideButton(cell.deleteButton);\n          if (cell.editButton) _this4.hideButton(cell.editButton);\n\n          _this4.hideButton(cell.newButton);\n\n          _this4.showButton(cell.insertButton);\n\n          _this4.showButton(cell.cacelButton);\n        });\n      }\n    }, {\n      key: \"cancelButtonHTML\",\n      get: function get() {\n        return this.params().cancelButtonHTML;\n      }\n    }, {\n      key: \"deleteButtonHTML\",\n      get: function get() {\n        return this.params().deleteButtonHTML;\n      }\n    }, {\n      key: \"editButtonHTML\",\n      get: function get() {\n        return this.params().editButtonHTML;\n      }\n    }, {\n      key: \"updateButtonHTML\",\n      get: function get() {\n        return this.params().updateButtonHTML;\n      }\n    }, {\n      key: \"newButtonHTML\",\n      get: function get() {\n        return this.params().newButtonHTML;\n      }\n    }, {\n      key: \"insertButtonHTML\",\n      get: function get() {\n        return this.params().insertButtonHTML;\n      }\n    }, {\n      key: \"cancelButtonClass\",\n      get: function get() {\n        return this.params().cancelButtonClass;\n      }\n    }, {\n      key: \"deleteButtonClass\",\n      get: function get() {\n        return this.params().deleteButtonClass;\n      }\n    }, {\n      key: \"editButtonClass\",\n      get: function get() {\n        return this.params().editButtonClass;\n      }\n    }, {\n      key: \"newButtonClass\",\n      get: function get() {\n        return this.params().newButtonClass;\n      }\n    }, {\n      key: \"updateButtonClass\",\n      get: function get() {\n        return this.params().updateButtonClass;\n      }\n    }, {\n      key: \"insertButtonClass\",\n      get: function get() {\n        return this.params().insertButtonClass;\n      }\n    }]);\n\n    return CommandField;\n  }(DataControlField_1.DataControlField);\n\n  exports.CommandField = CommandField;\n}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),\n\t\t\t\t__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));\n//# sourceMappingURL=CommandField.js.map\n\n\n//# sourceURL=webpack:///./out-es5/fields/CommandField.js?");
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
+
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+/// <reference path="DataControlField.ts"/>
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ./DataControlField */ "./out-es5/fields/DataControlField.js"), __webpack_require__(/*! ../Control */ "./out-es5/Control.js"), __webpack_require__(/*! ./BoundField */ "./out-es5/fields/BoundField.js"), __webpack_require__(/*! ../Utility */ "./out-es5/Utility.js")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, DataControlField_1, Control_1, BoundField_1, Utility_1) {
+  "use strict";
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+
+  var GridViewCommandCell =
+  /*#__PURE__*/
+  function (_DataControlField_1$G) {
+    _inherits(GridViewCommandCell, _DataControlField_1$G);
+
+    function GridViewCommandCell(field) {
+      _classCallCheck(this, GridViewCommandCell);
+
+      return _possibleConstructorReturn(this, _getPrototypeOf(GridViewCommandCell).call(this));
+    }
+
+    return GridViewCommandCell;
+  }(DataControlField_1.GridViewCell);
+
+  var CommandField =
+  /*#__PURE__*/
+  function (_DataControlField_1$D) {
+    _inherits(CommandField, _DataControlField_1$D);
+
+    function CommandField(params) {
+      var _this;
+
+      _classCallCheck(this, CommandField);
+
+      _this = _possibleConstructorReturn(this, _getPrototypeOf(CommandField).call(this, params));
+      if (!_this.params().cancelButtonHTML) _this.params().cancelButtonHTML = '取消';
+      if (!_this.params().deleteButtonHTML) _this.params().deleteButtonHTML = '删除';
+      if (!_this.params().editButtonHTML) _this.params().editButtonHTML = '编辑';
+      if (!_this.params().updateButtonHTML) _this.params().updateButtonHTML = '更新';
+      if (!_this.params().newButtonHTML) _this.params().newButtonHTML = '新增';
+      if (!_this.params().insertButtonHTML) _this.params().insertButtonHTML = '添加';
+      return _this;
+    }
+
+    _createClass(CommandField, [{
+      key: "params",
+      value: function params() {
+        return this._params;
+      }
+    }, {
+      key: "createItemCell",
+      value: function createItemCell(dataItem) {
+        var _this2 = this;
+
+        var cell = new GridViewCommandCell(this);
+        cell.style(this.itemStyle);
+
+        if (this.params().showEditButton) {
+          var editButton = this.createEditButton();
+          editButton.style.marginRight = '4px';
+          if (this.editButtonClass) editButton.className = this.editButtonClass;
+          cell.editButton = editButton;
+          editButton.addEventListener('click', function (e) {
+            return _this2.on_editButtonClick(e);
+          });
+          cell.appendChild(editButton);
+          var updateButton = this.createUpdateButton();
+          updateButton.style.display = 'none';
+          updateButton.style.marginRight = '4px';
+          if (this.updateButtonClass) updateButton.className = this.updateButtonClass;
+          cell.updateButton = updateButton;
+          updateButton.addEventListener('click', function (e) {
+            return _this2.on_insertOrUpdateButtonClick(e);
+          });
+          cell.appendChild(updateButton);
+          var cancelButton = this.createCancelButton();
+          cancelButton.style.display = 'none';
+          cancelButton.style.marginRight = '4px';
+          if (this.cancelButtonClass) cancelButton.className = this.cancelButtonClass;
+          cell.cacelButton = cancelButton;
+          cancelButton.addEventListener('click', function (e) {
+            return _this2.on_cancelButtonClick(e);
+          });
+          cell.appendChild(cancelButton);
+        }
+
+        if (this.params().showDeleteButton) {
+          var deleteButton = this.createDeleteButton();
+          deleteButton.style.marginRight = '4px';
+          if (this.deleteButtonClass) deleteButton.className = this.deleteButtonClass;
+          cell.deleteButton = deleteButton;
+
+          deleteButton.onclick = function (e) {
+            return _this2.on_deleteButtonClick(e);
+          };
+
+          cell.appendChild(deleteButton);
+        }
+
+        if (this.params().showNewButton) {
+          var newButton = this.createNewButton();
+          newButton.style.marginRight = '4px';
+          if (this.newButtonClass) newButton.className = this.newButtonClass;
+
+          newButton.onclick = function (e) {
+            return _this2.on_newButtonClick(e);
+          };
+
+          cell.newButton = newButton;
+          cell.appendChild(newButton);
+          var insertButton = this.createInsertButton();
+          insertButton.style.display = 'none';
+          insertButton.style.marginRight = '4px';
+          insertButton.addEventListener('click', function (e) {
+            return _this2.on_insertOrUpdateButtonClick(e);
+          });
+          if (this.insertButtonClass) insertButton.className = this.updateButtonClass;
+          cell.insertButton = insertButton;
+          cell.appendChild(insertButton);
+
+          var _cancelButton = this.createCancelButton();
+
+          _cancelButton.style.display = 'none';
+          _cancelButton.style.marginRight = '4px';
+
+          _cancelButton.addEventListener('click', function (e) {
+            return _this2.on_cancelButtonClick(e);
+          });
+
+          if (this.cancelButtonClass) _cancelButton.className = this.cancelButtonClass;
+          cell.cacelButton = _cancelButton;
+          cell.appendChild(_cancelButton);
+        }
+
+        return cell;
+      }
+    }, {
+      key: "showReadStatusButtons",
+      value: function showReadStatusButtons(cell) {
+        if (cell.newButton) {
+          this.showButton(cell.newButton);
+          this.hideButton(cell.insertButton);
+        }
+
+        if (cell.editButton) {
+          this.showButton(cell.editButton);
+          this.hideButton(cell.updateButton);
+        }
+
+        if (cell.deleteButton) this.showButton(cell.deleteButton);
+        this.hideButton(cell.cacelButton);
+      }
+    }, {
+      key: "createEditButton",
+      value: function createEditButton() {
+        var button = document.createElement('a');
+        button.innerHTML = this.editButtonHTML;
+        button.href = 'javascript:';
+        return button;
+      }
+    }, {
+      key: "createDeleteButton",
+      value: function createDeleteButton() {
+        var button = document.createElement('a');
+        button.innerHTML = this.deleteButtonHTML;
+        button.href = 'javascript:';
+        return button;
+      }
+    }, {
+      key: "createInsertButton",
+      value: function createInsertButton() {
+        var button = document.createElement('a');
+        button.innerHTML = this.insertButtonHTML;
+        button.href = 'javascript:';
+        return button;
+      }
+    }, {
+      key: "createUpdateButton",
+      value: function createUpdateButton() {
+        var button = document.createElement('a');
+        button.innerHTML = this.updateButtonHTML;
+        button.href = 'javascript:';
+        return button;
+      }
+    }, {
+      key: "createCancelButton",
+      value: function createCancelButton() {
+        var button = document.createElement('a');
+        button.innerHTML = this.cancelButtonHTML;
+        button.href = 'javascript:';
+        return button;
+      }
+    }, {
+      key: "createNewButton",
+      value: function createNewButton() {
+        var button = document.createElement('a');
+        button.innerHTML = this.newButtonHTML;
+        button.href = 'javascript:';
+        return button;
+      }
+    }, {
+      key: "hideButton",
+      value: function hideButton(button) {
+        button.style.display = 'none';
+      }
+    }, {
+      key: "showButton",
+      value: function showButton(button) {
+        button.style.removeProperty('display');
+      }
+    }, {
+      key: "findParentCell",
+      value: function findParentCell(element) {
+        var cellElement;
+        var p = element.parentElement;
+
+        while (p) {
+          if (p.tagName == 'TD') {
+            cellElement = p;
+            break;
+          }
+
+          p = p.parentElement;
+        }
+
+        return cellElement;
+      }
+    }, {
+      key: "on_editButtonClick",
+      value: function on_editButtonClick(e) {
+        var cellElement = this.findParentCell(e.target);
+        console.assert(cellElement != null);
+        var rowElement = cellElement.parentElement;
+
+        for (var i = 0; i < rowElement.cells.length; i++) {
+          var _cell = Control_1.Control.getControlByElement(rowElement.cells[i]);
+
+          if (_cell instanceof BoundField_1.GridViewEditableCell) {
+            _cell.beginEdit();
+          }
+        }
+
+        var cell = Control_1.Control.getControlByElement(cellElement);
+        this.showButton(cell.cacelButton);
+        this.showButton(cell.updateButton);
+        this.hideButton(cell.editButton);
+        if (cell.deleteButton) this.hideButton(cell.deleteButton);
+        if (cell.newButton) this.hideButton(cell.newButton);
+      }
+    }, {
+      key: "on_cancelButtonClick",
+      value: function on_cancelButtonClick(e) {
+        var cellElement = this.findParentCell(e.target);
+        console.assert(cellElement != null);
+        var rowElement = cellElement.parentElement;
+        var row = Control_1.Control.getControlByElement(rowElement);
+
+        if (row["isNew"] == true) {
+          rowElement.remove();
+          return;
+        }
+
+        for (var i = 0; i < rowElement.cells.length; i++) {
+          var _cell2 = Control_1.Control.getControlByElement(rowElement.cells[i]);
+
+          if (_cell2 instanceof BoundField_1.GridViewEditableCell) {
+            _cell2.cancelEdit();
+          }
+        }
+
+        var cell = Control_1.Control.getControlByElement(cellElement);
+        this.hideButton(cell.cacelButton);
+        this.hideButton(cell.updateButton);
+        this.showButton(cell.editButton);
+        if (cell.deleteButton) this.showButton(cell.deleteButton);
+        if (cell.newButton) this.showButton(cell.newButton);
+      }
+    }, {
+      key: "on_insertOrUpdateButtonClick",
+      value: function on_insertOrUpdateButtonClick(e) {
+        var _this3 = this;
+
+        if (e.target['_updating']) e.target['_updating'] = true;
+        var cellElement = Utility_1.ElementHelper.findFirstParentByTagName(e.target, 'td');
+        var rowElement = cellElement.parentElement;
+        var cell = Control_1.Control.getControlByElement(cellElement);
+        var row = Control_1.Control.getControlByElement(rowElement); //==========================================================
+        // 复制 dataItem 副本
+
+        var dataItem = Object.assign({}, row.dataItem || {}); //==========================================================
+
+        var dataSource = row.gridView.dataSource;
+        var editableCells = new Array();
+
+        for (var i = 0; i < rowElement.cells.length; i++) {
+          var _cell3 = Control_1.Control.getControlByElement(rowElement.cells[i]);
+
+          if (_cell3 instanceof BoundField_1.GridViewEditableCell && _cell3.mode == 'edit') {
+            dataItem[_cell3.field.dataField] = _cell3.controlValue;
+            editableCells.push(_cell3);
+          }
+        }
+
+        var isInsert = e.target == cell.insertButton;
+        var p = isInsert ? dataSource.insert(dataItem, rowElement.rowIndex) : dataSource.update(dataItem);
+        return p.then(function () {
+          if (isInsert) {
+            rowElement.remove();
+            return;
+          }
+
+          editableCells.forEach(function (item) {
+            return item.endEdit();
+          });
+          var cell = Control_1.Control.getControlByElement(cellElement);
+
+          _this3.showReadStatusButtons(cell);
+
+          e.target['_updating'] = false;
+        }).catch(function () {
+          return e.target['_updating'] = false;
+        });
+      }
+    }, {
+      key: "on_deleteButtonClick",
+      value: function on_deleteButtonClick(e) {
+        var rowElement = Utility_1.ElementHelper.findFirstParentByTagName(e.target, "tr");
+        var row = Control_1.Control.getControlByElement(rowElement);
+        var dataSource = row.gridView.dataSource;
+        dataSource.delete(row.dataItem).then(function () {
+          rowElement.remove();
+        });
+      }
+    }, {
+      key: "on_newButtonClick",
+      value: function on_newButtonClick(e) {
+        var _this4 = this;
+
+        var rowElement = Utility_1.ElementHelper.findFirstParentByTagName(e.target, "tr"); //cellElement.parentElement as HTMLTableRowElement;
+
+        var row = Control_1.Control.getControlByElement(rowElement);
+        var gridView = row.gridView;
+        var newRow = gridView.appendDataRow({}, rowElement.rowIndex);
+        newRow["isNew"] = true;
+        var commandCells = newRow.cells.filter(function (o) {
+          return o instanceof GridViewCommandCell;
+        });
+        newRow.cells.filter(function (o) {
+          return o instanceof BoundField_1.GridViewEditableCell;
+        }).forEach(function (c) {
+          return c.beginEdit();
+        });
+        commandCells.forEach(function (cell) {
+          if (cell.deleteButton) _this4.hideButton(cell.deleteButton);
+          if (cell.editButton) _this4.hideButton(cell.editButton);
+
+          _this4.hideButton(cell.newButton);
+
+          _this4.showButton(cell.insertButton);
+
+          _this4.showButton(cell.cacelButton);
+        });
+      }
+    }, {
+      key: "cancelButtonHTML",
+      get: function get() {
+        return this.params().cancelButtonHTML;
+      }
+    }, {
+      key: "deleteButtonHTML",
+      get: function get() {
+        return this.params().deleteButtonHTML;
+      }
+    }, {
+      key: "editButtonHTML",
+      get: function get() {
+        return this.params().editButtonHTML;
+      }
+    }, {
+      key: "updateButtonHTML",
+      get: function get() {
+        return this.params().updateButtonHTML;
+      }
+    }, {
+      key: "newButtonHTML",
+      get: function get() {
+        return this.params().newButtonHTML;
+      }
+    }, {
+      key: "insertButtonHTML",
+      get: function get() {
+        return this.params().insertButtonHTML;
+      }
+    }, {
+      key: "cancelButtonClass",
+      get: function get() {
+        return this.params().cancelButtonClass;
+      }
+    }, {
+      key: "deleteButtonClass",
+      get: function get() {
+        return this.params().deleteButtonClass;
+      }
+    }, {
+      key: "editButtonClass",
+      get: function get() {
+        return this.params().editButtonClass;
+      }
+    }, {
+      key: "newButtonClass",
+      get: function get() {
+        return this.params().newButtonClass;
+      }
+    }, {
+      key: "updateButtonClass",
+      get: function get() {
+        return this.params().updateButtonClass;
+      }
+    }, {
+      key: "insertButtonClass",
+      get: function get() {
+        return this.params().insertButtonClass;
+      }
+    }]);
+
+    return CommandField;
+  }(DataControlField_1.DataControlField);
+
+  exports.CommandField = CommandField;
+}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+//# sourceMappingURL=CommandField.js.map
+
 
 /***/ }),
 
@@ -223,7 +2890,96 @@ eval("var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;\n\nfuncti
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-eval("var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;\n\nfunction _typeof(obj) { if (typeof Symbol === \"function\" && typeof Symbol.iterator === \"symbol\") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === \"function\" && obj.constructor === Symbol && obj !== Symbol.prototype ? \"symbol\" : typeof obj; }; } return _typeof(obj); }\n\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\nfunction _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if (\"value\" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }\n\nfunction _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }\n\nfunction _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === \"object\" || typeof call === \"function\")) { return call; } return _assertThisInitialized(self); }\n\nfunction _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError(\"this hasn't been initialised - super() hasn't been called\"); } return self; }\n\nfunction _get(target, property, receiver) { if (typeof Reflect !== \"undefined\" && Reflect.get) { _get = Reflect.get; } else { _get = function _get(target, property, receiver) { var base = _superPropBase(target, property); if (!base) return; var desc = Object.getOwnPropertyDescriptor(base, property); if (desc.get) { return desc.get.call(receiver); } return desc.value; }; } return _get(target, property, receiver || target); }\n\nfunction _superPropBase(object, property) { while (!Object.prototype.hasOwnProperty.call(object, property)) { object = _getPrototypeOf(object); if (object === null) break; } return object; }\n\nfunction _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }\n\nfunction _inherits(subClass, superClass) { if (typeof superClass !== \"function\" && superClass !== null) { throw new TypeError(\"Super expression must either be null or a function\"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }\n\nfunction _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }\n\n!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ./DataControlField */ \"./out-es5/fields/DataControlField.js\")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, DataControlField_1) {\n  \"use strict\";\n\n  Object.defineProperty(exports, \"__esModule\", {\n    value: true\n  });\n\n  var CustomField =\n  /*#__PURE__*/\n  function (_DataControlField_1$D) {\n    _inherits(CustomField, _DataControlField_1$D);\n\n    function CustomField(params) {\n      _classCallCheck(this, CustomField);\n\n      return _possibleConstructorReturn(this, _getPrototypeOf(CustomField).call(this, params));\n    }\n\n    _createClass(CustomField, [{\n      key: \"params\",\n      value: function params() {\n        return this._params;\n      }\n    }, {\n      key: \"createHeaderCell\",\n      value: function createHeaderCell() {\n        if (this.params().createHeaderCell) {\n          var cell = this.params().createHeaderCell();\n          cell.style(this.headerStyle);\n          return cell;\n        }\n\n        return _get(_getPrototypeOf(CustomField.prototype), \"createHeaderCell\", this).call(this);\n      }\n    }, {\n      key: \"createFooterCell\",\n      value: function createFooterCell() {\n        if (this.params().createFooterCell) {\n          var cell = this.params().createFooterCell();\n          cell.style(this.params().footerStyle);\n          return cell;\n        }\n\n        return _get(_getPrototypeOf(CustomField.prototype), \"createFooterCell\", this).call(this);\n      }\n    }, {\n      key: \"createItemCell\",\n      value: function createItemCell(dataItem) {\n        if (this.params().createItemCell) {\n          var cell = this.params().createItemCell.apply(this, [dataItem]);\n          cell.style(this.params().itemStyle);\n          return cell;\n        }\n\n        return _get(_getPrototypeOf(CustomField.prototype), \"createItemCell\", this).call(this, dataItem);\n      }\n    }]);\n\n    return CustomField;\n  }(DataControlField_1.DataControlField);\n\n  exports.CustomField = CustomField;\n}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),\n\t\t\t\t__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));\n//# sourceMappingURL=CustomField.js.map\n\n\n//# sourceURL=webpack:///./out-es5/fields/CustomField.js?");
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
+
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _get(target, property, receiver) { if (typeof Reflect !== "undefined" && Reflect.get) { _get = Reflect.get; } else { _get = function _get(target, property, receiver) { var base = _superPropBase(target, property); if (!base) return; var desc = Object.getOwnPropertyDescriptor(base, property); if (desc.get) { return desc.get.call(receiver); } return desc.value; }; } return _get(target, property, receiver || target); }
+
+function _superPropBase(object, property) { while (!Object.prototype.hasOwnProperty.call(object, property)) { object = _getPrototypeOf(object); if (object === null) break; } return object; }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ./DataControlField */ "./out-es5/fields/DataControlField.js")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, DataControlField_1) {
+  "use strict";
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+
+  var CustomField =
+  /*#__PURE__*/
+  function (_DataControlField_1$D) {
+    _inherits(CustomField, _DataControlField_1$D);
+
+    function CustomField(params) {
+      _classCallCheck(this, CustomField);
+
+      return _possibleConstructorReturn(this, _getPrototypeOf(CustomField).call(this, params));
+    }
+
+    _createClass(CustomField, [{
+      key: "params",
+      value: function params() {
+        return this._params;
+      }
+    }, {
+      key: "createHeaderCell",
+      value: function createHeaderCell() {
+        if (this.params().createHeaderCell) {
+          var cell = this.params().createHeaderCell();
+          cell.style(this.headerStyle);
+          return cell;
+        }
+
+        return _get(_getPrototypeOf(CustomField.prototype), "createHeaderCell", this).call(this);
+      }
+    }, {
+      key: "createFooterCell",
+      value: function createFooterCell() {
+        if (this.params().createFooterCell) {
+          var cell = this.params().createFooterCell();
+          cell.style(this.params().footerStyle);
+          return cell;
+        }
+
+        return _get(_getPrototypeOf(CustomField.prototype), "createFooterCell", this).call(this);
+      }
+    }, {
+      key: "createItemCell",
+      value: function createItemCell(dataItem) {
+        if (this.params().createItemCell) {
+          var cell = this.params().createItemCell.apply(this, [dataItem]);
+          cell.style(this.params().itemStyle);
+          return cell;
+        }
+
+        return _get(_getPrototypeOf(CustomField.prototype), "createItemCell", this).call(this, dataItem);
+      }
+    }]);
+
+    return CustomField;
+  }(DataControlField_1.DataControlField);
+
+  exports.CustomField = CustomField;
+}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+//# sourceMappingURL=CustomField.js.map
+
 
 /***/ }),
 
@@ -235,7 +2991,421 @@ eval("var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;\n\nfuncti
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-eval("var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;\n\nfunction _typeof(obj) { if (typeof Symbol === \"function\" && typeof Symbol.iterator === \"symbol\") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === \"function\" && obj.constructor === Symbol && obj !== Symbol.prototype ? \"symbol\" : typeof obj; }; } return _typeof(obj); }\n\nfunction _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if (\"value\" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }\n\nfunction _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }\n\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\nfunction _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === \"object\" || typeof call === \"function\")) { return call; } return _assertThisInitialized(self); }\n\nfunction _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError(\"this hasn't been initialised - super() hasn't been called\"); } return self; }\n\nfunction _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }\n\nfunction _inherits(subClass, superClass) { if (typeof superClass !== \"function\" && superClass !== null) { throw new TypeError(\"Super expression must either be null or a function\"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }\n\nfunction _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }\n\n!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ../Control */ \"./out-es5/Control.js\"), __webpack_require__(/*! ../Utility */ \"./out-es5/Utility.js\"), __webpack_require__(/*! ../Errors */ \"./out-es5/Errors.js\")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, Control_1, Utility_1, Errors_1) {\n  \"use strict\";\n\n  Object.defineProperty(exports, \"__esModule\", {\n    value: true\n  });\n\n  var GridViewCell =\n  /*#__PURE__*/\n  function (_Control_1$Control) {\n    _inherits(GridViewCell, _Control_1$Control);\n\n    function GridViewCell() {\n      _classCallCheck(this, GridViewCell);\n\n      return _possibleConstructorReturn(this, _getPrototypeOf(GridViewCell).call(this, document.createElement('td')));\n    }\n\n    return GridViewCell;\n  }(Control_1.Control);\n\n  exports.GridViewCell = GridViewCell;\n\n  var GridViewDataCell =\n  /*#__PURE__*/\n  function (_GridViewCell) {\n    _inherits(GridViewDataCell, _GridViewCell);\n\n    function GridViewDataCell(params) {\n      var _this;\n\n      _classCallCheck(this, GridViewDataCell);\n\n      _this = _possibleConstructorReturn(this, _getPrototypeOf(GridViewDataCell).call(this));\n      var p = params;\n      _this.nullText = p.nullText != null ? p.nullText : '';\n      _this.dataFormatString = p.dataFormatString;\n      _this.dataField = p.dataField;\n\n      if (p.render) {\n        _this.render = function (dataItem) {\n          return p.render.apply(_assertThisInitialized(_this), [dataItem, _this.element]);\n        };\n      }\n\n      return _this;\n    }\n\n    _createClass(GridViewDataCell, [{\n      key: \"render\",\n      value: function render(dataItem) {\n        var value = dataItem[this.dataField];\n        var text;\n        if (value == null) text = this.nullText;else if (this.dataFormatString) text = this.formatValue(this.dataFormatString, value);else text = \"\".concat(value);\n        this.element.innerHTML = text;\n      }\n    }, {\n      key: \"formatValue\",\n      value: function formatValue(format, arg) {\n        var result = '';\n\n        for (var i = 0;;) {\n          var open = format.indexOf('{', i);\n          var close = format.indexOf('}', i);\n\n          if (open < 0 && close < 0) {\n            result += format.slice(i);\n            break;\n          }\n\n          if (close > 0 && (close < open || open < 0)) {\n            if (format.charAt(close + 1) !== '}') {\n              throw new Error('Sys.Res.stringFormatBraceMismatch');\n            }\n\n            result += format.slice(i, close + 1);\n            i = close + 2;\n            continue;\n          }\n\n          result += format.slice(i, open);\n          i = open + 1;\n\n          if (format.charAt(i) === '{') {\n            result += '{';\n            i++;\n            continue;\n          }\n\n          if (close < 0) throw new Error('Sys.Res.stringFormatBraceMismatch');\n          var brace = format.substring(i, close);\n          var argFormat = brace;\n\n          if (typeof arg === \"undefined\" || arg === null) {\n            arg = '';\n          }\n\n          if (arg instanceof Date) result = result + this.formatDate(arg, argFormat);else if (arg instanceof Number || typeof arg == 'number') result = result + this.formatNumber(arg, argFormat);else result = result + arg.toString();\n          i = close + 1;\n        }\n\n        return result;\n      }\n    }, {\n      key: \"formatDate\",\n      value: function formatDate(value, format) {\n        var y = value.getFullYear();\n        var m = value.getMonth() + 1;\n        var d = value.getDate();\n        var h = value.getHours();\n        var M = value.getMinutes();\n        var s = value.getSeconds();\n\n        var twoDigit = function twoDigit(value) {\n          var TEN = 10;\n          if (value < TEN) return \"0\" + value;\n          return value.toString();\n        };\n\n        switch (format) {\n          case 'd':\n            return \"\".concat(y, \"-\").concat(m, \"-\").concat(d);\n\n          case 'g':\n            return \"\".concat(y, \"-\").concat(m, \"-\").concat(d, \" \").concat(h, \":\").concat(M);\n\n          case 'gg':\n            return \"\".concat(y, \"-\").concat(twoDigit(m), \"-\").concat(twoDigit(d), \" \").concat(twoDigit(h), \":\").concat(twoDigit(M));\n\n          case 'G':\n            return \"\".concat(y, \"-\").concat(m, \"-\").concat(d, \" \").concat(h, \":\").concat(M, \":\").concat(s);\n\n          case 'GG':\n            return \"\".concat(y, \"-\").concat(twoDigit(m), \"-\").concat(twoDigit(d), \" \").concat(twoDigit(h), \":\").concat(twoDigit(M), \":\").concat(twoDigit(s));\n\n          case 't':\n            return \"\".concat(h, \":\").concat(M);\n\n          case 'T':\n            return \"\".concat(h, \":\").concat(M, \":\").concat(s);\n        }\n\n        return value.toString();\n      }\n    }, {\n      key: \"formatNumber\",\n      value: function formatNumber(value, format) {\n        var reg = new RegExp('^C[0-9]+');\n\n        if (reg.test(format)) {\n          var num = format.substr(1);\n          return value.toFixed(num);\n        }\n\n        return value.toString();\n      }\n    }]);\n\n    return GridViewDataCell;\n  }(GridViewCell);\n\n  exports.GridViewDataCell = GridViewDataCell;\n\n  var GridViewHeaderCell =\n  /*#__PURE__*/\n  function (_Control_1$Control2) {\n    _inherits(GridViewHeaderCell, _Control_1$Control2);\n\n    function GridViewHeaderCell(field) {\n      var _this2;\n\n      _classCallCheck(this, GridViewHeaderCell);\n\n      _this2 = _possibleConstructorReturn(this, _getPrototypeOf(GridViewHeaderCell).call(this, document.createElement('th')));\n      _this2.ascHTML = '↑';\n      _this2.descHTML = '↓';\n      _this2.sortingHTML = '...';\n      _this2.toSortHTML = '↕';\n      _this2.field = field;\n      _this2.sorting = Utility_1.callbacks();\n      _this2.sorted = Utility_1.callbacks();\n\n      if (field.sortExpression) {\n        var labelElement = document.createElement('a');\n        labelElement.href = 'javascript:';\n        labelElement.innerHTML = _this2.defaultHeaderText();\n\n        labelElement.onclick = function () {\n          return _this2.handleSort();\n        };\n\n        _this2._iconElement = document.createElement('span');\n        _this2._iconElement.innerHTML = _this2.toSortHTML;\n\n        _this2.appendChild(labelElement);\n\n        _this2.appendChild(_this2._iconElement);\n\n        _this2.sorting.add(function () {\n          return _this2._iconElement.innerHTML = _this2.sortingHTML;\n        });\n\n        _this2.sorted.add(function () {\n          return _this2.updateSortIcon();\n        });\n      } else {\n        _this2.element.innerHTML = _this2.defaultHeaderText();\n      }\n\n      _this2.style(field.headerStyle);\n\n      return _this2;\n    }\n\n    _createClass(GridViewHeaderCell, [{\n      key: \"handleSort\",\n      value: function handleSort() {\n        var _this3 = this;\n\n        var selectArguments = this.field.gridView.selectArguments;\n        var sortType = this.sortType == 'asc' ? 'desc' : 'asc';\n        Utility_1.fireCallback(this.sorting, this, {\n          sortType: sortType\n        });\n        selectArguments.sortExpression = this.field.sortExpression + ' ' + sortType;\n        return this.field.gridView.dataSource.select(selectArguments).then(function () {\n          _this3.sortType = sortType;\n          Utility_1.fireCallback(_this3.sorted, _this3, {\n            sortType: sortType\n          });\n        });\n      }\n    }, {\n      key: \"defaultHeaderText\",\n      value: function defaultHeaderText() {\n        return this.field.headerText || this.field.dataField || '';\n      }\n    }, {\n      key: \"clearSortIcon\",\n      value: function clearSortIcon() {\n        this._iconElement.innerHTML = this.toSortHTML;\n      }\n    }, {\n      key: \"updateSortIcon\",\n      value: function updateSortIcon() {\n        if (this.sortType == 'asc') {\n          this._iconElement.innerHTML = this.ascHTML;\n        } else if (this.sortType == 'desc') {\n          this._iconElement.innerHTML = this.descHTML;\n        } else {\n          this._iconElement.innerHTML = this.toSortHTML;\n        }\n      }\n    }, {\n      key: \"sortType\",\n      get: function get() {\n        return this._sortType;\n      },\n      set: function set(value) {\n        this._sortType = value;\n      }\n    }]);\n\n    return GridViewHeaderCell;\n  }(Control_1.Control);\n\n  exports.GridViewHeaderCell = GridViewHeaderCell;\n\n  var DataControlField =\n  /*#__PURE__*/\n  function () {\n    function DataControlField(params) {\n      _classCallCheck(this, DataControlField);\n\n      if (params.visible == null) params.visible = true;\n      this._params = params;\n    }\n    /**\r\n     * Gets the text that is displayed in the footer item of a data control field.\r\n     */\n\n\n    _createClass(DataControlField, [{\n      key: \"createHeaderCell\",\n      value: function createHeaderCell() {\n        var cell = new GridViewHeaderCell(this);\n        return cell;\n      }\n    }, {\n      key: \"createFooterCell\",\n      value: function createFooterCell() {\n        var cell = new GridViewCell();\n        cell.element.innerHTML = this.footerText || '';\n        cell.style(this.footerStyle);\n        return cell;\n      }\n    }, {\n      key: \"createItemCell\",\n      value: function createItemCell(dataItem) {\n        if (!dataItem) throw Errors_1.Errors.argumentNull('dataItem');\n        var cell = new GridViewCell();\n        cell.style(this.itemStyle);\n        return cell;\n      }\n    }, {\n      key: \"footerText\",\n      get: function get() {\n        return this._params.footerText;\n      }\n      /**\r\n       * Sets the text that is displayed in the footer item of a data control field.\r\n       */\n      ,\n      set: function set(value) {\n        this._params.footerText = value;\n      }\n      /**\r\n       * Gets the text that is displayed in the header item of a data control field.\r\n       */\n\n    }, {\n      key: \"headerText\",\n      get: function get() {\n        return this._params.headerText;\n      }\n      /**\r\n      * Sets the text that is displayed in the header item of a data control field.\r\n      */\n      ,\n      set: function set(value) {\n        this._params.headerText = value;\n      }\n    }, {\n      key: \"itemStyle\",\n      get: function get() {\n        return this._params.itemStyle;\n      },\n      set: function set(value) {\n        this._params.itemStyle = value;\n      }\n    }, {\n      key: \"footerStyle\",\n      get: function get() {\n        return this._params.footerStyle;\n      },\n      set: function set(value) {\n        this._params.footerStyle = value;\n      }\n    }, {\n      key: \"headerStyle\",\n      get: function get() {\n        return this._params.headerStyle;\n      },\n      set: function set(value) {\n        this._params.headerStyle = value;\n      }\n    }, {\n      key: \"visible\",\n      get: function get() {\n        return this._params.visible;\n      }\n    }, {\n      key: \"gridView\",\n      get: function get() {\n        return this._gridView;\n      },\n      set: function set(value) {\n        this._gridView = value;\n      }\n      /**\r\n       * Gets a sort expression that is used by a data source control to sort data.\r\n       */\n\n    }, {\n      key: \"sortExpression\",\n      get: function get() {\n        return this._params.sortExpression;\n      }\n      /**\r\n       * Sets a sort expression that is used by a data source control to sort data.\r\n       */\n      ,\n      set: function set(value) {\n        this._params.sortExpression = value;\n      }\n    }]);\n\n    return DataControlField;\n  }();\n\n  exports.DataControlField = DataControlField;\n}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),\n\t\t\t\t__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));\n//# sourceMappingURL=DataControlField.js.map\n\n\n//# sourceURL=webpack:///./out-es5/fields/DataControlField.js?");
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
+
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ../Control */ "./out-es5/Control.js"), __webpack_require__(/*! ../Utility */ "./out-es5/Utility.js"), __webpack_require__(/*! ../Errors */ "./out-es5/Errors.js")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, Control_1, Utility_1, Errors_1) {
+  "use strict";
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+
+  var GridViewCell =
+  /*#__PURE__*/
+  function (_Control_1$Control) {
+    _inherits(GridViewCell, _Control_1$Control);
+
+    function GridViewCell() {
+      _classCallCheck(this, GridViewCell);
+
+      return _possibleConstructorReturn(this, _getPrototypeOf(GridViewCell).call(this, document.createElement('td')));
+    }
+
+    return GridViewCell;
+  }(Control_1.Control);
+
+  exports.GridViewCell = GridViewCell;
+
+  var GridViewDataCell =
+  /*#__PURE__*/
+  function (_GridViewCell) {
+    _inherits(GridViewDataCell, _GridViewCell);
+
+    function GridViewDataCell(params) {
+      var _this;
+
+      _classCallCheck(this, GridViewDataCell);
+
+      _this = _possibleConstructorReturn(this, _getPrototypeOf(GridViewDataCell).call(this));
+      var p = params;
+      _this.nullText = p.nullText != null ? p.nullText : '';
+      _this.dataFormatString = p.dataFormatString;
+      _this.dataField = p.dataField;
+
+      if (p.render) {
+        _this.render = function (dataItem) {
+          return p.render.apply(_assertThisInitialized(_this), [dataItem, _this.element]);
+        };
+      }
+
+      return _this;
+    }
+
+    _createClass(GridViewDataCell, [{
+      key: "render",
+      value: function render(dataItem) {
+        var value = dataItem[this.dataField];
+        var text;
+        if (value == null) text = this.nullText;else if (this.dataFormatString) text = this.formatValue(this.dataFormatString, value);else text = "".concat(value);
+        this.element.innerHTML = text;
+      }
+    }, {
+      key: "formatValue",
+      value: function formatValue(format, arg) {
+        var result = '';
+
+        for (var i = 0;;) {
+          var open = format.indexOf('{', i);
+          var close = format.indexOf('}', i);
+
+          if (open < 0 && close < 0) {
+            result += format.slice(i);
+            break;
+          }
+
+          if (close > 0 && (close < open || open < 0)) {
+            if (format.charAt(close + 1) !== '}') {
+              throw new Error('Sys.Res.stringFormatBraceMismatch');
+            }
+
+            result += format.slice(i, close + 1);
+            i = close + 2;
+            continue;
+          }
+
+          result += format.slice(i, open);
+          i = open + 1;
+
+          if (format.charAt(i) === '{') {
+            result += '{';
+            i++;
+            continue;
+          }
+
+          if (close < 0) throw new Error('Sys.Res.stringFormatBraceMismatch');
+          var brace = format.substring(i, close);
+          var argFormat = brace;
+
+          if (typeof arg === "undefined" || arg === null) {
+            arg = '';
+          }
+
+          if (arg instanceof Date) result = result + this.formatDate(arg, argFormat);else if (arg instanceof Number || typeof arg == 'number') result = result + this.formatNumber(arg, argFormat);else result = result + arg.toString();
+          i = close + 1;
+        }
+
+        return result;
+      }
+    }, {
+      key: "formatDate",
+      value: function formatDate(value, format) {
+        var y = value.getFullYear();
+        var m = value.getMonth() + 1;
+        var d = value.getDate();
+        var h = value.getHours();
+        var M = value.getMinutes();
+        var s = value.getSeconds();
+
+        var twoDigit = function twoDigit(value) {
+          var TEN = 10;
+          if (value < TEN) return "0" + value;
+          return value.toString();
+        };
+
+        switch (format) {
+          case 'd':
+            return "".concat(y, "-").concat(m, "-").concat(d);
+
+          case 'g':
+            return "".concat(y, "-").concat(m, "-").concat(d, " ").concat(h, ":").concat(M);
+
+          case 'gg':
+            return "".concat(y, "-").concat(twoDigit(m), "-").concat(twoDigit(d), " ").concat(twoDigit(h), ":").concat(twoDigit(M));
+
+          case 'G':
+            return "".concat(y, "-").concat(m, "-").concat(d, " ").concat(h, ":").concat(M, ":").concat(s);
+
+          case 'GG':
+            return "".concat(y, "-").concat(twoDigit(m), "-").concat(twoDigit(d), " ").concat(twoDigit(h), ":").concat(twoDigit(M), ":").concat(twoDigit(s));
+
+          case 't':
+            return "".concat(h, ":").concat(M);
+
+          case 'T':
+            return "".concat(h, ":").concat(M, ":").concat(s);
+        }
+
+        return value.toString();
+      }
+    }, {
+      key: "formatNumber",
+      value: function formatNumber(value, format) {
+        var reg = new RegExp('^C[0-9]+');
+
+        if (reg.test(format)) {
+          var num = format.substr(1);
+          return value.toFixed(num);
+        }
+
+        return value.toString();
+      }
+    }]);
+
+    return GridViewDataCell;
+  }(GridViewCell);
+
+  exports.GridViewDataCell = GridViewDataCell;
+
+  var GridViewHeaderCell =
+  /*#__PURE__*/
+  function (_Control_1$Control2) {
+    _inherits(GridViewHeaderCell, _Control_1$Control2);
+
+    function GridViewHeaderCell(field) {
+      var _this2;
+
+      _classCallCheck(this, GridViewHeaderCell);
+
+      _this2 = _possibleConstructorReturn(this, _getPrototypeOf(GridViewHeaderCell).call(this, document.createElement('th')));
+      _this2.ascHTML = '↑';
+      _this2.descHTML = '↓';
+      _this2.sortingHTML = '...';
+      _this2.toSortHTML = '↕';
+      _this2.field = field;
+      _this2.sorting = Utility_1.callbacks();
+      _this2.sorted = Utility_1.callbacks();
+
+      if (field.sortExpression) {
+        var labelElement = document.createElement('a');
+        labelElement.href = 'javascript:';
+        labelElement.innerHTML = _this2.defaultHeaderText();
+
+        labelElement.onclick = function () {
+          return _this2.handleSort();
+        };
+
+        _this2._iconElement = document.createElement('span');
+        _this2._iconElement.innerHTML = _this2.toSortHTML;
+
+        _this2.appendChild(labelElement);
+
+        _this2.appendChild(_this2._iconElement);
+
+        _this2.sorting.add(function () {
+          return _this2._iconElement.innerHTML = _this2.sortingHTML;
+        });
+
+        _this2.sorted.add(function () {
+          return _this2.updateSortIcon();
+        });
+      } else {
+        _this2.element.innerHTML = _this2.defaultHeaderText();
+      }
+
+      _this2.style(field.headerStyle);
+
+      return _this2;
+    }
+
+    _createClass(GridViewHeaderCell, [{
+      key: "handleSort",
+      value: function handleSort() {
+        var _this3 = this;
+
+        var selectArguments = this.field.gridView.selectArguments;
+        var sortType = this.sortType == 'asc' ? 'desc' : 'asc';
+        Utility_1.fireCallback(this.sorting, this, {
+          sortType: sortType
+        });
+        selectArguments.sortExpression = this.field.sortExpression + ' ' + sortType;
+        return this.field.gridView.dataSource.select(selectArguments).then(function () {
+          _this3.sortType = sortType;
+          Utility_1.fireCallback(_this3.sorted, _this3, {
+            sortType: sortType
+          });
+        });
+      }
+    }, {
+      key: "defaultHeaderText",
+      value: function defaultHeaderText() {
+        return this.field.headerText || this.field.dataField || '';
+      }
+    }, {
+      key: "clearSortIcon",
+      value: function clearSortIcon() {
+        this._iconElement.innerHTML = this.toSortHTML;
+      }
+    }, {
+      key: "updateSortIcon",
+      value: function updateSortIcon() {
+        if (this.sortType == 'asc') {
+          this._iconElement.innerHTML = this.ascHTML;
+        } else if (this.sortType == 'desc') {
+          this._iconElement.innerHTML = this.descHTML;
+        } else {
+          this._iconElement.innerHTML = this.toSortHTML;
+        }
+      }
+    }, {
+      key: "sortType",
+      get: function get() {
+        return this._sortType;
+      },
+      set: function set(value) {
+        this._sortType = value;
+      }
+    }]);
+
+    return GridViewHeaderCell;
+  }(Control_1.Control);
+
+  exports.GridViewHeaderCell = GridViewHeaderCell;
+
+  var DataControlField =
+  /*#__PURE__*/
+  function () {
+    function DataControlField(params) {
+      _classCallCheck(this, DataControlField);
+
+      if (params.visible == null) params.visible = true;
+      this._params = params;
+    }
+    /**
+     * Gets the text that is displayed in the footer item of a data control field.
+     */
+
+
+    _createClass(DataControlField, [{
+      key: "createHeaderCell",
+      value: function createHeaderCell() {
+        var cell = new GridViewHeaderCell(this);
+        return cell;
+      }
+    }, {
+      key: "createFooterCell",
+      value: function createFooterCell() {
+        var cell = new GridViewCell();
+        cell.element.innerHTML = this.footerText || '';
+        cell.style(this.footerStyle);
+        return cell;
+      }
+    }, {
+      key: "createItemCell",
+      value: function createItemCell(dataItem) {
+        if (!dataItem) throw Errors_1.Errors.argumentNull('dataItem');
+        var cell = new GridViewCell();
+        cell.style(this.itemStyle);
+        return cell;
+      }
+    }, {
+      key: "footerText",
+      get: function get() {
+        return this._params.footerText;
+      }
+      /**
+       * Sets the text that is displayed in the footer item of a data control field.
+       */
+      ,
+      set: function set(value) {
+        this._params.footerText = value;
+      }
+      /**
+       * Gets the text that is displayed in the header item of a data control field.
+       */
+
+    }, {
+      key: "headerText",
+      get: function get() {
+        return this._params.headerText;
+      }
+      /**
+      * Sets the text that is displayed in the header item of a data control field.
+      */
+      ,
+      set: function set(value) {
+        this._params.headerText = value;
+      }
+    }, {
+      key: "itemStyle",
+      get: function get() {
+        return this._params.itemStyle;
+      },
+      set: function set(value) {
+        this._params.itemStyle = value;
+      }
+    }, {
+      key: "footerStyle",
+      get: function get() {
+        return this._params.footerStyle;
+      },
+      set: function set(value) {
+        this._params.footerStyle = value;
+      }
+    }, {
+      key: "headerStyle",
+      get: function get() {
+        return this._params.headerStyle;
+      },
+      set: function set(value) {
+        this._params.headerStyle = value;
+      }
+    }, {
+      key: "visible",
+      get: function get() {
+        return this._params.visible;
+      }
+    }, {
+      key: "gridView",
+      get: function get() {
+        return this._gridView;
+      },
+      set: function set(value) {
+        this._gridView = value;
+      }
+      /**
+       * Gets a sort expression that is used by a data source control to sort data.
+       */
+
+    }, {
+      key: "sortExpression",
+      get: function get() {
+        return this._params.sortExpression;
+      }
+      /**
+       * Sets a sort expression that is used by a data source control to sort data.
+       */
+      ,
+      set: function set(value) {
+        this._params.sortExpression = value;
+      }
+    }]);
+
+    return DataControlField;
+  }();
+
+  exports.DataControlField = DataControlField;
+}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+//# sourceMappingURL=DataControlField.js.map
+
 
 /***/ }),
 
@@ -247,8 +3417,34 @@ eval("var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;\n\nfuncti
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-eval("var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;\n\n!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ./GridView */ \"./out-es5/GridView.js\"), __webpack_require__(/*! ./fields/BoundField */ \"./out-es5/fields/BoundField.js\"), __webpack_require__(/*! ./fields/CommandField */ \"./out-es5/fields/CommandField.js\"), __webpack_require__(/*! ./fields/CustomField */ \"./out-es5/fields/CustomField.js\"), __webpack_require__(/*! ./fields/DataControlField */ \"./out-es5/fields/DataControlField.js\"), __webpack_require__(/*! ./DropDown */ \"./out-es5/DropDown.js\"), __webpack_require__(/*! ./TextBox */ \"./out-es5/TextBox.js\"), __webpack_require__(/*! ./DataSource */ \"./out-es5/DataSource.js\"), __webpack_require__(/*! ./NumberPagingBar */ \"./out-es5/NumberPagingBar.js\")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, GridView_1, BoundField_1, CommandField_1, CustomField_1, DataControlField_1, DropDown_1, TextBox_1, DataSource_1, NumberPagingBar_1) {\n  \"use strict\";\n\n  Object.defineProperty(exports, \"__esModule\", {\n    value: true\n  });\n  exports.GridView = GridView_1.GridView;\n  exports.GridViewDataRow = GridView_1.GridViewDataRow;\n  exports.BoundField = BoundField_1.BoundField;\n  exports.CommandField = CommandField_1.CommandField;\n  exports.CustomField = CustomField_1.CustomField;\n  exports.GridViewCell = DataControlField_1.GridViewCell;\n  exports.DataControlField = DataControlField_1.DataControlField;\n  exports.GridViewDataCell = DataControlField_1.GridViewDataCell;\n  exports.DropDown = DropDown_1.DropDown;\n  exports.TextBox = TextBox_1.TextBox;\n  exports.DataSource = DataSource_1.DataSource;\n  exports.DataSourceSelectArguments = DataSource_1.DataSourceSelectArguments;\n  exports.ArrayDataSource = DataSource_1.ArrayDataSource;\n  exports.NumberPagingBar = NumberPagingBar_1.NumberPagingBar;\n}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),\n\t\t\t\t__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));\n//# sourceMappingURL=index.js.map\n\n\n//# sourceURL=webpack:///./out-es5/index.js?");
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
+
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ./GridView */ "./out-es5/GridView.js"), __webpack_require__(/*! ./fields/BoundField */ "./out-es5/fields/BoundField.js"), __webpack_require__(/*! ./fields/CommandField */ "./out-es5/fields/CommandField.js"), __webpack_require__(/*! ./fields/CustomField */ "./out-es5/fields/CustomField.js"), __webpack_require__(/*! ./fields/DataControlField */ "./out-es5/fields/DataControlField.js"), __webpack_require__(/*! ./DropDown */ "./out-es5/DropDown.js"), __webpack_require__(/*! ./TextBox */ "./out-es5/TextBox.js"), __webpack_require__(/*! ./DataSource */ "./out-es5/DataSource.js"), __webpack_require__(/*! ./NumberPagingBar */ "./out-es5/NumberPagingBar.js")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, GridView_1, BoundField_1, CommandField_1, CustomField_1, DataControlField_1, DropDown_1, TextBox_1, DataSource_1, NumberPagingBar_1) {
+  "use strict";
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.GridView = GridView_1.GridView;
+  exports.GridViewDataRow = GridView_1.GridViewDataRow;
+  exports.BoundField = BoundField_1.BoundField;
+  exports.CommandField = CommandField_1.CommandField;
+  exports.CustomField = CustomField_1.CustomField;
+  exports.GridViewCell = DataControlField_1.GridViewCell;
+  exports.DataControlField = DataControlField_1.DataControlField;
+  exports.GridViewDataCell = DataControlField_1.GridViewDataCell;
+  exports.DropDown = DropDown_1.DropDown;
+  exports.TextBox = TextBox_1.TextBox;
+  exports.DataSource = DataSource_1.DataSource;
+  exports.DataSourceSelectArguments = DataSource_1.DataSourceSelectArguments;
+  exports.ArrayDataSource = DataSource_1.ArrayDataSource;
+  exports.NumberPagingBar = NumberPagingBar_1.NumberPagingBar;
+}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+//# sourceMappingURL=index.js.map
+
 
 /***/ })
 
 /******/ })});;
+//# sourceMappingURL=index.es5.js.map

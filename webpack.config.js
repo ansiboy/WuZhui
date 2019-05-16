@@ -15,6 +15,7 @@ module.exports = {
         libraryTarget: 'amd'
     },
     mode: 'development',
+    devtool: 'source-map',
     plugins: [
         new webpack.BannerPlugin(license),
     ],

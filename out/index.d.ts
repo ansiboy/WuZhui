@@ -6,4 +6,4 @@ export { GridViewCell, DataControlField, DataControlFieldParams, GridViewDataCel
 export { DropDown, DropDownParams } from './DropDown';
 export { TextBox, TextBoxParams } from './TextBox';
 export { DataSource, DataSourceArguments, DataSourceSelectArguments, DataSourceSelectResult, ArrayDataSource } from './DataSource';
-export { NumberPagingBar } from './NumberPagingBar';
+export { NumberPagingBar, PagerSettings } from './NumberPagingBar';

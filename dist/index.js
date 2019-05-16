@@ -1,6 +1,6 @@
 /*!
  * 
- *  maishu-wuzhui v1.3.4
+ *  maishu-wuzhui v1.3.5
  *  https://github.com/ansiboy/wuzhui
  *  
  *  Copyright (c) 2016-2018, shu mai <ansiboy@163.com>
@@ -102,7 +102,63 @@ define(function() { return /******/ (function(modules) { // webpackBootstrap
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ./Errors */ \"./out/Errors.js\"), __webpack_require__(/*! ./Utility */ \"./out/Utility.js\")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, Errors_1, Utility_1) {\r\n    \"use strict\";\r\n    Object.defineProperty(exports, \"__esModule\", { value: true });\r\n    // namespace wuzhui {\r\n    const CONTROL_DATA_NAME = 'Control';\r\n    class Control {\r\n        constructor(element) {\r\n            if (!element)\r\n                throw Errors_1.Errors.argumentNull('element');\r\n            this._element = element;\r\n            Utility_1.ElementHelper.data(element, CONTROL_DATA_NAME, this);\r\n        }\r\n        get visible() {\r\n            return Utility_1.ElementHelper.isVisible(this._element);\r\n        }\r\n        set visible(value) {\r\n            if (value) {\r\n                Utility_1.ElementHelper.showElement(this._element);\r\n            }\r\n            else {\r\n                Utility_1.ElementHelper.hideElement(this._element);\r\n            }\r\n        }\r\n        get element() {\r\n            return this._element;\r\n        }\r\n        appendChild(child, index) {\r\n            if (child == null)\r\n                throw Errors_1.Errors.argumentNull('child');\r\n            let childElement;\r\n            if (child instanceof Control)\r\n                childElement = child.element;\r\n            else\r\n                childElement = child;\r\n            let placeChild;\r\n            if (index != null) {\r\n                placeChild = this.element.children[index];\r\n            }\r\n            if (placeChild == null) {\r\n                this.element.appendChild(childElement);\r\n            }\r\n            else {\r\n                this.element.insertBefore(childElement, placeChild);\r\n            }\r\n        }\r\n        style(value) {\r\n            Utility_1.applyStyle(this.element, value);\r\n        }\r\n        static getControlByElement(element) {\r\n            return Utility_1.ElementHelper.data(element, CONTROL_DATA_NAME);\r\n        }\r\n    }\r\n    exports.Control = Control;\r\n}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),\n\t\t\t\t__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));\r\n// }\r\n\n\n//# sourceURL=webpack:///./out/Control.js?");
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ./Errors */ "./out/Errors.js"), __webpack_require__(/*! ./Utility */ "./out/Utility.js")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, Errors_1, Utility_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    // namespace wuzhui {
+    const CONTROL_DATA_NAME = 'Control';
+    class Control {
+        constructor(element) {
+            if (!element)
+                throw Errors_1.Errors.argumentNull('element');
+            this._element = element;
+            Utility_1.ElementHelper.data(element, CONTROL_DATA_NAME, this);
+        }
+        get visible() {
+            return Utility_1.ElementHelper.isVisible(this._element);
+        }
+        set visible(value) {
+            if (value) {
+                Utility_1.ElementHelper.showElement(this._element);
+            }
+            else {
+                Utility_1.ElementHelper.hideElement(this._element);
+            }
+        }
+        get element() {
+            return this._element;
+        }
+        appendChild(child, index) {
+            if (child == null)
+                throw Errors_1.Errors.argumentNull('child');
+            let childElement;
+            if (child instanceof Control)
+                childElement = child.element;
+            else
+                childElement = child;
+            let placeChild;
+            if (index != null) {
+                placeChild = this.element.children[index];
+            }
+            if (placeChild == null) {
+                this.element.appendChild(childElement);
+            }
+            else {
+                this.element.insertBefore(childElement, placeChild);
+            }
+        }
+        style(value) {
+            Utility_1.applyStyle(this.element, value);
+        }
+        static getControlByElement(element) {
+            return Utility_1.ElementHelper.data(element, CONTROL_DATA_NAME);
+        }
+    }
+    exports.Control = Control;
+}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+// }
+
 
 /***/ }),
 
@@ -113,7 +169,182 @@ eval("var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPAC
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {\r\n    return new (P || (P = Promise))(function (resolve, reject) {\r\n        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }\r\n        function rejected(value) { try { step(generator[\"throw\"](value)); } catch (e) { reject(e); } }\r\n        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }\r\n        step((generator = generator.apply(thisArg, _arguments || [])).next());\r\n    });\r\n};\r\n!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ./Errors */ \"./out/Errors.js\"), __webpack_require__(/*! ./Utility */ \"./out/Utility.js\")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, Errors_1, Utility_1) {\r\n    \"use strict\";\r\n    Object.defineProperty(exports, \"__esModule\", { value: true });\r\n    class DataSource {\r\n        constructor(args) {\r\n            this.inserting = Utility_1.callbacks1();\r\n            this.inserted = Utility_1.callbacks1();\r\n            this.deleting = Utility_1.callbacks();\r\n            this.deleted = Utility_1.callbacks();\r\n            this.updating = Utility_1.callbacks();\r\n            this.updated = Utility_1.callbacks();\r\n            this.selecting = Utility_1.callbacks();\r\n            this.selected = Utility_1.callbacks();\r\n            this.error = Utility_1.callbacks();\r\n            this.args = args;\r\n            this.primaryKeys = args.primaryKeys || [];\r\n        }\r\n        get canDelete() {\r\n            return this.args.delete != null && this.primaryKeys.length > 0;\r\n        }\r\n        get canInsert() {\r\n            return this.args.insert != null && this.primaryKeys.length > 0;\r\n        }\r\n        get canUpdate() {\r\n            return this.args.update != null && this.primaryKeys.length > 0;\r\n        }\r\n        executeInsert(item, args) {\r\n            return this.args.insert(item, args);\r\n        }\r\n        executeDelete(item, args) {\r\n            return this.args.delete(item, args);\r\n        }\r\n        executeUpdate(item, args) {\r\n            return this.args.update(item, args);\r\n        }\r\n        executeSelect(args) {\r\n            return this.args.select(args);\r\n        }\r\n        insert(item, args, index) {\r\n            if (!this.canInsert)\r\n                throw Errors_1.Errors.dataSourceCanntInsert();\r\n            if (!item)\r\n                throw Errors_1.Errors.argumentNull(\"item\");\r\n            if (typeof args == 'number') {\r\n                index = args;\r\n                args = null;\r\n            }\r\n            this.inserting.fire(this, item, index);\r\n            return this.executeInsert(item, args).then((data) => {\r\n                Object.assign(item, data);\r\n                this.inserted.fire(this, item, index);\r\n                return data;\r\n            }).catch(exc => {\r\n                this.processError(exc, 'insert');\r\n                throw exc;\r\n            });\r\n        }\r\n        delete(item, args) {\r\n            if (!this.canDelete)\r\n                throw Errors_1.Errors.dataSourceCanntDelete();\r\n            if (!item)\r\n                throw Errors_1.Errors.argumentNull(\"item\");\r\n            this.checkPrimaryKeys(item);\r\n            this.deleting.fire(this, item);\r\n            return this.executeDelete(item, args).then((data) => {\r\n                this.deleted.fire(this, item);\r\n                return data;\r\n            }).catch(exc => {\r\n                this.processError(exc, 'delete');\r\n                throw exc;\r\n            });\r\n        }\r\n        update(item, args) {\r\n            if (!this.canUpdate)\r\n                throw Errors_1.Errors.dataSourceCanntUpdate();\r\n            if (!item)\r\n                throw Errors_1.Errors.argumentNull(\"item\");\r\n            this.checkPrimaryKeys(item);\r\n            this.updating.fire(this, item);\r\n            return this.executeUpdate(item, args).then((data) => {\r\n                Object.assign(item, data);\r\n                this.updated.fire(this, item);\r\n                return data;\r\n            }).catch((exc) => {\r\n                this.processError(exc, 'update');\r\n                throw exc;\r\n            });\r\n        }\r\n        isSameItem(theItem, otherItem) {\r\n            if (theItem == null)\r\n                throw Errors_1.Errors.argumentNull('theItem');\r\n            if (otherItem == null)\r\n                throw Errors_1.Errors.argumentNull('otherItem');\r\n            if (this.primaryKeys.length == 0)\r\n                return theItem == otherItem;\r\n            this.checkPrimaryKeys(theItem);\r\n            this.checkPrimaryKeys(otherItem);\r\n            for (let pk of this.primaryKeys) {\r\n                if (theItem[pk] != otherItem[pk])\r\n                    return false;\r\n            }\r\n            return true;\r\n        }\r\n        checkPrimaryKeys(item) {\r\n            for (let key in item) {\r\n                if (item[key] == null && this.primaryKeys.indexOf(key) >= 0)\r\n                    throw Errors_1.Errors.primaryKeyNull(key);\r\n            }\r\n        }\r\n        select(args) {\r\n            console.assert(args != null);\r\n            Utility_1.fireCallback(this.selecting, this, args);\r\n            return this.executeSelect(args).then((data) => {\r\n                let dataItems;\r\n                let totalRowCount;\r\n                if (Array.isArray(data)) {\r\n                    dataItems = data;\r\n                    totalRowCount = data.length;\r\n                }\r\n                else if (data.dataItems !== undefined && data.totalRowCount !== undefined) {\r\n                    dataItems = data.dataItems;\r\n                    totalRowCount = data.totalRowCount;\r\n                }\r\n                else {\r\n                    throw Errors_1.Errors.queryResultTypeError();\r\n                }\r\n                this.selected.fire(this, { totalRowCount, dataItems });\r\n                return { totalRowCount, dataItems };\r\n            }).catch(exc => {\r\n                this.processError(exc, 'select');\r\n                throw exc;\r\n            });\r\n        }\r\n        processError(exc, method) {\r\n            exc.method = method;\r\n            this.error.fire(this, exc);\r\n            if (!exc.handled)\r\n                throw exc;\r\n        }\r\n    }\r\n    exports.DataSource = DataSource;\r\n    class DataSourceSelectArguments {\r\n        constructor() {\r\n            this.startRowIndex = 0;\r\n            this.maximumRows = 2147483647;\r\n        }\r\n    }\r\n    exports.DataSourceSelectArguments = DataSourceSelectArguments;\r\n    class ArrayDataSource extends DataSource {\r\n        constructor(items) {\r\n            super({\r\n                select(args) {\r\n                    return __awaiter(this, void 0, void 0, function* () {\r\n                        if (args.sortExpression) {\r\n                        }\r\n                        let dataItems = items.slice(args.startRowIndex, args.startRowIndex + args.maximumRows);\r\n                        let result = { dataItems, totalRowCount: items.length };\r\n                        return result;\r\n                    });\r\n                }\r\n            });\r\n        }\r\n    }\r\n    exports.ArrayDataSource = ArrayDataSource;\r\n}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),\n\t\t\t\t__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));\r\n// }\r\n\n\n//# sourceURL=webpack:///./out/DataSource.js?");
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ./Errors */ "./out/Errors.js"), __webpack_require__(/*! ./Utility */ "./out/Utility.js")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, Errors_1, Utility_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    class DataSource {
+        constructor(args) {
+            this.inserting = Utility_1.callbacks1();
+            this.inserted = Utility_1.callbacks1();
+            this.deleting = Utility_1.callbacks();
+            this.deleted = Utility_1.callbacks();
+            this.updating = Utility_1.callbacks();
+            this.updated = Utility_1.callbacks();
+            this.selecting = Utility_1.callbacks();
+            this.selected = Utility_1.callbacks();
+            this.error = Utility_1.callbacks();
+            this.args = args;
+            this.primaryKeys = args.primaryKeys || [];
+        }
+        get canDelete() {
+            return this.args.delete != null && this.primaryKeys.length > 0;
+        }
+        get canInsert() {
+            return this.args.insert != null && this.primaryKeys.length > 0;
+        }
+        get canUpdate() {
+            return this.args.update != null && this.primaryKeys.length > 0;
+        }
+        executeInsert(item, args) {
+            return this.args.insert(item, args);
+        }
+        executeDelete(item, args) {
+            return this.args.delete(item, args);
+        }
+        executeUpdate(item, args) {
+            return this.args.update(item, args);
+        }
+        executeSelect(args) {
+            return this.args.select(args);
+        }
+        insert(item, args, index) {
+            if (!this.canInsert)
+                throw Errors_1.Errors.dataSourceCanntInsert();
+            if (!item)
+                throw Errors_1.Errors.argumentNull("item");
+            if (typeof args == 'number') {
+                index = args;
+                args = null;
+            }
+            this.inserting.fire(this, item, index);
+            return this.executeInsert(item, args).then((data) => {
+                Object.assign(item, data);
+                this.inserted.fire(this, item, index);
+                return data;
+            }).catch(exc => {
+                this.processError(exc, 'insert');
+                throw exc;
+            });
+        }
+        delete(item, args) {
+            if (!this.canDelete)
+                throw Errors_1.Errors.dataSourceCanntDelete();
+            if (!item)
+                throw Errors_1.Errors.argumentNull("item");
+            this.checkPrimaryKeys(item);
+            this.deleting.fire(this, item);
+            return this.executeDelete(item, args).then((data) => {
+                this.deleted.fire(this, item);
+                return data;
+            }).catch(exc => {
+                this.processError(exc, 'delete');
+                throw exc;
+            });
+        }
+        update(item, args) {
+            if (!this.canUpdate)
+                throw Errors_1.Errors.dataSourceCanntUpdate();
+            if (!item)
+                throw Errors_1.Errors.argumentNull("item");
+            this.checkPrimaryKeys(item);
+            this.updating.fire(this, item);
+            return this.executeUpdate(item, args).then((data) => {
+                Object.assign(item, data);
+                this.updated.fire(this, item);
+                return data;
+            }).catch((exc) => {
+                this.processError(exc, 'update');
+                throw exc;
+            });
+        }
+        isSameItem(theItem, otherItem) {
+            if (theItem == null)
+                throw Errors_1.Errors.argumentNull('theItem');
+            if (otherItem == null)
+                throw Errors_1.Errors.argumentNull('otherItem');
+            if (this.primaryKeys.length == 0)
+                return theItem == otherItem;
+            this.checkPrimaryKeys(theItem);
+            this.checkPrimaryKeys(otherItem);
+            for (let pk of this.primaryKeys) {
+                if (theItem[pk] != otherItem[pk])
+                    return false;
+            }
+            return true;
+        }
+        checkPrimaryKeys(item) {
+            for (let key in item) {
+                if (item[key] == null && this.primaryKeys.indexOf(key) >= 0)
+                    throw Errors_1.Errors.primaryKeyNull(key);
+            }
+        }
+        select(args) {
+            console.assert(args != null);
+            Utility_1.fireCallback(this.selecting, this, args);
+            return this.executeSelect(args).then((data) => {
+                let dataItems;
+                let totalRowCount;
+                if (Array.isArray(data)) {
+                    dataItems = data;
+                    totalRowCount = data.length;
+                }
+                else if (data.dataItems !== undefined && data.totalRowCount !== undefined) {
+                    dataItems = data.dataItems;
+                    totalRowCount = data.totalRowCount;
+                }
+                else {
+                    throw Errors_1.Errors.queryResultTypeError();
+                }
+                this.selected.fire(this, { totalRowCount, dataItems });
+                return { totalRowCount, dataItems };
+            }).catch(exc => {
+                this.processError(exc, 'select');
+                throw exc;
+            });
+        }
+        processError(exc, method) {
+            exc.method = method;
+            this.error.fire(this, exc);
+            if (!exc.handled)
+                throw exc;
+        }
+    }
+    exports.DataSource = DataSource;
+    class DataSourceSelectArguments {
+        constructor() {
+            this.startRowIndex = 0;
+            this.maximumRows = 2147483647;
+        }
+    }
+    exports.DataSourceSelectArguments = DataSourceSelectArguments;
+    class ArrayDataSource extends DataSource {
+        constructor(items) {
+            super({
+                select(args) {
+                    return __awaiter(this, void 0, void 0, function* () {
+                        if (args.sortExpression) {
+                        }
+                        let dataItems = items.slice(args.startRowIndex, args.startRowIndex + args.maximumRows);
+                        let result = { dataItems, totalRowCount: items.length };
+                        return result;
+                    });
+                }
+            });
+        }
+    }
+    exports.ArrayDataSource = ArrayDataSource;
+}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+// }
+
 
 /***/ }),
 
@@ -124,7 +355,50 @@ eval("var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var __awai
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {\r\n    return new (P || (P = Promise))(function (resolve, reject) {\r\n        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }\r\n        function rejected(value) { try { step(generator[\"throw\"](value)); } catch (e) { reject(e); } }\r\n        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }\r\n        step((generator = generator.apply(thisArg, _arguments || [])).next());\r\n    });\r\n};\r\n!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ./Control */ \"./out/Control.js\"), __webpack_require__(/*! ./Errors */ \"./out/Errors.js\")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, Control_1, Errors_1) {\r\n    \"use strict\";\r\n    Object.defineProperty(exports, \"__esModule\", { value: true });\r\n    class DropDown extends Control_1.Control {\r\n        constructor(params) {\r\n            super(params.element);\r\n            if (params == null)\r\n                throw Errors_1.Errors.argumentNull('params');\r\n            if (params.dataSource == null)\r\n                throw Errors_1.Errors.argumentFieldNull('params', 'dataSource');\r\n            if (params.element == null)\r\n                throw Errors_1.Errors.argumentFieldNull('params', 'element');\r\n            this.init(params);\r\n        }\r\n        init(params) {\r\n            return __awaiter(this, void 0, void 0, function* () {\r\n                let r = yield params.dataSource.select({});\r\n                r.dataItems.forEach(dataItem => {\r\n                    let option = document.createElement('option');\r\n                    let name = params.nameField ? dataItem[params.nameField] : dataItem;\r\n                    let value = params.valueField ? dataItem[params.valueField] : dataItem;\r\n                    if (name == null)\r\n                        name = '';\r\n                    if (value == null)\r\n                        value = '';\r\n                    option.innerHTML = name;\r\n                    option.value = value;\r\n                    this.element.appendChild(option);\r\n                });\r\n            });\r\n        }\r\n    }\r\n    exports.DropDown = DropDown;\r\n}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),\n\t\t\t\t__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));\r\n\n\n//# sourceURL=webpack:///./out/DropDown.js?");
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ./Control */ "./out/Control.js"), __webpack_require__(/*! ./Errors */ "./out/Errors.js")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, Control_1, Errors_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    class DropDown extends Control_1.Control {
+        constructor(params) {
+            super(params.element);
+            if (params == null)
+                throw Errors_1.Errors.argumentNull('params');
+            if (params.dataSource == null)
+                throw Errors_1.Errors.argumentFieldNull('params', 'dataSource');
+            if (params.element == null)
+                throw Errors_1.Errors.argumentFieldNull('params', 'element');
+            this.init(params);
+        }
+        init(params) {
+            return __awaiter(this, void 0, void 0, function* () {
+                let r = yield params.dataSource.select({});
+                r.dataItems.forEach(dataItem => {
+                    let option = document.createElement('option');
+                    let name = params.nameField ? dataItem[params.nameField] : dataItem;
+                    let value = params.valueField ? dataItem[params.valueField] : dataItem;
+                    if (name == null)
+                        name = '';
+                    if (value == null)
+                        value = '';
+                    option.innerHTML = name;
+                    option.value = value;
+                    this.element.appendChild(option);
+                });
+            });
+        }
+    }
+    exports.DropDown = DropDown;
+}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
 
 /***/ }),
 
@@ -135,7 +409,51 @@ eval("var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var __awai
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports) {\r\n    \"use strict\";\r\n    Object.defineProperty(exports, \"__esModule\", { value: true });\r\n    // namespace wuzhui {\r\n    class Errors {\r\n        static notImplemented(message) {\r\n            message = message || \"Not implemented\";\r\n            return new Error(message);\r\n        }\r\n        static argumentNull(paramName) {\r\n            return new Error(\"Argument '\" + paramName + \"' can not be null.\");\r\n        }\r\n        static controllBelonsAnother() {\r\n            return new Error(\"The control is belongs another control.\");\r\n        }\r\n        static columnsCanntEmpty() {\r\n            return new Error(\"Columns cannt empty.\");\r\n        }\r\n        static dataSourceCanntInsert() {\r\n            return new Error(\"DataSource can not insert.\");\r\n        }\r\n        static dataSourceCanntUpdate() {\r\n            return new Error(\"DataSource can not update.\");\r\n        }\r\n        static dataSourceCanntDelete() {\r\n            return new Error(\"DataSource can not delete.\");\r\n        }\r\n        static primaryKeyNull(key) {\r\n            let msg = `Primary key named '${key}' value is null.`;\r\n            return new Error(msg);\r\n        }\r\n        static queryResultTypeError() {\r\n            let msg = 'Type of the query result is expected as Array or DataSourceSelectResult.';\r\n            return new Error(msg);\r\n        }\r\n        static argumentFieldNull(argumentName, fieldName) {\r\n            let msg = `Argument ${argumentName} ${fieldName} field can not be null or empty.`;\r\n            return new Error(msg);\r\n        }\r\n    }\r\n    exports.Errors = Errors;\r\n}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),\n\t\t\t\t__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));\r\n// }\r\n\n\n//# sourceURL=webpack:///./out/Errors.js?");
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    // namespace wuzhui {
+    class Errors {
+        static notImplemented(message) {
+            message = message || "Not implemented";
+            return new Error(message);
+        }
+        static argumentNull(paramName) {
+            return new Error("Argument '" + paramName + "' can not be null.");
+        }
+        static controllBelonsAnother() {
+            return new Error("The control is belongs another control.");
+        }
+        static columnsCanntEmpty() {
+            return new Error("Columns cannt empty.");
+        }
+        static dataSourceCanntInsert() {
+            return new Error("DataSource can not insert.");
+        }
+        static dataSourceCanntUpdate() {
+            return new Error("DataSource can not update.");
+        }
+        static dataSourceCanntDelete() {
+            return new Error("DataSource can not delete.");
+        }
+        static primaryKeyNull(key) {
+            let msg = `Primary key named '${key}' value is null.`;
+            return new Error(msg);
+        }
+        static queryResultTypeError() {
+            let msg = 'Type of the query result is expected as Array or DataSourceSelectResult.';
+            return new Error(msg);
+        }
+        static argumentFieldNull(argumentName, fieldName) {
+            let msg = `Argument ${argumentName} ${fieldName} field can not be null or empty.`;
+            return new Error(msg);
+        }
+    }
+    exports.Errors = Errors;
+}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+// }
+
 
 /***/ }),
 
@@ -146,7 +464,301 @@ eval("var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPAC
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ./Control */ \"./out/Control.js\"), __webpack_require__(/*! ./DataSource */ \"./out/DataSource.js\"), __webpack_require__(/*! ./fields/DataControlField */ \"./out/fields/DataControlField.js\"), __webpack_require__(/*! ./NumberPagingBar */ \"./out/NumberPagingBar.js\"), __webpack_require__(/*! ./Utility */ \"./out/Utility.js\"), __webpack_require__(/*! ./Errors */ \"./out/Errors.js\")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, Control_1, DataSource_1, DataControlField_1, NumberPagingBar_1, Utility_1, Errors_1) {\r\n    \"use strict\";\r\n    Object.defineProperty(exports, \"__esModule\", { value: true });\r\n    // namespace wuzhui {\r\n    var GridViewRowType;\r\n    (function (GridViewRowType) {\r\n        GridViewRowType[GridViewRowType[\"Header\"] = 0] = \"Header\";\r\n        GridViewRowType[GridViewRowType[\"Footer\"] = 1] = \"Footer\";\r\n        GridViewRowType[GridViewRowType[\"Data\"] = 2] = \"Data\";\r\n        GridViewRowType[GridViewRowType[\"Paging\"] = 3] = \"Paging\";\r\n        GridViewRowType[GridViewRowType[\"Empty\"] = 4] = \"Empty\";\r\n    })(GridViewRowType = exports.GridViewRowType || (exports.GridViewRowType = {}));\r\n    function findParentElement(element, parentTagName) {\r\n        console.assert(element != null);\r\n        console.assert(parentTagName != null);\r\n        parentTagName = parentTagName.toUpperCase();\r\n        let p = element.parentElement;\r\n        while (p) {\r\n            if (p.tagName == parentTagName)\r\n                return p;\r\n            p = p.parentElement;\r\n        }\r\n    }\r\n    class GridViewRow extends Control_1.Control {\r\n        constructor(rowType) {\r\n            let element = document.createElement('tr');\r\n            super(element);\r\n            this._rowType = rowType;\r\n        }\r\n        get rowType() {\r\n            return this._rowType;\r\n        }\r\n        get gridView() {\r\n            if (this._gridView == null) {\r\n                let gridViewElement = findParentElement(this.element, 'table');\r\n                console.assert(gridViewElement != null);\r\n                this._gridView = Control_1.Control.getControlByElement(gridViewElement);\r\n                console.assert(this._gridView != null);\r\n            }\r\n            return this._gridView;\r\n        }\r\n        get cells() {\r\n            let cells = new Array();\r\n            for (let i = 0; i < this.element.cells.length; i++) {\r\n                let cell = Control_1.Control.getControlByElement(this.element.cells[i]);\r\n                console.assert(cell != null);\r\n                cells[i] = cell;\r\n            }\r\n            return cells;\r\n        }\r\n    }\r\n    exports.GridViewRow = GridViewRow;\r\n    class GridViewDataRow extends GridViewRow {\r\n        constructor(gridView, dataItem) {\r\n            super(GridViewRowType.Data);\r\n            this._dataItem = dataItem;\r\n            for (var i = 0; i < gridView.columns.length; i++) {\r\n                var column = gridView.columns[i];\r\n                var cell = column.createItemCell(dataItem);\r\n                cell.visible = column.visible;\r\n                this.appendChild(cell);\r\n            }\r\n        }\r\n        get dataItem() {\r\n            return this._dataItem;\r\n        }\r\n    }\r\n    exports.GridViewDataRow = GridViewDataRow;\r\n    class GridView extends Control_1.Control {\r\n        constructor(params) {\r\n            super(params.element || document.createElement('table'));\r\n            this.emptyDataHTML = '暂无记录';\r\n            this.initDataHTML = '数据正在加载中...';\r\n            this.loadFailHTML = '加载数据失败，点击重新加载。';\r\n            //========================================================\r\n            // 样式\r\n            // headerStyle: string;\r\n            // footerStyle: string;\r\n            // rowStyle: string;\r\n            // alternatingRowStyle: string;\r\n            //private emptyDataRowStyle: string;\r\n            //========================================================\r\n            this.rowCreated = Utility_1.callbacks();\r\n            params = Object.assign({\r\n                showHeader: true, showFooter: false,\r\n                allowPaging: false\r\n            }, params);\r\n            this._params = params;\r\n            this._columns = params.columns || [];\r\n            if (this._columns.length == 0)\r\n                throw Errors_1.Errors.columnsCanntEmpty();\r\n            for (var i = 0; i < this._columns.length; i++) {\r\n                var column = this._columns[i];\r\n                column.gridView = this;\r\n            }\r\n            this._dataSource = params.dataSource;\r\n            this._dataSource.selected.add((sender, e) => this.on_selectExecuted(e.dataItems));\r\n            this._dataSource.updated.add((sender, item) => this.on_updateExecuted(item));\r\n            this._dataSource.inserted.add((sender, item, index) => this.on_insertExecuted(item, index));\r\n            this._dataSource.deleted.add((sender, item) => this.on_deleteExecuted(item));\r\n            this._dataSource.selecting.add((sender, e) => {\r\n                let display = this._emtpyRow.element.style.display;\r\n                if (display != 'none') {\r\n                    this._emtpyRow.element.cells[0].innerHTML = this.initDataHTML;\r\n                }\r\n            });\r\n            this._dataSource.error.add((sender, e) => {\r\n                if (e.method == 'select') {\r\n                    this.on_selectExecuted([]);\r\n                    var element = this._emtpyRow.cells[0].element;\r\n                    element.innerHTML = this.loadFailHTML;\r\n                    element.onclick = () => {\r\n                        this._dataSource.select(this.selectArguments);\r\n                    };\r\n                    e.handled = true;\r\n                    console.error(e.message);\r\n                    console.log(e.stack);\r\n                }\r\n            });\r\n            if (params.showHeader) {\r\n                this._header = new Control_1.Control(document.createElement('thead'));\r\n                this.appendChild(this._header);\r\n                this.appendHeaderRow();\r\n            }\r\n            this.emptyDataHTML = params.emptyDataHTML || this.emptyDataHTML;\r\n            this.initDataHTML = params.initDataHTML || this.initDataHTML;\r\n            this._body = new Control_1.Control(document.createElement('tbody'));\r\n            this.appendChild(this._body);\r\n            this.appendEmptyRow();\r\n            let allowPaging = params.pageSize;\r\n            if (params.showFooter || allowPaging) {\r\n                this._footer = new Control_1.Control(document.createElement('tfoot'));\r\n                this.appendChild(this._footer);\r\n                if (params.showFooter)\r\n                    this.appendFooterRow();\r\n                if (allowPaging) {\r\n                    this.createPagingBar(params.pagerSettings);\r\n                    this.pagingBar.selectArguments.maximumRows = params.pageSize;\r\n                }\r\n            }\r\n            this.selectArguments = this.pagingBar ? this.pagingBar.selectArguments : new DataSource_1.DataSourceSelectArguments();\r\n            this.dataSource.select(this.selectArguments);\r\n        }\r\n        createPagingBar(pagerSettings) {\r\n            var pagingBarContainer = document.createElement('tr');\r\n            var pagingBarElement = document.createElement('td');\r\n            pagingBarElement.className = GridView.pagingBarClassName;\r\n            pagingBarElement.colSpan = this.columns.length;\r\n            pagingBarContainer.appendChild(pagingBarElement);\r\n            console.assert(this._footer != null);\r\n            this._footer.appendChild(pagingBarContainer);\r\n            this.pagingBar = new NumberPagingBar_1.DataSourcePagingBar({ dataSource: this.dataSource, element: pagingBarElement, pagerSettings });\r\n        }\r\n        get columns() {\r\n            return this._columns;\r\n        }\r\n        get dataSource() {\r\n            return this._dataSource;\r\n        }\r\n        appendEmptyRow() {\r\n            this._emtpyRow = new GridViewRow(GridViewRowType.Empty);\r\n            this._emtpyRow.element.className = GridView.emptyRowClassName;\r\n            let cell = new DataControlField_1.GridViewCell();\r\n            cell.element.colSpan = this.columns.length;\r\n            if (!this._params.emptyDataRowStyle) {\r\n                Utility_1.applyStyle(cell.element, this._params.emptyDataRowStyle);\r\n            }\r\n            this._emtpyRow.appendChild(cell);\r\n            this._body.appendChild(this._emtpyRow);\r\n            Utility_1.fireCallback(this.rowCreated, this, { row: this._emtpyRow });\r\n        }\r\n        appendDataRow(dataItem, index) {\r\n            var row = new GridViewDataRow(this, dataItem);\r\n            row.element.className = GridView.dataRowClassName;\r\n            this._body.appendChild(row, index);\r\n            let cells = row.cells;\r\n            for (let j = 0; j < cells.length; j++) {\r\n                let cell = cells[j];\r\n                if (cell instanceof DataControlField_1.GridViewDataCell) {\r\n                    cell.render(dataItem);\r\n                }\r\n            }\r\n            Utility_1.fireCallback(this.rowCreated, this, { row });\r\n            if (this._emtpyRow.element.style.display != 'none')\r\n                this.hideEmptyRow();\r\n            return row;\r\n        }\r\n        on_sort(sender, args) {\r\n            if (this._currentSortCell != null && this._currentSortCell != sender) {\r\n                this._currentSortCell.clearSortIcon();\r\n            }\r\n            this._currentSortCell = sender;\r\n        }\r\n        appendHeaderRow() {\r\n            var row = new GridViewRow(GridViewRowType.Header);\r\n            for (var i = 0; i < this.columns.length; i++) {\r\n                var column = this.columns[i];\r\n                let cell = column.createHeaderCell();\r\n                if (cell instanceof DataControlField_1.GridViewHeaderCell) {\r\n                    cell.sorting.add((e, a) => this.on_sort(e, a));\r\n                }\r\n                row.appendChild(cell);\r\n                cell.visible = this.columns[i].visible;\r\n            }\r\n            this._header.appendChild(row);\r\n        }\r\n        appendFooterRow() {\r\n            var row = new GridViewRow(GridViewRowType.Footer);\r\n            for (var i = 0; i < this.columns.length; i++) {\r\n                var column = this.columns[i];\r\n                let cell = column.createFooterCell();\r\n                row.appendChild(cell);\r\n                cell.visible = column.visible;\r\n            }\r\n            this._footer.appendChild(row);\r\n        }\r\n        on_selectExecuted(items) {\r\n            var rows = this._body.element.querySelectorAll(`.${GridView.dataRowClassName}`);\r\n            for (let i = 0; i < rows.length; i++)\r\n                this._body.element.removeChild(rows[i]);\r\n            if (items.length == 0) {\r\n                this.showEmptyRow();\r\n                return;\r\n            }\r\n            for (let i = 0; i < items.length; i++) {\r\n                this.appendDataRow(items[i]);\r\n            }\r\n        }\r\n        on_updateExecuted(item) {\r\n            console.assert(item != null);\r\n            for (let i = 0; i < this._body.element.rows.length; i++) {\r\n                let row_element = this._body.element.rows[i];\r\n                let row = Control_1.Control.getControlByElement(row_element);\r\n                ;\r\n                if (!(row instanceof GridViewDataRow))\r\n                    continue;\r\n                let dataItem = row.dataItem;\r\n                if (!this.dataSource.isSameItem(dataItem, item))\r\n                    continue;\r\n                if (dataItem != item) {\r\n                    Object.assign(dataItem, item);\r\n                }\r\n                let cells = row.cells;\r\n                for (let j = 0; j < cells.length; j++) {\r\n                    let cell = cells[j];\r\n                    if (cell instanceof DataControlField_1.GridViewDataCell) {\r\n                        // let value = cell.dataField ? item[cell.dataField] : item;\r\n                        // let value = Object.assign({}, dataItem, item);\r\n                        cell.render(dataItem);\r\n                        // if (cell.dataField)\r\n                        //     dataItem[cell.dataField] = value;\r\n                    }\r\n                }\r\n                break;\r\n            }\r\n        }\r\n        on_insertExecuted(item, index) {\r\n            if (index == null)\r\n                index = 0;\r\n            this.appendDataRow(item, index);\r\n        }\r\n        on_deleteExecuted(item) {\r\n            let dataRowsCount = 0;\r\n            let rows = this._body.element.rows;\r\n            let dataRows = new Array();\r\n            for (let i = 0; i < rows.length; i++) {\r\n                let row = Control_1.Control.getControlByElement(rows.item(i));\r\n                if ((row instanceof GridViewDataRow))\r\n                    dataRows.push(row);\r\n            }\r\n            for (let i = 0; i < dataRows.length; i++) {\r\n                let dataRow = dataRows[i];\r\n                if (!this.dataSource.isSameItem(item, dataRow.dataItem))\r\n                    continue;\r\n                dataRow.element.remove();\r\n                if (dataRows.length == 1)\r\n                    this.showEmptyRow();\r\n            }\r\n        }\r\n        showEmptyRow() {\r\n            this._emtpyRow.element.cells[0].innerHTML = this.emptyDataHTML;\r\n            this._emtpyRow.element.style.removeProperty('display');\r\n        }\r\n        hideEmptyRow() {\r\n            this._emtpyRow.element.style.display = 'none';\r\n        }\r\n    }\r\n    GridView.emptyRowClassName = 'empty';\r\n    GridView.dataRowClassName = 'data';\r\n    GridView.pagingBarClassName = 'pagingBar';\r\n    exports.GridView = GridView;\r\n}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),\n\t\t\t\t__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));\r\n// }\r\n\n\n//# sourceURL=webpack:///./out/GridView.js?");
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ./Control */ "./out/Control.js"), __webpack_require__(/*! ./DataSource */ "./out/DataSource.js"), __webpack_require__(/*! ./fields/DataControlField */ "./out/fields/DataControlField.js"), __webpack_require__(/*! ./NumberPagingBar */ "./out/NumberPagingBar.js"), __webpack_require__(/*! ./Utility */ "./out/Utility.js"), __webpack_require__(/*! ./Errors */ "./out/Errors.js")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, Control_1, DataSource_1, DataControlField_1, NumberPagingBar_1, Utility_1, Errors_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    // namespace wuzhui {
+    var GridViewRowType;
+    (function (GridViewRowType) {
+        GridViewRowType[GridViewRowType["Header"] = 0] = "Header";
+        GridViewRowType[GridViewRowType["Footer"] = 1] = "Footer";
+        GridViewRowType[GridViewRowType["Data"] = 2] = "Data";
+        GridViewRowType[GridViewRowType["Paging"] = 3] = "Paging";
+        GridViewRowType[GridViewRowType["Empty"] = 4] = "Empty";
+    })(GridViewRowType = exports.GridViewRowType || (exports.GridViewRowType = {}));
+    function findParentElement(element, parentTagName) {
+        console.assert(element != null);
+        console.assert(parentTagName != null);
+        parentTagName = parentTagName.toUpperCase();
+        let p = element.parentElement;
+        while (p) {
+            if (p.tagName == parentTagName)
+                return p;
+            p = p.parentElement;
+        }
+    }
+    class GridViewRow extends Control_1.Control {
+        constructor(rowType) {
+            let element = document.createElement('tr');
+            super(element);
+            this._rowType = rowType;
+        }
+        get rowType() {
+            return this._rowType;
+        }
+        get gridView() {
+            if (this._gridView == null) {
+                let gridViewElement = findParentElement(this.element, 'table');
+                console.assert(gridViewElement != null);
+                this._gridView = Control_1.Control.getControlByElement(gridViewElement);
+                console.assert(this._gridView != null);
+            }
+            return this._gridView;
+        }
+        get cells() {
+            let cells = new Array();
+            for (let i = 0; i < this.element.cells.length; i++) {
+                let cell = Control_1.Control.getControlByElement(this.element.cells[i]);
+                console.assert(cell != null);
+                cells[i] = cell;
+            }
+            return cells;
+        }
+    }
+    exports.GridViewRow = GridViewRow;
+    class GridViewDataRow extends GridViewRow {
+        constructor(gridView, dataItem) {
+            super(GridViewRowType.Data);
+            this._dataItem = dataItem;
+            for (var i = 0; i < gridView.columns.length; i++) {
+                var column = gridView.columns[i];
+                var cell = column.createItemCell(dataItem);
+                cell.visible = column.visible;
+                this.appendChild(cell);
+            }
+        }
+        get dataItem() {
+            return this._dataItem;
+        }
+    }
+    exports.GridViewDataRow = GridViewDataRow;
+    class GridView extends Control_1.Control {
+        constructor(params) {
+            super(params.element || document.createElement('table'));
+            this.emptyDataHTML = '暂无记录';
+            this.initDataHTML = '数据正在加载中...';
+            this.loadFailHTML = '加载数据失败，点击重新加载。';
+            //========================================================
+            // 样式
+            // headerStyle: string;
+            // footerStyle: string;
+            // rowStyle: string;
+            // alternatingRowStyle: string;
+            //private emptyDataRowStyle: string;
+            //========================================================
+            this.rowCreated = Utility_1.callbacks();
+            params = Object.assign({
+                showHeader: true, showFooter: false,
+                allowPaging: false
+            }, params);
+            this._params = params;
+            this._columns = params.columns || [];
+            if (this._columns.length == 0)
+                throw Errors_1.Errors.columnsCanntEmpty();
+            for (var i = 0; i < this._columns.length; i++) {
+                var column = this._columns[i];
+                column.gridView = this;
+            }
+            this._dataSource = params.dataSource;
+            this._dataSource.selected.add((sender, e) => this.on_selectExecuted(e.dataItems));
+            this._dataSource.updated.add((sender, item) => this.on_updateExecuted(item));
+            this._dataSource.inserted.add((sender, item, index) => this.on_insertExecuted(item, index));
+            this._dataSource.deleted.add((sender, item) => this.on_deleteExecuted(item));
+            this._dataSource.selecting.add((sender, e) => {
+                let display = this._emtpyRow.element.style.display;
+                if (display != 'none') {
+                    this._emtpyRow.element.cells[0].innerHTML = this.initDataHTML;
+                }
+            });
+            this._dataSource.error.add((sender, e) => {
+                if (e.method == 'select') {
+                    this.on_selectExecuted([]);
+                    var element = this._emtpyRow.cells[0].element;
+                    element.innerHTML = this.loadFailHTML;
+                    element.onclick = () => {
+                        this._dataSource.select(this.selectArguments);
+                    };
+                    e.handled = true;
+                    console.error(e.message);
+                    console.log(e.stack);
+                }
+            });
+            if (params.showHeader) {
+                this._header = new Control_1.Control(document.createElement('thead'));
+                this.appendChild(this._header);
+                this.appendHeaderRow();
+            }
+            this.emptyDataHTML = params.emptyDataHTML || this.emptyDataHTML;
+            this.initDataHTML = params.initDataHTML || this.initDataHTML;
+            this._body = new Control_1.Control(document.createElement('tbody'));
+            this.appendChild(this._body);
+            this.appendEmptyRow();
+            let allowPaging = params.pageSize;
+            if (params.showFooter || allowPaging) {
+                this._footer = new Control_1.Control(document.createElement('tfoot'));
+                this.appendChild(this._footer);
+                if (params.showFooter)
+                    this.appendFooterRow();
+                if (allowPaging) {
+                    this.createPagingBar(params.pagerSettings);
+                    this.pagingBar.selectArguments.maximumRows = params.pageSize;
+                }
+            }
+            this.selectArguments = this.pagingBar ? this.pagingBar.selectArguments : new DataSource_1.DataSourceSelectArguments();
+            this.dataSource.select(this.selectArguments);
+        }
+        createPagingBar(pagerSettings) {
+            var pagingBarContainer = document.createElement('tr');
+            var pagingBarElement = document.createElement('td');
+            pagingBarElement.className = GridView.pagingBarClassName;
+            pagingBarElement.colSpan = this.columns.length;
+            pagingBarContainer.appendChild(pagingBarElement);
+            console.assert(this._footer != null);
+            this._footer.appendChild(pagingBarContainer);
+            this.pagingBar = new NumberPagingBar_1.DataSourcePagingBar({ dataSource: this.dataSource, element: pagingBarElement, pagerSettings });
+        }
+        get columns() {
+            return this._columns;
+        }
+        get dataSource() {
+            return this._dataSource;
+        }
+        appendEmptyRow() {
+            this._emtpyRow = new GridViewRow(GridViewRowType.Empty);
+            this._emtpyRow.element.className = GridView.emptyRowClassName;
+            let cell = new DataControlField_1.GridViewCell();
+            cell.element.colSpan = this.columns.length;
+            if (!this._params.emptyDataRowStyle) {
+                Utility_1.applyStyle(cell.element, this._params.emptyDataRowStyle);
+            }
+            this._emtpyRow.appendChild(cell);
+            this._body.appendChild(this._emtpyRow);
+            Utility_1.fireCallback(this.rowCreated, this, { row: this._emtpyRow });
+        }
+        appendDataRow(dataItem, index) {
+            var row = new GridViewDataRow(this, dataItem);
+            row.element.className = GridView.dataRowClassName;
+            this._body.appendChild(row, index);
+            let cells = row.cells;
+            for (let j = 0; j < cells.length; j++) {
+                let cell = cells[j];
+                if (cell instanceof DataControlField_1.GridViewDataCell) {
+                    cell.render(dataItem);
+                }
+            }
+            Utility_1.fireCallback(this.rowCreated, this, { row });
+            if (this._emtpyRow.element.style.display != 'none')
+                this.hideEmptyRow();
+            return row;
+        }
+        on_sort(sender, args) {
+            if (this._currentSortCell != null && this._currentSortCell != sender) {
+                this._currentSortCell.clearSortIcon();
+            }
+            this._currentSortCell = sender;
+        }
+        appendHeaderRow() {
+            var row = new GridViewRow(GridViewRowType.Header);
+            for (var i = 0; i < this.columns.length; i++) {
+                var column = this.columns[i];
+                let cell = column.createHeaderCell();
+                if (cell instanceof DataControlField_1.GridViewHeaderCell) {
+                    cell.sorting.add((e, a) => this.on_sort(e, a));
+                }
+                row.appendChild(cell);
+                cell.visible = this.columns[i].visible;
+            }
+            this._header.appendChild(row);
+        }
+        appendFooterRow() {
+            var row = new GridViewRow(GridViewRowType.Footer);
+            for (var i = 0; i < this.columns.length; i++) {
+                var column = this.columns[i];
+                let cell = column.createFooterCell();
+                row.appendChild(cell);
+                cell.visible = column.visible;
+            }
+            this._footer.appendChild(row);
+        }
+        on_selectExecuted(items) {
+            var rows = this._body.element.querySelectorAll(`.${GridView.dataRowClassName}`);
+            for (let i = 0; i < rows.length; i++)
+                this._body.element.removeChild(rows[i]);
+            if (items.length == 0) {
+                this.showEmptyRow();
+                return;
+            }
+            for (let i = 0; i < items.length; i++) {
+                this.appendDataRow(items[i]);
+            }
+        }
+        on_updateExecuted(item) {
+            console.assert(item != null);
+            for (let i = 0; i < this._body.element.rows.length; i++) {
+                let row_element = this._body.element.rows[i];
+                let row = Control_1.Control.getControlByElement(row_element);
+                ;
+                if (!(row instanceof GridViewDataRow))
+                    continue;
+                let dataItem = row.dataItem;
+                if (!this.dataSource.isSameItem(dataItem, item))
+                    continue;
+                if (dataItem != item) {
+                    Object.assign(dataItem, item);
+                }
+                let cells = row.cells;
+                for (let j = 0; j < cells.length; j++) {
+                    let cell = cells[j];
+                    if (cell instanceof DataControlField_1.GridViewDataCell) {
+                        // let value = cell.dataField ? item[cell.dataField] : item;
+                        // let value = Object.assign({}, dataItem, item);
+                        cell.render(dataItem);
+                        // if (cell.dataField)
+                        //     dataItem[cell.dataField] = value;
+                    }
+                }
+                break;
+            }
+        }
+        on_insertExecuted(item, index) {
+            if (index == null)
+                index = 0;
+            this.appendDataRow(item, index);
+        }
+        on_deleteExecuted(item) {
+            let dataRowsCount = 0;
+            let rows = this._body.element.rows;
+            let dataRows = new Array();
+            for (let i = 0; i < rows.length; i++) {
+                let row = Control_1.Control.getControlByElement(rows.item(i));
+                if ((row instanceof GridViewDataRow))
+                    dataRows.push(row);
+            }
+            for (let i = 0; i < dataRows.length; i++) {
+                let dataRow = dataRows[i];
+                if (!this.dataSource.isSameItem(item, dataRow.dataItem))
+                    continue;
+                dataRow.element.remove();
+                if (dataRows.length == 1)
+                    this.showEmptyRow();
+            }
+        }
+        showEmptyRow() {
+            this._emtpyRow.element.cells[0].innerHTML = this.emptyDataHTML;
+            this._emtpyRow.element.style.removeProperty('display');
+        }
+        hideEmptyRow() {
+            this._emtpyRow.element.style.display = 'none';
+        }
+    }
+    GridView.emptyRowClassName = 'empty';
+    GridView.dataRowClassName = 'data';
+    GridView.pagingBarClassName = 'pagingBar';
+    exports.GridView = GridView;
+}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+// }
+
 
 /***/ }),
 
@@ -157,7 +769,542 @@ eval("var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPAC
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ./Errors */ \"./out/Errors.js\"), __webpack_require__(/*! ./DataSource */ \"./out/DataSource.js\")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, Errors_1, DataSource_1) {\r\n    \"use strict\";\r\n    Object.defineProperty(exports, \"__esModule\", { value: true });\r\n    // namespace wuzhui {\r\n    var PagerPosition;\r\n    (function (PagerPosition) {\r\n        PagerPosition[PagerPosition[\"Bottom\"] = 0] = \"Bottom\";\r\n        PagerPosition[PagerPosition[\"Top\"] = 1] = \"Top\";\r\n        PagerPosition[PagerPosition[\"TopAndBottom\"] = 2] = \"TopAndBottom\";\r\n    })(PagerPosition = exports.PagerPosition || (exports.PagerPosition = {}));\r\n    ;\r\n    class PagingBar {\r\n        init(dataSource, selectArguments) {\r\n            // if (dataSource == null)\r\n            //     throw Errors.argumentNull('dataSource');\r\n            this._pageIndex = 0;\r\n            this._selectArguments = selectArguments || new DataSource_1.DataSourceSelectArguments();\r\n            var pagingBar = this;\r\n            pagingBar.totalRowCount = 1000000;\r\n            if (dataSource) {\r\n                dataSource.selected.add((source, args) => {\r\n                    pagingBar.pageSize = this._selectArguments.maximumRows;\r\n                    var totalRowCount = args.totalRowCount;\r\n                    if (totalRowCount != null && totalRowCount >= 0) {\r\n                        pagingBar.totalRowCount = totalRowCount;\r\n                    }\r\n                    var startRowIndex = this._selectArguments.startRowIndex;\r\n                    if (startRowIndex == null || startRowIndex <= 0)\r\n                        startRowIndex = 0;\r\n                    pagingBar.pageIndex = Math.floor(startRowIndex / pagingBar.pageSize);\r\n                    pagingBar.render();\r\n                });\r\n                dataSource.deleted.add(function () {\r\n                    pagingBar.totalRowCount = pagingBar.totalRowCount - 1;\r\n                    pagingBar.render();\r\n                });\r\n                dataSource.inserted.add(function () {\r\n                    pagingBar.totalRowCount = pagingBar.totalRowCount + 1;\r\n                    pagingBar.render();\r\n                });\r\n            }\r\n        }\r\n        get selectArguments() {\r\n            return this._selectArguments;\r\n        }\r\n        get pageCount() {\r\n            var pageCount = Math.ceil(this.totalRowCount / this.pageSize);\r\n            return pageCount;\r\n        }\r\n        get pageSize() {\r\n            return this._pageSize;\r\n        }\r\n        set pageSize(value) {\r\n            this._pageSize = value;\r\n        }\r\n        get pageIndex() {\r\n            return this._pageIndex;\r\n        }\r\n        set pageIndex(value) {\r\n            this._pageIndex = value;\r\n        }\r\n        get totalRowCount() {\r\n            return this._totalRowCount;\r\n        }\r\n        set totalRowCount(value) {\r\n            this._totalRowCount = value;\r\n        }\r\n        // Virtual Method\r\n        render() {\r\n            throw Errors_1.Errors.notImplemented('The table-row render method is not implemented.');\r\n        }\r\n    }\r\n    exports.PagingBar = PagingBar;\r\n    class DataSourcePagingBar extends PagingBar {\r\n        constructor(params) {\r\n            if (!params.dataSource)\r\n                throw Errors_1.Errors.argumentNull('dataSource');\r\n            if (!params.element)\r\n                throw Errors_1.Errors.argumentNull('element');\r\n            let pagerSettings = Object.assign({\r\n                pageButtonCount: 10,\r\n                firstPageText: '<<',\r\n                lastPageText: '>>',\r\n                nextPageText: '...',\r\n                previousPageText: '...',\r\n                showTotal: true,\r\n            }, params.pagerSettings || {});\r\n            super();\r\n            this.dataSource = params.dataSource;\r\n            this.pagerSettings = pagerSettings;\r\n            this.element = params.element;\r\n            this.numberButtons = new Array();\r\n            this.createButton = this.createPagingButton;\r\n            this.createLabel = this.createTotalLabel;\r\n            let buttonContainer = pagerSettings.buttonContainerWraper ?\r\n                document.createElement(pagerSettings.buttonContainerWraper) :\r\n                document.createElement('div');\r\n            buttonContainer.className = pagerSettings.buttonContainerClassName || \"buttons\";\r\n            this.element.appendChild(buttonContainer);\r\n            this.createPreviousButtons(buttonContainer);\r\n            this.createNumberButtons(buttonContainer);\r\n            this.createNextButtons(buttonContainer);\r\n            if (this.pagerSettings.showTotal) {\r\n                this.totalElement = this.createLabel();\r\n                this.totalElement.visible = false;\r\n            }\r\n            this.init(params.dataSource, params.selectArguments);\r\n        }\r\n        createPagingButton(container) {\r\n            var pagerSettings = this.pagerSettings;\r\n            let button = document.createElement('a');\r\n            button.href = 'javascript:';\r\n            if (this.pagerSettings.buttonWrapper) {\r\n                let w = document.createElement(this.pagerSettings.buttonWrapper);\r\n                w.appendChild(button);\r\n                container.appendChild(w);\r\n            }\r\n            else {\r\n                container.appendChild(button);\r\n            }\r\n            let result = {\r\n                _button: button,\r\n                get visible() {\r\n                    let button = this._button;\r\n                    return button.style.display != 'none';\r\n                },\r\n                set visible(value) {\r\n                    let button = this._button;\r\n                    let element = pagerSettings.buttonWrapper ? button.parentElement : button;\r\n                    if (value) {\r\n                        element.style.removeProperty('display');\r\n                    }\r\n                    else {\r\n                        element.style.display = 'none';\r\n                    }\r\n                },\r\n                get pageIndex() {\r\n                    let button = this._button;\r\n                    return new Number(button.getAttribute('pageIndex')).valueOf();\r\n                },\r\n                set pageIndex(value) {\r\n                    let button = this._button;\r\n                    button.setAttribute('pageIndex', value);\r\n                },\r\n                get text() {\r\n                    let button = this._button;\r\n                    return button.innerHTML;\r\n                },\r\n                set text(value) {\r\n                    let button = this._button;\r\n                    button.innerHTML = value;\r\n                },\r\n                get active() {\r\n                    let button = this._button;\r\n                    return button.href != null;\r\n                },\r\n                set active(value) {\r\n                    let button = this._button;\r\n                    if (value == true) {\r\n                        button.removeAttribute('href');\r\n                        if (pagerSettings.activeButtonClassName) {\r\n                            // button.className = pagerSettings.activeButtonClassName;\r\n                            this.setClassName(pagerSettings.activeButtonClassName);\r\n                        }\r\n                        return;\r\n                    }\r\n                    button.href = 'javascript:';\r\n                    if (pagerSettings.buttonClassName)\r\n                        this.setClassName(pagerSettings.buttonClassName);\r\n                    else\r\n                        this.setClassName(null);\r\n                },\r\n                setClassName(value) {\r\n                    let button = this._button;\r\n                    let element = pagerSettings.buttonWrapper ? button.parentElement : button;\r\n                    if (value)\r\n                        element.className = value;\r\n                    else\r\n                        element.removeAttribute('class');\r\n                },\r\n                onclick: null\r\n            };\r\n            button.onclick = () => {\r\n                if (result.onclick) {\r\n                    result.onclick(result, this);\r\n                }\r\n            };\r\n            return result;\r\n        }\r\n        createTotalLabel() {\r\n            let totalElement = document.createElement('div');\r\n            totalElement.className = 'total';\r\n            let textElement = document.createElement('span');\r\n            textElement.className = 'text';\r\n            textElement.innerHTML = '总记录：';\r\n            totalElement.appendChild(textElement);\r\n            let numberElement = document.createElement('span');\r\n            numberElement.className = 'number';\r\n            totalElement.appendChild(numberElement);\r\n            this.element.appendChild(totalElement);\r\n            return {\r\n                get text() {\r\n                    return numberElement.innerHTML;\r\n                },\r\n                set text(value) {\r\n                    numberElement.innerHTML = value;\r\n                },\r\n                get visible() {\r\n                    let display = totalElement.style.display;\r\n                    return display != 'none';\r\n                },\r\n                set visible(value) {\r\n                    if (value == true)\r\n                        totalElement.style.display = 'block';\r\n                    else\r\n                        totalElement.style.display = 'node';\r\n                }\r\n            };\r\n        }\r\n        createPreviousButtons(buttonContainer) {\r\n            this.firstPageButton = this.createButton(buttonContainer);\r\n            this.firstPageButton.onclick = DataSourcePagingBar.on_buttonClick;\r\n            this.firstPageButton.text = this.pagerSettings.firstPageText;\r\n            this.firstPageButton.visible = false;\r\n            this.previousPageButton = this.createButton(buttonContainer);\r\n            this.previousPageButton.onclick = DataSourcePagingBar.on_buttonClick;\r\n            this.previousPageButton.text = this.pagerSettings.previousPageText;\r\n            this.previousPageButton.visible = false;\r\n        }\r\n        createNextButtons(buttonContainer) {\r\n            this.nextPageButton = this.createButton(buttonContainer);\r\n            this.nextPageButton.onclick = DataSourcePagingBar.on_buttonClick;\r\n            this.nextPageButton.text = this.pagerSettings.nextPageText;\r\n            this.nextPageButton.visible = false;\r\n            this.lastPageButton = this.createButton(buttonContainer);\r\n            this.lastPageButton.onclick = DataSourcePagingBar.on_buttonClick;\r\n            this.lastPageButton.text = this.pagerSettings.lastPageText;\r\n            this.lastPageButton.visible = false;\r\n        }\r\n        createNumberButtons(buttonContainer) {\r\n            let pagingBar = this;\r\n            let buttonCount = this.pagerSettings.pageButtonCount;\r\n            for (let i = 0; i < buttonCount; i++) {\r\n                let button = this.createButton(buttonContainer);\r\n                button.onclick = DataSourcePagingBar.on_buttonClick;\r\n                this.numberButtons[i] = button;\r\n            }\r\n            this.numberButtons.forEach(btn => {\r\n                btn.onclick = () => DataSourcePagingBar.on_buttonClick(btn, pagingBar);\r\n            });\r\n        }\r\n        static on_buttonClick(button, pagingBar) {\r\n            let pageIndex = button.pageIndex;\r\n            if (!pageIndex == null) {\r\n                return;\r\n            }\r\n            let args = pagingBar.selectArguments;\r\n            args.maximumRows = pagingBar.pageSize;\r\n            args.startRowIndex = pageIndex * pagingBar.pageSize;\r\n            pagingBar.pageIndex = pageIndex;\r\n            pagingBar.dataSource.select(pagingBar.selectArguments);\r\n        }\r\n        render() {\r\n            var pagerSettings = this.pagerSettings;\r\n            var buttonCount = pagerSettings.pageButtonCount;\r\n            let pagingBarIndex = Math.floor(this.pageIndex / buttonCount);\r\n            let pagingBarCount = Math.ceil(this.pageCount / buttonCount);\r\n            this.previousPageButton.pageIndex = (pagingBarIndex - 1) * buttonCount;\r\n            this.nextPageButton.pageIndex = (pagingBarIndex + 1) * buttonCount;\r\n            this.firstPageButton.pageIndex = 0;\r\n            this.lastPageButton.pageIndex = this.pageCount - 1;\r\n            for (let i = 0; i < this.numberButtons.length; i++) {\r\n                let pageIndex = pagingBarIndex * buttonCount + i;\r\n                if (pageIndex < this.pageCount) {\r\n                    this.numberButtons[i].pageIndex = pageIndex;\r\n                    this.numberButtons[i].text = (pagingBarIndex * buttonCount + i + 1).toString();\r\n                    this.numberButtons[i].visible = true;\r\n                    this.numberButtons[i].active = pageIndex == this.pageIndex;\r\n                }\r\n                else {\r\n                    this.numberButtons[i].visible = false;\r\n                }\r\n            }\r\n            if (this.totalElement) {\r\n                this.totalElement.text = this.totalRowCount;\r\n                this.totalElement.visible = true;\r\n            }\r\n            this.firstPageButton.visible = false;\r\n            this.previousPageButton.visible = false;\r\n            this.lastPageButton.visible = false;\r\n            this.nextPageButton.visible = false;\r\n            if (pagingBarIndex > 0) {\r\n                this.firstPageButton.visible = true;\r\n                this.previousPageButton.visible = true;\r\n            }\r\n            if (pagingBarIndex < pagingBarCount - 1) {\r\n                this.lastPageButton.visible = true;\r\n                this.nextPageButton.visible = true;\r\n            }\r\n        }\r\n    }\r\n    exports.DataSourcePagingBar = DataSourcePagingBar;\r\n    class NumberPagingBar extends PagingBar {\r\n        constructor(params) {\r\n            if (!params.loadData)\r\n                throw Errors_1.Errors.argumentNull('loadData');\r\n            if (!params.element)\r\n                throw Errors_1.Errors.argumentNull('element');\r\n            let pagerSettings = Object.assign({\r\n                pageButtonCount: 10,\r\n                firstPageText: '<<',\r\n                lastPageText: '>>',\r\n                nextPageText: '...',\r\n                previousPageText: '...',\r\n                showTotal: true,\r\n            }, params.pagerSettings || {});\r\n            super();\r\n            this.loadData = params.loadData;\r\n            this.pagerSettings = pagerSettings;\r\n            this.element = params.element;\r\n            this.numberButtons = new Array();\r\n            this.createButton = this.createPagingButton;\r\n            this.createLabel = this.createTotalLabel;\r\n            let buttonContainer = pagerSettings.buttonContainerWraper ?\r\n                document.createElement(pagerSettings.buttonContainerWraper) :\r\n                document.createElement('div');\r\n            buttonContainer.className = pagerSettings.buttonContainerClassName || \"buttons\";\r\n            this.element.appendChild(buttonContainer);\r\n            this.createPreviousButtons(buttonContainer);\r\n            this.createNumberButtons(buttonContainer);\r\n            this.createNextButtons(buttonContainer);\r\n            if (this.pagerSettings.showTotal) {\r\n                this.totalElement = this.createLabel();\r\n                this.totalElement.visible = false;\r\n            }\r\n            this.init(null, params.selectArguments);\r\n        }\r\n        createPagingButton(container) {\r\n            var pagerSettings = this.pagerSettings;\r\n            let button = document.createElement('a');\r\n            button.href = 'javascript:';\r\n            if (this.pagerSettings.buttonWrapper) {\r\n                let w = document.createElement(this.pagerSettings.buttonWrapper);\r\n                w.appendChild(button);\r\n                container.appendChild(w);\r\n            }\r\n            else {\r\n                container.appendChild(button);\r\n            }\r\n            let result = {\r\n                _button: button,\r\n                get visible() {\r\n                    let button = this._button;\r\n                    return button.style.display != 'none';\r\n                },\r\n                set visible(value) {\r\n                    let button = this._button;\r\n                    let element = pagerSettings.buttonWrapper ? button.parentElement : button;\r\n                    if (value) {\r\n                        element.style.removeProperty('display');\r\n                    }\r\n                    else {\r\n                        element.style.display = 'none';\r\n                    }\r\n                },\r\n                get pageIndex() {\r\n                    let button = this._button;\r\n                    return new Number(button.getAttribute('pageIndex')).valueOf();\r\n                },\r\n                set pageIndex(value) {\r\n                    let button = this._button;\r\n                    button.setAttribute('pageIndex', value);\r\n                },\r\n                get text() {\r\n                    let button = this._button;\r\n                    return button.innerHTML;\r\n                },\r\n                set text(value) {\r\n                    let button = this._button;\r\n                    button.innerHTML = value;\r\n                },\r\n                get active() {\r\n                    let button = this._button;\r\n                    return button.href != null;\r\n                },\r\n                set active(value) {\r\n                    let button = this._button;\r\n                    if (value == true) {\r\n                        button.removeAttribute('href');\r\n                        if (pagerSettings.activeButtonClassName) {\r\n                            // button.className = pagerSettings.activeButtonClassName;\r\n                            this.setClassName(pagerSettings.activeButtonClassName);\r\n                        }\r\n                        return;\r\n                    }\r\n                    button.href = 'javascript:';\r\n                    if (pagerSettings.buttonClassName)\r\n                        this.setClassName(pagerSettings.buttonClassName);\r\n                    else\r\n                        this.setClassName(null);\r\n                },\r\n                setClassName(value) {\r\n                    let button = this._button;\r\n                    let element = pagerSettings.buttonWrapper ? button.parentElement : button;\r\n                    if (value)\r\n                        element.className = value;\r\n                    else\r\n                        element.removeAttribute('class');\r\n                },\r\n                onclick: null\r\n            };\r\n            button.onclick = () => {\r\n                if (result.onclick) {\r\n                    result.onclick(result, this);\r\n                }\r\n            };\r\n            return result;\r\n        }\r\n        createTotalLabel() {\r\n            let totalElement = document.createElement('div');\r\n            totalElement.className = 'total';\r\n            let textElement = document.createElement('span');\r\n            textElement.className = 'text';\r\n            textElement.innerHTML = '总记录：';\r\n            totalElement.appendChild(textElement);\r\n            let numberElement = document.createElement('span');\r\n            numberElement.className = 'number';\r\n            totalElement.appendChild(numberElement);\r\n            this.element.appendChild(totalElement);\r\n            return {\r\n                get text() {\r\n                    return numberElement.innerHTML;\r\n                },\r\n                set text(value) {\r\n                    numberElement.innerHTML = value;\r\n                },\r\n                get visible() {\r\n                    let display = totalElement.style.display;\r\n                    return display != 'none';\r\n                },\r\n                set visible(value) {\r\n                    if (value == true)\r\n                        totalElement.style.display = 'block';\r\n                    else\r\n                        totalElement.style.display = 'node';\r\n                }\r\n            };\r\n        }\r\n        createPreviousButtons(buttonContainer) {\r\n            this.firstPageButton = this.createButton(buttonContainer);\r\n            this.firstPageButton.onclick = NumberPagingBar.on_buttonClick;\r\n            this.firstPageButton.text = this.pagerSettings.firstPageText;\r\n            this.firstPageButton.visible = false;\r\n            this.previousPageButton = this.createButton(buttonContainer);\r\n            this.previousPageButton.onclick = NumberPagingBar.on_buttonClick;\r\n            this.previousPageButton.text = this.pagerSettings.previousPageText;\r\n            this.previousPageButton.visible = false;\r\n        }\r\n        createNextButtons(buttonContainer) {\r\n            this.nextPageButton = this.createButton(buttonContainer);\r\n            this.nextPageButton.onclick = NumberPagingBar.on_buttonClick;\r\n            this.nextPageButton.text = this.pagerSettings.nextPageText;\r\n            this.nextPageButton.visible = false;\r\n            this.lastPageButton = this.createButton(buttonContainer);\r\n            this.lastPageButton.onclick = NumberPagingBar.on_buttonClick;\r\n            this.lastPageButton.text = this.pagerSettings.lastPageText;\r\n            this.lastPageButton.visible = false;\r\n        }\r\n        createNumberButtons(buttonContainer) {\r\n            let pagingBar = this;\r\n            let buttonCount = this.pagerSettings.pageButtonCount;\r\n            for (let i = 0; i < buttonCount; i++) {\r\n                let button = this.createButton(buttonContainer);\r\n                button.onclick = NumberPagingBar.on_buttonClick;\r\n                this.numberButtons[i] = button;\r\n            }\r\n            this.numberButtons.forEach(btn => {\r\n                btn.onclick = () => NumberPagingBar.on_buttonClick(btn, pagingBar);\r\n            });\r\n        }\r\n        static on_buttonClick(button, pagingBar) {\r\n            let pageIndex = button.pageIndex;\r\n            if (!pageIndex == null) {\r\n                return;\r\n            }\r\n            let args = pagingBar.selectArguments;\r\n            args.maximumRows = pagingBar.pageSize;\r\n            args.startRowIndex = pageIndex * pagingBar.pageSize;\r\n            pagingBar.pageIndex = pageIndex;\r\n            //pagingBar.dataSource.select(pagingBar.selectArguments);\r\n            pagingBar.loadData(pageIndex);\r\n        }\r\n        render() {\r\n            var pagerSettings = this.pagerSettings;\r\n            var buttonCount = pagerSettings.pageButtonCount;\r\n            let pagingBarIndex = Math.floor(this.pageIndex / buttonCount);\r\n            let pagingBarCount = Math.ceil(this.pageCount / buttonCount);\r\n            this.previousPageButton.pageIndex = (pagingBarIndex - 1) * buttonCount;\r\n            this.nextPageButton.pageIndex = (pagingBarIndex + 1) * buttonCount;\r\n            this.firstPageButton.pageIndex = 0;\r\n            this.lastPageButton.pageIndex = this.pageCount - 1;\r\n            for (let i = 0; i < this.numberButtons.length; i++) {\r\n                let pageIndex = pagingBarIndex * buttonCount + i;\r\n                if (pageIndex < this.pageCount) {\r\n                    this.numberButtons[i].pageIndex = pageIndex;\r\n                    this.numberButtons[i].text = (pagingBarIndex * buttonCount + i + 1).toString();\r\n                    this.numberButtons[i].visible = true;\r\n                    this.numberButtons[i].active = pageIndex == this.pageIndex;\r\n                }\r\n                else {\r\n                    this.numberButtons[i].visible = false;\r\n                }\r\n            }\r\n            if (this.totalElement) {\r\n                this.totalElement.text = this.totalRowCount;\r\n                this.totalElement.visible = true;\r\n            }\r\n            this.firstPageButton.visible = false;\r\n            this.previousPageButton.visible = false;\r\n            this.lastPageButton.visible = false;\r\n            this.nextPageButton.visible = false;\r\n            if (pagingBarIndex > 0) {\r\n                this.firstPageButton.visible = true;\r\n                this.previousPageButton.visible = true;\r\n            }\r\n            if (pagingBarIndex < pagingBarCount - 1) {\r\n                this.lastPageButton.visible = true;\r\n                this.nextPageButton.visible = true;\r\n            }\r\n        }\r\n    }\r\n    exports.NumberPagingBar = NumberPagingBar;\r\n}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),\n\t\t\t\t__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));\r\n// }\r\n\n\n//# sourceURL=webpack:///./out/NumberPagingBar.js?");
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ./Errors */ "./out/Errors.js"), __webpack_require__(/*! ./DataSource */ "./out/DataSource.js")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, Errors_1, DataSource_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    // namespace wuzhui {
+    var PagerPosition;
+    (function (PagerPosition) {
+        PagerPosition[PagerPosition["Bottom"] = 0] = "Bottom";
+        PagerPosition[PagerPosition["Top"] = 1] = "Top";
+        PagerPosition[PagerPosition["TopAndBottom"] = 2] = "TopAndBottom";
+    })(PagerPosition = exports.PagerPosition || (exports.PagerPosition = {}));
+    ;
+    class PagingBar {
+        init(dataSource, selectArguments) {
+            // if (dataSource == null)
+            //     throw Errors.argumentNull('dataSource');
+            this._pageIndex = 0;
+            this._selectArguments = selectArguments || new DataSource_1.DataSourceSelectArguments();
+            var pagingBar = this;
+            pagingBar.totalRowCount = 1000000;
+            if (dataSource) {
+                dataSource.selected.add((source, args) => {
+                    pagingBar.pageSize = this._selectArguments.maximumRows;
+                    var totalRowCount = args.totalRowCount;
+                    if (totalRowCount != null && totalRowCount >= 0) {
+                        pagingBar.totalRowCount = totalRowCount;
+                    }
+                    var startRowIndex = this._selectArguments.startRowIndex;
+                    if (startRowIndex == null || startRowIndex <= 0)
+                        startRowIndex = 0;
+                    pagingBar.pageIndex = Math.floor(startRowIndex / pagingBar.pageSize);
+                    pagingBar.render();
+                });
+                dataSource.deleted.add(function () {
+                    pagingBar.totalRowCount = pagingBar.totalRowCount - 1;
+                    pagingBar.render();
+                });
+                dataSource.inserted.add(function () {
+                    pagingBar.totalRowCount = pagingBar.totalRowCount + 1;
+                    pagingBar.render();
+                });
+            }
+        }
+        get selectArguments() {
+            return this._selectArguments;
+        }
+        get pageCount() {
+            var pageCount = Math.ceil(this.totalRowCount / this.pageSize);
+            return pageCount;
+        }
+        get pageSize() {
+            return this._pageSize;
+        }
+        set pageSize(value) {
+            this._pageSize = value;
+        }
+        get pageIndex() {
+            return this._pageIndex;
+        }
+        set pageIndex(value) {
+            this._pageIndex = value;
+        }
+        get totalRowCount() {
+            return this._totalRowCount;
+        }
+        set totalRowCount(value) {
+            this._totalRowCount = value;
+        }
+        // Virtual Method
+        render() {
+            throw Errors_1.Errors.notImplemented('The table-row render method is not implemented.');
+        }
+    }
+    exports.PagingBar = PagingBar;
+    class DataSourcePagingBar extends PagingBar {
+        constructor(params) {
+            if (!params.dataSource)
+                throw Errors_1.Errors.argumentNull('dataSource');
+            if (!params.element)
+                throw Errors_1.Errors.argumentNull('element');
+            let pagerSettings = Object.assign({
+                pageButtonCount: 10,
+                firstPageText: '<<',
+                lastPageText: '>>',
+                nextPageText: '...',
+                previousPageText: '...',
+                showTotal: true,
+            }, params.pagerSettings || {});
+            super();
+            this.dataSource = params.dataSource;
+            this.pagerSettings = pagerSettings;
+            this.element = params.element;
+            this.numberButtons = new Array();
+            this.createButton = this.createPagingButton;
+            this.createLabel = this.createTotalLabel;
+            let buttonContainer = pagerSettings.buttonContainerWraper ?
+                document.createElement(pagerSettings.buttonContainerWraper) :
+                document.createElement('div');
+            buttonContainer.className = pagerSettings.buttonContainerClassName || "buttons";
+            this.element.appendChild(buttonContainer);
+            this.createPreviousButtons(buttonContainer);
+            this.createNumberButtons(buttonContainer);
+            this.createNextButtons(buttonContainer);
+            if (this.pagerSettings.showTotal) {
+                this.totalElement = this.createLabel();
+                this.totalElement.visible = false;
+            }
+            this.init(params.dataSource, params.selectArguments);
+        }
+        createPagingButton(container) {
+            var pagerSettings = this.pagerSettings;
+            let button = document.createElement('a');
+            button.href = 'javascript:';
+            if (this.pagerSettings.buttonWrapper) {
+                let w = document.createElement(this.pagerSettings.buttonWrapper);
+                w.appendChild(button);
+                container.appendChild(w);
+            }
+            else {
+                container.appendChild(button);
+            }
+            let result = {
+                _button: button,
+                get visible() {
+                    let button = this._button;
+                    return button.style.display != 'none';
+                },
+                set visible(value) {
+                    let button = this._button;
+                    let element = pagerSettings.buttonWrapper ? button.parentElement : button;
+                    if (value) {
+                        element.style.removeProperty('display');
+                    }
+                    else {
+                        element.style.display = 'none';
+                    }
+                },
+                get pageIndex() {
+                    let button = this._button;
+                    return new Number(button.getAttribute('pageIndex')).valueOf();
+                },
+                set pageIndex(value) {
+                    let button = this._button;
+                    button.setAttribute('pageIndex', value);
+                },
+                get text() {
+                    let button = this._button;
+                    return button.innerHTML;
+                },
+                set text(value) {
+                    let button = this._button;
+                    button.innerHTML = value;
+                },
+                get active() {
+                    let button = this._button;
+                    return button.href != null;
+                },
+                set active(value) {
+                    let button = this._button;
+                    if (value == true) {
+                        button.removeAttribute('href');
+                        if (pagerSettings.activeButtonClassName) {
+                            // button.className = pagerSettings.activeButtonClassName;
+                            this.setClassName(pagerSettings.activeButtonClassName);
+                        }
+                        return;
+                    }
+                    button.href = 'javascript:';
+                    if (pagerSettings.buttonClassName)
+                        this.setClassName(pagerSettings.buttonClassName);
+                    else
+                        this.setClassName(null);
+                },
+                setClassName(value) {
+                    let button = this._button;
+                    let element = pagerSettings.buttonWrapper ? button.parentElement : button;
+                    if (value)
+                        element.className = value;
+                    else
+                        element.removeAttribute('class');
+                },
+                onclick: null
+            };
+            button.onclick = () => {
+                if (result.onclick) {
+                    result.onclick(result, this);
+                }
+            };
+            return result;
+        }
+        createTotalLabel() {
+            let totalElement = document.createElement('div');
+            totalElement.className = 'total';
+            let textElement = document.createElement('span');
+            textElement.className = 'text';
+            textElement.innerHTML = '总记录：';
+            totalElement.appendChild(textElement);
+            let numberElement = document.createElement('span');
+            numberElement.className = 'number';
+            totalElement.appendChild(numberElement);
+            this.element.appendChild(totalElement);
+            return {
+                get text() {
+                    return numberElement.innerHTML;
+                },
+                set text(value) {
+                    numberElement.innerHTML = value;
+                },
+                get visible() {
+                    let display = totalElement.style.display;
+                    return display != 'none';
+                },
+                set visible(value) {
+                    if (value == true)
+                        totalElement.style.display = 'block';
+                    else
+                        totalElement.style.display = 'node';
+                }
+            };
+        }
+        createPreviousButtons(buttonContainer) {
+            this.firstPageButton = this.createButton(buttonContainer);
+            this.firstPageButton.onclick = DataSourcePagingBar.on_buttonClick;
+            this.firstPageButton.text = this.pagerSettings.firstPageText;
+            this.firstPageButton.visible = false;
+            this.previousPageButton = this.createButton(buttonContainer);
+            this.previousPageButton.onclick = DataSourcePagingBar.on_buttonClick;
+            this.previousPageButton.text = this.pagerSettings.previousPageText;
+            this.previousPageButton.visible = false;
+        }
+        createNextButtons(buttonContainer) {
+            this.nextPageButton = this.createButton(buttonContainer);
+            this.nextPageButton.onclick = DataSourcePagingBar.on_buttonClick;
+            this.nextPageButton.text = this.pagerSettings.nextPageText;
+            this.nextPageButton.visible = false;
+            this.lastPageButton = this.createButton(buttonContainer);
+            this.lastPageButton.onclick = DataSourcePagingBar.on_buttonClick;
+            this.lastPageButton.text = this.pagerSettings.lastPageText;
+            this.lastPageButton.visible = false;
+        }
+        createNumberButtons(buttonContainer) {
+            let pagingBar = this;
+            let buttonCount = this.pagerSettings.pageButtonCount;
+            for (let i = 0; i < buttonCount; i++) {
+                let button = this.createButton(buttonContainer);
+                button.onclick = DataSourcePagingBar.on_buttonClick;
+                this.numberButtons[i] = button;
+            }
+            this.numberButtons.forEach(btn => {
+                btn.onclick = () => DataSourcePagingBar.on_buttonClick(btn, pagingBar);
+            });
+        }
+        static on_buttonClick(button, pagingBar) {
+            let pageIndex = button.pageIndex;
+            if (!pageIndex == null) {
+                return;
+            }
+            let args = pagingBar.selectArguments;
+            args.maximumRows = pagingBar.pageSize;
+            args.startRowIndex = pageIndex * pagingBar.pageSize;
+            pagingBar.pageIndex = pageIndex;
+            pagingBar.dataSource.select(pagingBar.selectArguments);
+        }
+        render() {
+            var pagerSettings = this.pagerSettings;
+            var buttonCount = pagerSettings.pageButtonCount;
+            let pagingBarIndex = Math.floor(this.pageIndex / buttonCount);
+            let pagingBarCount = Math.ceil(this.pageCount / buttonCount);
+            this.previousPageButton.pageIndex = (pagingBarIndex - 1) * buttonCount;
+            this.nextPageButton.pageIndex = (pagingBarIndex + 1) * buttonCount;
+            this.firstPageButton.pageIndex = 0;
+            this.lastPageButton.pageIndex = this.pageCount - 1;
+            for (let i = 0; i < this.numberButtons.length; i++) {
+                let pageIndex = pagingBarIndex * buttonCount + i;
+                if (pageIndex < this.pageCount) {
+                    this.numberButtons[i].pageIndex = pageIndex;
+                    this.numberButtons[i].text = (pagingBarIndex * buttonCount + i + 1).toString();
+                    this.numberButtons[i].visible = true;
+                    this.numberButtons[i].active = pageIndex == this.pageIndex;
+                }
+                else {
+                    this.numberButtons[i].visible = false;
+                }
+            }
+            if (this.totalElement) {
+                this.totalElement.text = this.totalRowCount;
+                this.totalElement.visible = true;
+            }
+            this.firstPageButton.visible = false;
+            this.previousPageButton.visible = false;
+            this.lastPageButton.visible = false;
+            this.nextPageButton.visible = false;
+            if (pagingBarIndex > 0) {
+                this.firstPageButton.visible = true;
+                this.previousPageButton.visible = true;
+            }
+            if (pagingBarIndex < pagingBarCount - 1) {
+                this.lastPageButton.visible = true;
+                this.nextPageButton.visible = true;
+            }
+        }
+    }
+    exports.DataSourcePagingBar = DataSourcePagingBar;
+    class NumberPagingBar extends PagingBar {
+        constructor(params) {
+            if (!params.loadData)
+                throw Errors_1.Errors.argumentNull('loadData');
+            if (!params.element)
+                throw Errors_1.Errors.argumentNull('element');
+            let pagerSettings = Object.assign({
+                pageButtonCount: 10,
+                firstPageText: '<<',
+                lastPageText: '>>',
+                nextPageText: '...',
+                previousPageText: '...',
+                showTotal: true,
+            }, params.pagerSettings || {});
+            super();
+            this.loadData = params.loadData;
+            this.pagerSettings = pagerSettings;
+            this.element = params.element;
+            this.numberButtons = new Array();
+            this.createButton = this.createPagingButton;
+            this.createLabel = this.createTotalLabel;
+            let buttonContainer = pagerSettings.buttonContainerWraper ?
+                document.createElement(pagerSettings.buttonContainerWraper) :
+                document.createElement('div');
+            buttonContainer.className = pagerSettings.buttonContainerClassName || "buttons";
+            this.element.appendChild(buttonContainer);
+            this.createPreviousButtons(buttonContainer);
+            this.createNumberButtons(buttonContainer);
+            this.createNextButtons(buttonContainer);
+            if (this.pagerSettings.showTotal) {
+                this.totalElement = this.createLabel();
+                this.totalElement.visible = false;
+            }
+            this.init(null, params.selectArguments);
+        }
+        createPagingButton(container) {
+            var pagerSettings = this.pagerSettings;
+            let button = document.createElement('a');
+            button.href = 'javascript:';
+            if (this.pagerSettings.buttonWrapper) {
+                let w = document.createElement(this.pagerSettings.buttonWrapper);
+                w.appendChild(button);
+                container.appendChild(w);
+            }
+            else {
+                container.appendChild(button);
+            }
+            let result = {
+                _button: button,
+                get visible() {
+                    let button = this._button;
+                    return button.style.display != 'none';
+                },
+                set visible(value) {
+                    let button = this._button;
+                    let element = pagerSettings.buttonWrapper ? button.parentElement : button;
+                    if (value) {
+                        element.style.removeProperty('display');
+                    }
+                    else {
+                        element.style.display = 'none';
+                    }
+                },
+                get pageIndex() {
+                    let button = this._button;
+                    return new Number(button.getAttribute('pageIndex')).valueOf();
+                },
+                set pageIndex(value) {
+                    let button = this._button;
+                    button.setAttribute('pageIndex', value);
+                },
+                get text() {
+                    let button = this._button;
+                    return button.innerHTML;
+                },
+                set text(value) {
+                    let button = this._button;
+                    button.innerHTML = value;
+                },
+                get active() {
+                    let button = this._button;
+                    return button.href != null;
+                },
+                set active(value) {
+                    let button = this._button;
+                    if (value == true) {
+                        button.removeAttribute('href');
+                        if (pagerSettings.activeButtonClassName) {
+                            // button.className = pagerSettings.activeButtonClassName;
+                            this.setClassName(pagerSettings.activeButtonClassName);
+                        }
+                        return;
+                    }
+                    button.href = 'javascript:';
+                    if (pagerSettings.buttonClassName)
+                        this.setClassName(pagerSettings.buttonClassName);
+                    else
+                        this.setClassName(null);
+                },
+                setClassName(value) {
+                    let button = this._button;
+                    let element = pagerSettings.buttonWrapper ? button.parentElement : button;
+                    if (value)
+                        element.className = value;
+                    else
+                        element.removeAttribute('class');
+                },
+                onclick: null
+            };
+            button.onclick = () => {
+                if (result.onclick) {
+                    result.onclick(result, this);
+                }
+            };
+            return result;
+        }
+        createTotalLabel() {
+            let totalElement = document.createElement('div');
+            totalElement.className = 'total';
+            let textElement = document.createElement('span');
+            textElement.className = 'text';
+            textElement.innerHTML = '总记录：';
+            totalElement.appendChild(textElement);
+            let numberElement = document.createElement('span');
+            numberElement.className = 'number';
+            totalElement.appendChild(numberElement);
+            this.element.appendChild(totalElement);
+            return {
+                get text() {
+                    return numberElement.innerHTML;
+                },
+                set text(value) {
+                    numberElement.innerHTML = value;
+                },
+                get visible() {
+                    let display = totalElement.style.display;
+                    return display != 'none';
+                },
+                set visible(value) {
+                    if (value == true)
+                        totalElement.style.display = 'block';
+                    else
+                        totalElement.style.display = 'node';
+                }
+            };
+        }
+        createPreviousButtons(buttonContainer) {
+            this.firstPageButton = this.createButton(buttonContainer);
+            this.firstPageButton.onclick = NumberPagingBar.on_buttonClick;
+            this.firstPageButton.text = this.pagerSettings.firstPageText;
+            this.firstPageButton.visible = false;
+            this.previousPageButton = this.createButton(buttonContainer);
+            this.previousPageButton.onclick = NumberPagingBar.on_buttonClick;
+            this.previousPageButton.text = this.pagerSettings.previousPageText;
+            this.previousPageButton.visible = false;
+        }
+        createNextButtons(buttonContainer) {
+            this.nextPageButton = this.createButton(buttonContainer);
+            this.nextPageButton.onclick = NumberPagingBar.on_buttonClick;
+            this.nextPageButton.text = this.pagerSettings.nextPageText;
+            this.nextPageButton.visible = false;
+            this.lastPageButton = this.createButton(buttonContainer);
+            this.lastPageButton.onclick = NumberPagingBar.on_buttonClick;
+            this.lastPageButton.text = this.pagerSettings.lastPageText;
+            this.lastPageButton.visible = false;
+        }
+        createNumberButtons(buttonContainer) {
+            let pagingBar = this;
+            let buttonCount = this.pagerSettings.pageButtonCount;
+            for (let i = 0; i < buttonCount; i++) {
+                let button = this.createButton(buttonContainer);
+                button.onclick = NumberPagingBar.on_buttonClick;
+                this.numberButtons[i] = button;
+            }
+            this.numberButtons.forEach(btn => {
+                btn.onclick = () => NumberPagingBar.on_buttonClick(btn, pagingBar);
+            });
+        }
+        static on_buttonClick(button, pagingBar) {
+            let pageIndex = button.pageIndex;
+            if (!pageIndex == null) {
+                return;
+            }
+            let args = pagingBar.selectArguments;
+            args.maximumRows = pagingBar.pageSize;
+            args.startRowIndex = pageIndex * pagingBar.pageSize;
+            pagingBar.pageIndex = pageIndex;
+            //pagingBar.dataSource.select(pagingBar.selectArguments);
+            pagingBar.loadData(pageIndex);
+        }
+        render() {
+            var pagerSettings = this.pagerSettings;
+            var buttonCount = pagerSettings.pageButtonCount;
+            let pagingBarIndex = Math.floor(this.pageIndex / buttonCount);
+            let pagingBarCount = Math.ceil(this.pageCount / buttonCount);
+            this.previousPageButton.pageIndex = (pagingBarIndex - 1) * buttonCount;
+            this.nextPageButton.pageIndex = (pagingBarIndex + 1) * buttonCount;
+            this.firstPageButton.pageIndex = 0;
+            this.lastPageButton.pageIndex = this.pageCount - 1;
+            for (let i = 0; i < this.numberButtons.length; i++) {
+                let pageIndex = pagingBarIndex * buttonCount + i;
+                if (pageIndex < this.pageCount) {
+                    this.numberButtons[i].pageIndex = pageIndex;
+                    this.numberButtons[i].text = (pagingBarIndex * buttonCount + i + 1).toString();
+                    this.numberButtons[i].visible = true;
+                    this.numberButtons[i].active = pageIndex == this.pageIndex;
+                }
+                else {
+                    this.numberButtons[i].visible = false;
+                }
+            }
+            if (this.totalElement) {
+                this.totalElement.text = this.totalRowCount;
+                this.totalElement.visible = true;
+            }
+            this.firstPageButton.visible = false;
+            this.previousPageButton.visible = false;
+            this.lastPageButton.visible = false;
+            this.nextPageButton.visible = false;
+            if (pagingBarIndex > 0) {
+                this.firstPageButton.visible = true;
+                this.previousPageButton.visible = true;
+            }
+            if (pagingBarIndex < pagingBarCount - 1) {
+                this.lastPageButton.visible = true;
+                this.nextPageButton.visible = true;
+            }
+        }
+    }
+    exports.NumberPagingBar = NumberPagingBar;
+}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+// }
+
 
 /***/ }),
 
@@ -168,7 +1315,42 @@ eval("var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPAC
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ./Control */ \"./out/Control.js\"), __webpack_require__(/*! ./Errors */ \"./out/Errors.js\")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, Control_1, Errors_1) {\r\n    \"use strict\";\r\n    Object.defineProperty(exports, \"__esModule\", { value: true });\r\n    class TextBox extends Control_1.Control {\r\n        constructor(params) {\r\n            if (params == null)\r\n                throw Errors_1.Errors.argumentNull(\"params\");\r\n            if (!params.element)\r\n                throw Errors_1.Errors.argumentFieldNull(\"params\", \"element\");\r\n            if (!params.dataField)\r\n                throw Errors_1.Errors.argumentFieldNull(\"params\", \"dataField\");\r\n            if (!params.dataItem)\r\n                throw Errors_1.Errors.argumentFieldNull(\"params\", \"dataItem\");\r\n            if (!params.valueType)\r\n                throw Errors_1.Errors.argumentFieldNull(\"params\", \"valuetype\");\r\n            super(params.element);\r\n            let { element, dataField, dataItem, valueType } = params;\r\n            let value = dataItem[dataField];\r\n            element.value = `${value}`;\r\n            element.onchange = () => {\r\n                if (valueType == 'int') {\r\n                    dataItem[dataField] = Number.parseInt(element.value);\r\n                }\r\n                else if (valueType == 'float') {\r\n                    dataItem[dataField] = Number.parseFloat(element.value);\r\n                }\r\n                else {\r\n                    dataItem[dataField] = element.value;\r\n                }\r\n            };\r\n        }\r\n    }\r\n    exports.TextBox = TextBox;\r\n}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),\n\t\t\t\t__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));\r\n\n\n//# sourceURL=webpack:///./out/TextBox.js?");
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ./Control */ "./out/Control.js"), __webpack_require__(/*! ./Errors */ "./out/Errors.js")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, Control_1, Errors_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    class TextBox extends Control_1.Control {
+        constructor(params) {
+            if (params == null)
+                throw Errors_1.Errors.argumentNull("params");
+            if (!params.element)
+                throw Errors_1.Errors.argumentFieldNull("params", "element");
+            if (!params.dataField)
+                throw Errors_1.Errors.argumentFieldNull("params", "dataField");
+            if (!params.dataItem)
+                throw Errors_1.Errors.argumentFieldNull("params", "dataItem");
+            if (!params.valueType)
+                throw Errors_1.Errors.argumentFieldNull("params", "valuetype");
+            super(params.element);
+            let { element, dataField, dataItem, valueType } = params;
+            let value = dataItem[dataField];
+            element.value = `${value}`;
+            element.onchange = () => {
+                if (valueType == 'int') {
+                    dataItem[dataField] = Number.parseInt(element.value);
+                }
+                else if (valueType == 'float') {
+                    dataItem[dataField] = Number.parseFloat(element.value);
+                }
+                else {
+                    dataItem[dataField] = element.value;
+                }
+            };
+        }
+    }
+    exports.TextBox = TextBox;
+}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
 
 /***/ }),
 
@@ -179,7 +1361,89 @@ eval("var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPAC
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ./Errors */ \"./out/Errors.js\")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, Errors_1) {\r\n    \"use strict\";\r\n    Object.defineProperty(exports, \"__esModule\", { value: true });\r\n    class ElementHelper {\r\n        static showElement(element) {\r\n            if (!element)\r\n                throw Errors_1.Errors.argumentNull('element');\r\n            element.style.removeProperty('display');\r\n        }\r\n        static hideElement(element) {\r\n            if (!element)\r\n                throw Errors_1.Errors.argumentNull('element');\r\n            element.style.display = 'none';\r\n        }\r\n        static isVisible(element) {\r\n            let { display } = element.style;\r\n            return !display || display != 'none';\r\n        }\r\n        static data(element, name, value) {\r\n            element['data'] = element['data'] || {};\r\n            if (value == null)\r\n                return element['data'].name;\r\n            element['data'].name = value;\r\n        }\r\n        static findFirstParentByTagName(element, tagName) {\r\n            if (element == null)\r\n                throw Errors_1.Errors.argumentNull(\"element\");\r\n            if (!tagName)\r\n                throw Errors_1.Errors.argumentNull('tagName');\r\n            let parent = element.parentElement;\r\n            while (parent != null) {\r\n                if (parent.tagName.toLowerCase() == tagName.toLowerCase()) {\r\n                    return parent;\r\n                }\r\n                parent = parent.parentElement;\r\n            }\r\n            return null;\r\n        }\r\n    }\r\n    exports.ElementHelper = ElementHelper;\r\n    function applyStyle(element, value) {\r\n        let style = value || '';\r\n        if (typeof style == 'string') {\r\n            element.setAttribute('style', style);\r\n        }\r\n        else {\r\n            for (let key in style) {\r\n                element.style[key] = style[key];\r\n            }\r\n        }\r\n    }\r\n    exports.applyStyle = applyStyle;\r\n    class Callback {\r\n        constructor() {\r\n            this.funcs = new Array();\r\n        }\r\n        add(func) {\r\n            this.funcs.push(func);\r\n        }\r\n        remove(func) {\r\n            this.funcs = this.funcs.filter(o => o != func);\r\n        }\r\n        fire(...args) {\r\n            this.funcs.forEach(o => o(...args));\r\n        }\r\n    }\r\n    exports.Callback = Callback;\r\n    function callbacks() {\r\n        return new Callback();\r\n    }\r\n    exports.callbacks = callbacks;\r\n    function callbacks1() {\r\n        return new Callback();\r\n    }\r\n    exports.callbacks1 = callbacks1;\r\n    function fireCallback(callback, ...args) {\r\n        callback.fire(...args);\r\n    }\r\n    exports.fireCallback = fireCallback;\r\n}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),\n\t\t\t\t__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));\r\n// }\r\n\n\n//# sourceURL=webpack:///./out/Utility.js?");
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ./Errors */ "./out/Errors.js")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, Errors_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    class ElementHelper {
+        static showElement(element) {
+            if (!element)
+                throw Errors_1.Errors.argumentNull('element');
+            element.style.removeProperty('display');
+        }
+        static hideElement(element) {
+            if (!element)
+                throw Errors_1.Errors.argumentNull('element');
+            element.style.display = 'none';
+        }
+        static isVisible(element) {
+            let { display } = element.style;
+            return !display || display != 'none';
+        }
+        static data(element, name, value) {
+            element['data'] = element['data'] || {};
+            if (value == null)
+                return element['data'].name;
+            element['data'].name = value;
+        }
+        static findFirstParentByTagName(element, tagName) {
+            if (element == null)
+                throw Errors_1.Errors.argumentNull("element");
+            if (!tagName)
+                throw Errors_1.Errors.argumentNull('tagName');
+            let parent = element.parentElement;
+            while (parent != null) {
+                if (parent.tagName.toLowerCase() == tagName.toLowerCase()) {
+                    return parent;
+                }
+                parent = parent.parentElement;
+            }
+            return null;
+        }
+    }
+    exports.ElementHelper = ElementHelper;
+    function applyStyle(element, value) {
+        let style = value || '';
+        if (typeof style == 'string') {
+            element.setAttribute('style', style);
+        }
+        else {
+            for (let key in style) {
+                element.style[key] = style[key];
+            }
+        }
+    }
+    exports.applyStyle = applyStyle;
+    class Callback {
+        constructor() {
+            this.funcs = new Array();
+        }
+        add(func) {
+            this.funcs.push(func);
+        }
+        remove(func) {
+            this.funcs = this.funcs.filter(o => o != func);
+        }
+        fire(...args) {
+            this.funcs.forEach(o => o(...args));
+        }
+    }
+    exports.Callback = Callback;
+    function callbacks() {
+        return new Callback();
+    }
+    exports.callbacks = callbacks;
+    function callbacks1() {
+        return new Callback();
+    }
+    exports.callbacks1 = callbacks1;
+    function fireCallback(callback, ...args) {
+        callback.fire(...args);
+    }
+    exports.fireCallback = fireCallback;
+}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+// }
+
 
 /***/ }),
 
@@ -190,7 +1454,131 @@ eval("var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPAC
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/// <reference path=\"DataControlField.ts\"/>\r\n!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ./DataControlField */ \"./out/fields/DataControlField.js\"), __webpack_require__(/*! ../Errors */ \"./out/Errors.js\"), __webpack_require__(/*! ../Utility */ \"./out/Utility.js\")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, DataControlField_1, Errors_1, Utility_1) {\r\n    \"use strict\";\r\n    Object.defineProperty(exports, \"__esModule\", { value: true });\r\n    class GridViewEditableCell extends DataControlField_1.GridViewDataCell {\r\n        constructor(field, dataItem, valueType) {\r\n            if (field == null)\r\n                throw Errors_1.Errors.argumentNull('field');\r\n            if (dataItem == null)\r\n                throw Errors_1.Errors.argumentNull('dataItem');\r\n            super({\r\n                dataField: field.dataField,\r\n                nullText: field.nullText, dataFormatString: field.dataFormatString\r\n            });\r\n            this._field = field;\r\n            this._dataItem = dataItem;\r\n            this._valueType = valueType;\r\n            this._mode = 'read';\r\n            if (!this._valueType) {\r\n                let value = dataItem[field.dataField];\r\n                if (value instanceof Date)\r\n                    this._valueType = 'date';\r\n                else\r\n                    this._valueType = typeof value;\r\n            }\r\n        }\r\n        get field() {\r\n            return this._field;\r\n        }\r\n        get mode() {\r\n            return this._mode;\r\n        }\r\n        beginEdit() {\r\n            if (this._field.readOnly) {\r\n                return;\r\n            }\r\n            this._mode = 'edit';\r\n            this.render(this._dataItem);\r\n        }\r\n        endEdit() {\r\n            if (this._field.readOnly) {\r\n                return;\r\n            }\r\n            this._mode = 'read';\r\n            let value = this.controlValue;\r\n            this.render(this._dataItem);\r\n        }\r\n        cancelEdit() {\r\n            if (this._field.readOnly) {\r\n                return;\r\n            }\r\n            this._mode = 'read';\r\n            // let value = this._dataItem[this.field.dataField];\r\n            this.render(this._dataItem);\r\n        }\r\n        render(dataItem) {\r\n            //value\r\n            let value = dataItem[this.field.dataField];\r\n            if (this._mode == 'edit') {\r\n                this.element.innerHTML = `<input type=\"text\" />`;\r\n                Utility_1.applyStyle(this.element.querySelector('input'), this._field.controlStyle);\r\n                this.element.querySelector('input').value =\r\n                    value === undefined ? null : `${value}`;\r\n                return;\r\n            }\r\n            super.render(dataItem);\r\n        }\r\n        //==============================================\r\n        // Virtual Methods\r\n        get controlValue() {\r\n            var text = this.element.querySelector('input').value;\r\n            switch (this._valueType) {\r\n                case 'number':\r\n                    return new Number(text).valueOf();\r\n                case 'date':\r\n                    return new Date(text);\r\n                default:\r\n                    return text;\r\n            }\r\n        }\r\n    }\r\n    exports.GridViewEditableCell = GridViewEditableCell;\r\n    class BoundField extends DataControlField_1.DataControlField {\r\n        constructor(params) {\r\n            super(params);\r\n            this._params = params;\r\n            this._valueElement = document.createElement('span');\r\n        }\r\n        params() {\r\n            return this._params;\r\n        }\r\n        /**\r\n         * Gets the caption displayed for a field when the field's value is null.\r\n         */\r\n        get nullText() {\r\n            return this.params().nullText;\r\n        }\r\n        createItemCell(dataItem) {\r\n            let cell = new GridViewEditableCell(this, dataItem);\r\n            cell.style(this.itemStyle);\r\n            return cell;\r\n        }\r\n        /**\r\n         * Gets the field for the value.\r\n         */\r\n        get dataField() {\r\n            return this.params().dataField;\r\n        }\r\n        /**\r\n         * Gets the string that specifies the display format for the value of the field.\r\n         */\r\n        get dataFormatString() {\r\n            return this.params().dataFormatString;\r\n        }\r\n        get controlStyle() {\r\n            return this.params().controlStyle;\r\n        }\r\n        get readOnly() {\r\n            return this.params().readOnly;\r\n        }\r\n    }\r\n    exports.BoundField = BoundField;\r\n}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),\n\t\t\t\t__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));\r\n\n\n//# sourceURL=webpack:///./out/fields/BoundField.js?");
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/// <reference path="DataControlField.ts"/>
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ./DataControlField */ "./out/fields/DataControlField.js"), __webpack_require__(/*! ../Errors */ "./out/Errors.js"), __webpack_require__(/*! ../Utility */ "./out/Utility.js")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, DataControlField_1, Errors_1, Utility_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    class GridViewEditableCell extends DataControlField_1.GridViewDataCell {
+        constructor(field, dataItem, valueType) {
+            if (field == null)
+                throw Errors_1.Errors.argumentNull('field');
+            if (dataItem == null)
+                throw Errors_1.Errors.argumentNull('dataItem');
+            super({
+                dataField: field.dataField,
+                nullText: field.nullText, dataFormatString: field.dataFormatString
+            });
+            this._field = field;
+            this._dataItem = dataItem;
+            this._valueType = valueType;
+            this._mode = 'read';
+            if (!this._valueType) {
+                let value = dataItem[field.dataField];
+                if (value instanceof Date)
+                    this._valueType = 'date';
+                else
+                    this._valueType = typeof value;
+            }
+        }
+        get field() {
+            return this._field;
+        }
+        get mode() {
+            return this._mode;
+        }
+        beginEdit() {
+            if (this._field.readOnly) {
+                return;
+            }
+            this._mode = 'edit';
+            this.render(this._dataItem);
+        }
+        endEdit() {
+            if (this._field.readOnly) {
+                return;
+            }
+            this._mode = 'read';
+            let value = this.controlValue;
+            this.render(this._dataItem);
+        }
+        cancelEdit() {
+            if (this._field.readOnly) {
+                return;
+            }
+            this._mode = 'read';
+            // let value = this._dataItem[this.field.dataField];
+            this.render(this._dataItem);
+        }
+        render(dataItem) {
+            //value
+            let value = dataItem[this.field.dataField];
+            if (this._mode == 'edit') {
+                this.element.innerHTML = `<input type="text" />`;
+                Utility_1.applyStyle(this.element.querySelector('input'), this._field.controlStyle);
+                this.element.querySelector('input').value =
+                    value === undefined ? null : `${value}`;
+                return;
+            }
+            super.render(dataItem);
+        }
+        //==============================================
+        // Virtual Methods
+        get controlValue() {
+            var text = this.element.querySelector('input').value;
+            switch (this._valueType) {
+                case 'number':
+                    return new Number(text).valueOf();
+                case 'date':
+                    return new Date(text);
+                default:
+                    return text;
+            }
+        }
+    }
+    exports.GridViewEditableCell = GridViewEditableCell;
+    class BoundField extends DataControlField_1.DataControlField {
+        constructor(params) {
+            super(params);
+            this._params = params;
+            this._valueElement = document.createElement('span');
+        }
+        params() {
+            return this._params;
+        }
+        /**
+         * Gets the caption displayed for a field when the field's value is null.
+         */
+        get nullText() {
+            return this.params().nullText;
+        }
+        createItemCell(dataItem) {
+            let cell = new GridViewEditableCell(this, dataItem);
+            cell.style(this.itemStyle);
+            return cell;
+        }
+        /**
+         * Gets the field for the value.
+         */
+        get dataField() {
+            return this.params().dataField;
+        }
+        /**
+         * Gets the string that specifies the display format for the value of the field.
+         */
+        get dataFormatString() {
+            return this.params().dataFormatString;
+        }
+        get controlStyle() {
+            return this.params().controlStyle;
+        }
+        get readOnly() {
+            return this.params().readOnly;
+        }
+    }
+    exports.BoundField = BoundField;
+}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
 
 /***/ }),
 
@@ -201,7 +1589,310 @@ eval("var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/// <refer
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/// <reference path=\"DataControlField.ts\"/>\r\n!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ./DataControlField */ \"./out/fields/DataControlField.js\"), __webpack_require__(/*! ../Control */ \"./out/Control.js\"), __webpack_require__(/*! ./BoundField */ \"./out/fields/BoundField.js\"), __webpack_require__(/*! ../Utility */ \"./out/Utility.js\")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, DataControlField_1, Control_1, BoundField_1, Utility_1) {\r\n    \"use strict\";\r\n    Object.defineProperty(exports, \"__esModule\", { value: true });\r\n    class GridViewCommandCell extends DataControlField_1.GridViewCell {\r\n        constructor(field) {\r\n            super();\r\n        }\r\n    }\r\n    class CommandField extends DataControlField_1.DataControlField {\r\n        constructor(params) {\r\n            super(params);\r\n            if (!this.params().cancelButtonHTML)\r\n                this.params().cancelButtonHTML = '取消';\r\n            if (!this.params().deleteButtonHTML)\r\n                this.params().deleteButtonHTML = '删除';\r\n            if (!this.params().editButtonHTML)\r\n                this.params().editButtonHTML = '编辑';\r\n            if (!this.params().updateButtonHTML)\r\n                this.params().updateButtonHTML = '更新';\r\n            if (!this.params().newButtonHTML)\r\n                this.params().newButtonHTML = '新增';\r\n            if (!this.params().insertButtonHTML)\r\n                this.params().insertButtonHTML = '添加';\r\n        }\r\n        params() {\r\n            return this._params;\r\n        }\r\n        get cancelButtonHTML() {\r\n            return this.params().cancelButtonHTML;\r\n        }\r\n        get deleteButtonHTML() {\r\n            return this.params().deleteButtonHTML;\r\n        }\r\n        get editButtonHTML() {\r\n            return this.params().editButtonHTML;\r\n        }\r\n        get updateButtonHTML() {\r\n            return this.params().updateButtonHTML;\r\n        }\r\n        get newButtonHTML() {\r\n            return this.params().newButtonHTML;\r\n        }\r\n        get insertButtonHTML() {\r\n            return this.params().insertButtonHTML;\r\n        }\r\n        get cancelButtonClass() {\r\n            return this.params().cancelButtonClass;\r\n        }\r\n        get deleteButtonClass() {\r\n            return this.params().deleteButtonClass;\r\n        }\r\n        get editButtonClass() {\r\n            return this.params().editButtonClass;\r\n        }\r\n        get newButtonClass() {\r\n            return this.params().newButtonClass;\r\n        }\r\n        get updateButtonClass() {\r\n            return this.params().updateButtonClass;\r\n        }\r\n        get insertButtonClass() {\r\n            return this.params().insertButtonClass;\r\n        }\r\n        createItemCell(dataItem) {\r\n            let cell = new GridViewCommandCell(this);\r\n            cell.style(this.itemStyle);\r\n            if (this.params().showEditButton) {\r\n                let editButton = this.createEditButton();\r\n                editButton.style.marginRight = '4px';\r\n                if (this.editButtonClass)\r\n                    editButton.className = this.editButtonClass;\r\n                cell.editButton = editButton;\r\n                editButton.addEventListener('click', (e) => this.on_editButtonClick(e));\r\n                cell.appendChild(editButton);\r\n                let updateButton = this.createUpdateButton();\r\n                updateButton.style.display = 'none';\r\n                updateButton.style.marginRight = '4px';\r\n                if (this.updateButtonClass)\r\n                    updateButton.className = this.updateButtonClass;\r\n                cell.updateButton = updateButton;\r\n                updateButton.addEventListener('click', (e) => this.on_insertOrUpdateButtonClick(e));\r\n                cell.appendChild(updateButton);\r\n                let cancelButton = this.createCancelButton();\r\n                cancelButton.style.display = 'none';\r\n                cancelButton.style.marginRight = '4px';\r\n                if (this.cancelButtonClass)\r\n                    cancelButton.className = this.cancelButtonClass;\r\n                cell.cacelButton = cancelButton;\r\n                cancelButton.addEventListener('click', (e) => this.on_cancelButtonClick(e));\r\n                cell.appendChild(cancelButton);\r\n            }\r\n            if (this.params().showDeleteButton) {\r\n                let deleteButton = this.createDeleteButton();\r\n                deleteButton.style.marginRight = '4px';\r\n                if (this.deleteButtonClass)\r\n                    deleteButton.className = this.deleteButtonClass;\r\n                cell.deleteButton = deleteButton;\r\n                deleteButton.onclick = (e) => this.on_deleteButtonClick(e);\r\n                cell.appendChild(deleteButton);\r\n            }\r\n            if (this.params().showNewButton) {\r\n                let newButton = this.createNewButton();\r\n                newButton.style.marginRight = '4px';\r\n                if (this.newButtonClass)\r\n                    newButton.className = this.newButtonClass;\r\n                newButton.onclick = (e) => this.on_newButtonClick(e);\r\n                cell.newButton = newButton;\r\n                cell.appendChild(newButton);\r\n                let insertButton = this.createInsertButton();\r\n                insertButton.style.display = 'none';\r\n                insertButton.style.marginRight = '4px';\r\n                insertButton.addEventListener('click', (e) => this.on_insertOrUpdateButtonClick(e));\r\n                if (this.insertButtonClass)\r\n                    insertButton.className = this.updateButtonClass;\r\n                cell.insertButton = insertButton;\r\n                cell.appendChild(insertButton);\r\n                let cancelButton = this.createCancelButton();\r\n                cancelButton.style.display = 'none';\r\n                cancelButton.style.marginRight = '4px';\r\n                cancelButton.addEventListener('click', (e) => this.on_cancelButtonClick(e));\r\n                if (this.cancelButtonClass)\r\n                    cancelButton.className = this.cancelButtonClass;\r\n                cell.cacelButton = cancelButton;\r\n                cell.appendChild(cancelButton);\r\n            }\r\n            return cell;\r\n        }\r\n        showReadStatusButtons(cell) {\r\n            if (cell.newButton) {\r\n                this.showButton(cell.newButton);\r\n                this.hideButton(cell.insertButton);\r\n            }\r\n            if (cell.editButton) {\r\n                this.showButton(cell.editButton);\r\n                this.hideButton(cell.updateButton);\r\n            }\r\n            if (cell.deleteButton)\r\n                this.showButton(cell.deleteButton);\r\n            this.hideButton(cell.cacelButton);\r\n        }\r\n        createEditButton() {\r\n            let button = document.createElement('a');\r\n            button.innerHTML = this.editButtonHTML;\r\n            button.href = 'javascript:';\r\n            return button;\r\n        }\r\n        createDeleteButton() {\r\n            let button = document.createElement('a');\r\n            button.innerHTML = this.deleteButtonHTML;\r\n            button.href = 'javascript:';\r\n            return button;\r\n        }\r\n        createInsertButton() {\r\n            let button = document.createElement('a');\r\n            button.innerHTML = this.insertButtonHTML;\r\n            button.href = 'javascript:';\r\n            return button;\r\n        }\r\n        createUpdateButton() {\r\n            let button = document.createElement('a');\r\n            button.innerHTML = this.updateButtonHTML;\r\n            button.href = 'javascript:';\r\n            return button;\r\n        }\r\n        createCancelButton() {\r\n            let button = document.createElement('a');\r\n            button.innerHTML = this.cancelButtonHTML;\r\n            button.href = 'javascript:';\r\n            return button;\r\n        }\r\n        createNewButton() {\r\n            let button = document.createElement('a');\r\n            button.innerHTML = this.newButtonHTML;\r\n            button.href = 'javascript:';\r\n            return button;\r\n        }\r\n        hideButton(button) {\r\n            button.style.display = 'none';\r\n        }\r\n        showButton(button) {\r\n            button.style.removeProperty('display');\r\n        }\r\n        findParentCell(element) {\r\n            let cellElement;\r\n            let p = element.parentElement;\r\n            while (p) {\r\n                if (p.tagName == 'TD') {\r\n                    cellElement = p;\r\n                    break;\r\n                }\r\n                p = p.parentElement;\r\n            }\r\n            return cellElement;\r\n        }\r\n        on_editButtonClick(e) {\r\n            let cellElement = this.findParentCell(e.target);\r\n            console.assert(cellElement != null);\r\n            let rowElement = cellElement.parentElement;\r\n            for (let i = 0; i < rowElement.cells.length; i++) {\r\n                let cell = Control_1.Control.getControlByElement(rowElement.cells[i]);\r\n                if (cell instanceof BoundField_1.GridViewEditableCell) {\r\n                    cell.beginEdit();\r\n                }\r\n            }\r\n            let cell = Control_1.Control.getControlByElement(cellElement);\r\n            this.showButton(cell.cacelButton);\r\n            this.showButton(cell.updateButton);\r\n            this.hideButton(cell.editButton);\r\n            if (cell.deleteButton)\r\n                this.hideButton(cell.deleteButton);\r\n            if (cell.newButton)\r\n                this.hideButton(cell.newButton);\r\n        }\r\n        on_cancelButtonClick(e) {\r\n            let cellElement = this.findParentCell(e.target);\r\n            console.assert(cellElement != null);\r\n            let rowElement = cellElement.parentElement;\r\n            var row = Control_1.Control.getControlByElement(rowElement);\r\n            if (row[\"isNew\"] == true) {\r\n                rowElement.remove();\r\n                return;\r\n            }\r\n            for (let i = 0; i < rowElement.cells.length; i++) {\r\n                let cell = Control_1.Control.getControlByElement(rowElement.cells[i]);\r\n                if (cell instanceof BoundField_1.GridViewEditableCell) {\r\n                    cell.cancelEdit();\r\n                }\r\n            }\r\n            let cell = Control_1.Control.getControlByElement(cellElement);\r\n            this.hideButton(cell.cacelButton);\r\n            this.hideButton(cell.updateButton);\r\n            this.showButton(cell.editButton);\r\n            if (cell.deleteButton)\r\n                this.showButton(cell.deleteButton);\r\n            if (cell.newButton)\r\n                this.showButton(cell.newButton);\r\n        }\r\n        on_insertOrUpdateButtonClick(e) {\r\n            if (e.target['_updating'])\r\n                e.target['_updating'] = true;\r\n            let cellElement = Utility_1.ElementHelper.findFirstParentByTagName(e.target, 'td');\r\n            let rowElement = cellElement.parentElement;\r\n            let cell = Control_1.Control.getControlByElement(cellElement);\r\n            let row = Control_1.Control.getControlByElement(rowElement);\r\n            //==========================================================\r\n            // 复制 dataItem 副本\r\n            let dataItem = Object.assign({}, row.dataItem || {});\r\n            //==========================================================\r\n            let dataSource = row.gridView.dataSource;\r\n            let editableCells = new Array();\r\n            for (let i = 0; i < rowElement.cells.length; i++) {\r\n                let cell = Control_1.Control.getControlByElement(rowElement.cells[i]);\r\n                if (cell instanceof BoundField_1.GridViewEditableCell && cell.mode == 'edit') {\r\n                    dataItem[cell.field.dataField] = cell.controlValue;\r\n                    editableCells.push(cell);\r\n                }\r\n            }\r\n            let isInsert = e.target == cell.insertButton;\r\n            let p = isInsert ? dataSource.insert(dataItem, rowElement.rowIndex) : dataSource.update(dataItem);\r\n            return p.then(() => {\r\n                if (isInsert) {\r\n                    rowElement.remove();\r\n                    return;\r\n                }\r\n                editableCells.forEach((item) => item.endEdit());\r\n                let cell = Control_1.Control.getControlByElement(cellElement);\r\n                this.showReadStatusButtons(cell);\r\n                e.target['_updating'] = false;\r\n            }).catch(() => e.target['_updating'] = false);\r\n        }\r\n        on_deleteButtonClick(e) {\r\n            let rowElement = Utility_1.ElementHelper.findFirstParentByTagName(e.target, \"tr\");\r\n            let row = Control_1.Control.getControlByElement(rowElement);\r\n            let dataSource = row.gridView.dataSource;\r\n            dataSource.delete(row.dataItem)\r\n                .then(() => {\r\n                rowElement.remove();\r\n            });\r\n        }\r\n        on_newButtonClick(e) {\r\n            let rowElement = Utility_1.ElementHelper.findFirstParentByTagName(e.target, \"tr\"); //cellElement.parentElement as HTMLTableRowElement;\r\n            let row = Control_1.Control.getControlByElement(rowElement);\r\n            let gridView = row.gridView;\r\n            let newRow = gridView.appendDataRow({}, rowElement.rowIndex);\r\n            newRow[\"isNew\"] = true;\r\n            let commandCells = newRow.cells.filter(o => o instanceof GridViewCommandCell);\r\n            newRow.cells.filter(o => o instanceof BoundField_1.GridViewEditableCell)\r\n                .forEach((c) => c.beginEdit());\r\n            commandCells.forEach((cell) => {\r\n                if (cell.deleteButton)\r\n                    this.hideButton(cell.deleteButton);\r\n                if (cell.editButton)\r\n                    this.hideButton(cell.editButton);\r\n                this.hideButton(cell.newButton);\r\n                this.showButton(cell.insertButton);\r\n                this.showButton(cell.cacelButton);\r\n            });\r\n        }\r\n    }\r\n    exports.CommandField = CommandField;\r\n}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),\n\t\t\t\t__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));\r\n\n\n//# sourceURL=webpack:///./out/fields/CommandField.js?");
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/// <reference path="DataControlField.ts"/>
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ./DataControlField */ "./out/fields/DataControlField.js"), __webpack_require__(/*! ../Control */ "./out/Control.js"), __webpack_require__(/*! ./BoundField */ "./out/fields/BoundField.js"), __webpack_require__(/*! ../Utility */ "./out/Utility.js")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, DataControlField_1, Control_1, BoundField_1, Utility_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    class GridViewCommandCell extends DataControlField_1.GridViewCell {
+        constructor(field) {
+            super();
+        }
+    }
+    class CommandField extends DataControlField_1.DataControlField {
+        constructor(params) {
+            super(params);
+            if (!this.params().cancelButtonHTML)
+                this.params().cancelButtonHTML = '取消';
+            if (!this.params().deleteButtonHTML)
+                this.params().deleteButtonHTML = '删除';
+            if (!this.params().editButtonHTML)
+                this.params().editButtonHTML = '编辑';
+            if (!this.params().updateButtonHTML)
+                this.params().updateButtonHTML = '更新';
+            if (!this.params().newButtonHTML)
+                this.params().newButtonHTML = '新增';
+            if (!this.params().insertButtonHTML)
+                this.params().insertButtonHTML = '添加';
+        }
+        params() {
+            return this._params;
+        }
+        get cancelButtonHTML() {
+            return this.params().cancelButtonHTML;
+        }
+        get deleteButtonHTML() {
+            return this.params().deleteButtonHTML;
+        }
+        get editButtonHTML() {
+            return this.params().editButtonHTML;
+        }
+        get updateButtonHTML() {
+            return this.params().updateButtonHTML;
+        }
+        get newButtonHTML() {
+            return this.params().newButtonHTML;
+        }
+        get insertButtonHTML() {
+            return this.params().insertButtonHTML;
+        }
+        get cancelButtonClass() {
+            return this.params().cancelButtonClass;
+        }
+        get deleteButtonClass() {
+            return this.params().deleteButtonClass;
+        }
+        get editButtonClass() {
+            return this.params().editButtonClass;
+        }
+        get newButtonClass() {
+            return this.params().newButtonClass;
+        }
+        get updateButtonClass() {
+            return this.params().updateButtonClass;
+        }
+        get insertButtonClass() {
+            return this.params().insertButtonClass;
+        }
+        createItemCell(dataItem) {
+            let cell = new GridViewCommandCell(this);
+            cell.style(this.itemStyle);
+            if (this.params().showEditButton) {
+                let editButton = this.createEditButton();
+                editButton.style.marginRight = '4px';
+                if (this.editButtonClass)
+                    editButton.className = this.editButtonClass;
+                cell.editButton = editButton;
+                editButton.addEventListener('click', (e) => this.on_editButtonClick(e));
+                cell.appendChild(editButton);
+                let updateButton = this.createUpdateButton();
+                updateButton.style.display = 'none';
+                updateButton.style.marginRight = '4px';
+                if (this.updateButtonClass)
+                    updateButton.className = this.updateButtonClass;
+                cell.updateButton = updateButton;
+                updateButton.addEventListener('click', (e) => this.on_insertOrUpdateButtonClick(e));
+                cell.appendChild(updateButton);
+                let cancelButton = this.createCancelButton();
+                cancelButton.style.display = 'none';
+                cancelButton.style.marginRight = '4px';
+                if (this.cancelButtonClass)
+                    cancelButton.className = this.cancelButtonClass;
+                cell.cacelButton = cancelButton;
+                cancelButton.addEventListener('click', (e) => this.on_cancelButtonClick(e));
+                cell.appendChild(cancelButton);
+            }
+            if (this.params().showDeleteButton) {
+                let deleteButton = this.createDeleteButton();
+                deleteButton.style.marginRight = '4px';
+                if (this.deleteButtonClass)
+                    deleteButton.className = this.deleteButtonClass;
+                cell.deleteButton = deleteButton;
+                deleteButton.onclick = (e) => this.on_deleteButtonClick(e);
+                cell.appendChild(deleteButton);
+            }
+            if (this.params().showNewButton) {
+                let newButton = this.createNewButton();
+                newButton.style.marginRight = '4px';
+                if (this.newButtonClass)
+                    newButton.className = this.newButtonClass;
+                newButton.onclick = (e) => this.on_newButtonClick(e);
+                cell.newButton = newButton;
+                cell.appendChild(newButton);
+                let insertButton = this.createInsertButton();
+                insertButton.style.display = 'none';
+                insertButton.style.marginRight = '4px';
+                insertButton.addEventListener('click', (e) => this.on_insertOrUpdateButtonClick(e));
+                if (this.insertButtonClass)
+                    insertButton.className = this.updateButtonClass;
+                cell.insertButton = insertButton;
+                cell.appendChild(insertButton);
+                let cancelButton = this.createCancelButton();
+                cancelButton.style.display = 'none';
+                cancelButton.style.marginRight = '4px';
+                cancelButton.addEventListener('click', (e) => this.on_cancelButtonClick(e));
+                if (this.cancelButtonClass)
+                    cancelButton.className = this.cancelButtonClass;
+                cell.cacelButton = cancelButton;
+                cell.appendChild(cancelButton);
+            }
+            return cell;
+        }
+        showReadStatusButtons(cell) {
+            if (cell.newButton) {
+                this.showButton(cell.newButton);
+                this.hideButton(cell.insertButton);
+            }
+            if (cell.editButton) {
+                this.showButton(cell.editButton);
+                this.hideButton(cell.updateButton);
+            }
+            if (cell.deleteButton)
+                this.showButton(cell.deleteButton);
+            this.hideButton(cell.cacelButton);
+        }
+        createEditButton() {
+            let button = document.createElement('a');
+            button.innerHTML = this.editButtonHTML;
+            button.href = 'javascript:';
+            return button;
+        }
+        createDeleteButton() {
+            let button = document.createElement('a');
+            button.innerHTML = this.deleteButtonHTML;
+            button.href = 'javascript:';
+            return button;
+        }
+        createInsertButton() {
+            let button = document.createElement('a');
+            button.innerHTML = this.insertButtonHTML;
+            button.href = 'javascript:';
+            return button;
+        }
+        createUpdateButton() {
+            let button = document.createElement('a');
+            button.innerHTML = this.updateButtonHTML;
+            button.href = 'javascript:';
+            return button;
+        }
+        createCancelButton() {
+            let button = document.createElement('a');
+            button.innerHTML = this.cancelButtonHTML;
+            button.href = 'javascript:';
+            return button;
+        }
+        createNewButton() {
+            let button = document.createElement('a');
+            button.innerHTML = this.newButtonHTML;
+            button.href = 'javascript:';
+            return button;
+        }
+        hideButton(button) {
+            button.style.display = 'none';
+        }
+        showButton(button) {
+            button.style.removeProperty('display');
+        }
+        findParentCell(element) {
+            let cellElement;
+            let p = element.parentElement;
+            while (p) {
+                if (p.tagName == 'TD') {
+                    cellElement = p;
+                    break;
+                }
+                p = p.parentElement;
+            }
+            return cellElement;
+        }
+        on_editButtonClick(e) {
+            let cellElement = this.findParentCell(e.target);
+            console.assert(cellElement != null);
+            let rowElement = cellElement.parentElement;
+            for (let i = 0; i < rowElement.cells.length; i++) {
+                let cell = Control_1.Control.getControlByElement(rowElement.cells[i]);
+                if (cell instanceof BoundField_1.GridViewEditableCell) {
+                    cell.beginEdit();
+                }
+            }
+            let cell = Control_1.Control.getControlByElement(cellElement);
+            this.showButton(cell.cacelButton);
+            this.showButton(cell.updateButton);
+            this.hideButton(cell.editButton);
+            if (cell.deleteButton)
+                this.hideButton(cell.deleteButton);
+            if (cell.newButton)
+                this.hideButton(cell.newButton);
+        }
+        on_cancelButtonClick(e) {
+            let cellElement = this.findParentCell(e.target);
+            console.assert(cellElement != null);
+            let rowElement = cellElement.parentElement;
+            var row = Control_1.Control.getControlByElement(rowElement);
+            if (row["isNew"] == true) {
+                rowElement.remove();
+                return;
+            }
+            for (let i = 0; i < rowElement.cells.length; i++) {
+                let cell = Control_1.Control.getControlByElement(rowElement.cells[i]);
+                if (cell instanceof BoundField_1.GridViewEditableCell) {
+                    cell.cancelEdit();
+                }
+            }
+            let cell = Control_1.Control.getControlByElement(cellElement);
+            this.hideButton(cell.cacelButton);
+            this.hideButton(cell.updateButton);
+            this.showButton(cell.editButton);
+            if (cell.deleteButton)
+                this.showButton(cell.deleteButton);
+            if (cell.newButton)
+                this.showButton(cell.newButton);
+        }
+        on_insertOrUpdateButtonClick(e) {
+            if (e.target['_updating'])
+                e.target['_updating'] = true;
+            let cellElement = Utility_1.ElementHelper.findFirstParentByTagName(e.target, 'td');
+            let rowElement = cellElement.parentElement;
+            let cell = Control_1.Control.getControlByElement(cellElement);
+            let row = Control_1.Control.getControlByElement(rowElement);
+            //==========================================================
+            // 复制 dataItem 副本
+            let dataItem = Object.assign({}, row.dataItem || {});
+            //==========================================================
+            let dataSource = row.gridView.dataSource;
+            let editableCells = new Array();
+            for (let i = 0; i < rowElement.cells.length; i++) {
+                let cell = Control_1.Control.getControlByElement(rowElement.cells[i]);
+                if (cell instanceof BoundField_1.GridViewEditableCell && cell.mode == 'edit') {
+                    dataItem[cell.field.dataField] = cell.controlValue;
+                    editableCells.push(cell);
+                }
+            }
+            let isInsert = e.target == cell.insertButton;
+            let p = isInsert ? dataSource.insert(dataItem, rowElement.rowIndex) : dataSource.update(dataItem);
+            return p.then(() => {
+                if (isInsert) {
+                    rowElement.remove();
+                    return;
+                }
+                editableCells.forEach((item) => item.endEdit());
+                let cell = Control_1.Control.getControlByElement(cellElement);
+                this.showReadStatusButtons(cell);
+                e.target['_updating'] = false;
+            }).catch(() => e.target['_updating'] = false);
+        }
+        on_deleteButtonClick(e) {
+            let rowElement = Utility_1.ElementHelper.findFirstParentByTagName(e.target, "tr");
+            let row = Control_1.Control.getControlByElement(rowElement);
+            let dataSource = row.gridView.dataSource;
+            dataSource.delete(row.dataItem)
+                .then(() => {
+                rowElement.remove();
+            });
+        }
+        on_newButtonClick(e) {
+            let rowElement = Utility_1.ElementHelper.findFirstParentByTagName(e.target, "tr"); //cellElement.parentElement as HTMLTableRowElement;
+            let row = Control_1.Control.getControlByElement(rowElement);
+            let gridView = row.gridView;
+            let newRow = gridView.appendDataRow({}, rowElement.rowIndex);
+            newRow["isNew"] = true;
+            let commandCells = newRow.cells.filter(o => o instanceof GridViewCommandCell);
+            newRow.cells.filter(o => o instanceof BoundField_1.GridViewEditableCell)
+                .forEach((c) => c.beginEdit());
+            commandCells.forEach((cell) => {
+                if (cell.deleteButton)
+                    this.hideButton(cell.deleteButton);
+                if (cell.editButton)
+                    this.hideButton(cell.editButton);
+                this.hideButton(cell.newButton);
+                this.showButton(cell.insertButton);
+                this.showButton(cell.cacelButton);
+            });
+        }
+    }
+    exports.CommandField = CommandField;
+}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
 
 /***/ }),
 
@@ -212,7 +1903,45 @@ eval("var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/// <refer
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ./DataControlField */ \"./out/fields/DataControlField.js\")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, DataControlField_1) {\r\n    \"use strict\";\r\n    Object.defineProperty(exports, \"__esModule\", { value: true });\r\n    class CustomField extends DataControlField_1.DataControlField {\r\n        constructor(params) {\r\n            super(params);\r\n        }\r\n        params() {\r\n            return this._params;\r\n        }\r\n        createHeaderCell() {\r\n            if (this.params().createHeaderCell) {\r\n                let cell = this.params().createHeaderCell();\r\n                cell.style(this.headerStyle);\r\n                return cell;\r\n            }\r\n            return super.createHeaderCell();\r\n        }\r\n        createFooterCell() {\r\n            if (this.params().createFooterCell) {\r\n                let cell = this.params().createFooterCell();\r\n                cell.style(this.params().footerStyle);\r\n                return cell;\r\n            }\r\n            return super.createFooterCell();\r\n        }\r\n        createItemCell(dataItem) {\r\n            if (this.params().createItemCell) {\r\n                let cell = this.params().createItemCell.apply(this, [dataItem]);\r\n                cell.style(this.params().itemStyle);\r\n                return cell;\r\n            }\r\n            return super.createItemCell(dataItem);\r\n        }\r\n    }\r\n    exports.CustomField = CustomField;\r\n}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),\n\t\t\t\t__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));\r\n\n\n//# sourceURL=webpack:///./out/fields/CustomField.js?");
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ./DataControlField */ "./out/fields/DataControlField.js")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, DataControlField_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    class CustomField extends DataControlField_1.DataControlField {
+        constructor(params) {
+            super(params);
+        }
+        params() {
+            return this._params;
+        }
+        createHeaderCell() {
+            if (this.params().createHeaderCell) {
+                let cell = this.params().createHeaderCell();
+                cell.style(this.headerStyle);
+                return cell;
+            }
+            return super.createHeaderCell();
+        }
+        createFooterCell() {
+            if (this.params().createFooterCell) {
+                let cell = this.params().createFooterCell();
+                cell.style(this.params().footerStyle);
+                return cell;
+            }
+            return super.createFooterCell();
+        }
+        createItemCell(dataItem) {
+            if (this.params().createItemCell) {
+                let cell = this.params().createItemCell.apply(this, [dataItem]);
+                cell.style(this.params().itemStyle);
+                return cell;
+            }
+            return super.createItemCell(dataItem);
+        }
+    }
+    exports.CustomField = CustomField;
+}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
 
 /***/ }),
 
@@ -223,7 +1952,273 @@ eval("var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPAC
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ../Control */ \"./out/Control.js\"), __webpack_require__(/*! ../Utility */ \"./out/Utility.js\"), __webpack_require__(/*! ../Errors */ \"./out/Errors.js\")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, Control_1, Utility_1, Errors_1) {\r\n    \"use strict\";\r\n    Object.defineProperty(exports, \"__esModule\", { value: true });\r\n    class GridViewCell extends Control_1.Control {\r\n        constructor() {\r\n            super(document.createElement('td'));\r\n        }\r\n    }\r\n    exports.GridViewCell = GridViewCell;\r\n    class GridViewDataCell extends GridViewCell {\r\n        constructor(params) {\r\n            super();\r\n            let p = params;\r\n            this.nullText = p.nullText != null ? p.nullText : '';\r\n            this.dataFormatString = p.dataFormatString;\r\n            this.dataField = p.dataField;\r\n            if (p.render) {\r\n                this.render = (dataItem) => p.render.apply(this, [dataItem, this.element]);\r\n            }\r\n        }\r\n        render(dataItem) {\r\n            let value = dataItem[this.dataField];\r\n            var text;\r\n            if (value == null)\r\n                text = this.nullText;\r\n            else if (this.dataFormatString)\r\n                text = this.formatValue(this.dataFormatString, value);\r\n            else\r\n                text = `${value}`;\r\n            this.element.innerHTML = text;\r\n        }\r\n        formatValue(format, arg) {\r\n            var result = '';\r\n            for (var i = 0;;) {\r\n                var open = format.indexOf('{', i);\r\n                var close = format.indexOf('}', i);\r\n                if ((open < 0) && (close < 0)) {\r\n                    result += format.slice(i);\r\n                    break;\r\n                }\r\n                if ((close > 0) && ((close < open) || (open < 0))) {\r\n                    if (format.charAt(close + 1) !== '}') {\r\n                        throw new Error('Sys.Res.stringFormatBraceMismatch');\r\n                    }\r\n                    result += format.slice(i, close + 1);\r\n                    i = close + 2;\r\n                    continue;\r\n                }\r\n                result += format.slice(i, open);\r\n                i = open + 1;\r\n                if (format.charAt(i) === '{') {\r\n                    result += '{';\r\n                    i++;\r\n                    continue;\r\n                }\r\n                if (close < 0)\r\n                    throw new Error('Sys.Res.stringFormatBraceMismatch');\r\n                var brace = format.substring(i, close);\r\n                var argFormat = brace;\r\n                if (typeof (arg) === \"undefined\" || arg === null) {\r\n                    arg = '';\r\n                }\r\n                if (arg instanceof Date)\r\n                    result = result + this.formatDate(arg, argFormat);\r\n                else if (arg instanceof Number || typeof arg == 'number')\r\n                    result = result + this.formatNumber(arg, argFormat);\r\n                else\r\n                    result = result + arg.toString();\r\n                i = close + 1;\r\n            }\r\n            return result;\r\n        }\r\n        formatDate(value, format) {\r\n            let y = value.getFullYear();\r\n            let m = value.getMonth() + 1;\r\n            let d = value.getDate();\r\n            let h = value.getHours();\r\n            let M = value.getMinutes();\r\n            let s = value.getSeconds();\r\n            let twoDigit = function (value) {\r\n                const TEN = 10;\r\n                if (value < TEN)\r\n                    return `0` + value;\r\n                return value.toString();\r\n            };\r\n            switch (format) {\r\n                case 'd':\r\n                    return `${y}-${m}-${d}`;\r\n                case 'g':\r\n                    return `${y}-${m}-${d} ${h}:${M}`;\r\n                case 'gg':\r\n                    return `${y}-${twoDigit(m)}-${twoDigit(d)} ${twoDigit(h)}:${twoDigit(M)}`;\r\n                case 'G':\r\n                    return `${y}-${m}-${d} ${h}:${M}:${s}`;\r\n                case 'GG':\r\n                    return `${y}-${twoDigit(m)}-${twoDigit(d)} ${twoDigit(h)}:${twoDigit(M)}:${twoDigit(s)}`;\r\n                case 't':\r\n                    return `${h}:${M}`;\r\n                case 'T':\r\n                    return `${h}:${M}:${s}`;\r\n            }\r\n            return value.toString();\r\n        }\r\n        formatNumber(value, format) {\r\n            let reg = new RegExp('^C[0-9]+');\r\n            if (reg.test(format)) {\r\n                let num = format.substr(1);\r\n                return value.toFixed(num);\r\n            }\r\n            return value.toString();\r\n        }\r\n    }\r\n    exports.GridViewDataCell = GridViewDataCell;\r\n    class GridViewHeaderCell extends Control_1.Control {\r\n        constructor(field) {\r\n            super(document.createElement('th'));\r\n            this.ascHTML = '↑';\r\n            this.descHTML = '↓';\r\n            this.sortingHTML = '...';\r\n            this.toSortHTML = '↕';\r\n            this.field = field;\r\n            this.sorting = Utility_1.callbacks();\r\n            this.sorted = Utility_1.callbacks();\r\n            if (field.sortExpression) {\r\n                let labelElement = document.createElement('a');\r\n                labelElement.href = 'javascript:';\r\n                labelElement.innerHTML = this.defaultHeaderText();\r\n                labelElement.onclick = () => this.handleSort();\r\n                this._iconElement = document.createElement('span');\r\n                this._iconElement.innerHTML = this.toSortHTML;\r\n                this.appendChild(labelElement);\r\n                this.appendChild(this._iconElement);\r\n                this.sorting.add(() => this._iconElement.innerHTML = this.sortingHTML);\r\n                this.sorted.add(() => this.updateSortIcon());\r\n            }\r\n            else {\r\n                this.element.innerHTML = this.defaultHeaderText();\r\n            }\r\n            this.style(field.headerStyle);\r\n        }\r\n        handleSort() {\r\n            let selectArguments = this.field.gridView.selectArguments;\r\n            let sortType = this.sortType == 'asc' ? 'desc' : 'asc';\r\n            Utility_1.fireCallback(this.sorting, this, { sortType });\r\n            selectArguments.sortExpression = this.field.sortExpression + ' ' + sortType;\r\n            return this.field.gridView.dataSource.select(selectArguments)\r\n                .then(() => {\r\n                this.sortType = sortType;\r\n                Utility_1.fireCallback(this.sorted, this, { sortType });\r\n            });\r\n        }\r\n        defaultHeaderText() {\r\n            return this.field.headerText || this.field.dataField || '';\r\n        }\r\n        get sortType() {\r\n            return this._sortType;\r\n        }\r\n        set sortType(value) {\r\n            this._sortType = value;\r\n        }\r\n        clearSortIcon() {\r\n            this._iconElement.innerHTML = this.toSortHTML;\r\n        }\r\n        updateSortIcon() {\r\n            if (this.sortType == 'asc') {\r\n                this._iconElement.innerHTML = this.ascHTML;\r\n            }\r\n            else if (this.sortType == 'desc') {\r\n                this._iconElement.innerHTML = this.descHTML;\r\n            }\r\n            else {\r\n                this._iconElement.innerHTML = this.toSortHTML;\r\n            }\r\n        }\r\n    }\r\n    exports.GridViewHeaderCell = GridViewHeaderCell;\r\n    class DataControlField {\r\n        constructor(params) {\r\n            if (params.visible == null)\r\n                params.visible = true;\r\n            this._params = params;\r\n        }\r\n        /**\r\n         * Gets the text that is displayed in the footer item of a data control field.\r\n         */\r\n        get footerText() {\r\n            return this._params.footerText;\r\n        }\r\n        /**\r\n         * Sets the text that is displayed in the footer item of a data control field.\r\n         */\r\n        set footerText(value) {\r\n            this._params.footerText = value;\r\n        }\r\n        /**\r\n         * Gets the text that is displayed in the header item of a data control field.\r\n         */\r\n        get headerText() {\r\n            return this._params.headerText;\r\n        }\r\n        /**\r\n        * Sets the text that is displayed in the header item of a data control field.\r\n        */\r\n        set headerText(value) {\r\n            this._params.headerText = value;\r\n        }\r\n        get itemStyle() {\r\n            return this._params.itemStyle;\r\n        }\r\n        set itemStyle(value) {\r\n            this._params.itemStyle = value;\r\n        }\r\n        get footerStyle() {\r\n            return this._params.footerStyle;\r\n        }\r\n        set footerStyle(value) {\r\n            this._params.footerStyle = value;\r\n        }\r\n        get headerStyle() {\r\n            return this._params.headerStyle;\r\n        }\r\n        set headerStyle(value) {\r\n            this._params.headerStyle = value;\r\n        }\r\n        get visible() {\r\n            return this._params.visible;\r\n        }\r\n        get gridView() {\r\n            return this._gridView;\r\n        }\r\n        set gridView(value) {\r\n            this._gridView = value;\r\n        }\r\n        /**\r\n         * Gets a sort expression that is used by a data source control to sort data.\r\n         */\r\n        get sortExpression() {\r\n            return this._params.sortExpression;\r\n        }\r\n        /**\r\n         * Sets a sort expression that is used by a data source control to sort data.\r\n         */\r\n        set sortExpression(value) {\r\n            this._params.sortExpression = value;\r\n        }\r\n        createHeaderCell() {\r\n            let cell = new GridViewHeaderCell(this);\r\n            return cell;\r\n        }\r\n        createFooterCell() {\r\n            let cell = new GridViewCell();\r\n            cell.element.innerHTML = this.footerText || '';\r\n            cell.style(this.footerStyle);\r\n            return cell;\r\n        }\r\n        createItemCell(dataItem) {\r\n            if (!dataItem)\r\n                throw Errors_1.Errors.argumentNull('dataItem');\r\n            let cell = new GridViewCell();\r\n            cell.style(this.itemStyle);\r\n            return cell;\r\n        }\r\n    }\r\n    exports.DataControlField = DataControlField;\r\n}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),\n\t\t\t\t__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));\r\n\n\n//# sourceURL=webpack:///./out/fields/DataControlField.js?");
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ../Control */ "./out/Control.js"), __webpack_require__(/*! ../Utility */ "./out/Utility.js"), __webpack_require__(/*! ../Errors */ "./out/Errors.js")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, Control_1, Utility_1, Errors_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    class GridViewCell extends Control_1.Control {
+        constructor() {
+            super(document.createElement('td'));
+        }
+    }
+    exports.GridViewCell = GridViewCell;
+    class GridViewDataCell extends GridViewCell {
+        constructor(params) {
+            super();
+            let p = params;
+            this.nullText = p.nullText != null ? p.nullText : '';
+            this.dataFormatString = p.dataFormatString;
+            this.dataField = p.dataField;
+            if (p.render) {
+                this.render = (dataItem) => p.render.apply(this, [dataItem, this.element]);
+            }
+        }
+        render(dataItem) {
+            let value = dataItem[this.dataField];
+            var text;
+            if (value == null)
+                text = this.nullText;
+            else if (this.dataFormatString)
+                text = this.formatValue(this.dataFormatString, value);
+            else
+                text = `${value}`;
+            this.element.innerHTML = text;
+        }
+        formatValue(format, arg) {
+            var result = '';
+            for (var i = 0;;) {
+                var open = format.indexOf('{', i);
+                var close = format.indexOf('}', i);
+                if ((open < 0) && (close < 0)) {
+                    result += format.slice(i);
+                    break;
+                }
+                if ((close > 0) && ((close < open) || (open < 0))) {
+                    if (format.charAt(close + 1) !== '}') {
+                        throw new Error('Sys.Res.stringFormatBraceMismatch');
+                    }
+                    result += format.slice(i, close + 1);
+                    i = close + 2;
+                    continue;
+                }
+                result += format.slice(i, open);
+                i = open + 1;
+                if (format.charAt(i) === '{') {
+                    result += '{';
+                    i++;
+                    continue;
+                }
+                if (close < 0)
+                    throw new Error('Sys.Res.stringFormatBraceMismatch');
+                var brace = format.substring(i, close);
+                var argFormat = brace;
+                if (typeof (arg) === "undefined" || arg === null) {
+                    arg = '';
+                }
+                if (arg instanceof Date)
+                    result = result + this.formatDate(arg, argFormat);
+                else if (arg instanceof Number || typeof arg == 'number')
+                    result = result + this.formatNumber(arg, argFormat);
+                else
+                    result = result + arg.toString();
+                i = close + 1;
+            }
+            return result;
+        }
+        formatDate(value, format) {
+            let y = value.getFullYear();
+            let m = value.getMonth() + 1;
+            let d = value.getDate();
+            let h = value.getHours();
+            let M = value.getMinutes();
+            let s = value.getSeconds();
+            let twoDigit = function (value) {
+                const TEN = 10;
+                if (value < TEN)
+                    return `0` + value;
+                return value.toString();
+            };
+            switch (format) {
+                case 'd':
+                    return `${y}-${m}-${d}`;
+                case 'g':
+                    return `${y}-${m}-${d} ${h}:${M}`;
+                case 'gg':
+                    return `${y}-${twoDigit(m)}-${twoDigit(d)} ${twoDigit(h)}:${twoDigit(M)}`;
+                case 'G':
+                    return `${y}-${m}-${d} ${h}:${M}:${s}`;
+                case 'GG':
+                    return `${y}-${twoDigit(m)}-${twoDigit(d)} ${twoDigit(h)}:${twoDigit(M)}:${twoDigit(s)}`;
+                case 't':
+                    return `${h}:${M}`;
+                case 'T':
+                    return `${h}:${M}:${s}`;
+            }
+            return value.toString();
+        }
+        formatNumber(value, format) {
+            let reg = new RegExp('^C[0-9]+');
+            if (reg.test(format)) {
+                let num = format.substr(1);
+                return value.toFixed(num);
+            }
+            return value.toString();
+        }
+    }
+    exports.GridViewDataCell = GridViewDataCell;
+    class GridViewHeaderCell extends Control_1.Control {
+        constructor(field) {
+            super(document.createElement('th'));
+            this.ascHTML = '↑';
+            this.descHTML = '↓';
+            this.sortingHTML = '...';
+            this.toSortHTML = '↕';
+            this.field = field;
+            this.sorting = Utility_1.callbacks();
+            this.sorted = Utility_1.callbacks();
+            if (field.sortExpression) {
+                let labelElement = document.createElement('a');
+                labelElement.href = 'javascript:';
+                labelElement.innerHTML = this.defaultHeaderText();
+                labelElement.onclick = () => this.handleSort();
+                this._iconElement = document.createElement('span');
+                this._iconElement.innerHTML = this.toSortHTML;
+                this.appendChild(labelElement);
+                this.appendChild(this._iconElement);
+                this.sorting.add(() => this._iconElement.innerHTML = this.sortingHTML);
+                this.sorted.add(() => this.updateSortIcon());
+            }
+            else {
+                this.element.innerHTML = this.defaultHeaderText();
+            }
+            this.style(field.headerStyle);
+        }
+        handleSort() {
+            let selectArguments = this.field.gridView.selectArguments;
+            let sortType = this.sortType == 'asc' ? 'desc' : 'asc';
+            Utility_1.fireCallback(this.sorting, this, { sortType });
+            selectArguments.sortExpression = this.field.sortExpression + ' ' + sortType;
+            return this.field.gridView.dataSource.select(selectArguments)
+                .then(() => {
+                this.sortType = sortType;
+                Utility_1.fireCallback(this.sorted, this, { sortType });
+            });
+        }
+        defaultHeaderText() {
+            return this.field.headerText || this.field.dataField || '';
+        }
+        get sortType() {
+            return this._sortType;
+        }
+        set sortType(value) {
+            this._sortType = value;
+        }
+        clearSortIcon() {
+            this._iconElement.innerHTML = this.toSortHTML;
+        }
+        updateSortIcon() {
+            if (this.sortType == 'asc') {
+                this._iconElement.innerHTML = this.ascHTML;
+            }
+            else if (this.sortType == 'desc') {
+                this._iconElement.innerHTML = this.descHTML;
+            }
+            else {
+                this._iconElement.innerHTML = this.toSortHTML;
+            }
+        }
+    }
+    exports.GridViewHeaderCell = GridViewHeaderCell;
+    class DataControlField {
+        constructor(params) {
+            if (params.visible == null)
+                params.visible = true;
+            this._params = params;
+        }
+        /**
+         * Gets the text that is displayed in the footer item of a data control field.
+         */
+        get footerText() {
+            return this._params.footerText;
+        }
+        /**
+         * Sets the text that is displayed in the footer item of a data control field.
+         */
+        set footerText(value) {
+            this._params.footerText = value;
+        }
+        /**
+         * Gets the text that is displayed in the header item of a data control field.
+         */
+        get headerText() {
+            return this._params.headerText;
+        }
+        /**
+        * Sets the text that is displayed in the header item of a data control field.
+        */
+        set headerText(value) {
+            this._params.headerText = value;
+        }
+        get itemStyle() {
+            return this._params.itemStyle;
+        }
+        set itemStyle(value) {
+            this._params.itemStyle = value;
+        }
+        get footerStyle() {
+            return this._params.footerStyle;
+        }
+        set footerStyle(value) {
+            this._params.footerStyle = value;
+        }
+        get headerStyle() {
+            return this._params.headerStyle;
+        }
+        set headerStyle(value) {
+            this._params.headerStyle = value;
+        }
+        get visible() {
+            return this._params.visible;
+        }
+        get gridView() {
+            return this._gridView;
+        }
+        set gridView(value) {
+            this._gridView = value;
+        }
+        /**
+         * Gets a sort expression that is used by a data source control to sort data.
+         */
+        get sortExpression() {
+            return this._params.sortExpression;
+        }
+        /**
+         * Sets a sort expression that is used by a data source control to sort data.
+         */
+        set sortExpression(value) {
+            this._params.sortExpression = value;
+        }
+        createHeaderCell() {
+            let cell = new GridViewHeaderCell(this);
+            return cell;
+        }
+        createFooterCell() {
+            let cell = new GridViewCell();
+            cell.element.innerHTML = this.footerText || '';
+            cell.style(this.footerStyle);
+            return cell;
+        }
+        createItemCell(dataItem) {
+            if (!dataItem)
+                throw Errors_1.Errors.argumentNull('dataItem');
+            let cell = new GridViewCell();
+            cell.style(this.itemStyle);
+            return cell;
+        }
+    }
+    exports.DataControlField = DataControlField;
+}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
 
 /***/ }),
 
@@ -234,8 +2229,28 @@ eval("var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPAC
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ./GridView */ \"./out/GridView.js\"), __webpack_require__(/*! ./fields/BoundField */ \"./out/fields/BoundField.js\"), __webpack_require__(/*! ./fields/CommandField */ \"./out/fields/CommandField.js\"), __webpack_require__(/*! ./fields/CustomField */ \"./out/fields/CustomField.js\"), __webpack_require__(/*! ./fields/DataControlField */ \"./out/fields/DataControlField.js\"), __webpack_require__(/*! ./DropDown */ \"./out/DropDown.js\"), __webpack_require__(/*! ./TextBox */ \"./out/TextBox.js\"), __webpack_require__(/*! ./DataSource */ \"./out/DataSource.js\"), __webpack_require__(/*! ./NumberPagingBar */ \"./out/NumberPagingBar.js\")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, GridView_1, BoundField_1, CommandField_1, CustomField_1, DataControlField_1, DropDown_1, TextBox_1, DataSource_1, NumberPagingBar_1) {\r\n    \"use strict\";\r\n    Object.defineProperty(exports, \"__esModule\", { value: true });\r\n    exports.GridView = GridView_1.GridView;\r\n    exports.GridViewDataRow = GridView_1.GridViewDataRow;\r\n    exports.BoundField = BoundField_1.BoundField;\r\n    exports.CommandField = CommandField_1.CommandField;\r\n    exports.CustomField = CustomField_1.CustomField;\r\n    exports.GridViewCell = DataControlField_1.GridViewCell;\r\n    exports.DataControlField = DataControlField_1.DataControlField;\r\n    exports.GridViewDataCell = DataControlField_1.GridViewDataCell;\r\n    exports.DropDown = DropDown_1.DropDown;\r\n    exports.TextBox = TextBox_1.TextBox;\r\n    exports.DataSource = DataSource_1.DataSource;\r\n    exports.DataSourceSelectArguments = DataSource_1.DataSourceSelectArguments;\r\n    exports.ArrayDataSource = DataSource_1.ArrayDataSource;\r\n    exports.NumberPagingBar = NumberPagingBar_1.NumberPagingBar;\r\n}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),\n\t\t\t\t__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));\r\n\n\n//# sourceURL=webpack:///./out/index.js?");
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ./GridView */ "./out/GridView.js"), __webpack_require__(/*! ./fields/BoundField */ "./out/fields/BoundField.js"), __webpack_require__(/*! ./fields/CommandField */ "./out/fields/CommandField.js"), __webpack_require__(/*! ./fields/CustomField */ "./out/fields/CustomField.js"), __webpack_require__(/*! ./fields/DataControlField */ "./out/fields/DataControlField.js"), __webpack_require__(/*! ./DropDown */ "./out/DropDown.js"), __webpack_require__(/*! ./TextBox */ "./out/TextBox.js"), __webpack_require__(/*! ./DataSource */ "./out/DataSource.js"), __webpack_require__(/*! ./NumberPagingBar */ "./out/NumberPagingBar.js")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, GridView_1, BoundField_1, CommandField_1, CustomField_1, DataControlField_1, DropDown_1, TextBox_1, DataSource_1, NumberPagingBar_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.GridView = GridView_1.GridView;
+    exports.GridViewDataRow = GridView_1.GridViewDataRow;
+    exports.BoundField = BoundField_1.BoundField;
+    exports.CommandField = CommandField_1.CommandField;
+    exports.CustomField = CustomField_1.CustomField;
+    exports.GridViewCell = DataControlField_1.GridViewCell;
+    exports.DataControlField = DataControlField_1.DataControlField;
+    exports.GridViewDataCell = DataControlField_1.GridViewDataCell;
+    exports.DropDown = DropDown_1.DropDown;
+    exports.TextBox = TextBox_1.TextBox;
+    exports.DataSource = DataSource_1.DataSource;
+    exports.DataSourceSelectArguments = DataSource_1.DataSourceSelectArguments;
+    exports.ArrayDataSource = DataSource_1.ArrayDataSource;
+    exports.NumberPagingBar = NumberPagingBar_1.NumberPagingBar;
+}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
 
 /***/ })
 
 /******/ })});;
+//# sourceMappingURL=index.js.map
