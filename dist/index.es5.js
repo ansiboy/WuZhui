@@ -1,6 +1,6 @@
 /*!
  * 
- *  maishu-wuzhui v1.3.5
+ *  maishu-wuzhui v1.4.0
  *  https://github.com/ansiboy/wuzhui
  *  
  *  Copyright (c) 2016-2018, shu mai <ansiboy@163.com>
@@ -938,7 +938,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
       _this3._dataSource = params.dataSource;
 
       _this3._dataSource.selected.add(function (sender, e) {
-        return _this3.on_selectExecuted(e.dataItems);
+        return _this3.on_selectedExecuted(e);
       });
 
       _this3._dataSource.updated.add(function (sender, item) {
@@ -963,7 +963,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
       _this3._dataSource.error.add(function (sender, e) {
         if (e.method == 'select') {
-          _this3.on_selectExecuted([]);
+          _this3.renderDataItems([]);
 
           var element = _this3._emtpyRow.cells[0].element;
           element.innerHTML = _this3.loadFailHTML;
@@ -1126,8 +1126,8 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
         this._footer.appendChild(row);
       }
     }, {
-      key: "on_selectExecuted",
-      value: function on_selectExecuted(items) {
+      key: "renderDataItems",
+      value: function renderDataItems(items) {
         var rows = this._body.element.querySelectorAll(".".concat(GridView.dataRowClassName));
 
         for (var i = 0; i < rows.length; i++) {
@@ -1144,9 +1144,21 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
         }
       }
     }, {
+      key: "on_selectedExecuted",
+      value: function on_selectedExecuted(e) {
+        var dataItems = e.dataItems;
+
+        if (this._params.sort) {
+          dataItems = this._params.sort(dataItems);
+        }
+
+        this.renderDataItems(dataItems);
+      }
+    }, {
       key: "on_updateExecuted",
       value: function on_updateExecuted(item) {
         console.assert(item != null);
+        var dataItems = [];
 
         for (var i = 0; i < this._body.element.rows.length; i++) {
           var row_element = this._body.element.rows[i];
@@ -1154,6 +1166,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
           ;
           if (!(row instanceof GridViewDataRow)) continue;
           var dataItem = row.dataItem;
+          dataItems.push(dataItem);
           if (!this.dataSource.isSameItem(dataItem, item)) continue;
 
           if (dataItem != item) {
@@ -1166,32 +1179,59 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
             var cell = cells[j];
 
             if (cell instanceof DataControlField_1.GridViewDataCell) {
-              // let value = cell.dataField ? item[cell.dataField] : item;
-              // let value = Object.assign({}, dataItem, item);
-              cell.render(dataItem); // if (cell.dataField)
-              //     dataItem[cell.dataField] = value;
+              cell.render(dataItem);
             }
-          }
+          } // break;
 
-          break;
+        }
+
+        if (this._params.sort) {
+          dataItems = this._params.sort(dataItems);
+          this.renderDataItems(dataItems);
         }
       }
     }, {
       key: "on_insertExecuted",
       value: function on_insertExecuted(item, index) {
         if (index == null) index = 0;
-        this.appendDataRow(item, index);
+
+        if (!this._params.sort) {
+          this.appendDataRow(item, index);
+          return;
+        }
+
+        var dataItems = [];
+
+        for (var i = 0; i < this._body.element.rows.length; i++) {
+          var row_element = this._body.element.rows[i];
+          var row = Control_1.Control.getControlByElement(row_element);
+          ;
+          if (!(row instanceof GridViewDataRow)) continue;
+          var dataItem = row.dataItem;
+          dataItems.push(dataItem);
+        }
+
+        dataItems = this._params.sort(dataItems);
+        this.renderDataItems(dataItems);
       }
     }, {
       key: "on_deleteExecuted",
       value: function on_deleteExecuted(item) {
-        var dataRowsCount = 0;
         var rows = this._body.element.rows;
         var dataRows = new Array();
 
         for (var i = 0; i < rows.length; i++) {
           var row = Control_1.Control.getControlByElement(rows.item(i));
           if (row instanceof GridViewDataRow) dataRows.push(row);
+        }
+
+        if (this._params.sort) {
+          var dataItems = dataRows.map(function (o) {
+            return o.dataItem;
+          });
+          dataItems = this._params.sort(dataItems);
+          this.renderDataItems(dataItems);
+          return;
         }
 
         for (var _i2 = 0; _i2 < dataRows.length; _i2++) {

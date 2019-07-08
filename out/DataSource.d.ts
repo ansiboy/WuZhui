@@ -49,6 +49,7 @@ export declare type DataSourceArguments<T> = {
     insert?: ((item: Partial<T>, args?: any) => Promise<any>);
     update?: ((item: Partial<T>, args?: any) => Promise<any>);
     delete?: ((item: Partial<T>, args?: any) => Promise<any>);
+    sort?: (items: T[]) => T[];
 };
 export declare class ArrayDataSource<T> extends DataSource<T> {
     constructor(items: T[]);
