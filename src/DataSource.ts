@@ -191,7 +191,8 @@ export type DataSourceArguments<T> = {
     select: ((args: DataSourceSelectArguments) => Promise<DataSourceSelectResult<T>>),
     insert?: ((item: Partial<T>, args?: any) => Promise<any>),
     update?: ((item: Partial<T>, args?: any) => Promise<any>),
-    delete?: ((item: Partial<T>, args?: any) => Promise<any>)
+    delete?: ((item: Partial<T>, args?: any) => Promise<any>),
+    sort?: (items: T[]) => T[],
 };
 
 export class ArrayDataSource<T> extends DataSource<T> {
