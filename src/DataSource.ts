@@ -51,7 +51,8 @@ export class DataSource<T> {
     executeUpdate(item: T, args?: any) {
         return this.args.update(item, args);
     }
-    executeSelect(args: DataSourceSelectArguments) {
+    executeSelect(args?: DataSourceSelectArguments) {
+        args = args || {}
         return this.args.select(args);
     }
 
