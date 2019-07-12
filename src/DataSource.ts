@@ -140,9 +140,8 @@ export class DataSource<T> {
                 throw Errors.primaryKeyNull(key);
         }
     }
-    select(args: DataSourceSelectArguments): Promise<DataSourceSelectResult<T>> {
-        console.assert(args != null);
-
+    select(args?: DataSourceSelectArguments): Promise<DataSourceSelectResult<T>> {
+        args = args || {};
         fireCallback(this.selecting, this, args);
         return this.executeSelect(args).then((data) => {
             let dataItems: Array<T>;
