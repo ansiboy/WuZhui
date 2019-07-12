@@ -1,6 +1,6 @@
 /*!
  * 
- *  maishu-wuzhui v1.4.0
+ *  maishu-wuzhui v1.4.2
  *  https://github.com/ansiboy/wuzhui
  *  
  *  Copyright (c) 2016-2018, shu mai <ansiboy@163.com>
@@ -403,7 +403,7 @@ var __awaiter = void 0 && (void 0).__awaiter || function (thisArg, _arguments, P
       value: function select(args) {
         var _this4 = this;
 
-        console.assert(args != null);
+        args = args || {};
         Utility_1.fireCallback(this.selecting, this, args);
         return this.executeSelect(args).then(function (data) {
           var dataItems;

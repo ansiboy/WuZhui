@@ -1,6 +1,6 @@
 /*!
  * 
- *  maishu-wuzhui v1.4.0
+ *  maishu-wuzhui v1.4.2
  *  https://github.com/ansiboy/wuzhui
  *  
  *  Copyright (c) 2016-2018, shu mai <ansiboy@163.com>
@@ -287,7 +287,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var __awaiter = 
             }
         }
         select(args) {
-            console.assert(args != null);
+            args = args || {};
             Utility_1.fireCallback(this.selecting, this, args);
             return this.executeSelect(args).then((data) => {
                 let dataItems;
