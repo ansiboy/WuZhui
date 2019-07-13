@@ -50,7 +50,7 @@ define(["require", "exports", "./Control", "./Errors"], function (require, expor
         } else if (valueType == 'float') {
           dataItem[dataField] = Number.parseFloat(element.value);
         } else {
-          dataItem[dataField] = element.value;
+          dataItem[dataField] = element.value || "";
         }
       };
 

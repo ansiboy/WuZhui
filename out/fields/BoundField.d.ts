@@ -39,6 +39,6 @@ export declare class BoundField<T> extends DataControlField<T> {
      * Gets the string that specifies the display format for the value of the field.
      */
     readonly dataFormatString: string;
-    readonly controlStyle: string | CSSStyleDeclaration;
+    readonly controlStyle: string | Partial<CSSStyleDeclaration>;
     readonly readOnly: boolean;
 }
