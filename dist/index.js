@@ -1,6 +1,6 @@
 /*!
  * 
- *  maishu-wuzhui v1.4.0
+ *  maishu-wuzhui v1.4.3
  *  https://github.com/ansiboy/wuzhui
  *  
  *  Copyright (c) 2016-2018, shu mai <ansiboy@163.com>
@@ -213,6 +213,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var __awaiter = 
             return this.args.update(item, args);
         }
         executeSelect(args) {
+            args = args || {};
             return this.args.select(args);
         }
         insert(item, args, index) {
@@ -736,7 +737,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
                 this.appendDataRow(item, index);
                 return;
             }
-            let dataItems = [];
+            let dataItems = [item];
             for (let i = 0; i < this._body.element.rows.length; i++) {
                 let row_element = this._body.element.rows[i];
                 let row = Control_1.Control.getControlByElement(row_element);
@@ -758,7 +759,8 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
                     dataRows.push(row);
             }
             if (this._params.sort) {
-                let dataItems = dataRows.map(o => o.dataItem);
+                let dataItems = dataRows.map(o => o.dataItem)
+                    .filter(o => !this.dataSource.isSameItem(o, item));
                 dataItems = this._params.sort(dataItems);
                 this.renderDataItems(dataItems);
                 return;

@@ -1,6 +1,6 @@
 /*!
  * 
- *  maishu-wuzhui v1.4.0
+ *  maishu-wuzhui v1.4.3
  *  https://github.com/ansiboy/wuzhui
  *  
  *  Copyright (c) 2016-2018, shu mai <ansiboy@163.com>
@@ -289,6 +289,7 @@ var __awaiter = void 0 && (void 0).__awaiter || function (thisArg, _arguments, P
     }, {
       key: "executeSelect",
       value: function executeSelect(args) {
+        args = args || {};
         return this.args.select(args);
       }
     }, {
@@ -1200,7 +1201,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
           return;
         }
 
-        var dataItems = [];
+        var dataItems = [item];
 
         for (var i = 0; i < this._body.element.rows.length; i++) {
           var row_element = this._body.element.rows[i];
@@ -1217,6 +1218,8 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
     }, {
       key: "on_deleteExecuted",
       value: function on_deleteExecuted(item) {
+        var _this5 = this;
+
         var rows = this._body.element.rows;
         var dataRows = new Array();
 
@@ -1228,6 +1231,8 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
         if (this._params.sort) {
           var dataItems = dataRows.map(function (o) {
             return o.dataItem;
+          }).filter(function (o) {
+            return !_this5.dataSource.isSameItem(o, item);
           });
           dataItems = this._params.sort(dataItems);
           this.renderDataItems(dataItems);

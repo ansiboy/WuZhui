@@ -26,7 +26,7 @@ export declare class DataSource<T> {
     executeInsert(item: T, args?: any): Promise<any>;
     executeDelete(item: T, args?: any): Promise<any>;
     executeUpdate(item: T, args?: any): Promise<any>;
-    executeSelect(args: DataSourceSelectArguments): Promise<DataSourceSelectResult<T>>;
+    executeSelect(args?: DataSourceSelectArguments): Promise<DataSourceSelectResult<T>>;
     insert(item: T): any;
     insert(item: T, index?: number): any;
     delete(item: T, args?: any): Promise<any>;

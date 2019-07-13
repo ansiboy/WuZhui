@@ -90,6 +90,7 @@ define(["require", "exports", "./Errors", "./Utility"], function (require, expor
     }, {
       key: "executeSelect",
       value: function executeSelect(args) {
+        args = args || {};
         return this.args.select(args);
       }
     }, {

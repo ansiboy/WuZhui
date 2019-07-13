@@ -270,7 +270,7 @@ define(["require", "exports", "./Control", "./DataSource", "./fields/DataControl
                 this.appendDataRow(item, index);
                 return;
             }
-            let dataItems = [];
+            let dataItems = [item];
             for (let i = 0; i < this._body.element.rows.length; i++) {
                 let row_element = this._body.element.rows[i];
                 let row = Control_1.Control.getControlByElement(row_element);
@@ -292,7 +292,8 @@ define(["require", "exports", "./Control", "./DataSource", "./fields/DataControl
                     dataRows.push(row);
             }
             if (this._params.sort) {
-                let dataItems = dataRows.map(o => o.dataItem);
+                let dataItems = dataRows.map(o => o.dataItem)
+                    .filter(o => !this.dataSource.isSameItem(o, item));
                 dataItems = this._params.sort(dataItems);
                 this.renderDataItems(dataItems);
                 return;

@@ -438,7 +438,7 @@ define(["require", "exports", "./Control", "./DataSource", "./fields/DataControl
           return;
         }
 
-        var dataItems = [];
+        var dataItems = [item];
 
         for (var i = 0; i < this._body.element.rows.length; i++) {
           var row_element = this._body.element.rows[i];
@@ -455,6 +455,8 @@ define(["require", "exports", "./Control", "./DataSource", "./fields/DataControl
     }, {
       key: "on_deleteExecuted",
       value: function on_deleteExecuted(item) {
+        var _this5 = this;
+
         var rows = this._body.element.rows;
         var dataRows = new Array();
 
@@ -466,6 +468,8 @@ define(["require", "exports", "./Control", "./DataSource", "./fields/DataControl
         if (this._params.sort) {
           var dataItems = dataRows.map(function (o) {
             return o.dataItem;
+          }).filter(function (o) {
+            return !_this5.dataSource.isSameItem(o, item);
           });
           dataItems = this._params.sort(dataItems);
           this.renderDataItems(dataItems);
