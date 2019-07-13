@@ -33,7 +33,7 @@ export declare class DataSource<T> {
     update(item: T, args?: any): Promise<any>;
     isSameItem(theItem: T, otherItem: Partial<T>): boolean;
     private checkPrimaryKeys;
-    select(args: DataSourceSelectArguments): Promise<DataSourceSelectResult<T>>;
+    select(args?: DataSourceSelectArguments): Promise<DataSourceSelectResult<T>>;
     private processError;
 }
 export declare class DataSourceSelectArguments {

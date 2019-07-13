@@ -205,7 +205,7 @@ define(["require", "exports", "./Errors", "./Utility"], function (require, expor
       value: function select(args) {
         var _this4 = this;
 
-        console.assert(args != null);
+        args = args || {};
         Utility_1.fireCallback(this.selecting, this, args);
         return this.executeSelect(args).then(function (data) {
           var dataItems;
