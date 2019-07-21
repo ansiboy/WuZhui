@@ -51,7 +51,8 @@ export class DataSource<T> {
     executeUpdate(item: T, args?: any) {
         return this.args.update(item, args);
     }
-    executeSelect(args: DataSourceSelectArguments) {
+    executeSelect(args?: DataSourceSelectArguments) {
+        args = args || {}
         return this.args.select(args);
     }
 
@@ -140,9 +141,8 @@ export class DataSource<T> {
                 throw Errors.primaryKeyNull(key);
         }
     }
-    select(args: DataSourceSelectArguments): Promise<DataSourceSelectResult<T>> {
-        console.assert(args != null);
-
+    select(args?: DataSourceSelectArguments): Promise<DataSourceSelectResult<T>> {
+        args = args || {};
         fireCallback(this.selecting, this, args);
         return this.executeSelect(args).then((data) => {
             let dataItems: Array<T>;
@@ -191,7 +191,8 @@ export type DataSourceArguments<T> = {
     select: ((args: DataSourceSelectArguments) => Promise<DataSourceSelectResult<T>>),
     insert?: ((item: Partial<T>, args?: any) => Promise<any>),
     update?: ((item: Partial<T>, args?: any) => Promise<any>),
-    delete?: ((item: Partial<T>, args?: any) => Promise<any>)
+    delete?: ((item: Partial<T>, args?: any) => Promise<any>),
+    sort?: (items: T[]) => T[],
 };
 
 export class ArrayDataSource<T> extends DataSource<T> {

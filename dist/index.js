@@ -1,6 +1,6 @@
 /*!
  * 
- *  maishu-wuzhui v1.3.5
+ *  maishu-wuzhui v1.4.4
  *  https://github.com/ansiboy/wuzhui
  *  
  *  Copyright (c) 2016-2018, shu mai <ansiboy@163.com>
@@ -213,6 +213,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var __awaiter = 
             return this.args.update(item, args);
         }
         executeSelect(args) {
+            args = args || {};
             return this.args.select(args);
         }
         insert(item, args, index) {
@@ -287,7 +288,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var __awaiter = 
             }
         }
         select(args) {
-            console.assert(args != null);
+            args = args || {};
             Utility_1.fireCallback(this.selecting, this, args);
             return this.executeSelect(args).then((data) => {
                 let dataItems;
@@ -560,7 +561,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
                 column.gridView = this;
             }
             this._dataSource = params.dataSource;
-            this._dataSource.selected.add((sender, e) => this.on_selectExecuted(e.dataItems));
+            this._dataSource.selected.add((sender, e) => this.on_selectedExecuted(e));
             this._dataSource.updated.add((sender, item) => this.on_updateExecuted(item));
             this._dataSource.inserted.add((sender, item, index) => this.on_insertExecuted(item, index));
             this._dataSource.deleted.add((sender, item) => this.on_deleteExecuted(item));
@@ -572,7 +573,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
             });
             this._dataSource.error.add((sender, e) => {
                 if (e.method == 'select') {
-                    this.on_selectExecuted([]);
+                    this.renderDataItems([]);
                     var element = this._emtpyRow.cells[0].element;
                     element.innerHTML = this.loadFailHTML;
                     element.onclick = () => {
@@ -680,7 +681,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
             }
             this._footer.appendChild(row);
         }
-        on_selectExecuted(items) {
+        renderDataItems(items) {
             var rows = this._body.element.querySelectorAll(`.${GridView.dataRowClassName}`);
             for (let i = 0; i < rows.length; i++)
                 this._body.element.removeChild(rows[i]);
@@ -692,8 +693,16 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
                 this.appendDataRow(items[i]);
             }
         }
+        on_selectedExecuted(e) {
+            let dataItems = e.dataItems;
+            if (this._params.sort) {
+                dataItems = this._params.sort(dataItems);
+            }
+            this.renderDataItems(dataItems);
+        }
         on_updateExecuted(item) {
             console.assert(item != null);
+            let dataItems = [];
             for (let i = 0; i < this._body.element.rows.length; i++) {
                 let row_element = this._body.element.rows[i];
                 let row = Control_1.Control.getControlByElement(row_element);
@@ -701,6 +710,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
                 if (!(row instanceof GridViewDataRow))
                     continue;
                 let dataItem = row.dataItem;
+                dataItems.push(dataItem);
                 if (!this.dataSource.isSameItem(dataItem, item))
                     continue;
                 if (dataItem != item) {
@@ -710,29 +720,50 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
                 for (let j = 0; j < cells.length; j++) {
                     let cell = cells[j];
                     if (cell instanceof DataControlField_1.GridViewDataCell) {
-                        // let value = cell.dataField ? item[cell.dataField] : item;
-                        // let value = Object.assign({}, dataItem, item);
                         cell.render(dataItem);
-                        // if (cell.dataField)
-                        //     dataItem[cell.dataField] = value;
                     }
                 }
-                break;
+                // break;
+            }
+            if (this._params.sort) {
+                dataItems = this._params.sort(dataItems);
+                this.renderDataItems(dataItems);
             }
         }
         on_insertExecuted(item, index) {
             if (index == null)
                 index = 0;
-            this.appendDataRow(item, index);
+            if (!this._params.sort) {
+                this.appendDataRow(item, index);
+                return;
+            }
+            let dataItems = [item];
+            for (let i = 0; i < this._body.element.rows.length; i++) {
+                let row_element = this._body.element.rows[i];
+                let row = Control_1.Control.getControlByElement(row_element);
+                ;
+                if (!(row instanceof GridViewDataRow))
+                    continue;
+                let dataItem = row.dataItem;
+                dataItems.push(dataItem);
+            }
+            dataItems = this._params.sort(dataItems);
+            this.renderDataItems(dataItems);
         }
         on_deleteExecuted(item) {
-            let dataRowsCount = 0;
             let rows = this._body.element.rows;
             let dataRows = new Array();
             for (let i = 0; i < rows.length; i++) {
                 let row = Control_1.Control.getControlByElement(rows.item(i));
                 if ((row instanceof GridViewDataRow))
                     dataRows.push(row);
+            }
+            if (this._params.sort) {
+                let dataItems = dataRows.map(o => o.dataItem)
+                    .filter(o => !this.dataSource.isSameItem(o, item));
+                dataItems = this._params.sort(dataItems);
+                this.renderDataItems(dataItems);
+                return;
             }
             for (let i = 0; i < dataRows.length; i++) {
                 let dataRow = dataRows[i];
@@ -1342,7 +1373,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
                     dataItem[dataField] = Number.parseFloat(element.value);
                 }
                 else {
-                    dataItem[dataField] = element.value;
+                    dataItem[dataField] = (element.value || "");
                 }
             };
         }

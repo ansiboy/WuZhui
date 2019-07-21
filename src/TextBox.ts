@@ -26,7 +26,7 @@ export class TextBox<T> extends Control<HTMLInputElement>{
                 dataItem[dataField] = Number.parseFloat(element.value) as any
             }
             else {
-                dataItem[dataField] = element.value as any
+                dataItem[dataField] = (element.value as any || "")
             }
         }
     }

@@ -1,5 +1,5 @@
 import { Control } from "./Control";
-import { DataSource, DataSourceSelectArguments } from "./DataSource";
+import { DataSource, DataSourceSelectArguments, DataSourceSelectResult } from "./DataSource";
 import { DataControlField, GridViewHeaderCell, GridViewCell, GridViewDataCell } from "./fields/DataControlField";
 import { PagerSettings, DataSourcePagingBar } from "./NumberPagingBar";
 import { callbacks, applyStyle, fireCallback } from "./Utility";
@@ -92,7 +92,8 @@ export interface GridViewArguments<T> {
     pageSize?: number,
     pagerSettings?: PagerSettings,
     emptyDataHTML?: string,
-    initDataHTML?: string
+    initDataHTML?: string,
+    sort?: (items: T[]) => T[],
 }
 
 export class GridView<T> extends Control<HTMLTableElement> {
@@ -144,7 +145,7 @@ export class GridView<T> extends Control<HTMLTableElement> {
         }
 
         this._dataSource = params.dataSource;
-        this._dataSource.selected.add((sender, e) => this.on_selectExecuted(e.dataItems));
+        this._dataSource.selected.add((sender, e) => this.on_selectedExecuted(e));
         this._dataSource.updated.add((sender, item) => this.on_updateExecuted(item));
         this._dataSource.inserted.add((sender, item, index) => this.on_insertExecuted(item, index));
         this._dataSource.deleted.add((sender, item) => this.on_deleteExecuted(item));
@@ -156,7 +157,7 @@ export class GridView<T> extends Control<HTMLTableElement> {
         });
         this._dataSource.error.add((sender, e) => {
             if (e.method == 'select') {
-                this.on_selectExecuted([]);
+                this.renderDataItems([]);
                 var element = this._emtpyRow.cells[0].element;
                 element.innerHTML = this.loadFailHTML;
                 element.onclick = () => {
@@ -287,7 +288,7 @@ export class GridView<T> extends Control<HTMLTableElement> {
         this._footer.appendChild(row);
     }
 
-    private on_selectExecuted(items: Array<any>) {
+    private renderDataItems(items: Array<any>) {
         var rows = this._body.element.querySelectorAll(`.${GridView.dataRowClassName}`);
         for (let i = 0; i < rows.length; i++)
             this._body.element.removeChild(rows[i]);
@@ -302,8 +303,17 @@ export class GridView<T> extends Control<HTMLTableElement> {
         }
     }
 
+    private on_selectedExecuted(e: DataSourceSelectResult<T>) {
+        let dataItems = e.dataItems;
+        if (this._params.sort) {
+            dataItems = this._params.sort(dataItems);
+        }
+        this.renderDataItems(dataItems);
+    }
+
     private on_updateExecuted(item: Partial<T>) {
         console.assert(item != null);
+        let dataItems: T[] = [];
         for (let i = 0; i < this._body.element.rows.length; i++) {
             let row_element = this._body.element.rows[i] as HTMLElement;
             let row = Control.getControlByElement(row_element) as GridViewRow;;
@@ -312,6 +322,7 @@ export class GridView<T> extends Control<HTMLTableElement> {
 
 
             let dataItem = (row as GridViewDataRow).dataItem;
+            dataItems.push(dataItem);
             if (!this.dataSource.isSameItem(dataItem, item))
                 continue;
 
@@ -323,16 +334,16 @@ export class GridView<T> extends Control<HTMLTableElement> {
             for (let j = 0; j < cells.length; j++) {
                 let cell = cells[j];
                 if (cell instanceof GridViewDataCell) {
-                    // let value = cell.dataField ? item[cell.dataField] : item;
-                    // let value = Object.assign({}, dataItem, item);
                     cell.render(dataItem);
-                    // if (cell.dataField)
-                    //     dataItem[cell.dataField] = value;
                 }
             }
 
-            break;
+            // break;
+        }
 
+        if (this._params.sort) {
+            dataItems = this._params.sort(dataItems);
+            this.renderDataItems(dataItems);
         }
     }
 
@@ -340,18 +351,42 @@ export class GridView<T> extends Control<HTMLTableElement> {
         if (index == null)
             index = 0;
 
-        this.appendDataRow(item, index);
+        if (!this._params.sort) {
+            this.appendDataRow(item, index);
+            return;
+        }
+
+        let dataItems: T[] = [item];
+        for (let i = 0; i < this._body.element.rows.length; i++) {
+            let row_element = this._body.element.rows[i] as HTMLElement;
+            let row = Control.getControlByElement(row_element) as GridViewRow;;
+            if (!(row instanceof GridViewDataRow))
+                continue;
+
+            let dataItem = (row as GridViewDataRow).dataItem;
+            dataItems.push(dataItem);
+        }
+        dataItems = this._params.sort(dataItems);
+        this.renderDataItems(dataItems);
     }
 
     private on_deleteExecuted(item: any) {
 
-        let dataRowsCount = 0;
         let rows = this._body.element.rows;
         let dataRows = new Array<GridViewDataRow>();
         for (let i = 0; i < rows.length; i++) {
             let row = Control.getControlByElement(rows.item(i)) as GridViewRow;
             if ((row instanceof GridViewDataRow))
                 dataRows.push(row);
+        }
+
+        if (this._params.sort) {
+            let dataItems = dataRows.map(o => o.dataItem)
+                .filter(o => !this.dataSource.isSameItem(o, item));
+                
+            dataItems = this._params.sort(dataItems);
+            this.renderDataItems(dataItems);
+            return;
         }
 
         for (let i = 0; i < dataRows.length; i++) {

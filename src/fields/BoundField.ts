@@ -106,7 +106,7 @@ export class GridViewEditableCell<T> extends GridViewDataCell<T> {
 export interface BoundFieldParams<T> extends DataControlFieldParams {
     dataField: keyof T,
     dataFormatString?: string,
-    controlStyle?: CSSStyleDeclaration | string,
+    controlStyle?: Partial<CSSStyleDeclaration> | string,
     nullText?: string,
     readOnly?: boolean
 }

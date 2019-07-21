@@ -26,14 +26,14 @@ export declare class DataSource<T> {
     executeInsert(item: T, args?: any): Promise<any>;
     executeDelete(item: T, args?: any): Promise<any>;
     executeUpdate(item: T, args?: any): Promise<any>;
-    executeSelect(args: DataSourceSelectArguments): Promise<DataSourceSelectResult<T>>;
+    executeSelect(args?: DataSourceSelectArguments): Promise<DataSourceSelectResult<T>>;
     insert(item: T): any;
     insert(item: T, index?: number): any;
     delete(item: T, args?: any): Promise<any>;
     update(item: T, args?: any): Promise<any>;
     isSameItem(theItem: T, otherItem: Partial<T>): boolean;
     private checkPrimaryKeys;
-    select(args: DataSourceSelectArguments): Promise<DataSourceSelectResult<T>>;
+    select(args?: DataSourceSelectArguments): Promise<DataSourceSelectResult<T>>;
     private processError;
 }
 export declare class DataSourceSelectArguments {
@@ -49,6 +49,7 @@ export declare type DataSourceArguments<T> = {
     insert?: ((item: Partial<T>, args?: any) => Promise<any>);
     update?: ((item: Partial<T>, args?: any) => Promise<any>);
     delete?: ((item: Partial<T>, args?: any) => Promise<any>);
+    sort?: (items: T[]) => T[];
 };
 export declare class ArrayDataSource<T> extends DataSource<T> {
     constructor(items: T[]);

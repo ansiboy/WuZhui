@@ -39,6 +39,8 @@ export interface CommandFieldParams extends DataControlFieldParams {
     newButtonClass?: string,
     updateButtonClass?: string,
     insertButtonClass?: string,
+
+    
 }
 
 export class CommandField<T> extends DataControlField<T> {

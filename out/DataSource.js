@@ -42,6 +42,7 @@ define(["require", "exports", "./Errors", "./Utility"], function (require, expor
             return this.args.update(item, args);
         }
         executeSelect(args) {
+            args = args || {};
             return this.args.select(args);
         }
         insert(item, args, index) {
@@ -116,7 +117,7 @@ define(["require", "exports", "./Errors", "./Utility"], function (require, expor
             }
         }
         select(args) {
-            console.assert(args != null);
+            args = args || {};
             Utility_1.fireCallback(this.selecting, this, args);
             return this.executeSelect(args).then((data) => {
                 let dataItems;

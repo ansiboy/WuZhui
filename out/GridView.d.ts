@@ -33,6 +33,7 @@ export interface GridViewArguments<T> {
     pagerSettings?: PagerSettings;
     emptyDataHTML?: string;
     initDataHTML?: string;
+    sort?: (items: T[]) => T[];
 }
 export declare class GridView<T> extends Control<HTMLTableElement> {
     private _columns;
@@ -63,7 +64,8 @@ export declare class GridView<T> extends Control<HTMLTableElement> {
     private on_sort;
     private appendHeaderRow;
     private appendFooterRow;
-    private on_selectExecuted;
+    private renderDataItems;
+    private on_selectedExecuted;
     private on_updateExecuted;
     private on_insertExecuted;
     private on_deleteExecuted;
