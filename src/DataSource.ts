@@ -115,7 +115,7 @@ export class DataSource<T> {
             throw exc;
         });
     }
-    isSameItem(theItem: T, otherItem: Partial<T>) {
+    isSameItem(theItem: T, otherItem: T) {
         if (theItem == null)
             throw Errors.argumentNull('theItem');
 
@@ -189,9 +189,9 @@ export class DataSourceSelectArguments {
 export type DataSourceArguments<T> = {
     primaryKeys?: (keyof T)[]
     select: ((args: DataSourceSelectArguments) => Promise<DataSourceSelectResult<T>>),
-    insert?: ((item: Partial<T>, args?: any) => Promise<any>),
-    update?: ((item: Partial<T>, args?: any) => Promise<any>),
-    delete?: ((item: Partial<T>, args?: any) => Promise<any>),
+    insert?: ((item: T, args?: any) => Promise<any>),
+    update?: ((item: T, args?: any) => Promise<any>),
+    delete?: ((item: T, args?: any) => Promise<any>),
     sort?: (items: T[]) => T[],
 };
 

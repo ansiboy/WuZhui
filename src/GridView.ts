@@ -311,7 +311,7 @@ export class GridView<T> extends Control<HTMLTableElement> {
         this.renderDataItems(dataItems);
     }
 
-    private on_updateExecuted(item: Partial<T>) {
+    private on_updateExecuted(item: T) {
         console.assert(item != null);
         let dataItems: T[] = [];
         for (let i = 0; i < this._body.element.rows.length; i++) {

@@ -1,4 +1,4 @@
-export { GridView, GridViewArguments, GridViewDataRow } from './GridView'
+export { GridView, GridViewArguments, GridViewDataRow, GridViewRowType } from './GridView'
 export { BoundField, BoundFieldParams } from './fields/BoundField'
 export { CommandField, CommandFieldParams } from './fields/CommandField'
 export { CustomField, CustomFieldParams } from './fields/CustomField'

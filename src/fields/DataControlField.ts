@@ -18,7 +18,7 @@ type GridViewDataCellArgument1<T> = {
 }
 
 type GridViewDataCellArgument2<T> = {
-    render: (dataItem: Partial<T>, element: HTMLElement) => void
+    render: (dataItem: T, element: HTMLElement) => void
 }
 
 export class GridViewDataCell<T> extends GridViewCell {
@@ -40,7 +40,7 @@ export class GridViewDataCell<T> extends GridViewCell {
         }
     }
 
-    render(dataItem: Partial<T>) {
+    render(dataItem: T) {
         let value = dataItem[this.dataField];
         var text: string;
         if (value == null)
