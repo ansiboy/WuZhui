@@ -10,14 +10,14 @@ declare type GridViewDataCellArgument1<T> = {
     dataFormatString?: string;
 };
 declare type GridViewDataCellArgument2<T> = {
-    render: (dataItem: Partial<T>, element: HTMLElement) => void;
+    render: (dataItem: T, element: HTMLElement) => void;
 };
 export declare class GridViewDataCell<T> extends GridViewCell {
     private nullText;
     private dataFormatString;
     dataField: keyof T;
     constructor(params: GridViewDataCellArgument1<T> | GridViewDataCellArgument2<T>);
-    render(dataItem: Partial<T>): void;
+    render(dataItem: T): void;
     private formatValue;
     private formatDate;
     private formatNumber;

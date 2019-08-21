@@ -31,7 +31,7 @@ export declare class DataSource<T> {
     insert(item: T, index?: number): any;
     delete(item: T, args?: any): Promise<any>;
     update(item: T, args?: any): Promise<any>;
-    isSameItem(theItem: T, otherItem: Partial<T>): boolean;
+    isSameItem(theItem: T, otherItem: T): boolean;
     private checkPrimaryKeys;
     select(args?: DataSourceSelectArguments): Promise<DataSourceSelectResult<T>>;
     private processError;
@@ -46,9 +46,9 @@ export declare class DataSourceSelectArguments {
 export declare type DataSourceArguments<T> = {
     primaryKeys?: (keyof T)[];
     select: ((args: DataSourceSelectArguments) => Promise<DataSourceSelectResult<T>>);
-    insert?: ((item: Partial<T>, args?: any) => Promise<any>);
-    update?: ((item: Partial<T>, args?: any) => Promise<any>);
-    delete?: ((item: Partial<T>, args?: any) => Promise<any>);
+    insert?: ((item: T, args?: any) => Promise<any>);
+    update?: ((item: T, args?: any) => Promise<any>);
+    delete?: ((item: T, args?: any) => Promise<any>);
     sort?: (items: T[]) => T[];
 };
 export declare class ArrayDataSource<T> extends DataSource<T> {

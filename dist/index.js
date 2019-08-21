@@ -1,6 +1,6 @@
 /*!
  * 
- *  maishu-wuzhui v1.4.4
+ *  maishu-wuzhui v1.4.7
  *  https://github.com/ansiboy/wuzhui
  *  
  *  Copyright (c) 2016-2018, shu mai <ansiboy@163.com>
@@ -2260,11 +2260,12 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ./GridView */ "./out/GridView.js"), __webpack_require__(/*! ./fields/BoundField */ "./out/fields/BoundField.js"), __webpack_require__(/*! ./fields/CommandField */ "./out/fields/CommandField.js"), __webpack_require__(/*! ./fields/CustomField */ "./out/fields/CustomField.js"), __webpack_require__(/*! ./fields/DataControlField */ "./out/fields/DataControlField.js"), __webpack_require__(/*! ./DropDown */ "./out/DropDown.js"), __webpack_require__(/*! ./TextBox */ "./out/TextBox.js"), __webpack_require__(/*! ./DataSource */ "./out/DataSource.js"), __webpack_require__(/*! ./NumberPagingBar */ "./out/NumberPagingBar.js")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, GridView_1, BoundField_1, CommandField_1, CustomField_1, DataControlField_1, DropDown_1, TextBox_1, DataSource_1, NumberPagingBar_1) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ./GridView */ "./out/GridView.js"), __webpack_require__(/*! ./fields/BoundField */ "./out/fields/BoundField.js"), __webpack_require__(/*! ./fields/CommandField */ "./out/fields/CommandField.js"), __webpack_require__(/*! ./fields/CustomField */ "./out/fields/CustomField.js"), __webpack_require__(/*! ./fields/DataControlField */ "./out/fields/DataControlField.js"), __webpack_require__(/*! ./DropDown */ "./out/DropDown.js"), __webpack_require__(/*! ./TextBox */ "./out/TextBox.js"), __webpack_require__(/*! ./DataSource */ "./out/DataSource.js"), __webpack_require__(/*! ./NumberPagingBar */ "./out/NumberPagingBar.js"), __webpack_require__(/*! ./Control */ "./out/Control.js")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, GridView_1, BoundField_1, CommandField_1, CustomField_1, DataControlField_1, DropDown_1, TextBox_1, DataSource_1, NumberPagingBar_1, Control_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.GridView = GridView_1.GridView;
     exports.GridViewDataRow = GridView_1.GridViewDataRow;
+    exports.GridViewRowType = GridView_1.GridViewRowType;
     exports.BoundField = BoundField_1.BoundField;
     exports.CommandField = CommandField_1.CommandField;
     exports.CustomField = CustomField_1.CustomField;
@@ -2277,6 +2278,8 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
     exports.DataSourceSelectArguments = DataSource_1.DataSourceSelectArguments;
     exports.ArrayDataSource = DataSource_1.ArrayDataSource;
     exports.NumberPagingBar = NumberPagingBar_1.NumberPagingBar;
+    exports.DataSourcePagingBar = NumberPagingBar_1.DataSourcePagingBar;
+    exports.Control = Control_1.Control;
 }).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
