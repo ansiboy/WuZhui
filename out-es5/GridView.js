@@ -510,9 +510,9 @@ define(["require", "exports", "./Control", "./DataSource", "./fields/DataControl
     return GridView;
   }(Control_1.Control);
 
+  exports.GridView = GridView;
   GridView.emptyRowClassName = 'empty';
   GridView.dataRowClassName = 'data';
   GridView.pagingBarClassName = 'pagingBar';
-  exports.GridView = GridView;
 }); // }
 //# sourceMappingURL=GridView.js.map

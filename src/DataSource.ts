@@ -15,7 +15,7 @@ export interface DataSourceError extends Error {
 export type DataMethod = 'select' | 'update' | 'delete' | 'insert';
 export class DataSource<T> {
     private args: DataSourceArguments<T>;
-    private primaryKeys: (keyof T)[];
+    primaryKeys: (keyof T)[];
 
     inserting = callbacks1<DataSource<T>, T, number>();
     inserted = callbacks1<DataSource<T>, T, number>();

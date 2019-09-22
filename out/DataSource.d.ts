@@ -9,7 +9,7 @@ export interface DataSourceError extends Error {
 export declare type DataMethod = 'select' | 'update' | 'delete' | 'insert';
 export declare class DataSource<T> {
     private args;
-    private primaryKeys;
+    primaryKeys: (keyof T)[];
     inserting: import("./Utility").Callback2<DataSource<T>, T, number>;
     inserted: import("./Utility").Callback2<DataSource<T>, T, number>;
     deleting: import("./Utility").Callback1<DataSource<T>, T>;
