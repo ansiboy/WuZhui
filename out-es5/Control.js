@@ -31,7 +31,7 @@ define(["require", "exports", "./Errors", "./Utility"], function (require, expor
       value: function appendChild(child, index) {
         if (child == null) throw Errors_1.Errors.argumentNull('child');
         var childElement;
-        if (child instanceof Control) childElement = child.element;else childElement = child;
+        if (child instanceof HTMLElement) childElement = child;else childElement = child.element;
         var placeChild;
 
         if (index != null) {

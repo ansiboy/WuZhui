@@ -28,10 +28,10 @@ define(["require", "exports", "./Errors", "./Utility"], function (require, expor
             if (child == null)
                 throw Errors_1.Errors.argumentNull('child');
             let childElement;
-            if (child instanceof Control)
-                childElement = child.element;
-            else
+            if (child instanceof HTMLElement)
                 childElement = child;
+            else
+                childElement = child.element;
             let placeChild;
             if (index != null) {
                 placeChild = this.element.children[index];

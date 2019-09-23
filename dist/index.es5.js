@@ -1,6 +1,6 @@
 /*!
  * 
- *  maishu-wuzhui v1.4.8
+ *  maishu-wuzhui v1.4.11
  *  https://github.com/ansiboy/wuzhui
  *  
  *  Copyright (c) 2016-2018, shu mai <ansiboy@163.com>
@@ -136,7 +136,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
       value: function appendChild(child, index) {
         if (child == null) throw Errors_1.Errors.argumentNull('child');
         var childElement;
-        if (child instanceof Control) childElement = child.element;else childElement = child;
+        if (child instanceof HTMLElement) childElement = child;else childElement = child.element;
         var placeChild;
 
         if (index != null) {
@@ -1078,6 +1078,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
           var cell = cells[j];
 
           if (cell instanceof DataControlField_1.GridViewDataCell) {
+            //
             cell.render(dataItem);
           }
         }

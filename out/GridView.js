@@ -176,7 +176,7 @@ define(["require", "exports", "./Control", "./DataSource", "./fields/DataControl
             let cells = row.cells;
             for (let j = 0; j < cells.length; j++) {
                 let cell = cells[j];
-                if (cell instanceof DataControlField_1.GridViewDataCell) {
+                if (cell instanceof DataControlField_1.GridViewDataCell) { //
                     cell.render(dataItem);
                 }
             }

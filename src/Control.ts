@@ -35,10 +35,10 @@ export class Control<T extends HTMLElement> {
             throw Errors.argumentNull('child');
 
         let childElement: HTMLElement;
-        if (child instanceof Control)
-            childElement = child.element;
-        else
+        if (child instanceof HTMLElement)
             childElement = child;
+        else
+            childElement = child.element;
 
         let placeChild: HTMLElement;
         if (index != null) {

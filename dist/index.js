@@ -1,6 +1,6 @@
 /*!
  * 
- *  maishu-wuzhui v1.4.8
+ *  maishu-wuzhui v1.4.11
  *  https://github.com/ansiboy/wuzhui
  *  
  *  Copyright (c) 2016-2018, shu mai <ansiboy@163.com>
@@ -132,10 +132,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
             if (child == null)
                 throw Errors_1.Errors.argumentNull('child');
             let childElement;
-            if (child instanceof Control)
-                childElement = child.element;
-            else
+            if (child instanceof HTMLElement)
                 childElement = child;
+            else
+                childElement = child.element;
             let placeChild;
             if (index != null) {
                 placeChild = this.element.children[index];
@@ -645,7 +645,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
             let cells = row.cells;
             for (let j = 0; j < cells.length; j++) {
                 let cell = cells[j];
-                if (cell instanceof DataControlField_1.GridViewDataCell) {
+                if (cell instanceof DataControlField_1.GridViewDataCell) { //
                     cell.render(dataItem);
                 }
             }

@@ -242,8 +242,8 @@ export class GridView<T> extends Control<HTMLTableElement> {
         let cells = row.cells;
         for (let j = 0; j < cells.length; j++) {
             let cell = cells[j];
-            if (cell instanceof GridViewDataCell) {
-                cell.render(dataItem);
+            if (cell instanceof GridViewDataCell) {//
+                (cell as GridViewDataCell<any>).render(dataItem);
             }
         }
 
@@ -383,7 +383,7 @@ export class GridView<T> extends Control<HTMLTableElement> {
         if (this._params.sort) {
             let dataItems = dataRows.map(o => o.dataItem)
                 .filter(o => !this.dataSource.isSameItem(o, item));
-                
+
             dataItems = this._params.sort(dataItems);
             this.renderDataItems(dataItems);
             return;
