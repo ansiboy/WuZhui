@@ -178,52 +178,52 @@ define(["require", "exports", "../Control", "../Utility", "../Errors"], function
         constructor(params) {
             if (params.visible == null)
                 params.visible = true;
-            this._params = params;
+            this.params = params;
         }
         /**
          * Gets the text that is displayed in the footer item of a data control field.
          */
         get footerText() {
-            return this._params.footerText;
+            return this.params.footerText;
         }
         /**
          * Sets the text that is displayed in the footer item of a data control field.
          */
         set footerText(value) {
-            this._params.footerText = value;
+            this.params.footerText = value;
         }
         /**
          * Gets the text that is displayed in the header item of a data control field.
          */
         get headerText() {
-            return this._params.headerText;
+            return this.params.headerText;
         }
         /**
         * Sets the text that is displayed in the header item of a data control field.
         */
         set headerText(value) {
-            this._params.headerText = value;
+            this.params.headerText = value;
         }
         get itemStyle() {
-            return this._params.itemStyle;
+            return this.params.itemStyle;
         }
         set itemStyle(value) {
-            this._params.itemStyle = value;
+            this.params.itemStyle = value;
         }
         get footerStyle() {
-            return this._params.footerStyle;
+            return this.params.footerStyle;
         }
         set footerStyle(value) {
-            this._params.footerStyle = value;
+            this.params.footerStyle = value;
         }
         get headerStyle() {
-            return this._params.headerStyle;
+            return this.params.headerStyle;
         }
         set headerStyle(value) {
-            this._params.headerStyle = value;
+            this.params.headerStyle = value;
         }
         get visible() {
-            return this._params.visible;
+            return this.params.visible;
         }
         get gridView() {
             return this._gridView;
@@ -235,13 +235,13 @@ define(["require", "exports", "../Control", "../Utility", "../Errors"], function
          * Gets a sort expression that is used by a data source control to sort data.
          */
         get sortExpression() {
-            return this._params.sortExpression;
+            return this.params.sortExpression;
         }
         /**
          * Sets a sort expression that is used by a data source control to sort data.
          */
         set sortExpression(value) {
-            this._params.sortExpression = value;
+            this.params.sortExpression = value;
         }
         createHeaderCell() {
             let cell = new GridViewHeaderCell(this);

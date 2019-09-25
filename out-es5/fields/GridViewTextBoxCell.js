@@ -12,72 +12,69 @@ function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) ===
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
-function _get(target, property, receiver) { if (typeof Reflect !== "undefined" && Reflect.get) { _get = Reflect.get; } else { _get = function _get(target, property, receiver) { var base = _superPropBase(target, property); if (!base) return; var desc = Object.getOwnPropertyDescriptor(base, property); if (desc.get) { return desc.get.call(receiver); } return desc.value; }; } return _get(target, property, receiver || target); }
-
-function _superPropBase(object, property) { while (!Object.prototype.hasOwnProperty.call(object, property)) { object = _getPrototypeOf(object); if (object === null) break; } return object; }
-
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
-define(["require", "exports", "./DataControlField"], function (require, exports, DataControlField_1) {
+define(["require", "exports", "./GridViewEditableCell"], function (require, exports, GridViewEditableCell_1) {
   "use strict";
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
 
-  var CustomField =
+  var GridViewTextBoxCell =
   /*#__PURE__*/
-  function (_DataControlField_1$D) {
-    _inherits(CustomField, _DataControlField_1$D);
+  function (_GridViewEditableCell) {
+    _inherits(GridViewTextBoxCell, _GridViewEditableCell);
 
-    function CustomField() {
-      _classCallCheck(this, CustomField);
+    function GridViewTextBoxCell(field, dataItem, valueType) {
+      var _this;
 
-      return _possibleConstructorReturn(this, _getPrototypeOf(CustomField).apply(this, arguments));
+      _classCallCheck(this, GridViewTextBoxCell);
+
+      _this = _possibleConstructorReturn(this, _getPrototypeOf(GridViewTextBoxCell).call(this, field, dataItem));
+      _this._valueType = valueType;
+
+      if (!_this._valueType) {
+        var value = dataItem[field.dataField];
+        if (value instanceof Date) _this._valueType = 'date';else _this._valueType = _typeof(value);
+      }
+
+      return _this;
     }
 
-    _createClass(CustomField, [{
-      key: "createHeaderCell",
-      value: function createHeaderCell() {
-        if (this.params.createHeaderCell) {
-          var cell = this.params.createHeaderCell();
-          cell.style(this.headerStyle);
-          return cell;
-        }
-
-        return _get(_getPrototypeOf(CustomField.prototype), "createHeaderCell", this).call(this);
+    _createClass(GridViewTextBoxCell, [{
+      key: "createControl",
+      value: function createControl(value) {
+        var control = document.createElement("input");
+        control.value = value === undefined ? "" : "".concat(value);
+        control.name = this.field.dataField;
+        return control;
       }
     }, {
-      key: "createFooterCell",
-      value: function createFooterCell() {
-        if (this.params.createFooterCell) {
-          var cell = this.params.createFooterCell();
-          cell.style(this.params.footerStyle);
-          return cell;
-        }
+      key: "controlValue",
+      get: function get() {
+        var text = this.element.querySelector('input').value;
 
-        return _get(_getPrototypeOf(CustomField.prototype), "createFooterCell", this).call(this);
-      }
-    }, {
-      key: "createItemCell",
-      value: function createItemCell(dataItem) {
-        if (this.params.createItemCell) {
-          var cell = this.params.createItemCell.apply(this, [dataItem]);
-          cell.style(this.params.itemStyle);
-          return cell;
-        }
+        switch (this._valueType) {
+          case 'number':
+            return new Number(text).valueOf();
 
-        return _get(_getPrototypeOf(CustomField.prototype), "createItemCell", this).call(this, dataItem);
+          case 'date':
+            return new Date(text);
+
+          default:
+            return text;
+        }
       }
     }]);
 
-    return CustomField;
-  }(DataControlField_1.DataControlField);
+    return GridViewTextBoxCell;
+  }(GridViewEditableCell_1.GridViewEditableCell);
 
-  exports.CustomField = CustomField;
+  exports.GridViewTextBoxCell = GridViewTextBoxCell;
 });
-//# sourceMappingURL=CustomField.js.map
+//# sourceMappingURL=GridViewTextBoxCell.js.map

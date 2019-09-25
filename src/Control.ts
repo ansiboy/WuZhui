@@ -4,8 +4,6 @@ import { ElementHelper, applyStyle } from "./Utility";
 // namespace wuzhui {
 const CONTROL_DATA_NAME = 'Control';
 export class Control<T extends HTMLElement> {
-    private _text: string;
-    private _visible: boolean;
     private _element: T;
 
     constructor(element: T) {

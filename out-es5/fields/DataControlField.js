@@ -293,7 +293,7 @@ define(["require", "exports", "../Control", "../Utility", "../Errors"], function
       _classCallCheck(this, DataControlField);
 
       if (params.visible == null) params.visible = true;
-      this._params = params;
+      this.params = params;
     }
     /**
      * Gets the text that is displayed in the footer item of a data control field.
@@ -325,14 +325,14 @@ define(["require", "exports", "../Control", "../Utility", "../Errors"], function
     }, {
       key: "footerText",
       get: function get() {
-        return this._params.footerText;
+        return this.params.footerText;
       }
       /**
        * Sets the text that is displayed in the footer item of a data control field.
        */
       ,
       set: function set(value) {
-        this._params.footerText = value;
+        this.params.footerText = value;
       }
       /**
        * Gets the text that is displayed in the header item of a data control field.
@@ -341,43 +341,43 @@ define(["require", "exports", "../Control", "../Utility", "../Errors"], function
     }, {
       key: "headerText",
       get: function get() {
-        return this._params.headerText;
+        return this.params.headerText;
       }
       /**
       * Sets the text that is displayed in the header item of a data control field.
       */
       ,
       set: function set(value) {
-        this._params.headerText = value;
+        this.params.headerText = value;
       }
     }, {
       key: "itemStyle",
       get: function get() {
-        return this._params.itemStyle;
+        return this.params.itemStyle;
       },
       set: function set(value) {
-        this._params.itemStyle = value;
+        this.params.itemStyle = value;
       }
     }, {
       key: "footerStyle",
       get: function get() {
-        return this._params.footerStyle;
+        return this.params.footerStyle;
       },
       set: function set(value) {
-        this._params.footerStyle = value;
+        this.params.footerStyle = value;
       }
     }, {
       key: "headerStyle",
       get: function get() {
-        return this._params.headerStyle;
+        return this.params.headerStyle;
       },
       set: function set(value) {
-        this._params.headerStyle = value;
+        this.params.headerStyle = value;
       }
     }, {
       key: "visible",
       get: function get() {
-        return this._params.visible;
+        return this.params.visible;
       }
     }, {
       key: "gridView",
@@ -394,14 +394,14 @@ define(["require", "exports", "../Control", "../Utility", "../Errors"], function
     }, {
       key: "sortExpression",
       get: function get() {
-        return this._params.sortExpression;
+        return this.params.sortExpression;
       }
       /**
        * Sets a sort expression that is used by a data source control to sort data.
        */
       ,
       set: function set(value) {
-        this._params.sortExpression = value;
+        this.params.sortExpression = value;
       }
     }]);
 

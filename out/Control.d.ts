@@ -1,6 +1,4 @@
 export declare class Control<T extends HTMLElement> {
-    private _text;
-    private _visible;
     private _element;
     constructor(element: T);
     visible: boolean;

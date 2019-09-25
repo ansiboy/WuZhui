@@ -22,62 +22,102 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
-define(["require", "exports", "./DataControlField"], function (require, exports, DataControlField_1) {
+define(["require", "exports", "./DataControlField", "../Errors", "../Utility"], function (require, exports, DataControlField_1, Errors_1, Utility_1) {
   "use strict";
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
 
-  var CustomField =
+  var GridViewEditableCell =
   /*#__PURE__*/
-  function (_DataControlField_1$D) {
-    _inherits(CustomField, _DataControlField_1$D);
+  function (_DataControlField_1$G) {
+    _inherits(GridViewEditableCell, _DataControlField_1$G);
 
-    function CustomField() {
-      _classCallCheck(this, CustomField);
+    function GridViewEditableCell(field, dataItem) {
+      var _this;
 
-      return _possibleConstructorReturn(this, _getPrototypeOf(CustomField).apply(this, arguments));
+      _classCallCheck(this, GridViewEditableCell);
+
+      if (field == null) throw Errors_1.Errors.argumentNull('field');
+      if (dataItem == null) throw Errors_1.Errors.argumentNull('dataItem');
+      _this = _possibleConstructorReturn(this, _getPrototypeOf(GridViewEditableCell).call(this, {
+        dataField: field.dataField,
+        nullText: field.nullText,
+        dataFormatString: field.dataFormatString
+      }));
+      _this._field = field;
+      _this._dataItem = dataItem;
+      _this._mode = 'read';
+      return _this;
     }
 
-    _createClass(CustomField, [{
-      key: "createHeaderCell",
-      value: function createHeaderCell() {
-        if (this.params.createHeaderCell) {
-          var cell = this.params.createHeaderCell();
-          cell.style(this.headerStyle);
-          return cell;
+    _createClass(GridViewEditableCell, [{
+      key: "beginEdit",
+      value: function beginEdit() {
+        if (this._field.readOnly) {
+          return;
         }
 
-        return _get(_getPrototypeOf(CustomField.prototype), "createHeaderCell", this).call(this);
+        this._mode = 'edit';
+        this.render(this._dataItem);
       }
     }, {
-      key: "createFooterCell",
-      value: function createFooterCell() {
-        if (this.params.createFooterCell) {
-          var cell = this.params.createFooterCell();
-          cell.style(this.params.footerStyle);
-          return cell;
+      key: "endEdit",
+      value: function endEdit() {
+        if (this._field.readOnly) {
+          return;
         }
 
-        return _get(_getPrototypeOf(CustomField.prototype), "createFooterCell", this).call(this);
+        this._mode = 'read';
+        this.render(this._dataItem);
       }
     }, {
-      key: "createItemCell",
-      value: function createItemCell(dataItem) {
-        if (this.params.createItemCell) {
-          var cell = this.params.createItemCell.apply(this, [dataItem]);
-          cell.style(this.params.itemStyle);
-          return cell;
+      key: "cancelEdit",
+      value: function cancelEdit() {
+        if (this._field.readOnly) {
+          return;
         }
 
-        return _get(_getPrototypeOf(CustomField.prototype), "createItemCell", this).call(this, dataItem);
+        this._mode = 'read'; // let value = this._dataItem[this.field.dataField];
+
+        this.render(this._dataItem);
+      }
+    }, {
+      key: "render",
+      value: function render(dataItem) {
+        //value
+        var value = dataItem[this.field.dataField];
+
+        if (this._mode == 'edit') {
+          // this.element.innerHTML = `<input type="text" />`;
+          // applyStyle(this.element.querySelector('input'), this._field.controlStyle);
+          // this.element.querySelector('input').value =
+          //     value === undefined ? null : `${value}`;
+          this.element.innerHTML = "";
+          var control = this.createControl(value);
+          Utility_1.applyStyle(control, this._field.controlStyle);
+          this.element.appendChild(control);
+          return;
+        }
+
+        _get(_getPrototypeOf(GridViewEditableCell.prototype), "render", this).call(this, dataItem);
+      }
+    }, {
+      key: "field",
+      get: function get() {
+        return this._field;
+      }
+    }, {
+      key: "mode",
+      get: function get() {
+        return this._mode;
       }
     }]);
 
-    return CustomField;
-  }(DataControlField_1.DataControlField);
+    return GridViewEditableCell;
+  }(DataControlField_1.GridViewDataCell);
 
-  exports.CustomField = CustomField;
+  exports.GridViewEditableCell = GridViewEditableCell;
 });
-//# sourceMappingURL=CustomField.js.map
+//# sourceMappingURL=GridViewEditableCell.js.map

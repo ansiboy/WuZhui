@@ -25,9 +25,9 @@ export declare class GridViewDataCell<T> extends GridViewCell {
 export interface DataControlFieldParams {
     footerText?: string;
     headerText?: string;
-    itemStyle?: string | Partial<CSSStyleDeclaration>;
-    headerStyle?: string | Partial<CSSStyleDeclaration>;
-    footerStyle?: string | Partial<CSSStyleDeclaration>;
+    itemStyle?: Partial<CSSStyleDeclaration>;
+    headerStyle?: Partial<CSSStyleDeclaration>;
+    footerStyle?: Partial<CSSStyleDeclaration>;
     visible?: boolean;
     sortExpression?: string;
 }
@@ -52,10 +52,10 @@ export declare class GridViewHeaderCell<T> extends Control<HTMLTableHeaderCellEl
     clearSortIcon(): void;
     private updateSortIcon;
 }
-export declare class DataControlField<T> {
+export declare class DataControlField<T, P extends DataControlFieldParams = DataControlFieldParams> {
     private _gridView;
-    protected _params: DataControlFieldParams;
-    constructor(params?: DataControlFieldParams);
+    protected params: P;
+    constructor(params?: P);
     /**
      * Gets the text that is displayed in the footer item of a data control field.
      */
