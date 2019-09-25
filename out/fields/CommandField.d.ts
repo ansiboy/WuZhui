@@ -17,9 +17,8 @@ export interface CommandFieldParams extends DataControlFieldParams {
     updateButtonClass?: string;
     insertButtonClass?: string;
 }
-export declare class CommandField<T> extends DataControlField<T> {
+export declare class CommandField<T> extends DataControlField<T, CommandFieldParams> {
     constructor(params?: CommandFieldParams);
-    private params;
     readonly cancelButtonHTML: string;
     readonly deleteButtonHTML: string;
     readonly editButtonHTML: string;

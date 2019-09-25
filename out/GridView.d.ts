@@ -57,7 +57,7 @@ export declare class GridView<T> extends Control<HTMLTableElement> {
     readonly selectArguments: DataSourceSelectArguments;
     constructor(params: GridViewArguments<T>);
     private createPagingBar;
-    readonly columns: DataControlField<T>[];
+    readonly columns: DataControlField<T, import("./fields/DataControlField").DataControlFieldParams>[];
     readonly dataSource: DataSource<T>;
     private appendEmptyRow;
     appendDataRow(dataItem: any, index?: number): GridViewDataRow;

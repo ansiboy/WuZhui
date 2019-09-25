@@ -1,5 +1,5 @@
 /// <reference path="DataControlField.ts"/>
-define(["require", "exports", "./DataControlField", "../Control", "./BoundField", "../Utility"], function (require, exports, DataControlField_1, Control_1, BoundField_1, Utility_1) {
+define(["require", "exports", "./DataControlField", "../Control", "./GridViewEditableCell", "../Utility"], function (require, exports, DataControlField_1, Control_1, GridViewEditableCell_1, Utility_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class GridViewCommandCell extends DataControlField_1.GridViewCell {
@@ -10,62 +10,62 @@ define(["require", "exports", "./DataControlField", "../Control", "./BoundField"
     class CommandField extends DataControlField_1.DataControlField {
         constructor(params) {
             super(params);
-            if (!this.params().cancelButtonHTML)
-                this.params().cancelButtonHTML = '取消';
-            if (!this.params().deleteButtonHTML)
-                this.params().deleteButtonHTML = '删除';
-            if (!this.params().editButtonHTML)
-                this.params().editButtonHTML = '编辑';
-            if (!this.params().updateButtonHTML)
-                this.params().updateButtonHTML = '更新';
-            if (!this.params().newButtonHTML)
-                this.params().newButtonHTML = '新增';
-            if (!this.params().insertButtonHTML)
-                this.params().insertButtonHTML = '添加';
+            if (!this.params.cancelButtonHTML)
+                this.params.cancelButtonHTML = '取消';
+            if (!this.params.deleteButtonHTML)
+                this.params.deleteButtonHTML = '删除';
+            if (!this.params.editButtonHTML)
+                this.params.editButtonHTML = '编辑';
+            if (!this.params.updateButtonHTML)
+                this.params.updateButtonHTML = '更新';
+            if (!this.params.newButtonHTML)
+                this.params.newButtonHTML = '新增';
+            if (!this.params.insertButtonHTML)
+                this.params.insertButtonHTML = '添加';
         }
-        params() {
-            return this._params;
-        }
+        // private params(): CommandFieldParams {
+        //     return this.params;
+        // }
         get cancelButtonHTML() {
-            return this.params().cancelButtonHTML;
+            return this.params.cancelButtonHTML;
         }
         get deleteButtonHTML() {
-            return this.params().deleteButtonHTML;
+            return this.params.deleteButtonHTML;
         }
         get editButtonHTML() {
-            return this.params().editButtonHTML;
+            return this.params.editButtonHTML;
         }
         get updateButtonHTML() {
-            return this.params().updateButtonHTML;
+            return this.params.updateButtonHTML;
         }
         get newButtonHTML() {
-            return this.params().newButtonHTML;
+            return this.params.newButtonHTML;
         }
         get insertButtonHTML() {
-            return this.params().insertButtonHTML;
+            return this.params.insertButtonHTML;
         }
         get cancelButtonClass() {
-            return this.params().cancelButtonClass;
+            return this.params.cancelButtonClass;
         }
         get deleteButtonClass() {
-            return this.params().deleteButtonClass;
+            return this.params.deleteButtonClass;
         }
         get editButtonClass() {
-            return this.params().editButtonClass;
+            return this.params.editButtonClass;
         }
         get newButtonClass() {
-            return this.params().newButtonClass;
+            return this.params.newButtonClass;
         }
         get updateButtonClass() {
-            return this.params().updateButtonClass;
+            return this.params.updateButtonClass;
         }
         get insertButtonClass() {
-            return this.params().insertButtonClass;
+            return this.params.insertButtonClass;
         }
         createItemCell(dataItem) {
             let cell = new GridViewCommandCell(this);
             cell.style(this.itemStyle);
-            if (this.params().showEditButton) {
+            if (this.params.showEditButton) {
                 let editButton = this.createEditButton();
                 editButton.style.marginRight = '4px';
                 if (this.editButtonClass)
@@ -90,7 +90,7 @@ define(["require", "exports", "./DataControlField", "../Control", "./BoundField"
                 cancelButton.addEventListener('click', (e) => this.on_cancelButtonClick(e));
                 cell.appendChild(cancelButton);
             }
-            if (this.params().showDeleteButton) {
+            if (this.params.showDeleteButton) {
                 let deleteButton = this.createDeleteButton();
                 deleteButton.style.marginRight = '4px';
                 if (this.deleteButtonClass)
@@ -99,7 +99,7 @@ define(["require", "exports", "./DataControlField", "../Control", "./BoundField"
                 deleteButton.onclick = (e) => this.on_deleteButtonClick(e);
                 cell.appendChild(deleteButton);
             }
-            if (this.params().showNewButton) {
+            if (this.params.showNewButton) {
                 let newButton = this.createNewButton();
                 newButton.style.marginRight = '4px';
                 if (this.newButtonClass)
@@ -199,7 +199,7 @@ define(["require", "exports", "./DataControlField", "../Control", "./BoundField"
             let rowElement = cellElement.parentElement;
             for (let i = 0; i < rowElement.cells.length; i++) {
                 let cell = Control_1.Control.getControlByElement(rowElement.cells[i]);
-                if (cell instanceof BoundField_1.GridViewEditableCell) {
+                if (cell instanceof GridViewEditableCell_1.GridViewEditableCell) {
                     cell.beginEdit();
                 }
             }
@@ -223,7 +223,7 @@ define(["require", "exports", "./DataControlField", "../Control", "./BoundField"
             }
             for (let i = 0; i < rowElement.cells.length; i++) {
                 let cell = Control_1.Control.getControlByElement(rowElement.cells[i]);
-                if (cell instanceof BoundField_1.GridViewEditableCell) {
+                if (cell instanceof GridViewEditableCell_1.GridViewEditableCell) {
                     cell.cancelEdit();
                 }
             }
@@ -251,7 +251,7 @@ define(["require", "exports", "./DataControlField", "../Control", "./BoundField"
             let editableCells = new Array();
             for (let i = 0; i < rowElement.cells.length; i++) {
                 let cell = Control_1.Control.getControlByElement(rowElement.cells[i]);
-                if (cell instanceof BoundField_1.GridViewEditableCell && cell.mode == 'edit') {
+                if (cell instanceof GridViewEditableCell_1.GridViewEditableCell && cell.mode == 'edit') {
                     dataItem[cell.field.dataField] = cell.controlValue;
                     editableCells.push(cell);
                 }
@@ -285,7 +285,7 @@ define(["require", "exports", "./DataControlField", "../Control", "./BoundField"
             let newRow = gridView.appendDataRow({}, rowElement.rowIndex);
             newRow["isNew"] = true;
             let commandCells = newRow.cells.filter(o => o instanceof GridViewCommandCell);
-            newRow.cells.filter(o => o instanceof BoundField_1.GridViewEditableCell)
+            newRow.cells.filter(o => o instanceof GridViewEditableCell_1.GridViewEditableCell)
                 .forEach((c) => c.beginEdit());
             commandCells.forEach((cell) => {
                 if (cell.deleteButton)

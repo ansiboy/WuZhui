@@ -1,6 +1,6 @@
 /*!
  * 
- *  maishu-wuzhui v1.4.11
+ *  maishu-wuzhui v1.5.0
  *  https://github.com/ansiboy/wuzhui
  *  
  *  Copyright (c) 2016-2018, shu mai <ansiboy@163.com>
@@ -170,11 +170,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -358,11 +357,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var __awaiter = 
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -784,10 +782,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
             this._emtpyRow.element.style.display = 'none';
         }
     }
-    exports.GridView = GridView;
     GridView.emptyRowClassName = 'empty';
     GridView.dataRowClassName = 'data';
     GridView.pagingBarClassName = 'pagingBar';
+    exports.GridView = GridView;
 }).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 // }
@@ -1488,104 +1486,25 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/// <reference path="DataControlField.ts"/>
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ./DataControlField */ "./out/fields/DataControlField.js"), __webpack_require__(/*! ../Errors */ "./out/Errors.js"), __webpack_require__(/*! ../Utility */ "./out/Utility.js")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, DataControlField_1, Errors_1, Utility_1) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ./DataControlField */ "./out/fields/DataControlField.js"), __webpack_require__(/*! ./GridViewTextBoxCell */ "./out/fields/GridViewTextBoxCell.js")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, DataControlField_1, GridViewTextBoxCell_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    class GridViewEditableCell extends DataControlField_1.GridViewDataCell {
-        constructor(field, dataItem, valueType) {
-            if (field == null)
-                throw Errors_1.Errors.argumentNull('field');
-            if (dataItem == null)
-                throw Errors_1.Errors.argumentNull('dataItem');
-            super({
-                dataField: field.dataField,
-                nullText: field.nullText, dataFormatString: field.dataFormatString
-            });
-            this._field = field;
-            this._dataItem = dataItem;
-            this._valueType = valueType;
-            this._mode = 'read';
-            if (!this._valueType) {
-                let value = dataItem[field.dataField];
-                if (value instanceof Date)
-                    this._valueType = 'date';
-                else
-                    this._valueType = typeof value;
-            }
-        }
-        get field() {
-            return this._field;
-        }
-        get mode() {
-            return this._mode;
-        }
-        beginEdit() {
-            if (this._field.readOnly) {
-                return;
-            }
-            this._mode = 'edit';
-            this.render(this._dataItem);
-        }
-        endEdit() {
-            if (this._field.readOnly) {
-                return;
-            }
-            this._mode = 'read';
-            let value = this.controlValue;
-            this.render(this._dataItem);
-        }
-        cancelEdit() {
-            if (this._field.readOnly) {
-                return;
-            }
-            this._mode = 'read';
-            // let value = this._dataItem[this.field.dataField];
-            this.render(this._dataItem);
-        }
-        render(dataItem) {
-            //value
-            let value = dataItem[this.field.dataField];
-            if (this._mode == 'edit') {
-                this.element.innerHTML = `<input type="text" />`;
-                Utility_1.applyStyle(this.element.querySelector('input'), this._field.controlStyle);
-                this.element.querySelector('input').value =
-                    value === undefined ? null : `${value}`;
-                return;
-            }
-            super.render(dataItem);
-        }
-        //==============================================
-        // Virtual Methods
-        get controlValue() {
-            var text = this.element.querySelector('input').value;
-            switch (this._valueType) {
-                case 'number':
-                    return new Number(text).valueOf();
-                case 'date':
-                    return new Date(text);
-                default:
-                    return text;
-            }
-        }
-    }
-    exports.GridViewEditableCell = GridViewEditableCell;
     class BoundField extends DataControlField_1.DataControlField {
-        constructor(params) {
-            super(params);
-            this._params = params;
-            this._valueElement = document.createElement('span');
-        }
-        params() {
-            return this._params;
-        }
+        // constructor(params: BoundFieldParams<T>) {
+        //     super(params);
+        //     this._params = params;
+        // }
+        // private params(): BoundFieldParams<T> {
+        //     return <BoundFieldParams<T>>this._params;
+        // }
         /**
          * Gets the caption displayed for a field when the field's value is null.
          */
         get nullText() {
-            return this.params().nullText;
+            return this.params.nullText;
         }
         createItemCell(dataItem) {
-            let cell = new GridViewEditableCell(this, dataItem);
+            let cell = new GridViewTextBoxCell_1.GridViewTextBoxCell(this, dataItem, this.params.valueType);
             cell.style(this.itemStyle);
             return cell;
         }
@@ -1593,19 +1512,19 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/// <reference p
          * Gets the field for the value.
          */
         get dataField() {
-            return this.params().dataField;
+            return this.params.dataField;
         }
         /**
          * Gets the string that specifies the display format for the value of the field.
          */
         get dataFormatString() {
-            return this.params().dataFormatString;
+            return this.params.dataFormatString;
         }
         get controlStyle() {
-            return this.params().controlStyle;
+            return this.params.controlStyle;
         }
         get readOnly() {
-            return this.params().readOnly;
+            return this.params.readOnly;
         }
     }
     exports.BoundField = BoundField;
@@ -1623,7 +1542,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/// <reference p
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/// <reference path="DataControlField.ts"/>
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ./DataControlField */ "./out/fields/DataControlField.js"), __webpack_require__(/*! ../Control */ "./out/Control.js"), __webpack_require__(/*! ./BoundField */ "./out/fields/BoundField.js"), __webpack_require__(/*! ../Utility */ "./out/Utility.js")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, DataControlField_1, Control_1, BoundField_1, Utility_1) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ./DataControlField */ "./out/fields/DataControlField.js"), __webpack_require__(/*! ../Control */ "./out/Control.js"), __webpack_require__(/*! ./GridViewEditableCell */ "./out/fields/GridViewEditableCell.js"), __webpack_require__(/*! ../Utility */ "./out/Utility.js")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, DataControlField_1, Control_1, GridViewEditableCell_1, Utility_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class GridViewCommandCell extends DataControlField_1.GridViewCell {
@@ -1634,62 +1553,62 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/// <reference p
     class CommandField extends DataControlField_1.DataControlField {
         constructor(params) {
             super(params);
-            if (!this.params().cancelButtonHTML)
-                this.params().cancelButtonHTML = '取消';
-            if (!this.params().deleteButtonHTML)
-                this.params().deleteButtonHTML = '删除';
-            if (!this.params().editButtonHTML)
-                this.params().editButtonHTML = '编辑';
-            if (!this.params().updateButtonHTML)
-                this.params().updateButtonHTML = '更新';
-            if (!this.params().newButtonHTML)
-                this.params().newButtonHTML = '新增';
-            if (!this.params().insertButtonHTML)
-                this.params().insertButtonHTML = '添加';
+            if (!this.params.cancelButtonHTML)
+                this.params.cancelButtonHTML = '取消';
+            if (!this.params.deleteButtonHTML)
+                this.params.deleteButtonHTML = '删除';
+            if (!this.params.editButtonHTML)
+                this.params.editButtonHTML = '编辑';
+            if (!this.params.updateButtonHTML)
+                this.params.updateButtonHTML = '更新';
+            if (!this.params.newButtonHTML)
+                this.params.newButtonHTML = '新增';
+            if (!this.params.insertButtonHTML)
+                this.params.insertButtonHTML = '添加';
         }
-        params() {
-            return this._params;
-        }
+        // private params(): CommandFieldParams {
+        //     return this.params;
+        // }
         get cancelButtonHTML() {
-            return this.params().cancelButtonHTML;
+            return this.params.cancelButtonHTML;
         }
         get deleteButtonHTML() {
-            return this.params().deleteButtonHTML;
+            return this.params.deleteButtonHTML;
         }
         get editButtonHTML() {
-            return this.params().editButtonHTML;
+            return this.params.editButtonHTML;
         }
         get updateButtonHTML() {
-            return this.params().updateButtonHTML;
+            return this.params.updateButtonHTML;
         }
         get newButtonHTML() {
-            return this.params().newButtonHTML;
+            return this.params.newButtonHTML;
         }
         get insertButtonHTML() {
-            return this.params().insertButtonHTML;
+            return this.params.insertButtonHTML;
         }
         get cancelButtonClass() {
-            return this.params().cancelButtonClass;
+            return this.params.cancelButtonClass;
         }
         get deleteButtonClass() {
-            return this.params().deleteButtonClass;
+            return this.params.deleteButtonClass;
         }
         get editButtonClass() {
-            return this.params().editButtonClass;
+            return this.params.editButtonClass;
         }
         get newButtonClass() {
-            return this.params().newButtonClass;
+            return this.params.newButtonClass;
         }
         get updateButtonClass() {
-            return this.params().updateButtonClass;
+            return this.params.updateButtonClass;
         }
         get insertButtonClass() {
-            return this.params().insertButtonClass;
+            return this.params.insertButtonClass;
         }
         createItemCell(dataItem) {
             let cell = new GridViewCommandCell(this);
             cell.style(this.itemStyle);
-            if (this.params().showEditButton) {
+            if (this.params.showEditButton) {
                 let editButton = this.createEditButton();
                 editButton.style.marginRight = '4px';
                 if (this.editButtonClass)
@@ -1714,7 +1633,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/// <reference p
                 cancelButton.addEventListener('click', (e) => this.on_cancelButtonClick(e));
                 cell.appendChild(cancelButton);
             }
-            if (this.params().showDeleteButton) {
+            if (this.params.showDeleteButton) {
                 let deleteButton = this.createDeleteButton();
                 deleteButton.style.marginRight = '4px';
                 if (this.deleteButtonClass)
@@ -1723,7 +1642,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/// <reference p
                 deleteButton.onclick = (e) => this.on_deleteButtonClick(e);
                 cell.appendChild(deleteButton);
             }
-            if (this.params().showNewButton) {
+            if (this.params.showNewButton) {
                 let newButton = this.createNewButton();
                 newButton.style.marginRight = '4px';
                 if (this.newButtonClass)
@@ -1823,7 +1742,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/// <reference p
             let rowElement = cellElement.parentElement;
             for (let i = 0; i < rowElement.cells.length; i++) {
                 let cell = Control_1.Control.getControlByElement(rowElement.cells[i]);
-                if (cell instanceof BoundField_1.GridViewEditableCell) {
+                if (cell instanceof GridViewEditableCell_1.GridViewEditableCell) {
                     cell.beginEdit();
                 }
             }
@@ -1847,7 +1766,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/// <reference p
             }
             for (let i = 0; i < rowElement.cells.length; i++) {
                 let cell = Control_1.Control.getControlByElement(rowElement.cells[i]);
-                if (cell instanceof BoundField_1.GridViewEditableCell) {
+                if (cell instanceof GridViewEditableCell_1.GridViewEditableCell) {
                     cell.cancelEdit();
                 }
             }
@@ -1875,7 +1794,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/// <reference p
             let editableCells = new Array();
             for (let i = 0; i < rowElement.cells.length; i++) {
                 let cell = Control_1.Control.getControlByElement(rowElement.cells[i]);
-                if (cell instanceof BoundField_1.GridViewEditableCell && cell.mode == 'edit') {
+                if (cell instanceof GridViewEditableCell_1.GridViewEditableCell && cell.mode == 'edit') {
                     dataItem[cell.field.dataField] = cell.controlValue;
                     editableCells.push(cell);
                 }
@@ -1909,7 +1828,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/// <reference p
             let newRow = gridView.appendDataRow({}, rowElement.rowIndex);
             newRow["isNew"] = true;
             let commandCells = newRow.cells.filter(o => o instanceof GridViewCommandCell);
-            newRow.cells.filter(o => o instanceof BoundField_1.GridViewEditableCell)
+            newRow.cells.filter(o => o instanceof GridViewEditableCell_1.GridViewEditableCell)
                 .forEach((c) => c.beginEdit());
             commandCells.forEach((cell) => {
                 if (cell.deleteButton)
@@ -1940,32 +1859,26 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class CustomField extends DataControlField_1.DataControlField {
-        constructor(params) {
-            super(params);
-        }
-        params() {
-            return this._params;
-        }
         createHeaderCell() {
-            if (this.params().createHeaderCell) {
-                let cell = this.params().createHeaderCell();
+            if (this.params.createHeaderCell) {
+                let cell = this.params.createHeaderCell();
                 cell.style(this.headerStyle);
                 return cell;
             }
             return super.createHeaderCell();
         }
         createFooterCell() {
-            if (this.params().createFooterCell) {
-                let cell = this.params().createFooterCell();
-                cell.style(this.params().footerStyle);
+            if (this.params.createFooterCell) {
+                let cell = this.params.createFooterCell();
+                cell.style(this.params.footerStyle);
                 return cell;
             }
             return super.createFooterCell();
         }
         createItemCell(dataItem) {
-            if (this.params().createItemCell) {
-                let cell = this.params().createItemCell.apply(this, [dataItem]);
-                cell.style(this.params().itemStyle);
+            if (this.params.createItemCell) {
+                let cell = this.params.createItemCell.apply(this, [dataItem]);
+                cell.style(this.params.itemStyle);
                 return cell;
             }
             return super.createItemCell(dataItem);
@@ -2165,52 +2078,52 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
         constructor(params) {
             if (params.visible == null)
                 params.visible = true;
-            this._params = params;
+            this.params = params;
         }
         /**
          * Gets the text that is displayed in the footer item of a data control field.
          */
         get footerText() {
-            return this._params.footerText;
+            return this.params.footerText;
         }
         /**
          * Sets the text that is displayed in the footer item of a data control field.
          */
         set footerText(value) {
-            this._params.footerText = value;
+            this.params.footerText = value;
         }
         /**
          * Gets the text that is displayed in the header item of a data control field.
          */
         get headerText() {
-            return this._params.headerText;
+            return this.params.headerText;
         }
         /**
         * Sets the text that is displayed in the header item of a data control field.
         */
         set headerText(value) {
-            this._params.headerText = value;
+            this.params.headerText = value;
         }
         get itemStyle() {
-            return this._params.itemStyle;
+            return this.params.itemStyle;
         }
         set itemStyle(value) {
-            this._params.itemStyle = value;
+            this.params.itemStyle = value;
         }
         get footerStyle() {
-            return this._params.footerStyle;
+            return this.params.footerStyle;
         }
         set footerStyle(value) {
-            this._params.footerStyle = value;
+            this.params.footerStyle = value;
         }
         get headerStyle() {
-            return this._params.headerStyle;
+            return this.params.headerStyle;
         }
         set headerStyle(value) {
-            this._params.headerStyle = value;
+            this.params.headerStyle = value;
         }
         get visible() {
-            return this._params.visible;
+            return this.params.visible;
         }
         get gridView() {
             return this._gridView;
@@ -2222,13 +2135,13 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
          * Gets a sort expression that is used by a data source control to sort data.
          */
         get sortExpression() {
-            return this._params.sortExpression;
+            return this.params.sortExpression;
         }
         /**
          * Sets a sort expression that is used by a data source control to sort data.
          */
         set sortExpression(value) {
-            this._params.sortExpression = value;
+            this.params.sortExpression = value;
         }
         createHeaderCell() {
             let cell = new GridViewHeaderCell(this);
@@ -2249,6 +2162,129 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
         }
     }
     exports.DataControlField = DataControlField;
+}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+
+/***/ }),
+
+/***/ "./out/fields/GridViewEditableCell.js":
+/*!********************************************!*\
+  !*** ./out/fields/GridViewEditableCell.js ***!
+  \********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ./DataControlField */ "./out/fields/DataControlField.js"), __webpack_require__(/*! ../Errors */ "./out/Errors.js"), __webpack_require__(/*! ../Utility */ "./out/Utility.js")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, DataControlField_1, Errors_1, Utility_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    class GridViewEditableCell extends DataControlField_1.GridViewDataCell {
+        constructor(field, dataItem) {
+            if (field == null)
+                throw Errors_1.Errors.argumentNull('field');
+            if (dataItem == null)
+                throw Errors_1.Errors.argumentNull('dataItem');
+            super({
+                dataField: field.dataField,
+                nullText: field.nullText, dataFormatString: field.dataFormatString
+            });
+            this._field = field;
+            this._dataItem = dataItem;
+            this._mode = 'read';
+        }
+        get field() {
+            return this._field;
+        }
+        get mode() {
+            return this._mode;
+        }
+        beginEdit() {
+            if (this._field.readOnly) {
+                return;
+            }
+            this._mode = 'edit';
+            this.render(this._dataItem);
+        }
+        endEdit() {
+            if (this._field.readOnly) {
+                return;
+            }
+            this._mode = 'read';
+            this.render(this._dataItem);
+        }
+        cancelEdit() {
+            if (this._field.readOnly) {
+                return;
+            }
+            this._mode = 'read';
+            // let value = this._dataItem[this.field.dataField];
+            this.render(this._dataItem);
+        }
+        render(dataItem) {
+            //value
+            let value = dataItem[this.field.dataField];
+            if (this._mode == 'edit') {
+                // this.element.innerHTML = `<input type="text" />`;
+                // applyStyle(this.element.querySelector('input'), this._field.controlStyle);
+                // this.element.querySelector('input').value =
+                //     value === undefined ? null : `${value}`;
+                this.element.innerHTML = "";
+                let control = this.createControl(value);
+                Utility_1.applyStyle(control, this._field.controlStyle);
+                this.element.appendChild(control);
+                return;
+            }
+            super.render(dataItem);
+        }
+    }
+    exports.GridViewEditableCell = GridViewEditableCell;
+}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+
+/***/ }),
+
+/***/ "./out/fields/GridViewTextBoxCell.js":
+/*!*******************************************!*\
+  !*** ./out/fields/GridViewTextBoxCell.js ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ./GridViewEditableCell */ "./out/fields/GridViewEditableCell.js")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, GridViewEditableCell_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    class GridViewTextBoxCell extends GridViewEditableCell_1.GridViewEditableCell {
+        constructor(field, dataItem, valueType) {
+            super(field, dataItem);
+            this._valueType = valueType;
+            if (!this._valueType) {
+                let value = dataItem[field.dataField];
+                if (value instanceof Date)
+                    this._valueType = 'date';
+                else
+                    this._valueType = typeof value;
+            }
+        }
+        createControl(value) {
+            let control = document.createElement("input");
+            control.value = value === undefined ? "" : `${value}`;
+            control.name = this.field.dataField;
+            return control;
+        }
+        get controlValue() {
+            var text = this.element.querySelector('input').value;
+            switch (this._valueType) {
+                case 'number':
+                    return new Number(text).valueOf();
+                case 'date':
+                    return new Date(text);
+                default:
+                    return text;
+            }
+        }
+    }
+    exports.GridViewTextBoxCell = GridViewTextBoxCell;
 }).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 

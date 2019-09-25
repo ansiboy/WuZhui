@@ -19,7 +19,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
 /// <reference path="DataControlField.ts"/>
-define(["require", "exports", "./DataControlField", "../Control", "./BoundField", "../Utility"], function (require, exports, DataControlField_1, Control_1, BoundField_1, Utility_1) {
+define(["require", "exports", "./DataControlField", "../Control", "./GridViewEditableCell", "../Utility"], function (require, exports, DataControlField_1, Control_1, GridViewEditableCell_1, Utility_1) {
   "use strict";
 
   Object.defineProperty(exports, "__esModule", {
@@ -51,21 +51,19 @@ define(["require", "exports", "./DataControlField", "../Control", "./BoundField"
       _classCallCheck(this, CommandField);
 
       _this = _possibleConstructorReturn(this, _getPrototypeOf(CommandField).call(this, params));
-      if (!_this.params().cancelButtonHTML) _this.params().cancelButtonHTML = '取消';
-      if (!_this.params().deleteButtonHTML) _this.params().deleteButtonHTML = '删除';
-      if (!_this.params().editButtonHTML) _this.params().editButtonHTML = '编辑';
-      if (!_this.params().updateButtonHTML) _this.params().updateButtonHTML = '更新';
-      if (!_this.params().newButtonHTML) _this.params().newButtonHTML = '新增';
-      if (!_this.params().insertButtonHTML) _this.params().insertButtonHTML = '添加';
+      if (!_this.params.cancelButtonHTML) _this.params.cancelButtonHTML = '取消';
+      if (!_this.params.deleteButtonHTML) _this.params.deleteButtonHTML = '删除';
+      if (!_this.params.editButtonHTML) _this.params.editButtonHTML = '编辑';
+      if (!_this.params.updateButtonHTML) _this.params.updateButtonHTML = '更新';
+      if (!_this.params.newButtonHTML) _this.params.newButtonHTML = '新增';
+      if (!_this.params.insertButtonHTML) _this.params.insertButtonHTML = '添加';
       return _this;
-    }
+    } // private params(): CommandFieldParams {
+    //     return this.params;
+    // }
+
 
     _createClass(CommandField, [{
-      key: "params",
-      value: function params() {
-        return this._params;
-      }
-    }, {
       key: "createItemCell",
       value: function createItemCell(dataItem) {
         var _this2 = this;
@@ -73,7 +71,7 @@ define(["require", "exports", "./DataControlField", "../Control", "./BoundField"
         var cell = new GridViewCommandCell(this);
         cell.style(this.itemStyle);
 
-        if (this.params().showEditButton) {
+        if (this.params.showEditButton) {
           var editButton = this.createEditButton();
           editButton.style.marginRight = '4px';
           if (this.editButtonClass) editButton.className = this.editButtonClass;
@@ -102,7 +100,7 @@ define(["require", "exports", "./DataControlField", "../Control", "./BoundField"
           cell.appendChild(cancelButton);
         }
 
-        if (this.params().showDeleteButton) {
+        if (this.params.showDeleteButton) {
           var deleteButton = this.createDeleteButton();
           deleteButton.style.marginRight = '4px';
           if (this.deleteButtonClass) deleteButton.className = this.deleteButtonClass;
@@ -115,7 +113,7 @@ define(["require", "exports", "./DataControlField", "../Control", "./BoundField"
           cell.appendChild(deleteButton);
         }
 
-        if (this.params().showNewButton) {
+        if (this.params.showNewButton) {
           var newButton = this.createNewButton();
           newButton.style.marginRight = '4px';
           if (this.newButtonClass) newButton.className = this.newButtonClass;
@@ -253,7 +251,7 @@ define(["require", "exports", "./DataControlField", "../Control", "./BoundField"
         for (var i = 0; i < rowElement.cells.length; i++) {
           var _cell = Control_1.Control.getControlByElement(rowElement.cells[i]);
 
-          if (_cell instanceof BoundField_1.GridViewEditableCell) {
+          if (_cell instanceof GridViewEditableCell_1.GridViewEditableCell) {
             _cell.beginEdit();
           }
         }
@@ -281,7 +279,7 @@ define(["require", "exports", "./DataControlField", "../Control", "./BoundField"
         for (var i = 0; i < rowElement.cells.length; i++) {
           var _cell2 = Control_1.Control.getControlByElement(rowElement.cells[i]);
 
-          if (_cell2 instanceof BoundField_1.GridViewEditableCell) {
+          if (_cell2 instanceof GridViewEditableCell_1.GridViewEditableCell) {
             _cell2.cancelEdit();
           }
         }
@@ -313,7 +311,7 @@ define(["require", "exports", "./DataControlField", "../Control", "./BoundField"
         for (var i = 0; i < rowElement.cells.length; i++) {
           var _cell3 = Control_1.Control.getControlByElement(rowElement.cells[i]);
 
-          if (_cell3 instanceof BoundField_1.GridViewEditableCell && _cell3.mode == 'edit') {
+          if (_cell3 instanceof GridViewEditableCell_1.GridViewEditableCell && _cell3.mode == 'edit') {
             dataItem[_cell3.field.dataField] = _cell3.controlValue;
             editableCells.push(_cell3);
           }
@@ -364,7 +362,7 @@ define(["require", "exports", "./DataControlField", "../Control", "./BoundField"
           return o instanceof GridViewCommandCell;
         });
         newRow.cells.filter(function (o) {
-          return o instanceof BoundField_1.GridViewEditableCell;
+          return o instanceof GridViewEditableCell_1.GridViewEditableCell;
         }).forEach(function (c) {
           return c.beginEdit();
         });
@@ -382,62 +380,62 @@ define(["require", "exports", "./DataControlField", "../Control", "./BoundField"
     }, {
       key: "cancelButtonHTML",
       get: function get() {
-        return this.params().cancelButtonHTML;
+        return this.params.cancelButtonHTML;
       }
     }, {
       key: "deleteButtonHTML",
       get: function get() {
-        return this.params().deleteButtonHTML;
+        return this.params.deleteButtonHTML;
       }
     }, {
       key: "editButtonHTML",
       get: function get() {
-        return this.params().editButtonHTML;
+        return this.params.editButtonHTML;
       }
     }, {
       key: "updateButtonHTML",
       get: function get() {
-        return this.params().updateButtonHTML;
+        return this.params.updateButtonHTML;
       }
     }, {
       key: "newButtonHTML",
       get: function get() {
-        return this.params().newButtonHTML;
+        return this.params.newButtonHTML;
       }
     }, {
       key: "insertButtonHTML",
       get: function get() {
-        return this.params().insertButtonHTML;
+        return this.params.insertButtonHTML;
       }
     }, {
       key: "cancelButtonClass",
       get: function get() {
-        return this.params().cancelButtonClass;
+        return this.params.cancelButtonClass;
       }
     }, {
       key: "deleteButtonClass",
       get: function get() {
-        return this.params().deleteButtonClass;
+        return this.params.deleteButtonClass;
       }
     }, {
       key: "editButtonClass",
       get: function get() {
-        return this.params().editButtonClass;
+        return this.params.editButtonClass;
       }
     }, {
       key: "newButtonClass",
       get: function get() {
-        return this.params().newButtonClass;
+        return this.params.newButtonClass;
       }
     }, {
       key: "updateButtonClass",
       get: function get() {
-        return this.params().updateButtonClass;
+        return this.params.updateButtonClass;
       }
     }, {
       key: "insertButtonClass",
       get: function get() {
-        return this.params().insertButtonClass;
+        return this.params.insertButtonClass;
       }
     }]);
 

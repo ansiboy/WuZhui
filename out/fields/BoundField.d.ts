@@ -1,31 +1,15 @@
 /// <reference path="DataControlField.d.ts" />
-import { GridViewDataCell, DataControlFieldParams, DataControlField, GridViewCell } from "./DataControlField";
-export declare type ValueType = 'number' | 'date' | 'string' | 'boolean';
-export declare class GridViewEditableCell<T> extends GridViewDataCell<T> {
-    private _dataItem;
-    private _valueType;
-    private _field;
-    private _mode;
-    constructor(field: BoundField<T>, dataItem: any, valueType?: ValueType);
-    readonly field: BoundField<T>;
-    readonly mode: "read" | "edit";
-    beginEdit(): void;
-    endEdit(): void;
-    cancelEdit(): void;
-    render(dataItem: T): void;
-    readonly controlValue: string | number | Date;
-}
+import { DataControlFieldParams, DataControlField, GridViewCell } from "./DataControlField";
 export interface BoundFieldParams<T> extends DataControlFieldParams {
     dataField: keyof T;
     dataFormatString?: string;
     controlStyle?: Partial<CSSStyleDeclaration> | string;
     nullText?: string;
     readOnly?: boolean;
+    valueType?: ValueType;
 }
-export declare class BoundField<T> extends DataControlField<T> {
-    private _valueElement;
-    constructor(params: BoundFieldParams<T>);
-    private params;
+export declare type ValueType = 'number' | 'date' | 'string' | 'boolean';
+export declare class BoundField<T> extends DataControlField<T, BoundFieldParams<T>> {
     /**
      * Gets the caption displayed for a field when the field's value is null.
      */

@@ -4,9 +4,7 @@ export interface CustomFieldParams extends DataControlFieldParams {
     createFooterCell?: () => GridViewCell;
     createItemCell: (dataItem: any) => GridViewCell;
 }
-export declare class CustomField<T> extends DataControlField<T> {
-    constructor(params: CustomFieldParams);
-    private params;
+export declare class CustomField<T> extends DataControlField<T, CustomFieldParams> {
     createHeaderCell(): GridViewCell;
     createFooterCell(): GridViewCell;
     createItemCell(dataItem: any): GridViewCell;
