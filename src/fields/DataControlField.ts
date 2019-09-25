@@ -153,9 +153,9 @@ export class GridViewDataCell<T> extends GridViewCell {
 export interface DataControlFieldParams {
     footerText?: string,
     headerText?: string,
-    itemStyle?: string | Partial<CSSStyleDeclaration>;
-    headerStyle?: string | Partial<CSSStyleDeclaration>;
-    footerStyle?: string | Partial<CSSStyleDeclaration>;
+    itemStyle?: Partial<CSSStyleDeclaration>;
+    headerStyle?: Partial<CSSStyleDeclaration>;
+    footerStyle?: Partial<CSSStyleDeclaration>;
     visible?: boolean,
     sortExpression?: string
 }
@@ -244,62 +244,63 @@ export class GridViewHeaderCell<T> extends Control<HTMLTableHeaderCellElement> {
     }
 }
 
-export class DataControlField<T> {
+export class DataControlField<T, P extends DataControlFieldParams = DataControlFieldParams> {
     private _gridView: GridView<T>;
-    protected _params: DataControlFieldParams;
 
-    constructor(params?: DataControlFieldParams) {
+    protected params: P;
+
+    constructor(params?: P) {
         if (params.visible == null)
             params.visible = true;
 
-        this._params = params;
+        this.params = params;
     }
 
     /**
      * Gets the text that is displayed in the footer item of a data control field.
      */
     public get footerText(): string {
-        return this._params.footerText;
+        return this.params.footerText;
     }
     /**
      * Sets the text that is displayed in the footer item of a data control field.
      */
     public set footerText(value: string) {
-        this._params.footerText = value;
+        this.params.footerText = value;
     }
     /**
      * Gets the text that is displayed in the header item of a data control field.
      */
     public get headerText(): string {
-        return this._params.headerText;
+        return this.params.headerText;
     }
     /**
     * Sets the text that is displayed in the header item of a data control field.
     */
     public set headerText(value: string) {
-        this._params.headerText = value;
+        this.params.headerText = value;
     }
 
     public get itemStyle(): string | Partial<CSSStyleDeclaration> {
-        return this._params.itemStyle;
+        return this.params.itemStyle;
     }
     public set itemStyle(value: string | Partial<CSSStyleDeclaration>) {
-        this._params.itemStyle = value;
+        this.params.itemStyle = value;
     }
     public get footerStyle(): string | Partial<CSSStyleDeclaration> {
-        return this._params.footerStyle;
+        return this.params.footerStyle;
     }
     public set footerStyle(value: string | Partial<CSSStyleDeclaration>) {
-        this._params.footerStyle = value;
+        this.params.footerStyle = value;
     }
     public get headerStyle(): string | Partial<CSSStyleDeclaration> {
-        return this._params.headerStyle;
+        return this.params.headerStyle;
     }
     public set headerStyle(value: string | Partial<CSSStyleDeclaration>) {
-        this._params.headerStyle = value;
+        this.params.headerStyle = value;
     }
     get visible(): boolean {
-        return this._params.visible;
+        return this.params.visible;
     }
     get gridView(): GridView<any> {
         return this._gridView;
@@ -311,13 +312,13 @@ export class DataControlField<T> {
      * Gets a sort expression that is used by a data source control to sort data.
      */
     get sortExpression(): string {
-        return this._params.sortExpression;
+        return this.params.sortExpression;
     }
     /**
      * Sets a sort expression that is used by a data source control to sort data.
      */
     set sortExpression(value: string) {
-        this._params.sortExpression = value;
+        this.params.sortExpression = value;
     }
 
     createHeaderCell(): GridViewCell {

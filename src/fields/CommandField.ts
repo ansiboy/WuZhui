@@ -2,7 +2,8 @@
 
 import { GridViewCell, DataControlField, DataControlFieldParams } from "./DataControlField";
 import { Control } from "../Control";
-import { GridViewEditableCell, BoundField } from "./BoundField";
+import { BoundField } from "./BoundField";
+import { GridViewEditableCell } from "./GridViewEditableCell";
 import { ElementHelper } from "../Utility";
 import { GridViewRow, GridViewDataRow } from "../GridView";
 
@@ -40,82 +41,82 @@ export interface CommandFieldParams extends DataControlFieldParams {
     updateButtonClass?: string,
     insertButtonClass?: string,
 
-    
+
 }
 
-export class CommandField<T> extends DataControlField<T> {
+export class CommandField<T> extends DataControlField<T, CommandFieldParams> {
     constructor(params?: CommandFieldParams) {
         super(params);
-        if (!this.params().cancelButtonHTML)
-            this.params().cancelButtonHTML = '取消';
-        if (!this.params().deleteButtonHTML)
-            this.params().deleteButtonHTML = '删除';
-        if (!this.params().editButtonHTML)
-            this.params().editButtonHTML = '编辑';
-        if (!this.params().updateButtonHTML)
-            this.params().updateButtonHTML = '更新';
-        if (!this.params().newButtonHTML)
-            this.params().newButtonHTML = '新增';
-        if (!this.params().insertButtonHTML)
-            this.params().insertButtonHTML = '添加';
+        if (!this.params.cancelButtonHTML)
+            this.params.cancelButtonHTML = '取消';
+        if (!this.params.deleteButtonHTML)
+            this.params.deleteButtonHTML = '删除';
+        if (!this.params.editButtonHTML)
+            this.params.editButtonHTML = '编辑';
+        if (!this.params.updateButtonHTML)
+            this.params.updateButtonHTML = '更新';
+        if (!this.params.newButtonHTML)
+            this.params.newButtonHTML = '新增';
+        if (!this.params.insertButtonHTML)
+            this.params.insertButtonHTML = '添加';
     }
 
-    private params(): CommandFieldParams {
-        return this._params;
-    }
+    // private params(): CommandFieldParams {
+    //     return this.params;
+    // }
 
     get cancelButtonHTML(): string {
-        return this.params().cancelButtonHTML;
+        return this.params.cancelButtonHTML;
     }
 
     get deleteButtonHTML(): string {
-        return this.params().deleteButtonHTML;
+        return this.params.deleteButtonHTML;
     }
 
     get editButtonHTML(): string {
-        return this.params().editButtonHTML;
+        return this.params.editButtonHTML;
     }
 
     get updateButtonHTML(): string {
-        return this.params().updateButtonHTML;
+        return this.params.updateButtonHTML;
     }
 
     get newButtonHTML(): string {
-        return this.params().newButtonHTML;
+        return this.params.newButtonHTML;
     }
 
     get insertButtonHTML(): string {
-        return this.params().insertButtonHTML;
+        return this.params.insertButtonHTML;
     }
 
     get cancelButtonClass(): string {
-        return this.params().cancelButtonClass;
+        return this.params.cancelButtonClass;
     }
 
     get deleteButtonClass(): string {
-        return this.params().deleteButtonClass;
+        return this.params.deleteButtonClass;
     }
 
     get editButtonClass(): string {
-        return this.params().editButtonClass;
+        return this.params.editButtonClass;
     }
 
     get newButtonClass(): string {
-        return this.params().newButtonClass;
+        return this.params.newButtonClass;
     }
 
     get updateButtonClass(): string {
-        return this.params().updateButtonClass;
+        return this.params.updateButtonClass;
     }
 
     get insertButtonClass(): string {
-        return this.params().insertButtonClass;
+        return this.params.insertButtonClass;
     }
 
     createItemCell(dataItem: any): GridViewCell {
         let cell = new GridViewCommandCell(this);
         cell.style(this.itemStyle);
-        if (this.params().showEditButton) {
+        if (this.params.showEditButton) {
             let editButton = this.createEditButton();
             editButton.style.marginRight = '4px';
             if (this.editButtonClass)
@@ -146,7 +147,7 @@ export class CommandField<T> extends DataControlField<T> {
             cancelButton.addEventListener('click', (e) => this.on_cancelButtonClick(e));
             cell.appendChild(cancelButton);
         }
-        if (this.params().showDeleteButton) {
+        if (this.params.showDeleteButton) {
             let deleteButton = this.createDeleteButton();
             deleteButton.style.marginRight = '4px';
             if (this.deleteButtonClass)
@@ -156,7 +157,7 @@ export class CommandField<T> extends DataControlField<T> {
             deleteButton.onclick = (e) => this.on_deleteButtonClick(e);
             cell.appendChild(deleteButton);
         }
-        if (this.params().showNewButton) {
+        if (this.params.showNewButton) {
             let newButton = this.createNewButton();
             newButton.style.marginRight = '4px';
             if (this.newButtonClass)
