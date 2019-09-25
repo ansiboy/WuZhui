@@ -93,7 +93,7 @@ export interface GridViewArguments<T> {
     pagerSettings?: PagerSettings,
     emptyDataHTML?: string,
     initDataHTML?: string,
-    sort?: (items: T[]) => T[],
+    translate?: (items: T[]) => T[],
 }
 
 export class GridView<T> extends Control<HTMLTableElement> {
@@ -305,8 +305,8 @@ export class GridView<T> extends Control<HTMLTableElement> {
 
     private on_selectedExecuted(e: DataSourceSelectResult<T>) {
         let dataItems = e.dataItems;
-        if (this._params.sort) {
-            dataItems = this._params.sort(dataItems);
+        if (this._params.translate) {
+            dataItems = this._params.translate(dataItems);
         }
         this.renderDataItems(dataItems);
     }
@@ -341,8 +341,8 @@ export class GridView<T> extends Control<HTMLTableElement> {
             // break;
         }
 
-        if (this._params.sort) {
-            dataItems = this._params.sort(dataItems);
+        if (this._params.translate) {
+            dataItems = this._params.translate(dataItems);
             this.renderDataItems(dataItems);
         }
     }
@@ -351,7 +351,7 @@ export class GridView<T> extends Control<HTMLTableElement> {
         if (index == null)
             index = 0;
 
-        if (!this._params.sort) {
+        if (!this._params.translate) {
             this.appendDataRow(item, index);
             return;
         }
@@ -366,7 +366,7 @@ export class GridView<T> extends Control<HTMLTableElement> {
             let dataItem = (row as GridViewDataRow).dataItem;
             dataItems.push(dataItem);
         }
-        dataItems = this._params.sort(dataItems);
+        dataItems = this._params.translate(dataItems);
         this.renderDataItems(dataItems);
     }
 
@@ -380,11 +380,11 @@ export class GridView<T> extends Control<HTMLTableElement> {
                 dataRows.push(row);
         }
 
-        if (this._params.sort) {
+        if (this._params.translate) {
             let dataItems = dataRows.map(o => o.dataItem)
                 .filter(o => !this.dataSource.isSameItem(o, item));
 
-            dataItems = this._params.sort(dataItems);
+            dataItems = this._params.translate(dataItems);
             this.renderDataItems(dataItems);
             return;
         }
