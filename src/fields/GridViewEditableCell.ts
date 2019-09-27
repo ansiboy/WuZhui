@@ -1,14 +1,15 @@
 import { GridViewDataCell } from "./DataControlField";
 import { Errors } from "../Errors";
 import { applyStyle } from "../Utility";
-import { BoundField } from "./BoundField";
+import { BoundField, GridViewCellControl } from "./BoundField";
 
-export abstract class GridViewEditableCell<T> extends GridViewDataCell<T> {
-    private _dataItem: any;
+export class GridViewEditableCell<T> extends GridViewDataCell<T> {
+    private _dataItem: T;
     private _field: BoundField<T>;
     private _mode: 'read' | 'edit';
+    control: GridViewCellControl;
 
-    constructor(field: BoundField<T>, dataItem: any) {
+    constructor(field: BoundField<T>, dataItem: T) {
         if (field == null)
             throw Errors.argumentNull('field');
         if (dataItem == null)
@@ -17,10 +18,14 @@ export abstract class GridViewEditableCell<T> extends GridViewDataCell<T> {
             dataField: field.dataField,
             nullText: field.nullText, dataFormatString: field.dataFormatString
         });
+
         this._field = field;
         this._dataItem = dataItem;
         this._mode = 'read';
+    }
 
+    get dataItem() {
+        return this._dataItem;
     }
     get field() {
         return this._field;
@@ -47,29 +52,36 @@ export abstract class GridViewEditableCell<T> extends GridViewDataCell<T> {
             return;
         }
         this._mode = 'read';
-        // let value = this._dataItem[this.field.dataField];
         this.render(this._dataItem);
     }
 
     render(dataItem: T) {
-        //value
-        let value = dataItem[this.field.dataField];
         if (this._mode == 'edit') {
-            // this.element.innerHTML = `<input type="text" />`;
-            // applyStyle(this.element.querySelector('input'), this._field.controlStyle);
-            // this.element.querySelector('input').value =
-            //     value === undefined ? null : `${value}`;
-
             this.element.innerHTML = "";
-            let control = this.createControl(value);
-            applyStyle(control, this._field.controlStyle);
-            this.element.appendChild(control);
+
+            this.createControl();
+            console.assert(this.control != null);
+            let value = dataItem[this.field.dataField];
+            this.control.value = value;
+            applyStyle(this.control.element, this._field.controlStyle);
+            this.element.appendChild(this.control.element);
 
             return;
         }
+
+        this.control = null;
         super.render(dataItem);
     }
 
-    abstract createControl(value: any): HTMLElement;
-    abstract get controlValue();
+    createControl(): HTMLElement {
+        this.control = this.field.createControl();
+        return this.control.element;
+    }
+
+    get controlValue() {
+        if (this.control == null)
+            return null;
+
+        return this.control.value;
+    }
 }

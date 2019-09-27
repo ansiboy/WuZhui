@@ -1,7 +1,8 @@
 /// <reference path="DataControlField.ts"/>
 
 import { DataControlFieldParams, DataControlField, GridViewCell } from "./DataControlField";
-import { GridViewTextBoxCell } from "./GridViewTextBoxCell";
+import { GridViewEditableCell } from "./GridViewEditableCell";
+import { Errors } from "../Errors";
 
 export interface BoundFieldParams<T> extends DataControlFieldParams {
     dataField: keyof T,
@@ -16,16 +17,6 @@ export type ValueType = 'number' | 'date' | 'string' | 'boolean'
 
 export class BoundField<T> extends DataControlField<T, BoundFieldParams<T>> {
 
-    // constructor(params: BoundFieldParams<T>) {
-    //     super(params);
-
-    //     this._params = params;
-    // }
-
-    // private params(): BoundFieldParams<T> {
-    //     return <BoundFieldParams<T>>this._params;
-    // }
-
     /**
      * Gets the caption displayed for a field when the field's value is null.
      */
@@ -34,7 +25,7 @@ export class BoundField<T> extends DataControlField<T, BoundFieldParams<T>> {
     }
 
     createItemCell(dataItem: T): GridViewCell {
-        let cell = new GridViewTextBoxCell(this, dataItem, this.params.valueType);
+        let cell = new GridViewEditableCell(this, dataItem);
         cell.style(this.itemStyle);
 
         return cell;
@@ -61,4 +52,44 @@ export class BoundField<T> extends DataControlField<T, BoundFieldParams<T>> {
     get readOnly() {
         return this.params.readOnly;
     }
+
+    //===============================================
+    // Virutal Methods
+    createControl(): GridViewCellControl {
+        // let control = document.createElement("input");
+        // control.name = this.dataField as string;
+        // return control;
+        let element = document.createElement("input");
+        let control = {
+            element,
+            valueType: this.params.valueType,
+            get value(): any {
+                let it = this as typeof control;
+                let input = it.element as HTMLInputElement;
+                let text = input.value;
+                switch (it.valueType) {
+                    case 'number':
+                        return new Number(text).valueOf();
+                    case 'date':
+                        return new Date(text);
+                    default:
+                        return text;
+                }
+
+            },
+            set value(value) {
+                let it = this as typeof control;
+                let input = it.element as HTMLInputElement;
+                input.value = value == null ? "" : value;
+            }
+        }
+
+        return control;
+    }
+
+}
+
+export interface GridViewCellControl {
+    element: HTMLElement
+    value: any
 }

@@ -244,7 +244,7 @@ export class GridViewHeaderCell<T> extends Control<HTMLTableHeaderCellElement> {
     }
 }
 
-export class DataControlField<T, P extends DataControlFieldParams = DataControlFieldParams> {
+export abstract class DataControlField<T, P extends DataControlFieldParams = DataControlFieldParams> {
     private _gridView: GridView<T>;
 
     protected params: P;
