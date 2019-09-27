@@ -19,7 +19,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
 /// <reference path="DataControlField.ts"/>
-define(["require", "exports", "./DataControlField", "./GridViewTextBoxCell"], function (require, exports, DataControlField_1, GridViewTextBoxCell_1) {
+define(["require", "exports", "./DataControlField", "./GridViewEditableCell"], function (require, exports, DataControlField_1, GridViewEditableCell_1) {
   "use strict";
 
   Object.defineProperty(exports, "__esModule", {
@@ -40,7 +40,7 @@ define(["require", "exports", "./DataControlField", "./GridViewTextBoxCell"], fu
     _createClass(BoundField, [{
       key: "createItemCell",
       value: function createItemCell(dataItem) {
-        var cell = new GridViewTextBoxCell_1.GridViewTextBoxCell(this, dataItem, this.params.valueType);
+        var cell = new GridViewEditableCell_1.GridViewEditableCell(this, dataItem);
         cell.style(this.itemStyle);
         return cell;
       }
@@ -49,14 +49,46 @@ define(["require", "exports", "./DataControlField", "./GridViewTextBoxCell"], fu
        */
 
     }, {
+      key: "createControl",
+      //===============================================
+      // Virutal Methods
+      value: function createControl() {
+        // let control = document.createElement("input");
+        // control.name = this.dataField as string;
+        // return control;
+        var element = document.createElement("input");
+        var control = {
+          element: element,
+          valueType: this.params.valueType,
+
+          get value() {
+            var it = this;
+            var input = it.element;
+            var text = input.value;
+
+            switch (it.valueType) {
+              case 'number':
+                return new Number(text).valueOf();
+
+              case 'date':
+                return new Date(text);
+
+              default:
+                return text;
+            }
+          },
+
+          set value(value) {
+            var it = this;
+            var input = it.element;
+            input.value = value == null ? "" : value;
+          }
+
+        };
+        return control;
+      }
+    }, {
       key: "nullText",
-      // constructor(params: BoundFieldParams<T>) {
-      //     super(params);
-      //     this._params = params;
-      // }
-      // private params(): BoundFieldParams<T> {
-      //     return <BoundFieldParams<T>>this._params;
-      // }
 
       /**
        * Gets the caption displayed for a field when the field's value is null.

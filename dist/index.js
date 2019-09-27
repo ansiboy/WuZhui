@@ -695,8 +695,8 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
         }
         on_selectedExecuted(e) {
             let dataItems = e.dataItems;
-            if (this._params.sort) {
-                dataItems = this._params.sort(dataItems);
+            if (this._params.translate) {
+                dataItems = this._params.translate(dataItems);
             }
             this.renderDataItems(dataItems);
         }
@@ -725,15 +725,15 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
                 }
                 // break;
             }
-            if (this._params.sort) {
-                dataItems = this._params.sort(dataItems);
+            if (this._params.translate) {
+                dataItems = this._params.translate(dataItems);
                 this.renderDataItems(dataItems);
             }
         }
         on_insertExecuted(item, index) {
             if (index == null)
                 index = 0;
-            if (!this._params.sort) {
+            if (!this._params.translate) {
                 this.appendDataRow(item, index);
                 return;
             }
@@ -747,7 +747,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
                 let dataItem = row.dataItem;
                 dataItems.push(dataItem);
             }
-            dataItems = this._params.sort(dataItems);
+            dataItems = this._params.translate(dataItems);
             this.renderDataItems(dataItems);
         }
         on_deleteExecuted(item) {
@@ -758,10 +758,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
                 if ((row instanceof GridViewDataRow))
                     dataRows.push(row);
             }
-            if (this._params.sort) {
+            if (this._params.translate) {
                 let dataItems = dataRows.map(o => o.dataItem)
                     .filter(o => !this.dataSource.isSameItem(o, item));
-                dataItems = this._params.sort(dataItems);
+                dataItems = this._params.translate(dataItems);
                 this.renderDataItems(dataItems);
                 return;
             }
@@ -1486,17 +1486,10 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/// <reference path="DataControlField.ts"/>
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ./DataControlField */ "./out/fields/DataControlField.js"), __webpack_require__(/*! ./GridViewTextBoxCell */ "./out/fields/GridViewTextBoxCell.js")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, DataControlField_1, GridViewTextBoxCell_1) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ./DataControlField */ "./out/fields/DataControlField.js"), __webpack_require__(/*! ./GridViewEditableCell */ "./out/fields/GridViewEditableCell.js")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, DataControlField_1, GridViewEditableCell_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class BoundField extends DataControlField_1.DataControlField {
-        // constructor(params: BoundFieldParams<T>) {
-        //     super(params);
-        //     this._params = params;
-        // }
-        // private params(): BoundFieldParams<T> {
-        //     return <BoundFieldParams<T>>this._params;
-        // }
         /**
          * Gets the caption displayed for a field when the field's value is null.
          */
@@ -1504,7 +1497,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/// <reference p
             return this.params.nullText;
         }
         createItemCell(dataItem) {
-            let cell = new GridViewTextBoxCell_1.GridViewTextBoxCell(this, dataItem, this.params.valueType);
+            let cell = new GridViewEditableCell_1.GridViewEditableCell(this, dataItem);
             cell.style(this.itemStyle);
             return cell;
         }
@@ -1525,6 +1518,37 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/// <reference p
         }
         get readOnly() {
             return this.params.readOnly;
+        }
+        //===============================================
+        // Virutal Methods
+        createControl() {
+            // let control = document.createElement("input");
+            // control.name = this.dataField as string;
+            // return control;
+            let element = document.createElement("input");
+            let control = {
+                element,
+                valueType: this.params.valueType,
+                get value() {
+                    let it = this;
+                    let input = it.element;
+                    let text = input.value;
+                    switch (it.valueType) {
+                        case 'number':
+                            return new Number(text).valueOf();
+                        case 'date':
+                            return new Date(text);
+                        default:
+                            return text;
+                    }
+                },
+                set value(value) {
+                    let it = this;
+                    let input = it.element;
+                    input.value = value == null ? "" : value;
+                }
+            };
+            return control;
         }
     }
     exports.BoundField = BoundField;
@@ -1842,6 +1866,42 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/// <reference p
         }
     }
     exports.CommandField = CommandField;
+}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+
+/***/ }),
+
+/***/ "./out/fields/CustomBoundField.js":
+/*!****************************************!*\
+  !*** ./out/fields/CustomBoundField.js ***!
+  \****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ./BoundField */ "./out/fields/BoundField.js")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, BoundField_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    class CustomBoundField extends BoundField_1.BoundField {
+        constructor(params) {
+            super(params);
+        }
+        createItemCell(dataItem) {
+            let cell = super.createItemCell(dataItem);
+            let cellRender = cell.render;
+            cell.render = function (dataItem) {
+                let it = this;
+                let params = it.field.params;
+                if (it.mode == "read" && params.cellRender != null) {
+                    params.cellRender.apply(cell, [dataItem, it.element]);
+                    return;
+                }
+                cellRender.apply(cell, [dataItem]);
+            };
+            return cell;
+        }
+    }
+    exports.CustomBoundField = CustomBoundField;
 }).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
@@ -2192,6 +2252,9 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
             this._dataItem = dataItem;
             this._mode = 'read';
         }
+        get dataItem() {
+            return this._dataItem;
+        }
         get field() {
             return this._field;
         }
@@ -2217,74 +2280,33 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
                 return;
             }
             this._mode = 'read';
-            // let value = this._dataItem[this.field.dataField];
             this.render(this._dataItem);
         }
         render(dataItem) {
-            //value
-            let value = dataItem[this.field.dataField];
             if (this._mode == 'edit') {
-                // this.element.innerHTML = `<input type="text" />`;
-                // applyStyle(this.element.querySelector('input'), this._field.controlStyle);
-                // this.element.querySelector('input').value =
-                //     value === undefined ? null : `${value}`;
                 this.element.innerHTML = "";
-                let control = this.createControl(value);
-                Utility_1.applyStyle(control, this._field.controlStyle);
-                this.element.appendChild(control);
+                this.createControl();
+                console.assert(this.control != null);
+                let value = dataItem[this.field.dataField];
+                this.control.value = value;
+                Utility_1.applyStyle(this.control.element, this._field.controlStyle);
+                this.element.appendChild(this.control.element);
                 return;
             }
+            this.control = null;
             super.render(dataItem);
+        }
+        createControl() {
+            this.control = this.field.createControl();
+            return this.control.element;
+        }
+        get controlValue() {
+            if (this.control == null)
+                return null;
+            return this.control.value;
         }
     }
     exports.GridViewEditableCell = GridViewEditableCell;
-}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-
-/***/ }),
-
-/***/ "./out/fields/GridViewTextBoxCell.js":
-/*!*******************************************!*\
-  !*** ./out/fields/GridViewTextBoxCell.js ***!
-  \*******************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ./GridViewEditableCell */ "./out/fields/GridViewEditableCell.js")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, GridViewEditableCell_1) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    class GridViewTextBoxCell extends GridViewEditableCell_1.GridViewEditableCell {
-        constructor(field, dataItem, valueType) {
-            super(field, dataItem);
-            this._valueType = valueType;
-            if (!this._valueType) {
-                let value = dataItem[field.dataField];
-                if (value instanceof Date)
-                    this._valueType = 'date';
-                else
-                    this._valueType = typeof value;
-            }
-        }
-        createControl(value) {
-            let control = document.createElement("input");
-            control.value = value === undefined ? "" : `${value}`;
-            control.name = this.field.dataField;
-            return control;
-        }
-        get controlValue() {
-            var text = this.element.querySelector('input').value;
-            switch (this._valueType) {
-                case 'number':
-                    return new Number(text).valueOf();
-                case 'date':
-                    return new Date(text);
-                default:
-                    return text;
-            }
-        }
-    }
-    exports.GridViewTextBoxCell = GridViewTextBoxCell;
 }).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
@@ -2298,7 +2320,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ./GridView */ "./out/GridView.js"), __webpack_require__(/*! ./fields/BoundField */ "./out/fields/BoundField.js"), __webpack_require__(/*! ./fields/CommandField */ "./out/fields/CommandField.js"), __webpack_require__(/*! ./fields/CustomField */ "./out/fields/CustomField.js"), __webpack_require__(/*! ./fields/DataControlField */ "./out/fields/DataControlField.js"), __webpack_require__(/*! ./DropDown */ "./out/DropDown.js"), __webpack_require__(/*! ./TextBox */ "./out/TextBox.js"), __webpack_require__(/*! ./DataSource */ "./out/DataSource.js"), __webpack_require__(/*! ./NumberPagingBar */ "./out/NumberPagingBar.js"), __webpack_require__(/*! ./Control */ "./out/Control.js")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, GridView_1, BoundField_1, CommandField_1, CustomField_1, DataControlField_1, DropDown_1, TextBox_1, DataSource_1, NumberPagingBar_1, Control_1) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ./GridView */ "./out/GridView.js"), __webpack_require__(/*! ./fields/BoundField */ "./out/fields/BoundField.js"), __webpack_require__(/*! ./fields/CommandField */ "./out/fields/CommandField.js"), __webpack_require__(/*! ./fields/CustomField */ "./out/fields/CustomField.js"), __webpack_require__(/*! ./fields/CustomBoundField */ "./out/fields/CustomBoundField.js"), __webpack_require__(/*! ./fields/DataControlField */ "./out/fields/DataControlField.js"), __webpack_require__(/*! ./fields/GridViewEditableCell */ "./out/fields/GridViewEditableCell.js"), __webpack_require__(/*! ./DropDown */ "./out/DropDown.js"), __webpack_require__(/*! ./TextBox */ "./out/TextBox.js"), __webpack_require__(/*! ./DataSource */ "./out/DataSource.js"), __webpack_require__(/*! ./NumberPagingBar */ "./out/NumberPagingBar.js"), __webpack_require__(/*! ./Control */ "./out/Control.js")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, GridView_1, BoundField_1, CommandField_1, CustomField_1, CustomBoundField_1, DataControlField_1, GridViewEditableCell_1, DropDown_1, TextBox_1, DataSource_1, NumberPagingBar_1, Control_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.GridView = GridView_1.GridView;
@@ -2307,9 +2329,11 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
     exports.BoundField = BoundField_1.BoundField;
     exports.CommandField = CommandField_1.CommandField;
     exports.CustomField = CustomField_1.CustomField;
+    exports.CustomBoundField = CustomBoundField_1.CustomBoundField;
     exports.GridViewCell = DataControlField_1.GridViewCell;
     exports.DataControlField = DataControlField_1.DataControlField;
     exports.GridViewDataCell = DataControlField_1.GridViewDataCell;
+    exports.GridViewEditableCell = GridViewEditableCell_1.GridViewEditableCell;
     exports.DropDown = DropDown_1.DropDown;
     exports.TextBox = TextBox_1.TextBox;
     exports.DataSource = DataSource_1.DataSource;

@@ -13,7 +13,8 @@ define(["require", "exports", "./GridViewEditableCell"], function (require, expo
                     this._valueType = typeof value;
             }
         }
-        createControl(value) {
+        createControl() {
+            let value = this.dataItem[this.dataField];
             let control = document.createElement("input");
             control.value = value === undefined ? "" : `${value}`;
             control.name = this.field.dataField;

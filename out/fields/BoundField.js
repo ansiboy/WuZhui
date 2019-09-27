@@ -1,15 +1,8 @@
 /// <reference path="DataControlField.ts"/>
-define(["require", "exports", "./DataControlField", "./GridViewTextBoxCell"], function (require, exports, DataControlField_1, GridViewTextBoxCell_1) {
+define(["require", "exports", "./DataControlField", "./GridViewEditableCell"], function (require, exports, DataControlField_1, GridViewEditableCell_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class BoundField extends DataControlField_1.DataControlField {
-        // constructor(params: BoundFieldParams<T>) {
-        //     super(params);
-        //     this._params = params;
-        // }
-        // private params(): BoundFieldParams<T> {
-        //     return <BoundFieldParams<T>>this._params;
-        // }
         /**
          * Gets the caption displayed for a field when the field's value is null.
          */
@@ -17,7 +10,7 @@ define(["require", "exports", "./DataControlField", "./GridViewTextBoxCell"], fu
             return this.params.nullText;
         }
         createItemCell(dataItem) {
-            let cell = new GridViewTextBoxCell_1.GridViewTextBoxCell(this, dataItem, this.params.valueType);
+            let cell = new GridViewEditableCell_1.GridViewEditableCell(this, dataItem);
             cell.style(this.itemStyle);
             return cell;
         }
@@ -38,6 +31,37 @@ define(["require", "exports", "./DataControlField", "./GridViewTextBoxCell"], fu
         }
         get readOnly() {
             return this.params.readOnly;
+        }
+        //===============================================
+        // Virutal Methods
+        createControl() {
+            // let control = document.createElement("input");
+            // control.name = this.dataField as string;
+            // return control;
+            let element = document.createElement("input");
+            let control = {
+                element,
+                valueType: this.params.valueType,
+                get value() {
+                    let it = this;
+                    let input = it.element;
+                    let text = input.value;
+                    switch (it.valueType) {
+                        case 'number':
+                            return new Number(text).valueOf();
+                        case 'date':
+                            return new Date(text);
+                        default:
+                            return text;
+                    }
+                },
+                set value(value) {
+                    let it = this;
+                    let input = it.element;
+                    input.value = value == null ? "" : value;
+                }
+            };
+            return control;
         }
     }
     exports.BoundField = BoundField;

@@ -25,4 +25,9 @@ export declare class BoundField<T> extends DataControlField<T, BoundFieldParams<
     readonly dataFormatString: string;
     readonly controlStyle: string | Partial<CSSStyleDeclaration>;
     readonly readOnly: boolean;
+    createControl(): GridViewCellControl;
+}
+export interface GridViewCellControl {
+    element: HTMLElement;
+    value: any;
 }

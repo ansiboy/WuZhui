@@ -33,7 +33,7 @@ export interface GridViewArguments<T> {
     pagerSettings?: PagerSettings;
     emptyDataHTML?: string;
     initDataHTML?: string;
-    sort?: (items: T[]) => T[];
+    translate?: (items: T[]) => T[];
 }
 export declare class GridView<T> extends Control<HTMLTableElement> {
     private _columns;

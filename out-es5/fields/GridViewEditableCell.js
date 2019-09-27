@@ -79,29 +79,37 @@ define(["require", "exports", "./DataControlField", "../Errors", "../Utility"], 
           return;
         }
 
-        this._mode = 'read'; // let value = this._dataItem[this.field.dataField];
-
+        this._mode = 'read';
         this.render(this._dataItem);
       }
     }, {
       key: "render",
       value: function render(dataItem) {
-        //value
-        var value = dataItem[this.field.dataField];
-
         if (this._mode == 'edit') {
-          // this.element.innerHTML = `<input type="text" />`;
-          // applyStyle(this.element.querySelector('input'), this._field.controlStyle);
-          // this.element.querySelector('input').value =
-          //     value === undefined ? null : `${value}`;
           this.element.innerHTML = "";
-          var control = this.createControl(value);
-          Utility_1.applyStyle(control, this._field.controlStyle);
-          this.element.appendChild(control);
+          this.createControl();
+          console.assert(this.control != null);
+          var value = dataItem[this.field.dataField];
+          this.control.value = value;
+          Utility_1.applyStyle(this.control.element, this._field.controlStyle);
+          this.element.appendChild(this.control.element);
           return;
         }
 
+        this.control = null;
+
         _get(_getPrototypeOf(GridViewEditableCell.prototype), "render", this).call(this, dataItem);
+      }
+    }, {
+      key: "createControl",
+      value: function createControl() {
+        this.control = this.field.createControl();
+        return this.control.element;
+      }
+    }, {
+      key: "dataItem",
+      get: function get() {
+        return this._dataItem;
       }
     }, {
       key: "field",
@@ -112,6 +120,12 @@ define(["require", "exports", "./DataControlField", "../Errors", "../Utility"], 
       key: "mode",
       get: function get() {
         return this._mode;
+      }
+    }, {
+      key: "controlValue",
+      get: function get() {
+        if (this.control == null) return null;
+        return this.control.value;
       }
     }]);
 

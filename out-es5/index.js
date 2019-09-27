@@ -1,6 +1,6 @@
 "use strict";
 
-define(["require", "exports", "./GridView", "./fields/BoundField", "./fields/CommandField", "./fields/CustomField", "./fields/DataControlField", "./DropDown", "./TextBox", "./DataSource", "./NumberPagingBar", "./Control"], function (require, exports, GridView_1, BoundField_1, CommandField_1, CustomField_1, DataControlField_1, DropDown_1, TextBox_1, DataSource_1, NumberPagingBar_1, Control_1) {
+define(["require", "exports", "./GridView", "./fields/BoundField", "./fields/CommandField", "./fields/CustomField", "./fields/CustomBoundField", "./fields/DataControlField", "./fields/GridViewEditableCell", "./DropDown", "./TextBox", "./DataSource", "./NumberPagingBar", "./Control"], function (require, exports, GridView_1, BoundField_1, CommandField_1, CustomField_1, CustomBoundField_1, DataControlField_1, GridViewEditableCell_1, DropDown_1, TextBox_1, DataSource_1, NumberPagingBar_1, Control_1) {
   "use strict";
 
   Object.defineProperty(exports, "__esModule", {
@@ -12,9 +12,11 @@ define(["require", "exports", "./GridView", "./fields/BoundField", "./fields/Com
   exports.BoundField = BoundField_1.BoundField;
   exports.CommandField = CommandField_1.CommandField;
   exports.CustomField = CustomField_1.CustomField;
+  exports.CustomBoundField = CustomBoundField_1.CustomBoundField;
   exports.GridViewCell = DataControlField_1.GridViewCell;
   exports.DataControlField = DataControlField_1.DataControlField;
   exports.GridViewDataCell = DataControlField_1.GridViewDataCell;
+  exports.GridViewEditableCell = GridViewEditableCell_1.GridViewEditableCell;
   exports.DropDown = DropDown_1.DropDown;
   exports.TextBox = TextBox_1.TextBox;
   exports.DataSource = DataSource_1.DataSource;

@@ -52,7 +52,7 @@ export declare class GridViewHeaderCell<T> extends Control<HTMLTableHeaderCellEl
     clearSortIcon(): void;
     private updateSortIcon;
 }
-export declare class DataControlField<T, P extends DataControlFieldParams = DataControlFieldParams> {
+export declare abstract class DataControlField<T, P extends DataControlFieldParams = DataControlFieldParams> {
     private _gridView;
     protected params: P;
     constructor(params?: P);

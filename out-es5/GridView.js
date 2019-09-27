@@ -387,8 +387,8 @@ define(["require", "exports", "./Control", "./DataSource", "./fields/DataControl
       value: function on_selectedExecuted(e) {
         var dataItems = e.dataItems;
 
-        if (this._params.sort) {
-          dataItems = this._params.sort(dataItems);
+        if (this._params.translate) {
+          dataItems = this._params.translate(dataItems);
         }
 
         this.renderDataItems(dataItems);
@@ -424,8 +424,8 @@ define(["require", "exports", "./Control", "./DataSource", "./fields/DataControl
 
         }
 
-        if (this._params.sort) {
-          dataItems = this._params.sort(dataItems);
+        if (this._params.translate) {
+          dataItems = this._params.translate(dataItems);
           this.renderDataItems(dataItems);
         }
       }
@@ -434,7 +434,7 @@ define(["require", "exports", "./Control", "./DataSource", "./fields/DataControl
       value: function on_insertExecuted(item, index) {
         if (index == null) index = 0;
 
-        if (!this._params.sort) {
+        if (!this._params.translate) {
           this.appendDataRow(item, index);
           return;
         }
@@ -450,7 +450,7 @@ define(["require", "exports", "./Control", "./DataSource", "./fields/DataControl
           dataItems.push(dataItem);
         }
 
-        dataItems = this._params.sort(dataItems);
+        dataItems = this._params.translate(dataItems);
         this.renderDataItems(dataItems);
       }
     }, {
@@ -466,13 +466,13 @@ define(["require", "exports", "./Control", "./DataSource", "./fields/DataControl
           if (row instanceof GridViewDataRow) dataRows.push(row);
         }
 
-        if (this._params.sort) {
+        if (this._params.translate) {
           var dataItems = dataRows.map(function (o) {
             return o.dataItem;
           }).filter(function (o) {
             return !_this5.dataSource.isSameItem(o, item);
           });
-          dataItems = this._params.sort(dataItems);
+          dataItems = this._params.translate(dataItems);
           this.renderDataItems(dataItems);
           return;
         }

@@ -15,6 +15,9 @@ define(["require", "exports", "./DataControlField", "../Errors", "../Utility"], 
             this._dataItem = dataItem;
             this._mode = 'read';
         }
+        get dataItem() {
+            return this._dataItem;
+        }
         get field() {
             return this._field;
         }
@@ -40,24 +43,30 @@ define(["require", "exports", "./DataControlField", "../Errors", "../Utility"], 
                 return;
             }
             this._mode = 'read';
-            // let value = this._dataItem[this.field.dataField];
             this.render(this._dataItem);
         }
         render(dataItem) {
-            //value
-            let value = dataItem[this.field.dataField];
             if (this._mode == 'edit') {
-                // this.element.innerHTML = `<input type="text" />`;
-                // applyStyle(this.element.querySelector('input'), this._field.controlStyle);
-                // this.element.querySelector('input').value =
-                //     value === undefined ? null : `${value}`;
                 this.element.innerHTML = "";
-                let control = this.createControl(value);
-                Utility_1.applyStyle(control, this._field.controlStyle);
-                this.element.appendChild(control);
+                this.createControl();
+                console.assert(this.control != null);
+                let value = dataItem[this.field.dataField];
+                this.control.value = value;
+                Utility_1.applyStyle(this.control.element, this._field.controlStyle);
+                this.element.appendChild(this.control.element);
                 return;
             }
+            this.control = null;
             super.render(dataItem);
+        }
+        createControl() {
+            this.control = this.field.createControl();
+            return this.control.element;
+        }
+        get controlValue() {
+            if (this.control == null)
+                return null;
+            return this.control.value;
         }
     }
     exports.GridViewEditableCell = GridViewEditableCell;

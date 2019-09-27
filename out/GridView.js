@@ -228,8 +228,8 @@ define(["require", "exports", "./Control", "./DataSource", "./fields/DataControl
         }
         on_selectedExecuted(e) {
             let dataItems = e.dataItems;
-            if (this._params.sort) {
-                dataItems = this._params.sort(dataItems);
+            if (this._params.translate) {
+                dataItems = this._params.translate(dataItems);
             }
             this.renderDataItems(dataItems);
         }
@@ -258,15 +258,15 @@ define(["require", "exports", "./Control", "./DataSource", "./fields/DataControl
                 }
                 // break;
             }
-            if (this._params.sort) {
-                dataItems = this._params.sort(dataItems);
+            if (this._params.translate) {
+                dataItems = this._params.translate(dataItems);
                 this.renderDataItems(dataItems);
             }
         }
         on_insertExecuted(item, index) {
             if (index == null)
                 index = 0;
-            if (!this._params.sort) {
+            if (!this._params.translate) {
                 this.appendDataRow(item, index);
                 return;
             }
@@ -280,7 +280,7 @@ define(["require", "exports", "./Control", "./DataSource", "./fields/DataControl
                 let dataItem = row.dataItem;
                 dataItems.push(dataItem);
             }
-            dataItems = this._params.sort(dataItems);
+            dataItems = this._params.translate(dataItems);
             this.renderDataItems(dataItems);
         }
         on_deleteExecuted(item) {
@@ -291,10 +291,10 @@ define(["require", "exports", "./Control", "./DataSource", "./fields/DataControl
                 if ((row instanceof GridViewDataRow))
                     dataRows.push(row);
             }
-            if (this._params.sort) {
+            if (this._params.translate) {
                 let dataItems = dataRows.map(o => o.dataItem)
                     .filter(o => !this.dataSource.isSameItem(o, item));
-                dataItems = this._params.sort(dataItems);
+                dataItems = this._params.translate(dataItems);
                 this.renderDataItems(dataItems);
                 return;
             }
