@@ -20,9 +20,9 @@ export declare class DataSource<T> {
     selected: import("./Utility").Callback1<DataSource<T>, DataSourceSelectResult<T>>;
     error: import("./Utility").Callback1<this, DataSourceError>;
     constructor(args: DataSourceArguments<T>);
-    readonly canDelete: boolean;
-    readonly canInsert: boolean;
-    readonly canUpdate: boolean;
+    get canDelete(): boolean;
+    get canInsert(): boolean;
+    get canUpdate(): boolean;
     executeInsert(item: T, args?: any): Promise<any>;
     executeDelete(item: T, args?: any): Promise<any>;
     executeUpdate(item: T, args?: any): Promise<any>;

@@ -19,18 +19,18 @@ export interface CommandFieldParams extends DataControlFieldParams {
 }
 export declare class CommandField<T> extends DataControlField<T, CommandFieldParams> {
     constructor(params?: CommandFieldParams);
-    readonly cancelButtonHTML: string;
-    readonly deleteButtonHTML: string;
-    readonly editButtonHTML: string;
-    readonly updateButtonHTML: string;
-    readonly newButtonHTML: string;
-    readonly insertButtonHTML: string;
-    readonly cancelButtonClass: string;
-    readonly deleteButtonClass: string;
-    readonly editButtonClass: string;
-    readonly newButtonClass: string;
-    readonly updateButtonClass: string;
-    readonly insertButtonClass: string;
+    get cancelButtonHTML(): string;
+    get deleteButtonHTML(): string;
+    get editButtonHTML(): string;
+    get updateButtonHTML(): string;
+    get newButtonHTML(): string;
+    get insertButtonHTML(): string;
+    get cancelButtonClass(): string;
+    get deleteButtonClass(): string;
+    get editButtonClass(): string;
+    get newButtonClass(): string;
+    get updateButtonClass(): string;
+    get insertButtonClass(): string;
     createItemCell(dataItem: any): GridViewCell;
     private showReadStatusButtons;
     private createEditButton;

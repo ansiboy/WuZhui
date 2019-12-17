@@ -315,9 +315,9 @@ define(["require", "exports", "./Control", "./DataSource", "./fields/DataControl
             this._emtpyRow.element.style.display = 'none';
         }
     }
+    exports.GridView = GridView;
     GridView.emptyRowClassName = 'empty';
     GridView.dataRowClassName = 'data';
     GridView.pagingBarClassName = 'pagingBar';
-    exports.GridView = GridView;
 });
 // }

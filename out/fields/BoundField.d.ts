@@ -13,18 +13,18 @@ export declare class BoundField<T> extends DataControlField<T, BoundFieldParams<
     /**
      * Gets the caption displayed for a field when the field's value is null.
      */
-    readonly nullText: string;
+    get nullText(): string;
     createItemCell(dataItem: T): GridViewCell;
     /**
      * Gets the field for the value.
      */
-    readonly dataField: keyof T;
+    get dataField(): keyof T;
     /**
      * Gets the string that specifies the display format for the value of the field.
      */
-    readonly dataFormatString: string;
-    readonly controlStyle: string | Partial<CSSStyleDeclaration>;
-    readonly readOnly: boolean;
+    get dataFormatString(): string;
+    get controlStyle(): string | Partial<CSSStyleDeclaration>;
+    get readOnly(): boolean;
     createControl(): GridViewCellControl;
 }
 export interface GridViewCellControl {

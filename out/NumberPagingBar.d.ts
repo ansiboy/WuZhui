@@ -30,11 +30,14 @@ export declare abstract class PagingBar {
     private _pageSize;
     private _selectArguments;
     init(dataSource?: DataSource<any>, selectArguments?: DataSourceSelectArguments): void;
-    readonly selectArguments: DataSourceSelectArguments;
-    readonly pageCount: number;
-    pageSize: number;
-    pageIndex: number;
-    totalRowCount: number;
+    get selectArguments(): DataSourceSelectArguments;
+    get pageCount(): number;
+    get pageSize(): number;
+    set pageSize(value: number);
+    get pageIndex(): number;
+    set pageIndex(value: number);
+    get totalRowCount(): number;
+    set totalRowCount(value: number);
     render(): void;
 }
 export interface NumberPagingButton<T extends PagingBar> {

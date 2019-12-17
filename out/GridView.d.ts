@@ -13,14 +13,14 @@ export declare class GridViewRow extends Control<HTMLTableRowElement> {
     private _rowType;
     private _gridView;
     constructor(rowType: GridViewRowType);
-    readonly rowType: GridViewRowType;
-    readonly gridView: GridView<any>;
-    readonly cells: GridViewCell[];
+    get rowType(): GridViewRowType;
+    get gridView(): GridView<any>;
+    get cells(): GridViewCell[];
 }
 export declare class GridViewDataRow extends GridViewRow {
     private _dataItem;
     constructor(gridView: GridView<any>, dataItem: any);
-    readonly dataItem: any;
+    get dataItem(): any;
 }
 export interface GridViewArguments<T> {
     dataSource: DataSource<T>;
@@ -57,8 +57,8 @@ export declare class GridView<T> extends Control<HTMLTableElement> {
     readonly selectArguments: DataSourceSelectArguments;
     constructor(params: GridViewArguments<T>);
     private createPagingBar;
-    readonly columns: DataControlField<T, import("./fields/DataControlField").DataControlFieldParams>[];
-    readonly dataSource: DataSource<T>;
+    get columns(): DataControlField<T, import("./fields/DataControlField").DataControlFieldParams>[];
+    get dataSource(): DataSource<T>;
     private appendEmptyRow;
     appendDataRow(dataItem: any, index?: number): GridViewDataRow;
     private on_sort;

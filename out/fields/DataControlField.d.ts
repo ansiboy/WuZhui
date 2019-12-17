@@ -48,7 +48,8 @@ export declare class GridViewHeaderCell<T> extends Control<HTMLTableHeaderCellEl
     constructor(field: DataControlField<T>);
     handleSort(): Promise<void>;
     private defaultHeaderText;
-    sortType: "desc" | "asc";
+    get sortType(): "desc" | "asc";
+    set sortType(value: "desc" | "asc");
     clearSortIcon(): void;
     private updateSortIcon;
 }
@@ -59,29 +60,36 @@ export declare abstract class DataControlField<T, P extends DataControlFieldPara
     /**
      * Gets the text that is displayed in the footer item of a data control field.
      */
+    get footerText(): string;
     /**
-    * Sets the text that is displayed in the footer item of a data control field.
-    */
-    footerText: string;
+     * Sets the text that is displayed in the footer item of a data control field.
+     */
+    set footerText(value: string);
     /**
      * Gets the text that is displayed in the header item of a data control field.
      */
+    get headerText(): string;
     /**
     * Sets the text that is displayed in the header item of a data control field.
     */
-    headerText: string;
-    itemStyle: string | Partial<CSSStyleDeclaration>;
-    footerStyle: string | Partial<CSSStyleDeclaration>;
-    headerStyle: string | Partial<CSSStyleDeclaration>;
-    readonly visible: boolean;
-    gridView: GridView<any>;
+    set headerText(value: string);
+    get itemStyle(): string | Partial<CSSStyleDeclaration>;
+    set itemStyle(value: string | Partial<CSSStyleDeclaration>);
+    get footerStyle(): string | Partial<CSSStyleDeclaration>;
+    set footerStyle(value: string | Partial<CSSStyleDeclaration>);
+    get headerStyle(): string | Partial<CSSStyleDeclaration>;
+    set headerStyle(value: string | Partial<CSSStyleDeclaration>);
+    get visible(): boolean;
+    get gridView(): GridView<any>;
+    set gridView(value: GridView<any>);
     /**
      * Gets a sort expression that is used by a data source control to sort data.
      */
+    get sortExpression(): string;
     /**
-    * Sets a sort expression that is used by a data source control to sort data.
-    */
-    sortExpression: string;
+     * Sets a sort expression that is used by a data source control to sort data.
+     */
+    set sortExpression(value: string);
     createHeaderCell(): GridViewCell;
     createFooterCell(): GridViewCell;
     createItemCell(dataItem: any): GridViewCell;
