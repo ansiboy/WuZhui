@@ -1,6 +1,6 @@
 /*!
  * 
- *  maishu-wuzhui v1.7.0
+ *  maishu-wuzhui v1.7.1
  *  https://github.com/ansiboy/wuzhui
  *  
  *  Copyright (c) 2016-2018, shu mai <ansiboy@163.com>
