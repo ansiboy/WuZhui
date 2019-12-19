@@ -1,12 +1,12 @@
 import { GridViewCell, DataControlFieldParams, DataControlField } from "./DataControlField";
 
-export interface CustomFieldParams extends DataControlFieldParams {
+export interface CustomFieldParams<T> extends DataControlFieldParams {
     createHeaderCell?: () => GridViewCell,
     createFooterCell?: () => GridViewCell,
-    createItemCell: (dataItem: any) => GridViewCell
+    createItemCell: (dataItem: T) => GridViewCell
 }
 
-export class CustomField<T> extends DataControlField<T, CustomFieldParams> {
+export class CustomField<T> extends DataControlField<T, CustomFieldParams<T>> {
     createHeaderCell(): GridViewCell {
         if (this.params.createHeaderCell) {
             let cell = this.params.createHeaderCell();
