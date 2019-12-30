@@ -23,7 +23,7 @@ type GridViewDataCellArgument2<T> = {
 
 export class GridViewDataCell<T> extends GridViewCell {
     private nullText: string;
-    private dataFormatString: string;
+    private dataFormatString?: string;
 
     dataField: keyof T;
 
@@ -45,15 +45,16 @@ export class GridViewDataCell<T> extends GridViewCell {
         var text: string;
         if (value == null)
             text = this.nullText;
-        else if (this.dataFormatString)
-            text = this.formatValue(this.dataFormatString, value);
         else
-            text = `${value}`;
+            text = this.formatValue(value, this.dataFormatString);
 
         this.element.innerHTML = text;
     }
 
-    private formatValue(format: string, arg): string {//...args
+    formatValue(value: any, format?: string): string {//...args
+        if (!format)
+            return `${value}`;
+
         var result = '';
 
         for (var i = 0; ;) {
@@ -87,16 +88,16 @@ export class GridViewDataCell<T> extends GridViewCell {
 
             var brace = format.substring(i, close);
             var argFormat = brace;
-            if (typeof (arg) === "undefined" || arg === null) {
-                arg = '';
+            if (typeof (value) === "undefined" || value === null) {
+                value = '';
             }
 
-            if (arg instanceof Date)
-                result = result + this.formatDate(arg, argFormat);
-            else if (arg instanceof Number || typeof arg == 'number')
-                result = result + this.formatNumber(arg, argFormat);
+            if (value instanceof Date)
+                result = result + this.formatDate(value, argFormat);
+            else if (value instanceof Number || typeof value == 'number')
+                result = result + this.formatNumber(value, argFormat);
             else
-                result = result + arg.toString();
+                result = result + value.toString();
 
             i = close + 1;
         }

@@ -1,11 +1,8 @@
-/// <reference path="DataControlField.ts"/>
-
 import { DataControlFieldParams, DataControlField, GridViewCell } from "./DataControlField";
 import { GridViewEditableCell } from "./GridViewEditableCell";
-import { Errors } from "../Errors";
 
 export interface BoundFieldParams<T> extends DataControlFieldParams {
-    dataField: keyof T,
+    dataField: Extract<keyof T, string>,
     dataFormatString?: string,
     controlStyle?: Partial<CSSStyleDeclaration> | string,
     nullText?: string,
@@ -21,7 +18,7 @@ export class BoundField<T> extends DataControlField<T, BoundFieldParams<T>> {
      * Gets the caption displayed for a field when the field's value is null.
      */
     public get nullText(): string {
-        return this.params.nullText;
+        return this.params.nullText || "";
     }
 
     createItemCell(dataItem: T): GridViewCell {
@@ -41,7 +38,7 @@ export class BoundField<T> extends DataControlField<T, BoundFieldParams<T>> {
     /**
      * Gets the string that specifies the display format for the value of the field.
      */
-    get dataFormatString(): string {
+    get dataFormatString(): string | undefined {
         return this.params.dataFormatString;
     }
 
@@ -92,4 +89,5 @@ export class BoundField<T> extends DataControlField<T, BoundFieldParams<T>> {
 export interface GridViewCellControl {
     element: HTMLElement
     value: any
+    valueType?: ValueType
 }

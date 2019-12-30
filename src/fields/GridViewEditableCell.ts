@@ -69,7 +69,7 @@ export class GridViewEditableCell<T> extends GridViewDataCell<T> {
             return;
         }
 
-        this.control = null;
+        // this.control = null;
         super.render(dataItem);
     }
 

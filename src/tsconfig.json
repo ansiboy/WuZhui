@@ -4,6 +4,7 @@
         "sourceMap": false,
         "declaration": true,
         "module": "amd",
-        "outDir": "../out"
+        "outDir": "../out",
+        "strictNullChecks": false
     }
 }
