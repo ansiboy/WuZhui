@@ -23,13 +23,13 @@ define(["require", "exports", "../Control", "../Utility", "../Errors"], function
             var text;
             if (value == null)
                 text = this.nullText;
-            else if (this.dataFormatString)
-                text = this.formatValue(this.dataFormatString, value);
             else
-                text = `${value}`;
+                text = this.formatValue(value, this.dataFormatString);
             this.element.innerHTML = text;
         }
-        formatValue(format, arg) {
+        formatValue(value, format) {
+            if (!format)
+                return `${value}`;
             var result = '';
             for (var i = 0;;) {
                 var open = format.indexOf('{', i);
@@ -57,15 +57,15 @@ define(["require", "exports", "../Control", "../Utility", "../Errors"], function
                     throw new Error('Sys.Res.stringFormatBraceMismatch');
                 var brace = format.substring(i, close);
                 var argFormat = brace;
-                if (typeof (arg) === "undefined" || arg === null) {
-                    arg = '';
+                if (typeof (value) === "undefined" || value === null) {
+                    value = '';
                 }
-                if (arg instanceof Date)
-                    result = result + this.formatDate(arg, argFormat);
-                else if (arg instanceof Number || typeof arg == 'number')
-                    result = result + this.formatNumber(arg, argFormat);
+                if (value instanceof Date)
+                    result = result + this.formatDate(value, argFormat);
+                else if (value instanceof Number || typeof value == 'number')
+                    result = result + this.formatNumber(value, argFormat);
                 else
-                    result = result + arg.toString();
+                    result = result + value.toString();
                 i = close + 1;
             }
             return result;

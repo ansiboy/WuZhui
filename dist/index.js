@@ -1,6 +1,6 @@
 /*!
  * 
- *  maishu-wuzhui v1.7.1
+ *  maishu-wuzhui v1.8.0
  *  https://github.com/ansiboy/wuzhui
  *  
  *  Copyright (c) 2016-2018, shu mai <ansiboy@163.com>
@@ -1487,8 +1487,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/// <reference path="DataControlField.ts"/>
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ./DataControlField */ "./out/fields/DataControlField.js"), __webpack_require__(/*! ./GridViewEditableCell */ "./out/fields/GridViewEditableCell.js")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, DataControlField_1, GridViewEditableCell_1) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ./DataControlField */ "./out/fields/DataControlField.js"), __webpack_require__(/*! ./GridViewEditableCell */ "./out/fields/GridViewEditableCell.js")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, DataControlField_1, GridViewEditableCell_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class BoundField extends DataControlField_1.DataControlField {
@@ -1496,7 +1495,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/// <reference p
          * Gets the caption displayed for a field when the field's value is null.
          */
         get nullText() {
-            return this.params.nullText;
+            return this.params.nullText || "";
         }
         createItemCell(dataItem) {
             let cell = new GridViewEditableCell_1.GridViewEditableCell(this, dataItem);
@@ -1985,13 +1984,13 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
             var text;
             if (value == null)
                 text = this.nullText;
-            else if (this.dataFormatString)
-                text = this.formatValue(this.dataFormatString, value);
             else
-                text = `${value}`;
+                text = this.formatValue(value, this.dataFormatString);
             this.element.innerHTML = text;
         }
-        formatValue(format, arg) {
+        formatValue(value, format) {
+            if (!format)
+                return `${value}`;
             var result = '';
             for (var i = 0;;) {
                 var open = format.indexOf('{', i);
@@ -2019,15 +2018,15 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
                     throw new Error('Sys.Res.stringFormatBraceMismatch');
                 var brace = format.substring(i, close);
                 var argFormat = brace;
-                if (typeof (arg) === "undefined" || arg === null) {
-                    arg = '';
+                if (typeof (value) === "undefined" || value === null) {
+                    value = '';
                 }
-                if (arg instanceof Date)
-                    result = result + this.formatDate(arg, argFormat);
-                else if (arg instanceof Number || typeof arg == 'number')
-                    result = result + this.formatNumber(arg, argFormat);
+                if (value instanceof Date)
+                    result = result + this.formatDate(value, argFormat);
+                else if (value instanceof Number || typeof value == 'number')
+                    result = result + this.formatNumber(value, argFormat);
                 else
-                    result = result + arg.toString();
+                    result = result + value.toString();
                 i = close + 1;
             }
             return result;
@@ -2295,7 +2294,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
                 this.element.appendChild(this.control.element);
                 return;
             }
-            this.control = null;
+            // this.control = null;
             super.render(dataItem);
         }
         createControl() {

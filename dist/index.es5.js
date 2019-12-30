@@ -1,6 +1,6 @@
 /*!
  * 
- *  maishu-wuzhui v1.7.1
+ *  maishu-wuzhui v1.8.0
  *  https://github.com/ansiboy/wuzhui
  *  
  *  Copyright (c) 2016-2018, shu mai <ansiboy@163.com>
@@ -2272,7 +2272,6 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
-/// <reference path="DataControlField.ts"/>
 !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ./DataControlField */ "./out-es5/fields/DataControlField.js"), __webpack_require__(/*! ./GridViewEditableCell */ "./out-es5/fields/GridViewEditableCell.js")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, DataControlField_1, GridViewEditableCell_1) {
   "use strict";
 
@@ -2348,7 +2347,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
        * Gets the caption displayed for a field when the field's value is null.
        */
       get: function get() {
-        return this.params.nullText;
+        return this.params.nullText || "";
       }
     }, {
       key: "dataField",
@@ -3108,12 +3107,13 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
       value: function render(dataItem) {
         var value = dataItem[this.dataField];
         var text;
-        if (value == null) text = this.nullText;else if (this.dataFormatString) text = this.formatValue(this.dataFormatString, value);else text = "".concat(value);
+        if (value == null) text = this.nullText;else text = this.formatValue(value, this.dataFormatString);
         this.element.innerHTML = text;
       }
     }, {
       key: "formatValue",
-      value: function formatValue(format, arg) {
+      value: function formatValue(value, format) {
+        if (!format) return "".concat(value);
         var result = '';
 
         for (var i = 0;;) {
@@ -3148,11 +3148,11 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
           var brace = format.substring(i, close);
           var argFormat = brace;
 
-          if (typeof arg === "undefined" || arg === null) {
-            arg = '';
+          if (typeof value === "undefined" || value === null) {
+            value = '';
           }
 
-          if (arg instanceof Date) result = result + this.formatDate(arg, argFormat);else if (arg instanceof Number || typeof arg == 'number') result = result + this.formatNumber(arg, argFormat);else result = result + arg.toString();
+          if (value instanceof Date) result = result + this.formatDate(value, argFormat);else if (value instanceof Number || typeof value == 'number') result = result + this.formatNumber(value, argFormat);else result = result + value.toString();
           i = close + 1;
         }
 
@@ -3557,9 +3557,8 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
           Utility_1.applyStyle(this.control.element, this._field.controlStyle);
           this.element.appendChild(this.control.element);
           return;
-        }
+        } // this.control = null;
 
-        this.control = null;
 
         _get(_getPrototypeOf(GridViewEditableCell.prototype), "render", this).call(this, dataItem);
       }

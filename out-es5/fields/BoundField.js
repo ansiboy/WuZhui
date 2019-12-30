@@ -18,7 +18,6 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
-/// <reference path="DataControlField.ts"/>
 define(["require", "exports", "./DataControlField", "./GridViewEditableCell"], function (require, exports, DataControlField_1, GridViewEditableCell_1) {
   "use strict";
 
@@ -94,7 +93,7 @@ define(["require", "exports", "./DataControlField", "./GridViewEditableCell"], f
        * Gets the caption displayed for a field when the field's value is null.
        */
       get: function get() {
-        return this.params.nullText;
+        return this.params.nullText || "";
       }
     }, {
       key: "dataField",

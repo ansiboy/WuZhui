@@ -56,7 +56,7 @@ define(["require", "exports", "./DataControlField", "../Errors", "../Utility"], 
                 this.element.appendChild(this.control.element);
                 return;
             }
-            this.control = null;
+            // this.control = null;
             super.render(dataItem);
         }
         createControl() {

@@ -18,7 +18,7 @@ export declare class GridViewDataCell<T> extends GridViewCell {
     dataField: keyof T;
     constructor(params: GridViewDataCellArgument1<T> | GridViewDataCellArgument2<T>);
     render(dataItem: T): void;
-    private formatValue;
+    formatValue(value: any, format?: string): string;
     private formatDate;
     private formatNumber;
 }

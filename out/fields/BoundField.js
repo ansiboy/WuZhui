@@ -1,4 +1,3 @@
-/// <reference path="DataControlField.ts"/>
 define(["require", "exports", "./DataControlField", "./GridViewEditableCell"], function (require, exports, DataControlField_1, GridViewEditableCell_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -7,7 +6,7 @@ define(["require", "exports", "./DataControlField", "./GridViewEditableCell"], f
          * Gets the caption displayed for a field when the field's value is null.
          */
         get nullText() {
-            return this.params.nullText;
+            return this.params.nullText || "";
         }
         createItemCell(dataItem) {
             let cell = new GridViewEditableCell_1.GridViewEditableCell(this, dataItem);

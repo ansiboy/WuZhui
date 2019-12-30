@@ -94,9 +94,8 @@ define(["require", "exports", "./DataControlField", "../Errors", "../Utility"], 
           Utility_1.applyStyle(this.control.element, this._field.controlStyle);
           this.element.appendChild(this.control.element);
           return;
-        }
+        } // this.control = null;
 
-        this.control = null;
 
         _get(_getPrototypeOf(GridViewEditableCell.prototype), "render", this).call(this, dataItem);
       }

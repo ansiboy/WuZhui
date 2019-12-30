@@ -1,7 +1,6 @@
-/// <reference path="DataControlField.d.ts" />
 import { DataControlFieldParams, DataControlField, GridViewCell } from "./DataControlField";
 export interface BoundFieldParams<T> extends DataControlFieldParams {
-    dataField: keyof T;
+    dataField: Extract<keyof T, string>;
     dataFormatString?: string;
     controlStyle?: Partial<CSSStyleDeclaration> | string;
     nullText?: string;
@@ -22,7 +21,7 @@ export declare class BoundField<T> extends DataControlField<T, BoundFieldParams<
     /**
      * Gets the string that specifies the display format for the value of the field.
      */
-    get dataFormatString(): string;
+    get dataFormatString(): string | undefined;
     get controlStyle(): string | Partial<CSSStyleDeclaration>;
     get readOnly(): boolean;
     createControl(): GridViewCellControl;
@@ -30,4 +29,5 @@ export declare class BoundField<T> extends DataControlField<T, BoundFieldParams<
 export interface GridViewCellControl {
     element: HTMLElement;
     value: any;
+    valueType?: ValueType;
 }

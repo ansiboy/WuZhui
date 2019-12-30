@@ -3,9 +3,9 @@ export declare class ElementHelper {
     static hideElement(element: HTMLElement): void;
     static isVisible(element: HTMLElement): boolean;
     static data(element: HTMLElement, name: string, value?: any): any;
-    static findFirstParentByTagName(element: Element, tagName: string): HTMLElement;
+    static findFirstParentByTagName(element: Element, tagName: string): HTMLElement | null;
 }
-export declare function applyStyle(element: HTMLElement, value: Partial<CSSStyleDeclaration> | string): void;
+export declare function applyStyle(element: HTMLElement, value: Partial<CSSStyleDeclaration> | string | undefined): void;
 export declare class Callback {
     private funcs;
     constructor();
