@@ -7,7 +7,7 @@
  *  Licensed under the MIT License.
  * 
  */
-define(function() { return /******/ (function(modules) { // webpackBootstrap
+/******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/
@@ -3644,5 +3644,5 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
 
 /***/ })
 
-/******/ })});;
+/******/ });
 //# sourceMappingURL=index.es5.js.map

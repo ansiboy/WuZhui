@@ -14,7 +14,7 @@ declare type GridViewDataCellArgument2<T> = {
 };
 export declare class GridViewDataCell<T> extends GridViewCell {
     private nullText;
-    private dataFormatString;
+    private dataFormatString?;
     dataField: keyof T;
     constructor(params: GridViewDataCellArgument1<T> | GridViewDataCellArgument2<T>);
     render(dataItem: T): void;
