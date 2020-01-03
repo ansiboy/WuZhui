@@ -1,13 +1,13 @@
 /*!
  * 
- *  maishu-wuzhui v1.12.0
+ *  maishu-wuzhui v1.13.0
  *  https://github.com/ansiboy/wuzhui
  *  
  *  Copyright (c) 2016-2018, shu mai <ansiboy@163.com>
  *  Licensed under the MIT License.
  * 
  */
-/******/ (function(modules) { // webpackBootstrap
+define(function() { return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/
@@ -3644,5 +3644,5 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
 
 /***/ })
 
-/******/ });
+/******/ })});;
 //# sourceMappingURL=index.es5.js.map
