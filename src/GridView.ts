@@ -242,7 +242,7 @@ export class GridView<T> extends Control<HTMLTableElement> {
         let cells = row.cells;
         for (let j = 0; j < cells.length; j++) {
             let cell = cells[j];
-            if (cell instanceof GridViewDataCell) {//
+            if ((cell as GridViewDataCell<any>).render != null) {
                 (cell as GridViewDataCell<any>).render(dataItem);
             }
         }
