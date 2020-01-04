@@ -1,6 +1,6 @@
 /*!
  * 
- *  maishu-wuzhui v1.13.0
+ *  maishu-wuzhui v1.14.0
  *  https://github.com/ansiboy/wuzhui
  *  
  *  Copyright (c) 2016-2018, shu mai <ansiboy@163.com>
@@ -1077,8 +1077,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
         for (var j = 0; j < cells.length; j++) {
           var cell = cells[j];
 
-          if (cell instanceof DataControlField_1.GridViewDataCell) {
-            //
+          if (cell.render != null) {
             cell.render(dataItem);
           }
         }
@@ -3612,7 +3611,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 "use strict";
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
 
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ./GridView */ "./out-es5/GridView.js"), __webpack_require__(/*! ./fields/BoundField */ "./out-es5/fields/BoundField.js"), __webpack_require__(/*! ./fields/CommandField */ "./out-es5/fields/CommandField.js"), __webpack_require__(/*! ./fields/CustomField */ "./out-es5/fields/CustomField.js"), __webpack_require__(/*! ./fields/CustomBoundField */ "./out-es5/fields/CustomBoundField.js"), __webpack_require__(/*! ./fields/DataControlField */ "./out-es5/fields/DataControlField.js"), __webpack_require__(/*! ./fields/GridViewEditableCell */ "./out-es5/fields/GridViewEditableCell.js"), __webpack_require__(/*! ./DropDown */ "./out-es5/DropDown.js"), __webpack_require__(/*! ./TextBox */ "./out-es5/TextBox.js"), __webpack_require__(/*! ./DataSource */ "./out-es5/DataSource.js"), __webpack_require__(/*! ./NumberPagingBar */ "./out-es5/NumberPagingBar.js"), __webpack_require__(/*! ./Control */ "./out-es5/Control.js")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, GridView_1, BoundField_1, CommandField_1, CustomField_1, CustomBoundField_1, DataControlField_1, GridViewEditableCell_1, DropDown_1, TextBox_1, DataSource_1, NumberPagingBar_1, Control_1) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ./GridView */ "./out-es5/GridView.js"), __webpack_require__(/*! ./fields/BoundField */ "./out-es5/fields/BoundField.js"), __webpack_require__(/*! ./fields/CommandField */ "./out-es5/fields/CommandField.js"), __webpack_require__(/*! ./fields/CustomField */ "./out-es5/fields/CustomField.js"), __webpack_require__(/*! ./fields/CustomBoundField */ "./out-es5/fields/CustomBoundField.js"), __webpack_require__(/*! ./fields/DataControlField */ "./out-es5/fields/DataControlField.js"), __webpack_require__(/*! ./fields/GridViewEditableCell */ "./out-es5/fields/GridViewEditableCell.js"), __webpack_require__(/*! ./DropDown */ "./out-es5/DropDown.js"), __webpack_require__(/*! ./TextBox */ "./out-es5/TextBox.js"), __webpack_require__(/*! ./DataSource */ "./out-es5/DataSource.js"), __webpack_require__(/*! ./NumberPagingBar */ "./out-es5/NumberPagingBar.js"), __webpack_require__(/*! ./Control */ "./out-es5/Control.js"), __webpack_require__(/*! ./Utility */ "./out-es5/Utility.js")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, GridView_1, BoundField_1, CommandField_1, CustomField_1, CustomBoundField_1, DataControlField_1, GridViewEditableCell_1, DropDown_1, TextBox_1, DataSource_1, NumberPagingBar_1, Control_1, Utility_1) {
   "use strict";
 
   Object.defineProperty(exports, "__esModule", {
@@ -3637,6 +3636,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
   exports.NumberPagingBar = NumberPagingBar_1.NumberPagingBar;
   exports.DataSourcePagingBar = NumberPagingBar_1.DataSourcePagingBar;
   exports.Control = Control_1.Control;
+  exports.fireCallback = Utility_1.fireCallback;
 }).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 //# sourceMappingURL=index.js.map

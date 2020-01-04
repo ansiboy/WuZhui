@@ -1,6 +1,6 @@
 /*!
  * 
- *  maishu-wuzhui v1.13.0
+ *  maishu-wuzhui v1.14.0
  *  https://github.com/ansiboy/wuzhui
  *  
  *  Copyright (c) 2016-2018, shu mai <ansiboy@163.com>
@@ -537,7 +537,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
     exports.GridViewDataRow = GridViewDataRow;
     class GridView extends Control_1.Control {
         constructor(params) {
-            super(params.element || document.createElement('table'));
+            super(params.element || document.createElement('table'));debugger;
             this.emptyDataHTML = '暂无记录';
             this.initDataHTML = '数据正在加载中...';
             this.loadFailHTML = '加载数据失败，点击重新加载。';
@@ -639,13 +639,13 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
             Utility_1.fireCallback(this.rowCreated, this, { row: this._emtpyRow });
         }
         appendDataRow(dataItem, index) {
-            var row = new GridViewDataRow(this, dataItem);
+            var row = new GridViewDataRow(this, dataItem);debugger
             row.element.className = GridView.dataRowClassName;
             this._body.appendChild(row, index);
             let cells = row.cells;
             for (let j = 0; j < cells.length; j++) {
                 let cell = cells[j];
-                if (cell instanceof DataControlField_1.GridViewDataCell) { //
+                if (cell.render != null) {
                     cell.render(dataItem);
                 }
             }
@@ -2321,7 +2321,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ./GridView */ "./out/GridView.js"), __webpack_require__(/*! ./fields/BoundField */ "./out/fields/BoundField.js"), __webpack_require__(/*! ./fields/CommandField */ "./out/fields/CommandField.js"), __webpack_require__(/*! ./fields/CustomField */ "./out/fields/CustomField.js"), __webpack_require__(/*! ./fields/CustomBoundField */ "./out/fields/CustomBoundField.js"), __webpack_require__(/*! ./fields/DataControlField */ "./out/fields/DataControlField.js"), __webpack_require__(/*! ./fields/GridViewEditableCell */ "./out/fields/GridViewEditableCell.js"), __webpack_require__(/*! ./DropDown */ "./out/DropDown.js"), __webpack_require__(/*! ./TextBox */ "./out/TextBox.js"), __webpack_require__(/*! ./DataSource */ "./out/DataSource.js"), __webpack_require__(/*! ./NumberPagingBar */ "./out/NumberPagingBar.js"), __webpack_require__(/*! ./Control */ "./out/Control.js")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, GridView_1, BoundField_1, CommandField_1, CustomField_1, CustomBoundField_1, DataControlField_1, GridViewEditableCell_1, DropDown_1, TextBox_1, DataSource_1, NumberPagingBar_1, Control_1) {
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(/*! ./GridView */ "./out/GridView.js"), __webpack_require__(/*! ./fields/BoundField */ "./out/fields/BoundField.js"), __webpack_require__(/*! ./fields/CommandField */ "./out/fields/CommandField.js"), __webpack_require__(/*! ./fields/CustomField */ "./out/fields/CustomField.js"), __webpack_require__(/*! ./fields/CustomBoundField */ "./out/fields/CustomBoundField.js"), __webpack_require__(/*! ./fields/DataControlField */ "./out/fields/DataControlField.js"), __webpack_require__(/*! ./fields/GridViewEditableCell */ "./out/fields/GridViewEditableCell.js"), __webpack_require__(/*! ./DropDown */ "./out/DropDown.js"), __webpack_require__(/*! ./TextBox */ "./out/TextBox.js"), __webpack_require__(/*! ./DataSource */ "./out/DataSource.js"), __webpack_require__(/*! ./NumberPagingBar */ "./out/NumberPagingBar.js"), __webpack_require__(/*! ./Control */ "./out/Control.js"), __webpack_require__(/*! ./Utility */ "./out/Utility.js")], __WEBPACK_AMD_DEFINE_RESULT__ = (function (require, exports, GridView_1, BoundField_1, CommandField_1, CustomField_1, CustomBoundField_1, DataControlField_1, GridViewEditableCell_1, DropDown_1, TextBox_1, DataSource_1, NumberPagingBar_1, Control_1, Utility_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.GridView = GridView_1.GridView;
@@ -2343,6 +2343,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_
     exports.NumberPagingBar = NumberPagingBar_1.NumberPagingBar;
     exports.DataSourcePagingBar = NumberPagingBar_1.DataSourcePagingBar;
     exports.Control = Control_1.Control;
+    exports.fireCallback = Utility_1.fireCallback;
 }).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 

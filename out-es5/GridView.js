@@ -306,8 +306,7 @@ define(["require", "exports", "./Control", "./DataSource", "./fields/DataControl
         for (var j = 0; j < cells.length; j++) {
           var cell = cells[j];
 
-          if (cell instanceof DataControlField_1.GridViewDataCell) {
-            //
+          if (cell.render != null) {
             cell.render(dataItem);
           }
         }
