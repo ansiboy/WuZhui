@@ -10,4 +10,3 @@ export { TextBox, TextBoxParams } from './TextBox';
 export { DataSource, DataSourceArguments, DataSourceSelectArguments, DataSourceSelectResult, ArrayDataSource } from './DataSource';
 export { NumberPagingBar, PagerSettings, DataSourcePagingBar } from './NumberPagingBar';
 export { Control } from "./Control";
-export { fireCallback } from "./Utility";

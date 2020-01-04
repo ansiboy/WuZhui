@@ -1,6 +1,6 @@
 "use strict";
 
-define(["require", "exports", "./GridView", "./fields/BoundField", "./fields/CommandField", "./fields/CustomField", "./fields/CustomBoundField", "./fields/DataControlField", "./fields/GridViewEditableCell", "./DropDown", "./TextBox", "./DataSource", "./NumberPagingBar", "./Control", "./Utility"], function (require, exports, GridView_1, BoundField_1, CommandField_1, CustomField_1, CustomBoundField_1, DataControlField_1, GridViewEditableCell_1, DropDown_1, TextBox_1, DataSource_1, NumberPagingBar_1, Control_1, Utility_1) {
+define(["require", "exports", "./GridView", "./fields/BoundField", "./fields/CommandField", "./fields/CustomField", "./fields/CustomBoundField", "./fields/DataControlField", "./fields/GridViewEditableCell", "./DropDown", "./TextBox", "./DataSource", "./NumberPagingBar", "./Control"], function (require, exports, GridView_1, BoundField_1, CommandField_1, CustomField_1, CustomBoundField_1, DataControlField_1, GridViewEditableCell_1, DropDown_1, TextBox_1, DataSource_1, NumberPagingBar_1, Control_1) {
   "use strict";
 
   Object.defineProperty(exports, "__esModule", {
@@ -25,6 +25,5 @@ define(["require", "exports", "./GridView", "./fields/BoundField", "./fields/Com
   exports.NumberPagingBar = NumberPagingBar_1.NumberPagingBar;
   exports.DataSourcePagingBar = NumberPagingBar_1.DataSourcePagingBar;
   exports.Control = Control_1.Control;
-  exports.fireCallback = Utility_1.fireCallback;
 });
 //# sourceMappingURL=index.js.map
