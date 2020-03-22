@@ -1,5 +1,14 @@
 "use strict";
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.BoundField = void 0;
+
+var _DataControlField2 = require("./DataControlField");
+
+var _GridViewEditableCell = require("./GridViewEditableCell");
+
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -18,112 +27,104 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
-define(["require", "exports", "./DataControlField", "./GridViewEditableCell"], function (require, exports, DataControlField_1, GridViewEditableCell_1) {
-  "use strict";
+var BoundField =
+/*#__PURE__*/
+function (_DataControlField) {
+  _inherits(BoundField, _DataControlField);
 
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
+  function BoundField() {
+    _classCallCheck(this, BoundField);
 
-  var BoundField =
-  /*#__PURE__*/
-  function (_DataControlField_1$D) {
-    _inherits(BoundField, _DataControlField_1$D);
+    return _possibleConstructorReturn(this, _getPrototypeOf(BoundField).apply(this, arguments));
+  }
 
-    function BoundField() {
-      _classCallCheck(this, BoundField);
-
-      return _possibleConstructorReturn(this, _getPrototypeOf(BoundField).apply(this, arguments));
+  _createClass(BoundField, [{
+    key: "createItemCell",
+    value: function createItemCell(dataItem) {
+      var cell = new _GridViewEditableCell.GridViewEditableCell(this, dataItem);
+      cell.style(this.itemStyle);
+      return cell;
     }
+    /**
+     * Gets the field for the value.
+     */
 
-    _createClass(BoundField, [{
-      key: "createItemCell",
-      value: function createItemCell(dataItem) {
-        var cell = new GridViewEditableCell_1.GridViewEditableCell(this, dataItem);
-        cell.style(this.itemStyle);
-        return cell;
-      }
-      /**
-       * Gets the field for the value.
-       */
+  }, {
+    key: "createControl",
+    //===============================================
+    // Virutal Methods
+    value: function createControl() {
+      // let control = document.createElement("input");
+      // control.name = this.dataField as string;
+      // return control;
+      var element = document.createElement("input");
+      var control = {
+        element: element,
+        valueType: this.params.valueType,
 
-    }, {
-      key: "createControl",
-      //===============================================
-      // Virutal Methods
-      value: function createControl() {
-        // let control = document.createElement("input");
-        // control.name = this.dataField as string;
-        // return control;
-        var element = document.createElement("input");
-        var control = {
-          element: element,
-          valueType: this.params.valueType,
+        get value() {
+          var it = this;
+          var input = it.element;
+          var text = input.value;
 
-          get value() {
-            var it = this;
-            var input = it.element;
-            var text = input.value;
+          switch (it.valueType) {
+            case 'number':
+              return new Number(text).valueOf();
 
-            switch (it.valueType) {
-              case 'number':
-                return new Number(text).valueOf();
+            case 'date':
+              return new Date(text);
 
-              case 'date':
-                return new Date(text);
-
-              default:
-                return text;
-            }
-          },
-
-          set value(value) {
-            var it = this;
-            var input = it.element;
-            input.value = value == null ? "" : value;
+            default:
+              return text;
           }
+        },
 
-        };
-        return control;
-      }
-    }, {
-      key: "nullText",
+        set value(value) {
+          var it = this;
+          var input = it.element;
+          input.value = value == null ? "" : value;
+        }
 
-      /**
-       * Gets the caption displayed for a field when the field's value is null.
-       */
-      get: function get() {
-        return this.params.nullText || "";
-      }
-    }, {
-      key: "dataField",
-      get: function get() {
-        return this.params.dataField;
-      }
-      /**
-       * Gets the string that specifies the display format for the value of the field.
-       */
+      };
+      return control;
+    }
+  }, {
+    key: "nullText",
 
-    }, {
-      key: "dataFormatString",
-      get: function get() {
-        return this.params.dataFormatString;
-      }
-    }, {
-      key: "controlStyle",
-      get: function get() {
-        return this.params.controlStyle;
-      }
-    }, {
-      key: "readOnly",
-      get: function get() {
-        return this.params.readOnly;
-      }
-    }]);
+    /**
+     * Gets the caption displayed for a field when the field's value is null.
+     */
+    get: function get() {
+      return this.params.nullText || "";
+    }
+  }, {
+    key: "dataField",
+    get: function get() {
+      return this.params.dataField;
+    }
+    /**
+     * Gets the string that specifies the display format for the value of the field.
+     */
 
-    return BoundField;
-  }(DataControlField_1.DataControlField);
+  }, {
+    key: "dataFormatString",
+    get: function get() {
+      return this.params.dataFormatString;
+    }
+  }, {
+    key: "controlStyle",
+    get: function get() {
+      return this.params.controlStyle;
+    }
+  }, {
+    key: "readOnly",
+    get: function get() {
+      return this.params.readOnly;
+    }
+  }]);
 
-  exports.BoundField = BoundField;
-});
+  return BoundField;
+}(_DataControlField2.DataControlField);
+
+exports.BoundField = BoundField;
 //# sourceMappingURL=BoundField.js.map

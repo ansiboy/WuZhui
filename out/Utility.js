@@ -1,81 +1,72 @@
-define(["require", "exports", "./Errors"], function (require, exports, Errors_1) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    class ElementHelper {
-        static showElement(element) {
-            if (!element)
-                throw Errors_1.Errors.argumentNull('element');
-            element.style.removeProperty('display');
-        }
-        static hideElement(element) {
-            if (!element)
-                throw Errors_1.Errors.argumentNull('element');
-            element.style.display = 'none';
-        }
-        static isVisible(element) {
-            let { display } = element.style;
-            return !display || display != 'none';
-        }
-        static data(element, name, value) {
-            element['data'] = element['data'] || {};
-            if (value == null)
-                return element['data'].name;
-            element['data'].name = value;
-        }
-        static findFirstParentByTagName(element, tagName) {
-            if (element == null)
-                throw Errors_1.Errors.argumentNull("element");
-            if (!tagName)
-                throw Errors_1.Errors.argumentNull('tagName');
-            let parent = element.parentElement;
-            while (parent != null) {
-                if (parent.tagName.toLowerCase() == tagName.toLowerCase()) {
-                    return parent;
-                }
-                parent = parent.parentElement;
+import { Errors } from "./Errors";
+export class ElementHelper {
+    static showElement(element) {
+        if (!element)
+            throw Errors.argumentNull('element');
+        element.style.removeProperty('display');
+    }
+    static hideElement(element) {
+        if (!element)
+            throw Errors.argumentNull('element');
+        element.style.display = 'none';
+    }
+    static isVisible(element) {
+        let { display } = element.style;
+        return !display || display != 'none';
+    }
+    static data(element, name, value) {
+        element['data'] = element['data'] || {};
+        if (value == null)
+            return element['data'].name;
+        element['data'].name = value;
+    }
+    static findFirstParentByTagName(element, tagName) {
+        if (element == null)
+            throw Errors.argumentNull("element");
+        if (!tagName)
+            throw Errors.argumentNull('tagName');
+        let parent = element.parentElement;
+        while (parent != null) {
+            if (parent.tagName.toLowerCase() == tagName.toLowerCase()) {
+                return parent;
             }
-            return null;
+            parent = parent.parentElement;
+        }
+        return null;
+    }
+}
+export function applyStyle(element, value) {
+    let style = value || '';
+    if (typeof style == 'string') {
+        element.setAttribute('style', style);
+    }
+    else {
+        for (let key in style) {
+            element.style[key] = style[key];
         }
     }
-    exports.ElementHelper = ElementHelper;
-    function applyStyle(element, value) {
-        let style = value || '';
-        if (typeof style == 'string') {
-            element.setAttribute('style', style);
-        }
-        else {
-            for (let key in style) {
-                element.style[key] = style[key];
-            }
-        }
+}
+export class Callback {
+    constructor() {
+        this.funcs = new Array();
     }
-    exports.applyStyle = applyStyle;
-    class Callback {
-        constructor() {
-            this.funcs = new Array();
-        }
-        add(func) {
-            this.funcs.push(func);
-        }
-        remove(func) {
-            this.funcs = this.funcs.filter(o => o != func);
-        }
-        fire(...args) {
-            this.funcs.forEach(o => o(...args));
-        }
+    add(func) {
+        this.funcs.push(func);
     }
-    exports.Callback = Callback;
-    function callbacks() {
-        return new Callback();
+    remove(func) {
+        this.funcs = this.funcs.filter(o => o != func);
     }
-    exports.callbacks = callbacks;
-    function callbacks1() {
-        return new Callback();
+    fire(...args) {
+        this.funcs.forEach(o => o(...args));
     }
-    exports.callbacks1 = callbacks1;
-    function fireCallback(callback, ...args) {
-        callback.fire(...args);
-    }
-    exports.fireCallback = fireCallback;
-});
+}
+export function callbacks() {
+    return new Callback();
+}
+export function callbacks1() {
+    return new Callback();
+}
+export function fireCallback(callback, ...args) {
+    callback.fire(...args);
+}
 // }

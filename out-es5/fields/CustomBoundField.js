@@ -1,5 +1,12 @@
 "use strict";
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.CustomBoundField = void 0;
+
+var _BoundField2 = require("./BoundField");
+
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -22,50 +29,42 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
-define(["require", "exports", "./BoundField"], function (require, exports, BoundField_1) {
-  "use strict";
+var CustomBoundField =
+/*#__PURE__*/
+function (_BoundField) {
+  _inherits(CustomBoundField, _BoundField);
 
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
+  function CustomBoundField(params) {
+    _classCallCheck(this, CustomBoundField);
 
-  var CustomBoundField =
-  /*#__PURE__*/
-  function (_BoundField_1$BoundFi) {
-    _inherits(CustomBoundField, _BoundField_1$BoundFi);
+    return _possibleConstructorReturn(this, _getPrototypeOf(CustomBoundField).call(this, params));
+  }
 
-    function CustomBoundField(params) {
-      _classCallCheck(this, CustomBoundField);
+  _createClass(CustomBoundField, [{
+    key: "createItemCell",
+    value: function createItemCell(dataItem) {
+      var cell = _get(_getPrototypeOf(CustomBoundField.prototype), "createItemCell", this).call(this, dataItem);
 
-      return _possibleConstructorReturn(this, _getPrototypeOf(CustomBoundField).call(this, params));
+      var cellRender = cell.render;
+
+      cell.render = function (dataItem) {
+        var it = this;
+        var params = it.field.params;
+
+        if (it.mode == "read" && params.cellRender != null) {
+          params.cellRender.apply(cell, [dataItem, it.element]);
+          return;
+        }
+
+        cellRender.apply(cell, [dataItem]);
+      };
+
+      return cell;
     }
+  }]);
 
-    _createClass(CustomBoundField, [{
-      key: "createItemCell",
-      value: function createItemCell(dataItem) {
-        var cell = _get(_getPrototypeOf(CustomBoundField.prototype), "createItemCell", this).call(this, dataItem);
+  return CustomBoundField;
+}(_BoundField2.BoundField);
 
-        var cellRender = cell.render;
-
-        cell.render = function (dataItem) {
-          var it = this;
-          var params = it.field.params;
-
-          if (it.mode == "read" && params.cellRender != null) {
-            params.cellRender.apply(cell, [dataItem, it.element]);
-            return;
-          }
-
-          cellRender.apply(cell, [dataItem]);
-        };
-
-        return cell;
-      }
-    }]);
-
-    return CustomBoundField;
-  }(BoundField_1.BoundField);
-
-  exports.CustomBoundField = CustomBoundField;
-});
+exports.CustomBoundField = CustomBoundField;
 //# sourceMappingURL=CustomBoundField.js.map

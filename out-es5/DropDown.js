@@ -1,5 +1,14 @@
 "use strict";
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.DropDown = void 0;
+
+var _Control2 = require("./Control");
+
+var _Errors = require("./Errors");
+
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -50,76 +59,68 @@ var __awaiter = void 0 && (void 0).__awaiter || function (thisArg, _arguments, P
   });
 };
 
-define(["require", "exports", "./Control", "./Errors"], function (require, exports, Control_1, Errors_1) {
-  "use strict";
+var DropDown =
+/*#__PURE__*/
+function (_Control) {
+  _inherits(DropDown, _Control);
 
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
+  function DropDown(params) {
+    var _this;
 
-  var DropDown =
-  /*#__PURE__*/
-  function (_Control_1$Control) {
-    _inherits(DropDown, _Control_1$Control);
+    _classCallCheck(this, DropDown);
 
-    function DropDown(params) {
-      var _this;
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(DropDown).call(this, params.element));
+    if (params == null) throw _Errors.Errors.argumentNull('params');
+    if (params.dataSource == null) throw _Errors.Errors.argumentFieldNull('params', 'dataSource');
+    if (params.element == null) throw _Errors.Errors.argumentFieldNull('params', 'element');
 
-      _classCallCheck(this, DropDown);
+    _this.init(params);
 
-      _this = _possibleConstructorReturn(this, _getPrototypeOf(DropDown).call(this, params.element));
-      if (params == null) throw Errors_1.Errors.argumentNull('params');
-      if (params.dataSource == null) throw Errors_1.Errors.argumentFieldNull('params', 'dataSource');
-      if (params.element == null) throw Errors_1.Errors.argumentFieldNull('params', 'element');
+    return _this;
+  }
 
-      _this.init(params);
+  _createClass(DropDown, [{
+    key: "init",
+    value: function init(params) {
+      return __awaiter(this, void 0, void 0,
+      /*#__PURE__*/
+      regeneratorRuntime.mark(function _callee() {
+        var _this2 = this;
 
-      return _this;
-    }
+        var r;
+        return regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.next = 2;
+                return params.dataSource.select({});
 
-    _createClass(DropDown, [{
-      key: "init",
-      value: function init(params) {
-        return __awaiter(this, void 0, void 0,
-        /*#__PURE__*/
-        regeneratorRuntime.mark(function _callee() {
-          var _this2 = this;
+              case 2:
+                r = _context.sent;
+                r.dataItems.forEach(function (dataItem) {
+                  var option = document.createElement('option');
+                  var name = params.nameField ? dataItem[params.nameField] : dataItem;
+                  var value = params.valueField ? dataItem[params.valueField] : dataItem;
+                  if (name == null) name = '';
+                  if (value == null) value = '';
+                  option.innerHTML = name;
+                  option.value = value;
 
-          var r;
-          return regeneratorRuntime.wrap(function _callee$(_context) {
-            while (1) {
-              switch (_context.prev = _context.next) {
-                case 0:
-                  _context.next = 2;
-                  return params.dataSource.select({});
+                  _this2.element.appendChild(option);
+                });
 
-                case 2:
-                  r = _context.sent;
-                  r.dataItems.forEach(function (dataItem) {
-                    var option = document.createElement('option');
-                    var name = params.nameField ? dataItem[params.nameField] : dataItem;
-                    var value = params.valueField ? dataItem[params.valueField] : dataItem;
-                    if (name == null) name = '';
-                    if (value == null) value = '';
-                    option.innerHTML = name;
-                    option.value = value;
-
-                    _this2.element.appendChild(option);
-                  });
-
-                case 4:
-                case "end":
-                  return _context.stop();
-              }
+              case 4:
+              case "end":
+                return _context.stop();
             }
-          }, _callee);
-        }));
-      }
-    }]);
+          }
+        }, _callee);
+      }));
+    }
+  }]);
 
-    return DropDown;
-  }(Control_1.Control);
+  return DropDown;
+}(_Control2.Control);
 
-  exports.DropDown = DropDown;
-});
+exports.DropDown = DropDown;
 //# sourceMappingURL=DropDown.js.map

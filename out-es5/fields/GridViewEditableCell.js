@@ -1,5 +1,16 @@
 "use strict";
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.GridViewEditableCell = void 0;
+
+var _DataControlField = require("./DataControlField");
+
+var _Errors = require("../Errors");
+
+var _Utility = require("../Utility");
+
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -22,115 +33,107 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
-define(["require", "exports", "./DataControlField", "../Errors", "../Utility"], function (require, exports, DataControlField_1, Errors_1, Utility_1) {
-  "use strict";
+var GridViewEditableCell =
+/*#__PURE__*/
+function (_GridViewDataCell) {
+  _inherits(GridViewEditableCell, _GridViewDataCell);
 
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
+  function GridViewEditableCell(field, dataItem) {
+    var _this;
 
-  var GridViewEditableCell =
-  /*#__PURE__*/
-  function (_DataControlField_1$G) {
-    _inherits(GridViewEditableCell, _DataControlField_1$G);
+    _classCallCheck(this, GridViewEditableCell);
 
-    function GridViewEditableCell(field, dataItem) {
-      var _this;
+    if (field == null) throw _Errors.Errors.argumentNull('field');
+    if (dataItem == null) throw _Errors.Errors.argumentNull('dataItem');
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(GridViewEditableCell).call(this, {
+      dataField: field.dataField,
+      nullText: field.nullText,
+      dataFormatString: field.dataFormatString
+    }));
+    _this._field = field;
+    _this._dataItem = dataItem;
+    _this._mode = 'read';
+    return _this;
+  }
 
-      _classCallCheck(this, GridViewEditableCell);
+  _createClass(GridViewEditableCell, [{
+    key: "beginEdit",
+    value: function beginEdit() {
+      if (this._field.readOnly) {
+        return;
+      }
 
-      if (field == null) throw Errors_1.Errors.argumentNull('field');
-      if (dataItem == null) throw Errors_1.Errors.argumentNull('dataItem');
-      _this = _possibleConstructorReturn(this, _getPrototypeOf(GridViewEditableCell).call(this, {
-        dataField: field.dataField,
-        nullText: field.nullText,
-        dataFormatString: field.dataFormatString
-      }));
-      _this._field = field;
-      _this._dataItem = dataItem;
-      _this._mode = 'read';
-      return _this;
+      this._mode = 'edit';
+      this.render(this._dataItem);
     }
-
-    _createClass(GridViewEditableCell, [{
-      key: "beginEdit",
-      value: function beginEdit() {
-        if (this._field.readOnly) {
-          return;
-        }
-
-        this._mode = 'edit';
-        this.render(this._dataItem);
+  }, {
+    key: "endEdit",
+    value: function endEdit() {
+      if (this._field.readOnly) {
+        return;
       }
-    }, {
-      key: "endEdit",
-      value: function endEdit() {
-        if (this._field.readOnly) {
-          return;
-        }
 
-        this._mode = 'read';
-        this.render(this._dataItem);
+      this._mode = 'read';
+      this.render(this._dataItem);
+    }
+  }, {
+    key: "cancelEdit",
+    value: function cancelEdit() {
+      if (this._field.readOnly) {
+        return;
       }
-    }, {
-      key: "cancelEdit",
-      value: function cancelEdit() {
-        if (this._field.readOnly) {
-          return;
-        }
 
-        this._mode = 'read';
-        this.render(this._dataItem);
-      }
-    }, {
-      key: "render",
-      value: function render(dataItem) {
-        if (this._mode == 'edit') {
-          this.element.innerHTML = "";
-          this.createControl();
-          console.assert(this.control != null);
-          var value = dataItem[this.field.dataField];
-          this.control.value = value;
-          Utility_1.applyStyle(this.control.element, this._field.controlStyle);
-          this.element.appendChild(this.control.element);
-          return;
-        } // this.control = null;
+      this._mode = 'read';
+      this.render(this._dataItem);
+    }
+  }, {
+    key: "render",
+    value: function render(dataItem) {
+      if (this._mode == 'edit') {
+        this.element.innerHTML = "";
+        this.createControl();
+        console.assert(this.control != null);
+        var value = dataItem[this.field.dataField];
+        this.control.value = value;
+        (0, _Utility.applyStyle)(this.control.element, this._field.controlStyle);
+        this.element.appendChild(this.control.element);
+        return;
+      } // this.control = null;
 
 
-        _get(_getPrototypeOf(GridViewEditableCell.prototype), "render", this).call(this, dataItem);
-      }
-    }, {
-      key: "createControl",
-      value: function createControl() {
-        this.control = this.field.createControl();
-        return this.control.element;
-      }
-    }, {
-      key: "dataItem",
-      get: function get() {
-        return this._dataItem;
-      }
-    }, {
-      key: "field",
-      get: function get() {
-        return this._field;
-      }
-    }, {
-      key: "mode",
-      get: function get() {
-        return this._mode;
-      }
-    }, {
-      key: "controlValue",
-      get: function get() {
-        if (this.control == null) return null;
-        return this.control.value;
-      }
-    }]);
+      _get(_getPrototypeOf(GridViewEditableCell.prototype), "render", this).call(this, dataItem);
+    }
+  }, {
+    key: "createControl",
+    value: function createControl() {
+      this.control = this.field.createControl();
+      return this.control.element;
+    }
+  }, {
+    key: "dataItem",
+    get: function get() {
+      return this._dataItem;
+    }
+  }, {
+    key: "field",
+    get: function get() {
+      return this._field;
+    }
+  }, {
+    key: "mode",
+    get: function get() {
+      return this._mode;
+    }
+  }, {
+    key: "controlValue",
+    get: function get() {
+      if (this.control == null) return null;
+      return this.control.value;
+    }
+  }]);
 
-    return GridViewEditableCell;
-  }(DataControlField_1.GridViewDataCell);
+  return GridViewEditableCell;
+}(_DataControlField.GridViewDataCell);
 
-  exports.GridViewEditableCell = GridViewEditableCell;
-});
+exports.GridViewEditableCell = GridViewEditableCell;
 //# sourceMappingURL=GridViewEditableCell.js.map

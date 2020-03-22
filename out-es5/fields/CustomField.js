@@ -1,5 +1,12 @@
 "use strict";
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.CustomField = void 0;
+
+var _DataControlField2 = require("./DataControlField");
+
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -22,62 +29,54 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
-define(["require", "exports", "./DataControlField"], function (require, exports, DataControlField_1) {
-  "use strict";
+var CustomField =
+/*#__PURE__*/
+function (_DataControlField) {
+  _inherits(CustomField, _DataControlField);
 
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
+  function CustomField() {
+    _classCallCheck(this, CustomField);
 
-  var CustomField =
-  /*#__PURE__*/
-  function (_DataControlField_1$D) {
-    _inherits(CustomField, _DataControlField_1$D);
+    return _possibleConstructorReturn(this, _getPrototypeOf(CustomField).apply(this, arguments));
+  }
 
-    function CustomField() {
-      _classCallCheck(this, CustomField);
+  _createClass(CustomField, [{
+    key: "createHeaderCell",
+    value: function createHeaderCell() {
+      if (this.params.createHeaderCell) {
+        var cell = this.params.createHeaderCell();
+        cell.style(this.headerStyle);
+        return cell;
+      }
 
-      return _possibleConstructorReturn(this, _getPrototypeOf(CustomField).apply(this, arguments));
+      return _get(_getPrototypeOf(CustomField.prototype), "createHeaderCell", this).call(this);
     }
-
-    _createClass(CustomField, [{
-      key: "createHeaderCell",
-      value: function createHeaderCell() {
-        if (this.params.createHeaderCell) {
-          var cell = this.params.createHeaderCell();
-          cell.style(this.headerStyle);
-          return cell;
-        }
-
-        return _get(_getPrototypeOf(CustomField.prototype), "createHeaderCell", this).call(this);
+  }, {
+    key: "createFooterCell",
+    value: function createFooterCell() {
+      if (this.params.createFooterCell) {
+        var cell = this.params.createFooterCell();
+        cell.style(this.params.footerStyle);
+        return cell;
       }
-    }, {
-      key: "createFooterCell",
-      value: function createFooterCell() {
-        if (this.params.createFooterCell) {
-          var cell = this.params.createFooterCell();
-          cell.style(this.params.footerStyle);
-          return cell;
-        }
 
-        return _get(_getPrototypeOf(CustomField.prototype), "createFooterCell", this).call(this);
+      return _get(_getPrototypeOf(CustomField.prototype), "createFooterCell", this).call(this);
+    }
+  }, {
+    key: "createItemCell",
+    value: function createItemCell(dataItem) {
+      if (this.params.createItemCell) {
+        var cell = this.params.createItemCell.apply(this, [dataItem]);
+        cell.style(this.params.itemStyle);
+        return cell;
       }
-    }, {
-      key: "createItemCell",
-      value: function createItemCell(dataItem) {
-        if (this.params.createItemCell) {
-          var cell = this.params.createItemCell.apply(this, [dataItem]);
-          cell.style(this.params.itemStyle);
-          return cell;
-        }
 
-        return _get(_getPrototypeOf(CustomField.prototype), "createItemCell", this).call(this, dataItem);
-      }
-    }]);
+      return _get(_getPrototypeOf(CustomField.prototype), "createItemCell", this).call(this, dataItem);
+    }
+  }]);
 
-    return CustomField;
-  }(DataControlField_1.DataControlField);
+  return CustomField;
+}(_DataControlField2.DataControlField);
 
-  exports.CustomField = CustomField;
-});
+exports.CustomField = CustomField;
 //# sourceMappingURL=CustomField.js.map

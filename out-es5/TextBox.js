@@ -1,5 +1,14 @@
 "use strict";
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.TextBox = void 0;
+
+var _Control2 = require("./Control");
+
+var _Errors = require("./Errors");
+
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -14,52 +23,44 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
-define(["require", "exports", "./Control", "./Errors"], function (require, exports, Control_1, Errors_1) {
-  "use strict";
+var TextBox =
+/*#__PURE__*/
+function (_Control) {
+  _inherits(TextBox, _Control);
 
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
+  function TextBox(params) {
+    var _this;
 
-  var TextBox =
-  /*#__PURE__*/
-  function (_Control_1$Control) {
-    _inherits(TextBox, _Control_1$Control);
+    _classCallCheck(this, TextBox);
 
-    function TextBox(params) {
-      var _this;
+    if (params == null) throw _Errors.Errors.argumentNull("params");
+    if (!params.element) throw _Errors.Errors.argumentFieldNull("params", "element");
+    if (!params.dataField) throw _Errors.Errors.argumentFieldNull("params", "dataField");
+    if (!params.dataItem) throw _Errors.Errors.argumentFieldNull("params", "dataItem");
+    if (!params.valueType) throw _Errors.Errors.argumentFieldNull("params", "valuetype");
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(TextBox).call(this, params.element));
+    var element = params.element,
+        dataField = params.dataField,
+        dataItem = params.dataItem,
+        valueType = params.valueType;
+    var value = dataItem[dataField];
+    element.value = "".concat(value);
 
-      _classCallCheck(this, TextBox);
+    element.onchange = function () {
+      if (valueType == 'int') {
+        dataItem[dataField] = Number.parseInt(element.value);
+      } else if (valueType == 'float') {
+        dataItem[dataField] = Number.parseFloat(element.value);
+      } else {
+        dataItem[dataField] = element.value || "";
+      }
+    };
 
-      if (params == null) throw Errors_1.Errors.argumentNull("params");
-      if (!params.element) throw Errors_1.Errors.argumentFieldNull("params", "element");
-      if (!params.dataField) throw Errors_1.Errors.argumentFieldNull("params", "dataField");
-      if (!params.dataItem) throw Errors_1.Errors.argumentFieldNull("params", "dataItem");
-      if (!params.valueType) throw Errors_1.Errors.argumentFieldNull("params", "valuetype");
-      _this = _possibleConstructorReturn(this, _getPrototypeOf(TextBox).call(this, params.element));
-      var element = params.element,
-          dataField = params.dataField,
-          dataItem = params.dataItem,
-          valueType = params.valueType;
-      var value = dataItem[dataField];
-      element.value = "".concat(value);
+    return _this;
+  }
 
-      element.onchange = function () {
-        if (valueType == 'int') {
-          dataItem[dataField] = Number.parseInt(element.value);
-        } else if (valueType == 'float') {
-          dataItem[dataField] = Number.parseFloat(element.value);
-        } else {
-          dataItem[dataField] = element.value || "";
-        }
-      };
+  return TextBox;
+}(_Control2.Control);
 
-      return _this;
-    }
-
-    return TextBox;
-  }(Control_1.Control);
-
-  exports.TextBox = TextBox;
-});
+exports.TextBox = TextBox;
 //# sourceMappingURL=TextBox.js.map
