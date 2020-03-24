@@ -1,5 +1,5 @@
 import { Control } from "./Control";
-import { DataSource, DataSourceSelectArguments } from "./DataSource";
+import { DataSource, DataSourceSelectArguments } from "maishu-toolkit";
 import { DataControlField, GridViewCell } from "./fields/DataControlField";
 import { PagerSettings } from "./NumberPagingBar";
 export declare enum GridViewRowType {

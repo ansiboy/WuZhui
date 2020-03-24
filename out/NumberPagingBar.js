@@ -1,5 +1,5 @@
 import { Errors } from "./Errors";
-import { DataSourceSelectArguments } from "./DataSource";
+import { DataSourceSelectArguments } from "maishu-toolkit";
 // namespace wuzhui {
 export var PagerPosition;
 (function (PagerPosition) {
@@ -17,9 +17,9 @@ export class PagingBar {
         var pagingBar = this;
         pagingBar.totalRowCount = 1000000;
         if (dataSource) {
-            dataSource.selected.add((source, args) => {
+            dataSource.selected.add(args => {
                 pagingBar.pageSize = this._selectArguments.maximumRows;
-                var totalRowCount = args.totalRowCount;
+                var totalRowCount = args.selectResult.totalRowCount;
                 if (totalRowCount != null && totalRowCount >= 0) {
                     pagingBar.totalRowCount = totalRowCount;
                 }

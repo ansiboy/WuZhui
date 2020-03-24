@@ -1,6 +1,6 @@
 {
     "name": "maishu-wuzhui",
-    "version": "1.15.2",
+    "version": "1.16.0",
     "main": "./out/index.js",
     "types": "./out/index.d.ts",
     "scripts": {
@@ -16,5 +16,8 @@
         "load-grunt-tasks": "^4.0.0",
         "webpack": "^4.30.0",
         "webpack-cli": "^3.3.0"
+    },
+    "dependencies": {
+        "maishu-toolkit": "^1.2.0"
     }
 }

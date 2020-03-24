@@ -1,4 +1,4 @@
-import { DataSource } from "./DataSource";
+import { DataSource } from "maishu-toolkit";
 import { Control } from "./Control";
 export interface DropDownParams<T> {
     dataSource: DataSource<T>;

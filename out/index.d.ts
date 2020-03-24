@@ -7,6 +7,7 @@ export { GridViewCell, DataControlField, DataControlFieldParams, GridViewDataCel
 export { GridViewEditableCell } from "./fields/GridViewEditableCell";
 export { DropDown, DropDownParams } from './DropDown';
 export { TextBox, TextBoxParams } from './TextBox';
-export { DataSource, DataSourceArguments, DataSourceSelectArguments, DataSourceSelectResult, ArrayDataSource } from './DataSource';
+export { ArrayDataSource } from './DataSource';
 export { NumberPagingBar, PagerSettings, DataSourcePagingBar } from './NumberPagingBar';
 export { Control } from "./Control";
+export { DataSource, DataSourceArguments, DataSourceSelectArguments, DataSourceSelectResult, } from "maishu-toolkit";

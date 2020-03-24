@@ -1,6 +1,6 @@
-import { DataSource } from "./DataSource";
+import { DataSource } from "maishu-toolkit";
 import { Control } from "./Control";
-import { Errors } from "./Errors";
+import { Errors as errors } from "./Errors";
 
 export interface DropDownParams<T> {
     dataSource: DataSource<T>
@@ -13,9 +13,9 @@ export class DropDown<T> extends Control<HTMLSelectElement> {
     constructor(params: DropDownParams<T>) {
         super(params.element)
 
-        if (params == null) throw Errors.argumentNull('params')
-        if (params.dataSource == null) throw Errors.argumentFieldNull('params', 'dataSource')
-        if (params.element == null) throw Errors.argumentFieldNull('params', 'element')
+        if (params == null) throw errors.argumentNull('params')
+        if (params.dataSource == null) throw errors.argumentFieldNull('params', 'dataSource')
+        if (params.element == null) throw errors.argumentFieldNull('params', 'element')
 
         this.init<T>(params)
     }

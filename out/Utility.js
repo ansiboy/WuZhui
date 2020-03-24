@@ -1,13 +1,13 @@
-import { Errors } from "./Errors";
+import { errors } from "maishu-toolkit";
 export class ElementHelper {
     static showElement(element) {
         if (!element)
-            throw Errors.argumentNull('element');
+            throw errors.argumentNull('element');
         element.style.removeProperty('display');
     }
     static hideElement(element) {
         if (!element)
-            throw Errors.argumentNull('element');
+            throw errors.argumentNull('element');
         element.style.display = 'none';
     }
     static isVisible(element) {
@@ -22,9 +22,9 @@ export class ElementHelper {
     }
     static findFirstParentByTagName(element, tagName) {
         if (element == null)
-            throw Errors.argumentNull("element");
+            throw errors.argumentNull("element");
         if (!tagName)
-            throw Errors.argumentNull('tagName');
+            throw errors.argumentNull('tagName');
         let parent = element.parentElement;
         while (parent != null) {
             if (parent.tagName.toLowerCase() == tagName.toLowerCase()) {

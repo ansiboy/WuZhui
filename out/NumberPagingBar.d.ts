@@ -1,4 +1,4 @@
-import { DataSourceSelectArguments, DataSource } from "./DataSource";
+import { DataSourceSelectArguments, DataSource } from "maishu-toolkit";
 export declare enum PagerPosition {
     Bottom = 0,
     Top = 1,

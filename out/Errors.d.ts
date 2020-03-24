@@ -1,12 +1,4 @@
-export declare class Errors {
-    static notImplemented(message?: string): Error;
-    static argumentNull(paramName: any): Error;
-    static controllBelonsAnother(): Error;
-    static columnsCanntEmpty(): Error;
-    static dataSourceCanntInsert(): Error;
-    static dataSourceCanntUpdate(): Error;
-    static dataSourceCanntDelete(): Error;
-    static primaryKeyNull(key: string): Error;
-    static queryResultTypeError(): Error;
-    static argumentFieldNull(argumentName: string, fieldName: string): Error;
-}
+export declare let Errors: import("../node_modules/maishu-toolkit/out/errors").Errors & {
+    columnsCanntEmpty(): Error;
+    notImplemented(message?: string): Error;
+};

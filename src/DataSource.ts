@@ -1,199 +1,202 @@
-import { Errors } from "./Errors";
-import { fireCallback, callbacks1, callbacks } from "./Utility";
+// import { Errors } from "./Errors";
+// import { fireCallback, callbacks1, callbacks } from "./Utility";
 
-// namespace wuzhui {
-export interface DataSourceSelectResult<T> {
-    totalRowCount: number,
-    dataItems: Array<T>
-}
 
-export interface DataSourceError extends Error {
-    handled: boolean,
-    method: DataMethod,
-}
+// // namespace wuzhui {
+// export interface DataSourceSelectResult<T> {
+//     totalRowCount: number,
+//     dataItems: Array<T>
+// }
 
-export type DataMethod = 'select' | 'update' | 'delete' | 'insert';
-export class DataSource<T> {
-    private args: DataSourceArguments<T>;
-    primaryKeys: (keyof T)[];
+// export interface DataSourceError extends Error {
+//     handled: boolean,
+//     method: DataMethod,
+// }
 
-    inserting = callbacks1<DataSource<T>, T, number>();
-    inserted = callbacks1<DataSource<T>, T, number>();
+// export type DataMethod = 'select' | 'update' | 'delete' | 'insert';
+// export class DataSource<T> {
+//     private args: DataSourceArguments<T>;
+//     primaryKeys: (keyof T)[];
 
-    deleting = callbacks<DataSource<T>, T>();
-    deleted = callbacks<DataSource<T>, T>();
-    updating = callbacks<DataSource<T>, T>();
-    updated = callbacks<DataSource<T>, T>();
-    selecting = callbacks<DataSource<T>, DataSourceSelectArguments>();
-    selected = callbacks<DataSource<T>, DataSourceSelectResult<T>>();
-    error = callbacks<this, DataSourceError>();
+//     inserting = callbacks1<DataSource<T>, T, number>();
+//     inserted = callbacks1<DataSource<T>, T, number>();
 
-    constructor(args: DataSourceArguments<T>) {
-        this.args = args;
-        this.primaryKeys = args.primaryKeys || [];
-    }
-    get canDelete() {
-        return this.args.delete != null && this.primaryKeys.length > 0;
-    }
-    get canInsert() {
-        return this.args.insert != null && this.primaryKeys.length > 0;
-    }
-    get canUpdate() {
-        return this.args.update != null && this.primaryKeys.length > 0;
-    }
+//     deleting = callbacks<DataSource<T>, T>();
+//     deleted = callbacks<DataSource<T>, T>();
+//     updating = callbacks<DataSource<T>, T>();
+//     updated = callbacks<DataSource<T>, T>();
+//     selecting = callbacks<DataSource<T>, DataSourceSelectArguments>();
+//     selected = callbacks<DataSource<T>, DataSourceSelectResult<T>>();
+//     error = callbacks<this, DataSourceError>();
 
-    executeInsert(item: T, args?: any) {
-        return this.args.insert(item, args);
-    }
-    executeDelete(item: T, args?: any) {
-        return this.args.delete(item, args);
-    }
-    executeUpdate(item: T, args?: any) {
-        return this.args.update(item, args);
-    }
-    executeSelect(args?: DataSourceSelectArguments) {
-        args = args || {}
-        return this.args.select(args);
-    }
+//     constructor(args: DataSourceArguments<T>) {
+//         this.args = args;
+//         this.primaryKeys = args.primaryKeys || [];
+//     }
+//     get canDelete() {
+//         return this.args.delete != null && this.primaryKeys.length > 0;
+//     }
+//     get canInsert() {
+//         return this.args.insert != null && this.primaryKeys.length > 0;
+//     }
+//     get canUpdate() {
+//         return this.args.update != null && this.primaryKeys.length > 0;
+//     }
 
-    insert(item: T)
-    insert(item: T, index?: number)
-    insert(item: T, args?: any, index?: number) {
-        if (!this.canInsert)
-            throw Errors.dataSourceCanntInsert();
+//     executeInsert(item: T, args?: any) {
+//         return this.args.insert(item, args);
+//     }
+//     executeDelete(item: T, args?: any) {
+//         return this.args.delete(item, args);
+//     }
+//     executeUpdate(item: T, args?: any) {
+//         return this.args.update(item, args);
+//     }
+//     executeSelect(args?: DataSourceSelectArguments) {
+//         args = args || {}
+//         return this.args.select(args);
+//     }
 
-        if (!item)
-            throw Errors.argumentNull("item");
+//     insert(item: T)
+//     insert(item: T, index?: number)
+//     insert(item: T, args?: any, index?: number) {
+//         if (!this.canInsert)
+//             throw Errors.dataSourceCanntInsert();
 
-        if (typeof args == 'number') {
-            index = args;
-            args = null;
-        }
+//         if (!item)
+//             throw Errors.argumentNull("item");
 
-        this.inserting.fire(this, item, index);
-        return this.executeInsert(item, args).then((data) => {
-            Object.assign(item, data);
-            this.inserted.fire(this, item, index);
-            return data;
-        }).catch(exc => {
-            this.processError(exc, 'insert');
-            throw exc;
-        });
-    }
-    delete(item: T, args?: any) {
-        if (!this.canDelete)
-            throw Errors.dataSourceCanntDelete();
+//         if (typeof args == 'number') {
+//             index = args;
+//             args = null;
+//         }
 
-        if (!item)
-            throw Errors.argumentNull("item");
+//         this.inserting.fire(this, item, index);
+//         return this.executeInsert(item, args).then((data) => {
+//             Object.assign(item, data);
+//             this.inserted.fire(this, item, index);
+//             return data;
+//         }).catch(exc => {
+//             this.processError(exc, 'insert');
+//             throw exc;
+//         });
+//     }
+//     delete(item: T, args?: any) {
+//         if (!this.canDelete)
+//             throw Errors.dataSourceCanntDelete();
 
-        this.checkPrimaryKeys(item);
-        this.deleting.fire(this, item);
-        return this.executeDelete(item, args).then((data) => {
-            this.deleted.fire(this, item);
-            return data;
-        }).catch(exc => {
-            this.processError(exc, 'delete');
-            throw exc;
-        });
-    }
-    update(item: T, args?: any) {
-        if (!this.canUpdate)
-            throw Errors.dataSourceCanntUpdate();
+//         if (!item)
+//             throw Errors.argumentNull("item");
 
-        if (!item)
-            throw Errors.argumentNull("item");
+//         this.checkPrimaryKeys(item);
+//         this.deleting.fire(this, item);
+//         return this.executeDelete(item, args).then((data) => {
+//             this.deleted.fire(this, item);
+//             return data;
+//         }).catch(exc => {
+//             this.processError(exc, 'delete');
+//             throw exc;
+//         });
+//     }
+//     update(item: T, args?: any) {
+//         if (!this.canUpdate)
+//             throw Errors.dataSourceCanntUpdate();
 
-        this.checkPrimaryKeys(item);
-        this.updating.fire(this, item);
-        return this.executeUpdate(item, args).then((data) => {
-            Object.assign(item, data);
-            this.updated.fire(this, item);
-            return data;
-        }).catch((exc: DataSourceError) => {
-            this.processError(exc, 'update');
-            throw exc;
-        });
-    }
-    isSameItem(theItem: T, otherItem: T) {
-        if (theItem == null)
-            throw Errors.argumentNull('theItem');
+//         if (!item)
+//             throw Errors.argumentNull("item");
 
-        if (otherItem == null)
-            throw Errors.argumentNull('otherItem');
+//         this.checkPrimaryKeys(item);
+//         this.updating.fire(this, item);
+//         return this.executeUpdate(item, args).then((data) => {
+//             Object.assign(item, data);
+//             this.updated.fire(this, item);
+//             return data;
+//         }).catch((exc: DataSourceError) => {
+//             this.processError(exc, 'update');
+//             throw exc;
+//         });
+//     }
+//     isSameItem(theItem: T, otherItem: T) {
+//         if (theItem == null)
+//             throw Errors.argumentNull('theItem');
 
-        if (this.primaryKeys.length == 0)
-            return theItem == otherItem;
+//         if (otherItem == null)
+//             throw Errors.argumentNull('otherItem');
 
-        this.checkPrimaryKeys(theItem);
-        this.checkPrimaryKeys(otherItem);
+//         if (this.primaryKeys.length == 0)
+//             return theItem == otherItem;
 
-        for (let pk of this.primaryKeys) {
-            if (theItem[pk] != otherItem[pk])
-                return false;
-        }
+//         this.checkPrimaryKeys(theItem);
+//         this.checkPrimaryKeys(otherItem);
 
-        return true;
-    }
-    private checkPrimaryKeys(item: Partial<T>) {
-        for (let key in item) {
-            if (item[key] == null && this.primaryKeys.indexOf(key) >= 0)
-                throw Errors.primaryKeyNull(key);
-        }
-    }
-    select(args?: DataSourceSelectArguments): Promise<DataSourceSelectResult<T>> {
-        args = args || {};
-        fireCallback(this.selecting, this, args);
-        return this.executeSelect(args).then((data) => {
-            let dataItems: Array<T>;
-            let totalRowCount: number
-            if (Array.isArray(data)) {
-                dataItems = data;
-                totalRowCount = data.length;
-            }
-            else if (data.dataItems !== undefined && data.totalRowCount !== undefined) {
-                dataItems = (<DataSourceSelectResult<T>>data).dataItems;
-                totalRowCount = (<DataSourceSelectResult<T>>data).totalRowCount;
-            }
-            else {
-                throw Errors.queryResultTypeError();
-            }
-            this.selected.fire(this, { totalRowCount, dataItems });
-            return { totalRowCount, dataItems };
-        }).catch(exc => {
-            this.processError(exc, 'select');
-            throw exc;
-        });
-    }
+//         for (let pk of this.primaryKeys) {
+//             if (theItem[pk] != otherItem[pk])
+//                 return false;
+//         }
 
-    private processError(exc: DataSourceError, method: DataMethod) {
-        exc.method = method;
-        this.error.fire(this, exc);
-        if (!exc.handled)
-            throw exc;
-    }
-}
+//         return true;
+//     }
+//     private checkPrimaryKeys(item: Partial<T>) {
+//         for (let key in item) {
+//             if (item[key] == null && this.primaryKeys.indexOf(key) >= 0)
+//                 throw Errors.primaryKeyNull(key);
+//         }
+//     }
+//     select(args?: DataSourceSelectArguments): Promise<DataSourceSelectResult<T>> {
+//         args = args || {};
+//         fireCallback(this.selecting, this, args);
+//         return this.executeSelect(args).then((data) => {
+//             let dataItems: Array<T>;
+//             let totalRowCount: number
+//             if (Array.isArray(data)) {
+//                 dataItems = data;
+//                 totalRowCount = data.length;
+//             }
+//             else if (data.dataItems !== undefined && data.totalRowCount !== undefined) {
+//                 dataItems = (<DataSourceSelectResult<T>>data).dataItems;
+//                 totalRowCount = (<DataSourceSelectResult<T>>data).totalRowCount;
+//             }
+//             else {
+//                 throw Errors.queryResultTypeError();
+//             }
+//             this.selected.fire(this, { totalRowCount, dataItems });
+//             return { totalRowCount, dataItems };
+//         }).catch(exc => {
+//             this.processError(exc, 'select');
+//             throw exc;
+//         });
+//     }
 
-export class DataSourceSelectArguments {
-    startRowIndex?: number;
-    maximumRows?: number;
-    sortExpression?: string;
-    filter?: string;
+//     private processError(exc: DataSourceError, method: DataMethod) {
+//         exc.method = method;
+//         this.error.fire(this, exc);
+//         if (!exc.handled)
+//             throw exc;
+//     }
+// }
 
-    constructor() {
-        this.startRowIndex = 0;
-        this.maximumRows = 2147483647;
-    }
-}
+// export class DataSourceSelectArguments {
+//     startRowIndex?: number;
+//     maximumRows?: number;
+//     sortExpression?: string;
+//     filter?: string;
 
-export type DataSourceArguments<T> = {
-    primaryKeys?: (keyof T)[]
-    select: ((args: DataSourceSelectArguments) => Promise<DataSourceSelectResult<T>>),
-    insert?: ((item: T, args?: any) => Promise<any>),
-    update?: ((item: T, args?: any) => Promise<any>),
-    delete?: ((item: T, args?: any) => Promise<any>),
-    sort?: (items: T[]) => T[],
-};
+//     constructor() {
+//         this.startRowIndex = 0;
+//         this.maximumRows = 2147483647;
+//     }
+// }
+
+// export type DataSourceArguments<T> = {
+//     primaryKeys?: (keyof T)[]
+//     select: ((args: DataSourceSelectArguments) => Promise<DataSourceSelectResult<T>>),
+//     insert?: ((item: T, args?: any) => Promise<any>),
+//     update?: ((item: T, args?: any) => Promise<any>),
+//     delete?: ((item: T, args?: any) => Promise<any>),
+//     sort?: (items: T[]) => T[],
+// };
+
+import { DataSource } from "maishu-toolkit"
 
 export class ArrayDataSource<T> extends DataSource<T> {
     constructor(items: T[]) {

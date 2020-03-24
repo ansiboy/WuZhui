@@ -8,16 +8,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { Control } from "./Control";
-import { Errors } from "./Errors";
+import { Errors as errors } from "./Errors";
 export class DropDown extends Control {
     constructor(params) {
         super(params.element);
         if (params == null)
-            throw Errors.argumentNull('params');
+            throw errors.argumentNull('params');
         if (params.dataSource == null)
-            throw Errors.argumentFieldNull('params', 'dataSource');
+            throw errors.argumentFieldNull('params', 'dataSource');
         if (params.element == null)
-            throw Errors.argumentFieldNull('params', 'element');
+            throw errors.argumentFieldNull('params', 'element');
         this.init(params);
     }
     init(params) {
