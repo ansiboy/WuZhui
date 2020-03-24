@@ -1,20 +1,30 @@
 "use strict";
 
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _get(target, property, receiver) { if (typeof Reflect !== "undefined" && Reflect.get) { _get = Reflect.get; } else { _get = function _get(target, property, receiver) { var base = _superPropBase(target, property); if (!base) return; var desc = Object.getOwnPropertyDescriptor(base, property); if (desc.get) { return desc.get.call(receiver); } return desc.value; }; } return _get(target, property, receiver || target); }
 
 function _superPropBase(object, property) { while (!Object.prototype.hasOwnProperty.call(object, property)) { object = _getPrototypeOf(object); if (object === null) break; } return object; }
 
+function _createSuper(Derived) { return function () { var Super = _getPrototypeOf(Derived), result; if (_isNativeReflectConstruct()) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createForOfIteratorHelper(o) { if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (o = _unsupportedIterableToArray(o))) { var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var it, normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -55,9 +65,7 @@ var wuzhui;
 (function (wuzhui) {
   var CONTROL_DATA_NAME = 'Control';
 
-  var Control =
-  /*#__PURE__*/
-  function () {
+  var Control = /*#__PURE__*/function () {
     function Control(element) {
       _classCallCheck(this, Control);
 
@@ -122,9 +130,7 @@ var wuzhui;
 var wuzhui;
 
 (function (wuzhui) {
-  var DataSource =
-  /*#__PURE__*/
-  function () {
+  var DataSource = /*#__PURE__*/function () {
     function DataSource(args) {
       _classCallCheck(this, DataSource);
 
@@ -235,28 +241,19 @@ var wuzhui;
         if (this.primaryKeys.length == 0) return theItem == otherItem;
         this.checkPrimaryKeys(theItem);
         this.checkPrimaryKeys(otherItem);
-        var _iteratorNormalCompletion = true;
-        var _didIteratorError = false;
-        var _iteratorError = undefined;
+
+        var _iterator = _createForOfIteratorHelper(this.primaryKeys),
+            _step;
 
         try {
-          for (var _iterator = this.primaryKeys[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          for (_iterator.s(); !(_step = _iterator.n()).done;) {
             var pk = _step.value;
             if (theItem[pk] != otherItem[pk]) return false;
           }
         } catch (err) {
-          _didIteratorError = true;
-          _iteratorError = err;
+          _iterator.e(err);
         } finally {
-          try {
-            if (!_iteratorNormalCompletion && _iterator.return != null) {
-              _iterator.return();
-            }
-          } finally {
-            if (_didIteratorError) {
-              throw _iteratorError;
-            }
-          }
+          _iterator.f();
         }
 
         return true;
@@ -342,19 +339,17 @@ var wuzhui;
 
   wuzhui.DataSourceSelectArguments = DataSourceSelectArguments;
 
-  var ArrayDataSource =
-  /*#__PURE__*/
-  function (_DataSource) {
+  var ArrayDataSource = /*#__PURE__*/function (_DataSource) {
     _inherits(ArrayDataSource, _DataSource);
+
+    var _super = _createSuper(ArrayDataSource);
 
     function ArrayDataSource(items) {
       _classCallCheck(this, ArrayDataSource);
 
-      return _possibleConstructorReturn(this, _getPrototypeOf(ArrayDataSource).call(this, {
+      return _super.call(this, {
         select: function select(args) {
-          return __awaiter(this, void 0, void 0,
-          /*#__PURE__*/
-          regeneratorRuntime.mark(function _callee() {
+          return __awaiter(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
             var dataItems, result;
             return regeneratorRuntime.wrap(function _callee$(_context) {
               while (1) {
@@ -377,7 +372,7 @@ var wuzhui;
             }, _callee);
           }));
         }
-      }));
+      });
     }
 
     return ArrayDataSource;
@@ -389,9 +384,7 @@ var wuzhui;
 var wuzhui;
 
 (function (wuzhui) {
-  var Errors =
-  /*#__PURE__*/
-  function () {
+  var Errors = /*#__PURE__*/function () {
     function Errors(parameters) {
       _classCallCheck(this, Errors);
     }
@@ -477,10 +470,10 @@ var wuzhui;
     }
   }
 
-  var GridViewRow =
-  /*#__PURE__*/
-  function (_wuzhui$Control) {
+  var GridViewRow = /*#__PURE__*/function (_wuzhui$Control) {
     _inherits(GridViewRow, _wuzhui$Control);
+
+    var _super2 = _createSuper(GridViewRow);
 
     function GridViewRow(rowType) {
       var _this5;
@@ -488,7 +481,7 @@ var wuzhui;
       _classCallCheck(this, GridViewRow);
 
       var element = document.createElement('tr');
-      _this5 = _possibleConstructorReturn(this, _getPrototypeOf(GridViewRow).call(this, element));
+      _this5 = _super2.call(this, element);
       _this5._rowType = rowType;
       return _this5;
     }
@@ -530,17 +523,17 @@ var wuzhui;
 
   wuzhui.GridViewRow = GridViewRow;
 
-  var GridViewDataRow =
-  /*#__PURE__*/
-  function (_GridViewRow) {
+  var GridViewDataRow = /*#__PURE__*/function (_GridViewRow) {
     _inherits(GridViewDataRow, _GridViewRow);
+
+    var _super3 = _createSuper(GridViewDataRow);
 
     function GridViewDataRow(gridView, dataItem) {
       var _this6;
 
       _classCallCheck(this, GridViewDataRow);
 
-      _this6 = _possibleConstructorReturn(this, _getPrototypeOf(GridViewDataRow).call(this, GridViewRowType.Data));
+      _this6 = _super3.call(this, GridViewRowType.Data);
       _this6._dataItem = dataItem;
 
       for (var i = 0; i < gridView.columns.length; i++) {
@@ -566,17 +559,17 @@ var wuzhui;
 
   wuzhui.GridViewDataRow = GridViewDataRow;
 
-  var GridView =
-  /*#__PURE__*/
-  function (_wuzhui$Control2) {
+  var GridView = /*#__PURE__*/function (_wuzhui$Control2) {
     _inherits(GridView, _wuzhui$Control2);
+
+    var _super4 = _createSuper(GridView);
 
     function GridView(params) {
       var _this7;
 
       _classCallCheck(this, GridView);
 
-      _this7 = _possibleConstructorReturn(this, _getPrototypeOf(GridView).call(this, params.element || document.createElement('table')));
+      _this7 = _super4.call(this, params.element || document.createElement('table'));
       _this7.emptyDataHTML = '暂无记录';
       _this7.initDataHTML = '数据正在加载中...';
       _this7.loadFailHTML = '加载数据失败，点击重新加载。'; //========================================================
@@ -915,9 +908,7 @@ var wuzhui;
 
   ;
 
-  var PagingBar =
-  /*#__PURE__*/
-  function () {
+  var PagingBar = /*#__PURE__*/function () {
     function PagingBar() {
       _classCallCheck(this, PagingBar);
     }
@@ -1006,10 +997,10 @@ var wuzhui;
 
   wuzhui.PagingBar = PagingBar;
 
-  var NumberPagingBar =
-  /*#__PURE__*/
-  function (_PagingBar) {
+  var NumberPagingBar = /*#__PURE__*/function (_PagingBar) {
     _inherits(NumberPagingBar, _PagingBar);
+
+    var _super5 = _createSuper(NumberPagingBar);
 
     function NumberPagingBar(params) {
       var _this10;
@@ -1026,7 +1017,7 @@ var wuzhui;
         previousPageText: '...',
         showTotal: true
       }, params.pagerSettings || {});
-      _this10 = _possibleConstructorReturn(this, _getPrototypeOf(NumberPagingBar).call(this));
+      _this10 = _super5.call(this);
       _this10.dataSource = params.dataSource;
       _this10.pagerSettings = pagerSettings;
       _this10.element = params.element;
@@ -1291,10 +1282,10 @@ var wuzhui;
 
   wuzhui.NumberPagingBar = NumberPagingBar;
 
-  var StaticNumberPagingBar =
-  /*#__PURE__*/
-  function (_PagingBar2) {
+  var StaticNumberPagingBar = /*#__PURE__*/function (_PagingBar2) {
     _inherits(StaticNumberPagingBar, _PagingBar2);
+
+    var _super6 = _createSuper(StaticNumberPagingBar);
 
     function StaticNumberPagingBar(params) {
       var _this12;
@@ -1311,7 +1302,7 @@ var wuzhui;
         previousPageText: '...',
         showTotal: true
       }, params.pagerSettings || {});
-      _this12 = _possibleConstructorReturn(this, _getPrototypeOf(StaticNumberPagingBar).call(this));
+      _this12 = _super6.call(this);
       _this12.loadData = params.loadData;
       _this12.pagerSettings = pagerSettings;
       _this12.element = params.element;
@@ -1581,9 +1572,7 @@ var wuzhui;
 var wuzhui;
 
 (function (wuzhui) {
-  var ElementHelper =
-  /*#__PURE__*/
-  function () {
+  var ElementHelper = /*#__PURE__*/function () {
     function ElementHelper() {
       _classCallCheck(this, ElementHelper);
     }
@@ -1651,9 +1640,7 @@ var wuzhui;
 
   wuzhui.applyStyle = applyStyle;
 
-  var Callback =
-  /*#__PURE__*/
-  function () {
+  var Callback = /*#__PURE__*/function () {
     function Callback() {
       _classCallCheck(this, Callback);
 
@@ -1717,15 +1704,15 @@ var wuzhui;
 var wuzhui;
 
 (function (wuzhui) {
-  var GridViewCell =
-  /*#__PURE__*/
-  function (_wuzhui$Control3) {
+  var GridViewCell = /*#__PURE__*/function (_wuzhui$Control3) {
     _inherits(GridViewCell, _wuzhui$Control3);
+
+    var _super7 = _createSuper(GridViewCell);
 
     function GridViewCell() {
       _classCallCheck(this, GridViewCell);
 
-      return _possibleConstructorReturn(this, _getPrototypeOf(GridViewCell).call(this, document.createElement('td')));
+      return _super7.call(this, document.createElement('td'));
     }
 
     return GridViewCell;
@@ -1733,17 +1720,17 @@ var wuzhui;
 
   wuzhui.GridViewCell = GridViewCell;
 
-  var GridViewDataCell =
-  /*#__PURE__*/
-  function (_GridViewCell) {
+  var GridViewDataCell = /*#__PURE__*/function (_GridViewCell) {
     _inherits(GridViewDataCell, _GridViewCell);
+
+    var _super8 = _createSuper(GridViewDataCell);
 
     function GridViewDataCell(params) {
       var _this14;
 
       _classCallCheck(this, GridViewDataCell);
 
-      _this14 = _possibleConstructorReturn(this, _getPrototypeOf(GridViewDataCell).call(this));
+      _this14 = _super8.call(this);
       var p = params;
       _this14.nullText = p.nullText != null ? p.nullText : '';
       _this14.dataFormatString = p.dataFormatString;
@@ -1873,17 +1860,17 @@ var wuzhui;
 
   wuzhui.GridViewDataCell = GridViewDataCell;
 
-  var GridViewHeaderCell =
-  /*#__PURE__*/
-  function (_wuzhui$Control4) {
+  var GridViewHeaderCell = /*#__PURE__*/function (_wuzhui$Control4) {
     _inherits(GridViewHeaderCell, _wuzhui$Control4);
+
+    var _super9 = _createSuper(GridViewHeaderCell);
 
     function GridViewHeaderCell(field) {
       var _this15;
 
       _classCallCheck(this, GridViewHeaderCell);
 
-      _this15 = _possibleConstructorReturn(this, _getPrototypeOf(GridViewHeaderCell).call(this, document.createElement('th')));
+      _this15 = _super9.call(this, document.createElement('th'));
       _this15.ascHTML = '↑';
       _this15.descHTML = '↓';
       _this15.sortingHTML = '...';
@@ -1978,9 +1965,7 @@ var wuzhui;
 
   wuzhui.GridViewHeaderCell = GridViewHeaderCell;
 
-  var DataControlField =
-  /*#__PURE__*/
-  function () {
+  var DataControlField = /*#__PURE__*/function () {
     function DataControlField(params) {
       _classCallCheck(this, DataControlField);
 
@@ -2107,10 +2092,10 @@ var wuzhui;
 var wuzhui;
 
 (function (wuzhui) {
-  var GridViewEditableCell =
-  /*#__PURE__*/
-  function (_wuzhui$GridViewDataC) {
+  var GridViewEditableCell = /*#__PURE__*/function (_wuzhui$GridViewDataC) {
     _inherits(GridViewEditableCell, _wuzhui$GridViewDataC);
+
+    var _super10 = _createSuper(GridViewEditableCell);
 
     function GridViewEditableCell(field, dataItem, valueType) {
       var _this17;
@@ -2119,11 +2104,11 @@ var wuzhui;
 
       if (field == null) throw wuzhui.Errors.argumentNull('field');
       if (dataItem == null) throw wuzhui.Errors.argumentNull('dataItem');
-      _this17 = _possibleConstructorReturn(this, _getPrototypeOf(GridViewEditableCell).call(this, {
+      _this17 = _super10.call(this, {
         dataField: field.dataField,
         nullText: field.nullText,
         dataFormatString: field.dataFormatString
-      }));
+      });
       _this17._field = field;
       _this17._dataItem = dataItem;
       _this17._valueType = valueType;
@@ -2219,17 +2204,17 @@ var wuzhui;
 
   wuzhui.GridViewEditableCell = GridViewEditableCell;
 
-  var BoundField =
-  /*#__PURE__*/
-  function (_wuzhui$DataControlFi) {
+  var BoundField = /*#__PURE__*/function (_wuzhui$DataControlFi) {
     _inherits(BoundField, _wuzhui$DataControlFi);
+
+    var _super11 = _createSuper(BoundField);
 
     function BoundField(params) {
       var _this18;
 
       _classCallCheck(this, BoundField);
 
-      _this18 = _possibleConstructorReturn(this, _getPrototypeOf(BoundField).call(this, params));
+      _this18 = _super11.call(this, params);
       _this18._params = params;
       _this18._valueElement = document.createElement('span');
       return _this18;
@@ -2296,31 +2281,31 @@ var wuzhui;
 var wuzhui;
 
 (function (wuzhui) {
-  var GridViewCommandCell =
-  /*#__PURE__*/
-  function (_wuzhui$GridViewCell) {
+  var GridViewCommandCell = /*#__PURE__*/function (_wuzhui$GridViewCell) {
     _inherits(GridViewCommandCell, _wuzhui$GridViewCell);
+
+    var _super12 = _createSuper(GridViewCommandCell);
 
     function GridViewCommandCell(field) {
       _classCallCheck(this, GridViewCommandCell);
 
-      return _possibleConstructorReturn(this, _getPrototypeOf(GridViewCommandCell).call(this));
+      return _super12.call(this);
     }
 
     return GridViewCommandCell;
   }(wuzhui.GridViewCell);
 
-  var CommandField =
-  /*#__PURE__*/
-  function (_wuzhui$DataControlFi2) {
+  var CommandField = /*#__PURE__*/function (_wuzhui$DataControlFi2) {
     _inherits(CommandField, _wuzhui$DataControlFi2);
+
+    var _super13 = _createSuper(CommandField);
 
     function CommandField(params) {
       var _this19;
 
       _classCallCheck(this, CommandField);
 
-      _this19 = _possibleConstructorReturn(this, _getPrototypeOf(CommandField).call(this, params));
+      _this19 = _super13.call(this, params);
       if (!_this19.params().cancelButtonHTML) _this19.params().cancelButtonHTML = '取消';
       if (!_this19.params().deleteButtonHTML) _this19.params().deleteButtonHTML = '删除';
       if (!_this19.params().editButtonHTML) _this19.params().editButtonHTML = '编辑';
@@ -2721,15 +2706,15 @@ var wuzhui;
 var wuzhui;
 
 (function (wuzhui) {
-  var CustomField =
-  /*#__PURE__*/
-  function (_wuzhui$DataControlFi3) {
+  var CustomField = /*#__PURE__*/function (_wuzhui$DataControlFi3) {
     _inherits(CustomField, _wuzhui$DataControlFi3);
+
+    var _super14 = _createSuper(CustomField);
 
     function CustomField(params) {
       _classCallCheck(this, CustomField);
 
-      return _possibleConstructorReturn(this, _getPrototypeOf(CustomField).call(this, params));
+      return _super14.call(this, params);
     }
 
     _createClass(CustomField, [{

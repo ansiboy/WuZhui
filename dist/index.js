@@ -1,6 +1,6 @@
 /*!
  * 
- *  maishu-wuzhui v1.15.2
+ *  maishu-wuzhui v1.11.0
  *  https://github.com/ansiboy/wuzhui
  *  
  *  Copyright (c) 2016-2018, shu mai <ansiboy@163.com>
@@ -105,6 +105,428 @@ return /******/ (function(modules) { // webpackBootstrap
 /************************************************************************/
 /******/ ({
 
+/***/ "./node_modules/maishu-toolkit/out/Errors.js":
+/*!***************************************************!*\
+  !*** ./node_modules/maishu-toolkit/out/Errors.js ***!
+  \***************************************************/
+/*! exports provided: Errors, errors */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Errors", function() { return Errors; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "errors", function() { return errors; });
+class Errors {
+    argumentNull(argumentName) {
+        let error = new Error(`Argument ${argumentName} cannt be null or emtpy.`);
+        let name = "argumentNull";
+        error.name = name;
+        return error;
+    }
+    routeDataFieldNull(fieldName) {
+        let msg = `The ${fieldName} field of route data cannt be null.`;
+        let error = new Error(msg);
+        let name = "routeDataFieldNull";
+        error.name = name;
+        return error;
+    }
+    argumentFieldNull(fieldName, argumentName) {
+        let msg = `The ${fieldName} field of ${argumentName} cannt be null.`;
+        let error = new Error(msg);
+        let name = "argumentFieldNull";
+        error.name = name;
+        return error;
+    }
+    argumentTypeIncorrect(argumentName, expectedType) {
+        let msg = `Argument ${argumentName} type error, expected type is ${expectedType}.`;
+        let error = new Error(msg);
+        let name = "argumentTypeIncorrect";
+        error.name = name;
+        return error;
+    }
+    queryResultTypeError() {
+        let msg = 'Type of the query result is expected as Array or DataSourceSelectResult.';
+        return new Error(msg);
+    }
+}
+let errors = new Errors();
+
+
+/***/ }),
+
+/***/ "./node_modules/maishu-toolkit/out/callback.js":
+/*!*****************************************************!*\
+  !*** ./node_modules/maishu-toolkit/out/callback.js ***!
+  \*****************************************************/
+/*! exports provided: Callback */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Callback", function() { return Callback; });
+class Callback {
+    constructor() {
+        this.funcs = new Array();
+    }
+    add(func) {
+        this.funcs.push(func);
+    }
+    remove(func) {
+        this.funcs = this.funcs.filter(o => o != func);
+    }
+    fire(args) {
+        this.funcs.forEach(o => o(args));
+    }
+    static create() {
+        return new Callback();
+    }
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/maishu-toolkit/out/data.js":
+/*!*************************************************!*\
+  !*** ./node_modules/maishu-toolkit/out/data.js ***!
+  \*************************************************/
+/*! exports provided: DataSource, DataSourceSelectArguments, ArrayDataSource */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DataSource", function() { return DataSource; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DataSourceSelectArguments", function() { return DataSourceSelectArguments; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ArrayDataSource", function() { return ArrayDataSource; });
+/* harmony import */ var _Errors__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Errors */ "./node_modules/maishu-toolkit/out/Errors.js");
+/* harmony import */ var _callback__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./callback */ "./node_modules/maishu-toolkit/out/callback.js");
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+
+
+let errors = Object.assign(_Errors__WEBPACK_IMPORTED_MODULE_0__["errors"], {
+    dataSourceCanntInsert() {
+        return new Error("DataSource can not insert.");
+    },
+    dataSourceCanntDelete() {
+        return new Error("DataSource can not delete.");
+    },
+    dataSourceCanntUpdate() {
+        return new Error("DataSource can not update.");
+    },
+    primaryKeyNull(key) {
+        let msg = `Primary key named '${key}' value is null.`;
+        return new Error(msg);
+    }
+});
+class DataSource {
+    constructor(args) {
+        this.inserting = new _callback__WEBPACK_IMPORTED_MODULE_1__["Callback"](); //callbacks1<DataSource<T>, T, number>();
+        this.inserted = new _callback__WEBPACK_IMPORTED_MODULE_1__["Callback"]();
+        this.deleting = new _callback__WEBPACK_IMPORTED_MODULE_1__["Callback"](); //callbacks<DataSource<T>, T>();
+        this.deleted = new _callback__WEBPACK_IMPORTED_MODULE_1__["Callback"](); //callbacks<DataSource<T>, T>();
+        this.updating = new _callback__WEBPACK_IMPORTED_MODULE_1__["Callback"]();
+        this.updated = new _callback__WEBPACK_IMPORTED_MODULE_1__["Callback"]();
+        this.selecting = new _callback__WEBPACK_IMPORTED_MODULE_1__["Callback"]();
+        this.selected = new _callback__WEBPACK_IMPORTED_MODULE_1__["Callback"](); //callbacks<DataSource<T>, DataSourceSelectResult<T>>();
+        this.error = new _callback__WEBPACK_IMPORTED_MODULE_1__["Callback"](); //callbacks<this, DataSourceError>();
+        this.args = args;
+        this.primaryKeys = args.primaryKeys || [];
+    }
+    ; //callbacks<DataSource<T>, DataSourceSelectArguments>();
+    get canDelete() {
+        return this.args.delete != null && this.primaryKeys.length > 0;
+    }
+    get canInsert() {
+        return this.args.insert != null && this.primaryKeys.length > 0;
+    }
+    get canUpdate() {
+        return this.args.update != null && this.primaryKeys.length > 0;
+    }
+    executeInsert(item, args) {
+        return this.args.insert(item, args);
+    }
+    executeDelete(item, args) {
+        return this.args.delete(item, args);
+    }
+    executeUpdate(item, args) {
+        return this.args.update(item, args);
+    }
+    executeSelect(args) {
+        args = args || {};
+        return this.args.select(args);
+    }
+    insert(item, args, index) {
+        if (!this.canInsert)
+            throw errors.dataSourceCanntInsert();
+        if (!item)
+            throw errors.argumentNull("item");
+        if (typeof args == 'number') {
+            index = args;
+            args = null;
+        }
+        this.inserting.fire({ sender: this, dataItem: item, index });
+        return this.executeInsert(item, args).then((data) => {
+            Object.assign(item, data);
+            this.inserted.fire({ sender: this, dataItem: item, index });
+            return data;
+        }).catch(exc => {
+            this.processError(exc, 'insert');
+            throw exc;
+        });
+    }
+    delete(item, args) {
+        if (!this.canDelete)
+            throw errors.dataSourceCanntDelete();
+        if (!item)
+            throw errors.argumentNull("item");
+        this.checkPrimaryKeys(item);
+        this.deleting.fire({ sender: this, dataItem: item });
+        return this.executeDelete(item, args).then((data) => {
+            this.deleted.fire({ sender: this, dataItem: item });
+            return data;
+        }).catch(exc => {
+            this.processError(exc, 'delete');
+            throw exc;
+        });
+    }
+    update(item, args) {
+        if (!this.canUpdate)
+            throw errors.dataSourceCanntUpdate();
+        if (!item)
+            throw errors.argumentNull("item");
+        this.checkPrimaryKeys(item);
+        this.updating.fire({ sender: this, dataItem: item });
+        return this.executeUpdate(item, args).then((data) => {
+            Object.assign(item, data);
+            this.updated.fire({ sender: this, dataItem: item });
+            return data;
+        }).catch((exc) => {
+            this.processError(exc, 'update');
+            throw exc;
+        });
+    }
+    isSameItem(theItem, otherItem) {
+        if (theItem == null)
+            throw errors.argumentNull('theItem');
+        if (otherItem == null)
+            throw errors.argumentNull('otherItem');
+        if (this.primaryKeys.length == 0)
+            return theItem == otherItem;
+        this.checkPrimaryKeys(theItem);
+        this.checkPrimaryKeys(otherItem);
+        for (let pk of this.primaryKeys) {
+            if (theItem[pk] != otherItem[pk])
+                return false;
+        }
+        return true;
+    }
+    checkPrimaryKeys(item) {
+        for (let key in item) {
+            if (item[key] == null && this.primaryKeys.indexOf(key) >= 0)
+                throw errors.primaryKeyNull(key);
+        }
+    }
+    select(args) {
+        args = args || {};
+        // fireCallback(this.selecting, this, args);
+        this.selecting.fire({ sender: this, selectArguments: args });
+        return this.executeSelect(args).then((data) => {
+            let dataItems;
+            let totalRowCount;
+            if (Array.isArray(data)) {
+                dataItems = data;
+                totalRowCount = data.length;
+            }
+            else if (data.dataItems !== undefined && data.totalRowCount !== undefined) {
+                dataItems = data.dataItems;
+                totalRowCount = data.totalRowCount;
+            }
+            else {
+                throw errors.queryResultTypeError();
+            }
+            this.selected.fire({ sender: this, selectResult: { totalRowCount, dataItems } });
+            return { totalRowCount, dataItems };
+        }).catch(exc => {
+            this.processError(exc, 'select');
+            throw exc;
+        });
+    }
+    processError(exc, method) {
+        exc.method = method;
+        this.error.fire({ sender: this, error: exc });
+        if (!exc.handled)
+            throw exc;
+    }
+}
+class DataSourceSelectArguments {
+    constructor() {
+        this.startRowIndex = 0;
+        this.maximumRows = 2147483647;
+    }
+}
+class ArrayDataSource extends DataSource {
+    constructor(items) {
+        super({
+            select(args) {
+                return __awaiter(this, void 0, void 0, function* () {
+                    if (args.sortExpression) {
+                    }
+                    let dataItems = items.slice(args.startRowIndex, args.startRowIndex + args.maximumRows);
+                    let result = { dataItems, totalRowCount: items.length };
+                    return result;
+                });
+            }
+        });
+    }
+}
+// }
+
+
+/***/ }),
+
+/***/ "./node_modules/maishu-toolkit/out/errors.js":
+/*!***************************************************!*\
+  !*** ./node_modules/maishu-toolkit/out/errors.js ***!
+  \***************************************************/
+/*! exports provided: Errors, errors */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Errors", function() { return Errors; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "errors", function() { return errors; });
+class Errors {
+    argumentNull(argumentName) {
+        let error = new Error(`Argument ${argumentName} cannt be null or emtpy.`);
+        let name = "argumentNull";
+        error.name = name;
+        return error;
+    }
+    routeDataFieldNull(fieldName) {
+        let msg = `The ${fieldName} field of route data cannt be null.`;
+        let error = new Error(msg);
+        let name = "routeDataFieldNull";
+        error.name = name;
+        return error;
+    }
+    argumentFieldNull(fieldName, argumentName) {
+        let msg = `The ${fieldName} field of ${argumentName} cannt be null.`;
+        let error = new Error(msg);
+        let name = "argumentFieldNull";
+        error.name = name;
+        return error;
+    }
+    argumentTypeIncorrect(argumentName, expectedType) {
+        let msg = `Argument ${argumentName} type error, expected type is ${expectedType}.`;
+        let error = new Error(msg);
+        let name = "argumentTypeIncorrect";
+        error.name = name;
+        return error;
+    }
+    queryResultTypeError() {
+        let msg = 'Type of the query result is expected as Array or DataSourceSelectResult.';
+        return new Error(msg);
+    }
+}
+let errors = new Errors();
+
+
+/***/ }),
+
+/***/ "./node_modules/maishu-toolkit/out/guid.js":
+/*!*************************************************!*\
+  !*** ./node_modules/maishu-toolkit/out/guid.js ***!
+  \*************************************************/
+/*! exports provided: guid */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "guid", function() { return guid; });
+function guid() {
+    function s4() {
+        return Math.floor((1 + Math.random()) * 0x10000)
+            .toString(16)
+            .substring(1);
+    }
+    return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+        s4() + '-' + s4() + s4() + s4();
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/maishu-toolkit/out/index.js":
+/*!**************************************************!*\
+  !*** ./node_modules/maishu-toolkit/out/index.js ***!
+  \**************************************************/
+/*! exports provided: guid, pathContact, Errors, errors, Callback, DataSource, DataSourceSelectArguments */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _guid__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./guid */ "./node_modules/maishu-toolkit/out/guid.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "guid", function() { return _guid__WEBPACK_IMPORTED_MODULE_0__["guid"]; });
+
+/* harmony import */ var _path__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./path */ "./node_modules/maishu-toolkit/out/path.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "pathContact", function() { return _path__WEBPACK_IMPORTED_MODULE_1__["pathContact"]; });
+
+/* harmony import */ var _errors__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./errors */ "./node_modules/maishu-toolkit/out/errors.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Errors", function() { return _errors__WEBPACK_IMPORTED_MODULE_2__["Errors"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "errors", function() { return _errors__WEBPACK_IMPORTED_MODULE_2__["errors"]; });
+
+/* harmony import */ var _callback__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./callback */ "./node_modules/maishu-toolkit/out/callback.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Callback", function() { return _callback__WEBPACK_IMPORTED_MODULE_3__["Callback"]; });
+
+/* harmony import */ var _data__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./data */ "./node_modules/maishu-toolkit/out/data.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DataSource", function() { return _data__WEBPACK_IMPORTED_MODULE_4__["DataSource"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DataSourceSelectArguments", function() { return _data__WEBPACK_IMPORTED_MODULE_4__["DataSourceSelectArguments"]; });
+
+
+
+
+
+
+
+
+/***/ }),
+
+/***/ "./node_modules/maishu-toolkit/out/path.js":
+/*!*************************************************!*\
+  !*** ./node_modules/maishu-toolkit/out/path.js ***!
+  \*************************************************/
+/*! exports provided: pathContact */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "pathContact", function() { return pathContact; });
+/** 连接多个路径 */
+function pathContact(...paths) {
+    paths = paths || [];
+    if (paths.length == 0)
+        return "";
+    if (paths.length == 1) {
+        return paths[0];
+    }
+    let str = paths.join("");
+    // 将一个或多个的 / 变为一个 /，例如：/shop/test// 转换为 /shop/test/
+    str = str.replace(/\/+/g, '/');
+    return str;
+}
+
+
+/***/ }),
+
 /***/ "./out/Control.js":
 /*!************************!*\
   !*** ./out/Control.js ***!
@@ -177,16 +599,13 @@ class Control {
 /*!***************************!*\
   !*** ./out/DataSource.js ***!
   \***************************/
-/*! exports provided: DataSource, DataSourceSelectArguments, ArrayDataSource */
+/*! exports provided: ArrayDataSource */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DataSource", function() { return DataSource; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DataSourceSelectArguments", function() { return DataSourceSelectArguments; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ArrayDataSource", function() { return ArrayDataSource; });
-/* harmony import */ var _Errors__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Errors */ "./out/Errors.js");
-/* harmony import */ var _Utility__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Utility */ "./out/Utility.js");
+/* harmony import */ var maishu_toolkit__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! maishu-toolkit */ "./node_modules/maishu-toolkit/out/index.js");
 var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -197,152 +616,7 @@ var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _argume
     });
 };
 
-
-class DataSource {
-    constructor(args) {
-        this.inserting = Object(_Utility__WEBPACK_IMPORTED_MODULE_1__["callbacks1"])();
-        this.inserted = Object(_Utility__WEBPACK_IMPORTED_MODULE_1__["callbacks1"])();
-        this.deleting = Object(_Utility__WEBPACK_IMPORTED_MODULE_1__["callbacks"])();
-        this.deleted = Object(_Utility__WEBPACK_IMPORTED_MODULE_1__["callbacks"])();
-        this.updating = Object(_Utility__WEBPACK_IMPORTED_MODULE_1__["callbacks"])();
-        this.updated = Object(_Utility__WEBPACK_IMPORTED_MODULE_1__["callbacks"])();
-        this.selecting = Object(_Utility__WEBPACK_IMPORTED_MODULE_1__["callbacks"])();
-        this.selected = Object(_Utility__WEBPACK_IMPORTED_MODULE_1__["callbacks"])();
-        this.error = Object(_Utility__WEBPACK_IMPORTED_MODULE_1__["callbacks"])();
-        this.args = args;
-        this.primaryKeys = args.primaryKeys || [];
-    }
-    get canDelete() {
-        return this.args.delete != null && this.primaryKeys.length > 0;
-    }
-    get canInsert() {
-        return this.args.insert != null && this.primaryKeys.length > 0;
-    }
-    get canUpdate() {
-        return this.args.update != null && this.primaryKeys.length > 0;
-    }
-    executeInsert(item, args) {
-        return this.args.insert(item, args);
-    }
-    executeDelete(item, args) {
-        return this.args.delete(item, args);
-    }
-    executeUpdate(item, args) {
-        return this.args.update(item, args);
-    }
-    executeSelect(args) {
-        args = args || {};
-        return this.args.select(args);
-    }
-    insert(item, args, index) {
-        if (!this.canInsert)
-            throw _Errors__WEBPACK_IMPORTED_MODULE_0__["Errors"].dataSourceCanntInsert();
-        if (!item)
-            throw _Errors__WEBPACK_IMPORTED_MODULE_0__["Errors"].argumentNull("item");
-        if (typeof args == 'number') {
-            index = args;
-            args = null;
-        }
-        this.inserting.fire(this, item, index);
-        return this.executeInsert(item, args).then((data) => {
-            Object.assign(item, data);
-            this.inserted.fire(this, item, index);
-            return data;
-        }).catch(exc => {
-            this.processError(exc, 'insert');
-            throw exc;
-        });
-    }
-    delete(item, args) {
-        if (!this.canDelete)
-            throw _Errors__WEBPACK_IMPORTED_MODULE_0__["Errors"].dataSourceCanntDelete();
-        if (!item)
-            throw _Errors__WEBPACK_IMPORTED_MODULE_0__["Errors"].argumentNull("item");
-        this.checkPrimaryKeys(item);
-        this.deleting.fire(this, item);
-        return this.executeDelete(item, args).then((data) => {
-            this.deleted.fire(this, item);
-            return data;
-        }).catch(exc => {
-            this.processError(exc, 'delete');
-            throw exc;
-        });
-    }
-    update(item, args) {
-        if (!this.canUpdate)
-            throw _Errors__WEBPACK_IMPORTED_MODULE_0__["Errors"].dataSourceCanntUpdate();
-        if (!item)
-            throw _Errors__WEBPACK_IMPORTED_MODULE_0__["Errors"].argumentNull("item");
-        this.checkPrimaryKeys(item);
-        this.updating.fire(this, item);
-        return this.executeUpdate(item, args).then((data) => {
-            Object.assign(item, data);
-            this.updated.fire(this, item);
-            return data;
-        }).catch((exc) => {
-            this.processError(exc, 'update');
-            throw exc;
-        });
-    }
-    isSameItem(theItem, otherItem) {
-        if (theItem == null)
-            throw _Errors__WEBPACK_IMPORTED_MODULE_0__["Errors"].argumentNull('theItem');
-        if (otherItem == null)
-            throw _Errors__WEBPACK_IMPORTED_MODULE_0__["Errors"].argumentNull('otherItem');
-        if (this.primaryKeys.length == 0)
-            return theItem == otherItem;
-        this.checkPrimaryKeys(theItem);
-        this.checkPrimaryKeys(otherItem);
-        for (let pk of this.primaryKeys) {
-            if (theItem[pk] != otherItem[pk])
-                return false;
-        }
-        return true;
-    }
-    checkPrimaryKeys(item) {
-        for (let key in item) {
-            if (item[key] == null && this.primaryKeys.indexOf(key) >= 0)
-                throw _Errors__WEBPACK_IMPORTED_MODULE_0__["Errors"].primaryKeyNull(key);
-        }
-    }
-    select(args) {
-        args = args || {};
-        Object(_Utility__WEBPACK_IMPORTED_MODULE_1__["fireCallback"])(this.selecting, this, args);
-        return this.executeSelect(args).then((data) => {
-            let dataItems;
-            let totalRowCount;
-            if (Array.isArray(data)) {
-                dataItems = data;
-                totalRowCount = data.length;
-            }
-            else if (data.dataItems !== undefined && data.totalRowCount !== undefined) {
-                dataItems = data.dataItems;
-                totalRowCount = data.totalRowCount;
-            }
-            else {
-                throw _Errors__WEBPACK_IMPORTED_MODULE_0__["Errors"].queryResultTypeError();
-            }
-            this.selected.fire(this, { totalRowCount, dataItems });
-            return { totalRowCount, dataItems };
-        }).catch(exc => {
-            this.processError(exc, 'select');
-            throw exc;
-        });
-    }
-    processError(exc, method) {
-        exc.method = method;
-        this.error.fire(this, exc);
-        if (!exc.handled)
-            throw exc;
-    }
-}
-class DataSourceSelectArguments {
-    constructor() {
-        this.startRowIndex = 0;
-        this.maximumRows = 2147483647;
-    }
-}
-class ArrayDataSource extends DataSource {
+class ArrayDataSource extends maishu_toolkit__WEBPACK_IMPORTED_MODULE_0__["DataSource"] {
     constructor(items) {
         super({
             select(args) {
@@ -357,7 +631,6 @@ class ArrayDataSource extends DataSource {
         });
     }
 }
-// }
 
 
 /***/ }),
@@ -428,44 +701,55 @@ class DropDown extends _Control__WEBPACK_IMPORTED_MODULE_0__["Control"] {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Errors", function() { return Errors; });
+/* harmony import */ var maishu_toolkit__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! maishu-toolkit */ "./node_modules/maishu-toolkit/out/index.js");
 // namespace wuzhui {
-class Errors {
-    static notImplemented(message) {
+// export class Errors {
+//     static notImplemented(message?: string) {
+//         message = message || "Not implemented";
+//         return new Error(message);
+//     }
+//     static argumentNull(paramName) {
+//         return new Error("Argument '" + paramName + "' can not be null.");
+//     }
+//     static controllBelonsAnother() {
+//         return new Error("The control is belongs another control.");
+//     }
+//     static columnsCanntEmpty() {
+//         return new Error("Columns cannt empty.");
+//     }
+//     static dataSourceCanntInsert() {
+//         return new Error("DataSource can not insert.");
+//     }
+//     static dataSourceCanntUpdate() {
+//         return new Error("DataSource can not update.");
+//     }
+//     static dataSourceCanntDelete() {
+//         return new Error("DataSource can not delete.");
+//     }
+//     static primaryKeyNull(key: string) {
+//         let msg = `Primary key named '${key}' value is null.`;
+//         return new Error(msg);
+//     }
+//     static queryResultTypeError() {
+//         let msg = 'Type of the query result is expected as Array or DataSourceSelectResult.';
+//         return new Error(msg);
+//     }
+//     static argumentFieldNull(argumentName: string, fieldName: string) {
+//         let msg = `Argument ${argumentName} ${fieldName} field can not be null or empty.`
+//         return new Error(msg);
+//     }
+// }
+// }
+
+let Errors = Object.assign(maishu_toolkit__WEBPACK_IMPORTED_MODULE_0__["errors"], {
+    columnsCanntEmpty() {
+        return new Error("Columns cannt empty.");
+    },
+    notImplemented(message) {
         message = message || "Not implemented";
         return new Error(message);
     }
-    static argumentNull(paramName) {
-        return new Error("Argument '" + paramName + "' can not be null.");
-    }
-    static controllBelonsAnother() {
-        return new Error("The control is belongs another control.");
-    }
-    static columnsCanntEmpty() {
-        return new Error("Columns cannt empty.");
-    }
-    static dataSourceCanntInsert() {
-        return new Error("DataSource can not insert.");
-    }
-    static dataSourceCanntUpdate() {
-        return new Error("DataSource can not update.");
-    }
-    static dataSourceCanntDelete() {
-        return new Error("DataSource can not delete.");
-    }
-    static primaryKeyNull(key) {
-        let msg = `Primary key named '${key}' value is null.`;
-        return new Error(msg);
-    }
-    static queryResultTypeError() {
-        let msg = 'Type of the query result is expected as Array or DataSourceSelectResult.';
-        return new Error(msg);
-    }
-    static argumentFieldNull(argumentName, fieldName) {
-        let msg = `Argument ${argumentName} ${fieldName} field can not be null or empty.`;
-        return new Error(msg);
-    }
-}
-// }
+});
 
 
 /***/ }),
@@ -484,7 +768,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GridViewDataRow", function() { return GridViewDataRow; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GridView", function() { return GridView; });
 /* harmony import */ var _Control__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Control */ "./out/Control.js");
-/* harmony import */ var _DataSource__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./DataSource */ "./out/DataSource.js");
+/* harmony import */ var maishu_toolkit__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! maishu-toolkit */ "./node_modules/maishu-toolkit/out/index.js");
 /* harmony import */ var _fields_DataControlField__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./fields/DataControlField */ "./out/fields/DataControlField.js");
 /* harmony import */ var _NumberPagingBar__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./NumberPagingBar */ "./out/NumberPagingBar.js");
 /* harmony import */ var _Utility__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Utility */ "./out/Utility.js");
@@ -586,27 +870,27 @@ class GridView extends _Control__WEBPACK_IMPORTED_MODULE_0__["Control"] {
             column.gridView = this;
         }
         this._dataSource = params.dataSource;
-        this._dataSource.selected.add((sender, e) => this.on_selectedExecuted(e));
-        this._dataSource.updated.add((sender, item) => this.on_updateExecuted(item));
-        this._dataSource.inserted.add((sender, item, index) => this.on_insertExecuted(item, index));
-        this._dataSource.deleted.add((sender, item) => this.on_deleteExecuted(item));
-        this._dataSource.selecting.add((sender, e) => {
+        this._dataSource.selected.add(args => this.on_selectedExecuted(args.selectResult));
+        this._dataSource.updated.add(args => this.on_updateExecuted(args.dataItem));
+        this._dataSource.inserted.add(args => this.on_insertExecuted(args.dataItem, args.index));
+        this._dataSource.deleted.add(args => this.on_deleteExecuted(args.dataItem));
+        this._dataSource.selecting.add(args => {
             let display = this._emtpyRow.element.style.display;
             if (display != 'none') {
                 this._emtpyRow.element.cells[0].innerHTML = this.initDataHTML;
             }
         });
-        this._dataSource.error.add((sender, e) => {
-            if (e.method == 'select') {
+        this._dataSource.error.add(args => {
+            if (args.error.method == 'select') {
                 this.renderDataItems([]);
                 var element = this._emtpyRow.cells[0].element;
                 element.innerHTML = this.loadFailHTML;
                 element.onclick = () => {
                     this._dataSource.select(this.selectArguments);
                 };
-                e.handled = true;
-                console.error(e.message);
-                console.log(e.stack);
+                args.error.handled = true;
+                console.error(args.error.message);
+                console.log(args.error.stack);
             }
         });
         if (params.showHeader) {
@@ -630,7 +914,7 @@ class GridView extends _Control__WEBPACK_IMPORTED_MODULE_0__["Control"] {
                 this.pagingBar.selectArguments.maximumRows = params.pageSize;
             }
         }
-        this.selectArguments = this.pagingBar ? this.pagingBar.selectArguments : new _DataSource__WEBPACK_IMPORTED_MODULE_1__["DataSourceSelectArguments"]();
+        this.selectArguments = this.pagingBar ? this.pagingBar.selectArguments : new maishu_toolkit__WEBPACK_IMPORTED_MODULE_1__["DataSourceSelectArguments"]();
         this.dataSource.select(this.selectArguments);
     }
     createPagingBar(pagerSettings) {
@@ -829,7 +1113,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DataSourcePagingBar", function() { return DataSourcePagingBar; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NumberPagingBar", function() { return NumberPagingBar; });
 /* harmony import */ var _Errors__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Errors */ "./out/Errors.js");
-/* harmony import */ var _DataSource__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./DataSource */ "./out/DataSource.js");
+/* harmony import */ var maishu_toolkit__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! maishu-toolkit */ "./node_modules/maishu-toolkit/out/index.js");
 
 
 // namespace wuzhui {
@@ -845,13 +1129,13 @@ class PagingBar {
         // if (dataSource == null)
         //     throw Errors.argumentNull('dataSource');
         this._pageIndex = 0;
-        this._selectArguments = selectArguments || new _DataSource__WEBPACK_IMPORTED_MODULE_1__["DataSourceSelectArguments"]();
+        this._selectArguments = selectArguments || new maishu_toolkit__WEBPACK_IMPORTED_MODULE_1__["DataSourceSelectArguments"]();
         var pagingBar = this;
         pagingBar.totalRowCount = 1000000;
         if (dataSource) {
-            dataSource.selected.add((source, args) => {
+            dataSource.selected.add(args => {
                 pagingBar.pageSize = this._selectArguments.maximumRows;
-                var totalRowCount = args.totalRowCount;
+                var totalRowCount = args.selectResult.totalRowCount;
                 if (totalRowCount != null && totalRowCount >= 0) {
                     pagingBar.totalRowCount = totalRowCount;
                 }
@@ -1425,17 +1709,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "callbacks", function() { return callbacks; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "callbacks1", function() { return callbacks1; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fireCallback", function() { return fireCallback; });
-/* harmony import */ var _Errors__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Errors */ "./out/Errors.js");
+/* harmony import */ var maishu_toolkit__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! maishu-toolkit */ "./node_modules/maishu-toolkit/out/index.js");
 
 class ElementHelper {
     static showElement(element) {
         if (!element)
-            throw _Errors__WEBPACK_IMPORTED_MODULE_0__["Errors"].argumentNull('element');
+            throw maishu_toolkit__WEBPACK_IMPORTED_MODULE_0__["errors"].argumentNull('element');
         element.style.removeProperty('display');
     }
     static hideElement(element) {
         if (!element)
-            throw _Errors__WEBPACK_IMPORTED_MODULE_0__["Errors"].argumentNull('element');
+            throw maishu_toolkit__WEBPACK_IMPORTED_MODULE_0__["errors"].argumentNull('element');
         element.style.display = 'none';
     }
     static isVisible(element) {
@@ -1450,9 +1734,9 @@ class ElementHelper {
     }
     static findFirstParentByTagName(element, tagName) {
         if (element == null)
-            throw _Errors__WEBPACK_IMPORTED_MODULE_0__["Errors"].argumentNull("element");
+            throw maishu_toolkit__WEBPACK_IMPORTED_MODULE_0__["errors"].argumentNull("element");
         if (!tagName)
-            throw _Errors__WEBPACK_IMPORTED_MODULE_0__["Errors"].argumentNull('tagName');
+            throw maishu_toolkit__WEBPACK_IMPORTED_MODULE_0__["errors"].argumentNull('tagName');
         let parent = element.parentElement;
         while (parent != null) {
             if (parent.tagName.toLowerCase() == tagName.toLowerCase()) {
@@ -2350,7 +2634,7 @@ class GridViewEditableCell extends _DataControlField__WEBPACK_IMPORTED_MODULE_0_
 /*!**********************!*\
   !*** ./out/index.js ***!
   \**********************/
-/*! exports provided: GridView, GridViewDataRow, GridViewRowType, BoundField, CommandField, CustomField, CustomBoundField, GridViewCell, DataControlField, GridViewDataCell, GridViewEditableCell, DropDown, TextBox, DataSource, DataSourceSelectArguments, ArrayDataSource, NumberPagingBar, DataSourcePagingBar, Control */
+/*! exports provided: GridView, GridViewDataRow, GridViewRowType, BoundField, CommandField, CustomField, CustomBoundField, GridViewCell, DataControlField, GridViewDataCell, GridViewEditableCell, DropDown, TextBox, ArrayDataSource, NumberPagingBar, DataSourcePagingBar, Control, DataSource, DataSourceSelectArguments */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2391,10 +2675,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "TextBox", function() { return _TextBox__WEBPACK_IMPORTED_MODULE_8__["TextBox"]; });
 
 /* harmony import */ var _DataSource__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./DataSource */ "./out/DataSource.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DataSource", function() { return _DataSource__WEBPACK_IMPORTED_MODULE_9__["DataSource"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DataSourceSelectArguments", function() { return _DataSource__WEBPACK_IMPORTED_MODULE_9__["DataSourceSelectArguments"]; });
-
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ArrayDataSource", function() { return _DataSource__WEBPACK_IMPORTED_MODULE_9__["ArrayDataSource"]; });
 
 /* harmony import */ var _NumberPagingBar__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./NumberPagingBar */ "./out/NumberPagingBar.js");
@@ -2404,6 +2684,12 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony import */ var _Control__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./Control */ "./out/Control.js");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Control", function() { return _Control__WEBPACK_IMPORTED_MODULE_11__["Control"]; });
+
+/* harmony import */ var maishu_toolkit__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! maishu-toolkit */ "./node_modules/maishu-toolkit/out/index.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DataSource", function() { return maishu_toolkit__WEBPACK_IMPORTED_MODULE_12__["DataSource"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DataSourceSelectArguments", function() { return maishu_toolkit__WEBPACK_IMPORTED_MODULE_12__["DataSourceSelectArguments"]; });
+
 
 
 

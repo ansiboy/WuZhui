@@ -18,9 +18,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 // namespace wuzhui {
 var CONTROL_DATA_NAME = 'Control';
 
-var Control =
-/*#__PURE__*/
-function () {
+var Control = /*#__PURE__*/function () {
   function Control(element) {
     _classCallCheck(this, Control);
 

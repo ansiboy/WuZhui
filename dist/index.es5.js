@@ -1,6 +1,6 @@
 /*!
  * 
- *  maishu-wuzhui v1.15.2
+ *  maishu-wuzhui v1.11.0
  *  https://github.com/ansiboy/wuzhui
  *  
  *  Copyright (c) 2016-2018, shu mai <ansiboy@163.com>
@@ -105,6 +105,428 @@ return /******/ (function(modules) { // webpackBootstrap
 /************************************************************************/
 /******/ ({
 
+/***/ "./node_modules/maishu-toolkit/out/Errors.js":
+/*!***************************************************!*\
+  !*** ./node_modules/maishu-toolkit/out/Errors.js ***!
+  \***************************************************/
+/*! exports provided: Errors, errors */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Errors", function() { return Errors; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "errors", function() { return errors; });
+class Errors {
+    argumentNull(argumentName) {
+        let error = new Error(`Argument ${argumentName} cannt be null or emtpy.`);
+        let name = "argumentNull";
+        error.name = name;
+        return error;
+    }
+    routeDataFieldNull(fieldName) {
+        let msg = `The ${fieldName} field of route data cannt be null.`;
+        let error = new Error(msg);
+        let name = "routeDataFieldNull";
+        error.name = name;
+        return error;
+    }
+    argumentFieldNull(fieldName, argumentName) {
+        let msg = `The ${fieldName} field of ${argumentName} cannt be null.`;
+        let error = new Error(msg);
+        let name = "argumentFieldNull";
+        error.name = name;
+        return error;
+    }
+    argumentTypeIncorrect(argumentName, expectedType) {
+        let msg = `Argument ${argumentName} type error, expected type is ${expectedType}.`;
+        let error = new Error(msg);
+        let name = "argumentTypeIncorrect";
+        error.name = name;
+        return error;
+    }
+    queryResultTypeError() {
+        let msg = 'Type of the query result is expected as Array or DataSourceSelectResult.';
+        return new Error(msg);
+    }
+}
+let errors = new Errors();
+
+
+/***/ }),
+
+/***/ "./node_modules/maishu-toolkit/out/callback.js":
+/*!*****************************************************!*\
+  !*** ./node_modules/maishu-toolkit/out/callback.js ***!
+  \*****************************************************/
+/*! exports provided: Callback */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Callback", function() { return Callback; });
+class Callback {
+    constructor() {
+        this.funcs = new Array();
+    }
+    add(func) {
+        this.funcs.push(func);
+    }
+    remove(func) {
+        this.funcs = this.funcs.filter(o => o != func);
+    }
+    fire(args) {
+        this.funcs.forEach(o => o(args));
+    }
+    static create() {
+        return new Callback();
+    }
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/maishu-toolkit/out/data.js":
+/*!*************************************************!*\
+  !*** ./node_modules/maishu-toolkit/out/data.js ***!
+  \*************************************************/
+/*! exports provided: DataSource, DataSourceSelectArguments, ArrayDataSource */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DataSource", function() { return DataSource; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DataSourceSelectArguments", function() { return DataSourceSelectArguments; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ArrayDataSource", function() { return ArrayDataSource; });
+/* harmony import */ var _Errors__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Errors */ "./node_modules/maishu-toolkit/out/Errors.js");
+/* harmony import */ var _callback__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./callback */ "./node_modules/maishu-toolkit/out/callback.js");
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+
+
+let errors = Object.assign(_Errors__WEBPACK_IMPORTED_MODULE_0__["errors"], {
+    dataSourceCanntInsert() {
+        return new Error("DataSource can not insert.");
+    },
+    dataSourceCanntDelete() {
+        return new Error("DataSource can not delete.");
+    },
+    dataSourceCanntUpdate() {
+        return new Error("DataSource can not update.");
+    },
+    primaryKeyNull(key) {
+        let msg = `Primary key named '${key}' value is null.`;
+        return new Error(msg);
+    }
+});
+class DataSource {
+    constructor(args) {
+        this.inserting = new _callback__WEBPACK_IMPORTED_MODULE_1__["Callback"](); //callbacks1<DataSource<T>, T, number>();
+        this.inserted = new _callback__WEBPACK_IMPORTED_MODULE_1__["Callback"]();
+        this.deleting = new _callback__WEBPACK_IMPORTED_MODULE_1__["Callback"](); //callbacks<DataSource<T>, T>();
+        this.deleted = new _callback__WEBPACK_IMPORTED_MODULE_1__["Callback"](); //callbacks<DataSource<T>, T>();
+        this.updating = new _callback__WEBPACK_IMPORTED_MODULE_1__["Callback"]();
+        this.updated = new _callback__WEBPACK_IMPORTED_MODULE_1__["Callback"]();
+        this.selecting = new _callback__WEBPACK_IMPORTED_MODULE_1__["Callback"]();
+        this.selected = new _callback__WEBPACK_IMPORTED_MODULE_1__["Callback"](); //callbacks<DataSource<T>, DataSourceSelectResult<T>>();
+        this.error = new _callback__WEBPACK_IMPORTED_MODULE_1__["Callback"](); //callbacks<this, DataSourceError>();
+        this.args = args;
+        this.primaryKeys = args.primaryKeys || [];
+    }
+    ; //callbacks<DataSource<T>, DataSourceSelectArguments>();
+    get canDelete() {
+        return this.args.delete != null && this.primaryKeys.length > 0;
+    }
+    get canInsert() {
+        return this.args.insert != null && this.primaryKeys.length > 0;
+    }
+    get canUpdate() {
+        return this.args.update != null && this.primaryKeys.length > 0;
+    }
+    executeInsert(item, args) {
+        return this.args.insert(item, args);
+    }
+    executeDelete(item, args) {
+        return this.args.delete(item, args);
+    }
+    executeUpdate(item, args) {
+        return this.args.update(item, args);
+    }
+    executeSelect(args) {
+        args = args || {};
+        return this.args.select(args);
+    }
+    insert(item, args, index) {
+        if (!this.canInsert)
+            throw errors.dataSourceCanntInsert();
+        if (!item)
+            throw errors.argumentNull("item");
+        if (typeof args == 'number') {
+            index = args;
+            args = null;
+        }
+        this.inserting.fire({ sender: this, dataItem: item, index });
+        return this.executeInsert(item, args).then((data) => {
+            Object.assign(item, data);
+            this.inserted.fire({ sender: this, dataItem: item, index });
+            return data;
+        }).catch(exc => {
+            this.processError(exc, 'insert');
+            throw exc;
+        });
+    }
+    delete(item, args) {
+        if (!this.canDelete)
+            throw errors.dataSourceCanntDelete();
+        if (!item)
+            throw errors.argumentNull("item");
+        this.checkPrimaryKeys(item);
+        this.deleting.fire({ sender: this, dataItem: item });
+        return this.executeDelete(item, args).then((data) => {
+            this.deleted.fire({ sender: this, dataItem: item });
+            return data;
+        }).catch(exc => {
+            this.processError(exc, 'delete');
+            throw exc;
+        });
+    }
+    update(item, args) {
+        if (!this.canUpdate)
+            throw errors.dataSourceCanntUpdate();
+        if (!item)
+            throw errors.argumentNull("item");
+        this.checkPrimaryKeys(item);
+        this.updating.fire({ sender: this, dataItem: item });
+        return this.executeUpdate(item, args).then((data) => {
+            Object.assign(item, data);
+            this.updated.fire({ sender: this, dataItem: item });
+            return data;
+        }).catch((exc) => {
+            this.processError(exc, 'update');
+            throw exc;
+        });
+    }
+    isSameItem(theItem, otherItem) {
+        if (theItem == null)
+            throw errors.argumentNull('theItem');
+        if (otherItem == null)
+            throw errors.argumentNull('otherItem');
+        if (this.primaryKeys.length == 0)
+            return theItem == otherItem;
+        this.checkPrimaryKeys(theItem);
+        this.checkPrimaryKeys(otherItem);
+        for (let pk of this.primaryKeys) {
+            if (theItem[pk] != otherItem[pk])
+                return false;
+        }
+        return true;
+    }
+    checkPrimaryKeys(item) {
+        for (let key in item) {
+            if (item[key] == null && this.primaryKeys.indexOf(key) >= 0)
+                throw errors.primaryKeyNull(key);
+        }
+    }
+    select(args) {
+        args = args || {};
+        // fireCallback(this.selecting, this, args);
+        this.selecting.fire({ sender: this, selectArguments: args });
+        return this.executeSelect(args).then((data) => {
+            let dataItems;
+            let totalRowCount;
+            if (Array.isArray(data)) {
+                dataItems = data;
+                totalRowCount = data.length;
+            }
+            else if (data.dataItems !== undefined && data.totalRowCount !== undefined) {
+                dataItems = data.dataItems;
+                totalRowCount = data.totalRowCount;
+            }
+            else {
+                throw errors.queryResultTypeError();
+            }
+            this.selected.fire({ sender: this, selectResult: { totalRowCount, dataItems } });
+            return { totalRowCount, dataItems };
+        }).catch(exc => {
+            this.processError(exc, 'select');
+            throw exc;
+        });
+    }
+    processError(exc, method) {
+        exc.method = method;
+        this.error.fire({ sender: this, error: exc });
+        if (!exc.handled)
+            throw exc;
+    }
+}
+class DataSourceSelectArguments {
+    constructor() {
+        this.startRowIndex = 0;
+        this.maximumRows = 2147483647;
+    }
+}
+class ArrayDataSource extends DataSource {
+    constructor(items) {
+        super({
+            select(args) {
+                return __awaiter(this, void 0, void 0, function* () {
+                    if (args.sortExpression) {
+                    }
+                    let dataItems = items.slice(args.startRowIndex, args.startRowIndex + args.maximumRows);
+                    let result = { dataItems, totalRowCount: items.length };
+                    return result;
+                });
+            }
+        });
+    }
+}
+// }
+
+
+/***/ }),
+
+/***/ "./node_modules/maishu-toolkit/out/errors.js":
+/*!***************************************************!*\
+  !*** ./node_modules/maishu-toolkit/out/errors.js ***!
+  \***************************************************/
+/*! exports provided: Errors, errors */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Errors", function() { return Errors; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "errors", function() { return errors; });
+class Errors {
+    argumentNull(argumentName) {
+        let error = new Error(`Argument ${argumentName} cannt be null or emtpy.`);
+        let name = "argumentNull";
+        error.name = name;
+        return error;
+    }
+    routeDataFieldNull(fieldName) {
+        let msg = `The ${fieldName} field of route data cannt be null.`;
+        let error = new Error(msg);
+        let name = "routeDataFieldNull";
+        error.name = name;
+        return error;
+    }
+    argumentFieldNull(fieldName, argumentName) {
+        let msg = `The ${fieldName} field of ${argumentName} cannt be null.`;
+        let error = new Error(msg);
+        let name = "argumentFieldNull";
+        error.name = name;
+        return error;
+    }
+    argumentTypeIncorrect(argumentName, expectedType) {
+        let msg = `Argument ${argumentName} type error, expected type is ${expectedType}.`;
+        let error = new Error(msg);
+        let name = "argumentTypeIncorrect";
+        error.name = name;
+        return error;
+    }
+    queryResultTypeError() {
+        let msg = 'Type of the query result is expected as Array or DataSourceSelectResult.';
+        return new Error(msg);
+    }
+}
+let errors = new Errors();
+
+
+/***/ }),
+
+/***/ "./node_modules/maishu-toolkit/out/guid.js":
+/*!*************************************************!*\
+  !*** ./node_modules/maishu-toolkit/out/guid.js ***!
+  \*************************************************/
+/*! exports provided: guid */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "guid", function() { return guid; });
+function guid() {
+    function s4() {
+        return Math.floor((1 + Math.random()) * 0x10000)
+            .toString(16)
+            .substring(1);
+    }
+    return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+        s4() + '-' + s4() + s4() + s4();
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/maishu-toolkit/out/index.js":
+/*!**************************************************!*\
+  !*** ./node_modules/maishu-toolkit/out/index.js ***!
+  \**************************************************/
+/*! exports provided: guid, pathContact, Errors, errors, Callback, DataSource, DataSourceSelectArguments */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _guid__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./guid */ "./node_modules/maishu-toolkit/out/guid.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "guid", function() { return _guid__WEBPACK_IMPORTED_MODULE_0__["guid"]; });
+
+/* harmony import */ var _path__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./path */ "./node_modules/maishu-toolkit/out/path.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "pathContact", function() { return _path__WEBPACK_IMPORTED_MODULE_1__["pathContact"]; });
+
+/* harmony import */ var _errors__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./errors */ "./node_modules/maishu-toolkit/out/errors.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Errors", function() { return _errors__WEBPACK_IMPORTED_MODULE_2__["Errors"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "errors", function() { return _errors__WEBPACK_IMPORTED_MODULE_2__["errors"]; });
+
+/* harmony import */ var _callback__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./callback */ "./node_modules/maishu-toolkit/out/callback.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Callback", function() { return _callback__WEBPACK_IMPORTED_MODULE_3__["Callback"]; });
+
+/* harmony import */ var _data__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./data */ "./node_modules/maishu-toolkit/out/data.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DataSource", function() { return _data__WEBPACK_IMPORTED_MODULE_4__["DataSource"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DataSourceSelectArguments", function() { return _data__WEBPACK_IMPORTED_MODULE_4__["DataSourceSelectArguments"]; });
+
+
+
+
+
+
+
+
+/***/ }),
+
+/***/ "./node_modules/maishu-toolkit/out/path.js":
+/*!*************************************************!*\
+  !*** ./node_modules/maishu-toolkit/out/path.js ***!
+  \*************************************************/
+/*! exports provided: pathContact */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "pathContact", function() { return pathContact; });
+/** 连接多个路径 */
+function pathContact(...paths) {
+    paths = paths || [];
+    if (paths.length == 0)
+        return "";
+    if (paths.length == 1) {
+        return paths[0];
+    }
+    let str = paths.join("");
+    // 将一个或多个的 / 变为一个 /，例如：/shop/test// 转换为 /shop/test/
+    str = str.replace(/\/+/g, '/');
+    return str;
+}
+
+
+/***/ }),
+
 /***/ "./out-es5/Control.js":
 /*!****************************!*\
   !*** ./out-es5/Control.js ***!
@@ -133,9 +555,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 // namespace wuzhui {
 var CONTROL_DATA_NAME = 'Control';
 
-var Control =
-/*#__PURE__*/
-function () {
+var Control = /*#__PURE__*/function () {
   function Control(element) {
     _classCallCheck(this, Control);
 
@@ -215,29 +635,27 @@ exports.Control = Control;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.ArrayDataSource = exports.DataSourceSelectArguments = exports.DataSource = void 0;
+exports.ArrayDataSource = void 0;
 
-var _Errors = __webpack_require__(/*! ./Errors */ "./out-es5/Errors.js");
+var _maishuToolkit = __webpack_require__(/*! maishu-toolkit */ "./node_modules/maishu-toolkit/out/index.js");
 
-var _Utility = __webpack_require__(/*! ./Utility */ "./out-es5/Utility.js");
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _createSuper(Derived) { return function () { var Super = _getPrototypeOf(Derived), result; if (_isNativeReflectConstruct()) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
 
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
 var __awaiter = void 0 && (void 0).__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
@@ -271,240 +689,17 @@ var __awaiter = void 0 && (void 0).__awaiter || function (thisArg, _arguments, P
   });
 };
 
-var DataSource =
-/*#__PURE__*/
-function () {
-  function DataSource(args) {
-    _classCallCheck(this, DataSource);
-
-    this.inserting = (0, _Utility.callbacks1)();
-    this.inserted = (0, _Utility.callbacks1)();
-    this.deleting = (0, _Utility.callbacks)();
-    this.deleted = (0, _Utility.callbacks)();
-    this.updating = (0, _Utility.callbacks)();
-    this.updated = (0, _Utility.callbacks)();
-    this.selecting = (0, _Utility.callbacks)();
-    this.selected = (0, _Utility.callbacks)();
-    this.error = (0, _Utility.callbacks)();
-    this.args = args;
-    this.primaryKeys = args.primaryKeys || [];
-  }
-
-  _createClass(DataSource, [{
-    key: "executeInsert",
-    value: function executeInsert(item, args) {
-      return this.args.insert(item, args);
-    }
-  }, {
-    key: "executeDelete",
-    value: function executeDelete(item, args) {
-      return this.args.delete(item, args);
-    }
-  }, {
-    key: "executeUpdate",
-    value: function executeUpdate(item, args) {
-      return this.args.update(item, args);
-    }
-  }, {
-    key: "executeSelect",
-    value: function executeSelect(args) {
-      args = args || {};
-      return this.args.select(args);
-    }
-  }, {
-    key: "insert",
-    value: function insert(item, args, index) {
-      var _this = this;
-
-      if (!this.canInsert) throw _Errors.Errors.dataSourceCanntInsert();
-      if (!item) throw _Errors.Errors.argumentNull("item");
-
-      if (typeof args == 'number') {
-        index = args;
-        args = null;
-      }
-
-      this.inserting.fire(this, item, index);
-      return this.executeInsert(item, args).then(function (data) {
-        Object.assign(item, data);
-
-        _this.inserted.fire(_this, item, index);
-
-        return data;
-      }).catch(function (exc) {
-        _this.processError(exc, 'insert');
-
-        throw exc;
-      });
-    }
-  }, {
-    key: "delete",
-    value: function _delete(item, args) {
-      var _this2 = this;
-
-      if (!this.canDelete) throw _Errors.Errors.dataSourceCanntDelete();
-      if (!item) throw _Errors.Errors.argumentNull("item");
-      this.checkPrimaryKeys(item);
-      this.deleting.fire(this, item);
-      return this.executeDelete(item, args).then(function (data) {
-        _this2.deleted.fire(_this2, item);
-
-        return data;
-      }).catch(function (exc) {
-        _this2.processError(exc, 'delete');
-
-        throw exc;
-      });
-    }
-  }, {
-    key: "update",
-    value: function update(item, args) {
-      var _this3 = this;
-
-      if (!this.canUpdate) throw _Errors.Errors.dataSourceCanntUpdate();
-      if (!item) throw _Errors.Errors.argumentNull("item");
-      this.checkPrimaryKeys(item);
-      this.updating.fire(this, item);
-      return this.executeUpdate(item, args).then(function (data) {
-        Object.assign(item, data);
-
-        _this3.updated.fire(_this3, item);
-
-        return data;
-      }).catch(function (exc) {
-        _this3.processError(exc, 'update');
-
-        throw exc;
-      });
-    }
-  }, {
-    key: "isSameItem",
-    value: function isSameItem(theItem, otherItem) {
-      if (theItem == null) throw _Errors.Errors.argumentNull('theItem');
-      if (otherItem == null) throw _Errors.Errors.argumentNull('otherItem');
-      if (this.primaryKeys.length == 0) return theItem == otherItem;
-      this.checkPrimaryKeys(theItem);
-      this.checkPrimaryKeys(otherItem);
-      var _iteratorNormalCompletion = true;
-      var _didIteratorError = false;
-      var _iteratorError = undefined;
-
-      try {
-        for (var _iterator = this.primaryKeys[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-          var pk = _step.value;
-          if (theItem[pk] != otherItem[pk]) return false;
-        }
-      } catch (err) {
-        _didIteratorError = true;
-        _iteratorError = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion && _iterator.return != null) {
-            _iterator.return();
-          }
-        } finally {
-          if (_didIteratorError) {
-            throw _iteratorError;
-          }
-        }
-      }
-
-      return true;
-    }
-  }, {
-    key: "checkPrimaryKeys",
-    value: function checkPrimaryKeys(item) {
-      for (var key in item) {
-        if (item[key] == null && this.primaryKeys.indexOf(key) >= 0) throw _Errors.Errors.primaryKeyNull(key);
-      }
-    }
-  }, {
-    key: "select",
-    value: function select(args) {
-      var _this4 = this;
-
-      args = args || {};
-      (0, _Utility.fireCallback)(this.selecting, this, args);
-      return this.executeSelect(args).then(function (data) {
-        var dataItems;
-        var totalRowCount;
-
-        if (Array.isArray(data)) {
-          dataItems = data;
-          totalRowCount = data.length;
-        } else if (data.dataItems !== undefined && data.totalRowCount !== undefined) {
-          dataItems = data.dataItems;
-          totalRowCount = data.totalRowCount;
-        } else {
-          throw _Errors.Errors.queryResultTypeError();
-        }
-
-        _this4.selected.fire(_this4, {
-          totalRowCount: totalRowCount,
-          dataItems: dataItems
-        });
-
-        return {
-          totalRowCount: totalRowCount,
-          dataItems: dataItems
-        };
-      }).catch(function (exc) {
-        _this4.processError(exc, 'select');
-
-        throw exc;
-      });
-    }
-  }, {
-    key: "processError",
-    value: function processError(exc, method) {
-      exc.method = method;
-      this.error.fire(this, exc);
-      if (!exc.handled) throw exc;
-    }
-  }, {
-    key: "canDelete",
-    get: function get() {
-      return this.args.delete != null && this.primaryKeys.length > 0;
-    }
-  }, {
-    key: "canInsert",
-    get: function get() {
-      return this.args.insert != null && this.primaryKeys.length > 0;
-    }
-  }, {
-    key: "canUpdate",
-    get: function get() {
-      return this.args.update != null && this.primaryKeys.length > 0;
-    }
-  }]);
-
-  return DataSource;
-}();
-
-exports.DataSource = DataSource;
-
-var DataSourceSelectArguments = function DataSourceSelectArguments() {
-  _classCallCheck(this, DataSourceSelectArguments);
-
-  this.startRowIndex = 0;
-  this.maximumRows = 2147483647;
-};
-
-exports.DataSourceSelectArguments = DataSourceSelectArguments;
-
-var ArrayDataSource =
-/*#__PURE__*/
-function (_DataSource) {
+var ArrayDataSource = /*#__PURE__*/function (_DataSource) {
   _inherits(ArrayDataSource, _DataSource);
+
+  var _super = _createSuper(ArrayDataSource);
 
   function ArrayDataSource(items) {
     _classCallCheck(this, ArrayDataSource);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(ArrayDataSource).call(this, {
+    return _super.call(this, {
       select: function select(args) {
-        return __awaiter(this, void 0, void 0,
-        /*#__PURE__*/
-        regeneratorRuntime.mark(function _callee() {
+        return __awaiter(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
           var dataItems, result;
           return regeneratorRuntime.wrap(function _callee$(_context) {
             while (1) {
@@ -527,12 +722,11 @@ function (_DataSource) {
           }, _callee);
         }));
       }
-    }));
+    });
   }
 
   return ArrayDataSource;
-}(DataSource); // }
-
+}(_maishuToolkit.DataSource);
 
 exports.ArrayDataSource = ArrayDataSource;
 //# sourceMappingURL=DataSource.js.map
@@ -559,7 +753,7 @@ var _Control2 = __webpack_require__(/*! ./Control */ "./out-es5/Control.js");
 
 var _Errors = __webpack_require__(/*! ./Errors */ "./out-es5/Errors.js");
 
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -567,9 +761,13 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
+function _createSuper(Derived) { return function () { var Super = _getPrototypeOf(Derived), result; if (_isNativeReflectConstruct()) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -609,17 +807,17 @@ var __awaiter = void 0 && (void 0).__awaiter || function (thisArg, _arguments, P
   });
 };
 
-var DropDown =
-/*#__PURE__*/
-function (_Control) {
+var DropDown = /*#__PURE__*/function (_Control) {
   _inherits(DropDown, _Control);
+
+  var _super = _createSuper(DropDown);
 
   function DropDown(params) {
     var _this;
 
     _classCallCheck(this, DropDown);
 
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(DropDown).call(this, params.element));
+    _this = _super.call(this, params.element);
     if (params == null) throw _Errors.Errors.argumentNull('params');
     if (params.dataSource == null) throw _Errors.Errors.argumentFieldNull('params', 'dataSource');
     if (params.element == null) throw _Errors.Errors.argumentFieldNull('params', 'element');
@@ -632,9 +830,7 @@ function (_Control) {
   _createClass(DropDown, [{
     key: "init",
     value: function init(params) {
-      return __awaiter(this, void 0, void 0,
-      /*#__PURE__*/
-      regeneratorRuntime.mark(function _callee() {
+      return __awaiter(this, void 0, void 0, /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
         var _this2 = this;
 
         var r;
@@ -693,80 +889,55 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.Errors = void 0;
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+var _maishuToolkit = __webpack_require__(/*! maishu-toolkit */ "./node_modules/maishu-toolkit/out/index.js");
 
 // namespace wuzhui {
-var Errors =
-/*#__PURE__*/
-function () {
-  function Errors() {
-    _classCallCheck(this, Errors);
+// export class Errors {
+//     static notImplemented(message?: string) {
+//         message = message || "Not implemented";
+//         return new Error(message);
+//     }
+//     static argumentNull(paramName) {
+//         return new Error("Argument '" + paramName + "' can not be null.");
+//     }
+//     static controllBelonsAnother() {
+//         return new Error("The control is belongs another control.");
+//     }
+//     static columnsCanntEmpty() {
+//         return new Error("Columns cannt empty.");
+//     }
+//     static dataSourceCanntInsert() {
+//         return new Error("DataSource can not insert.");
+//     }
+//     static dataSourceCanntUpdate() {
+//         return new Error("DataSource can not update.");
+//     }
+//     static dataSourceCanntDelete() {
+//         return new Error("DataSource can not delete.");
+//     }
+//     static primaryKeyNull(key: string) {
+//         let msg = `Primary key named '${key}' value is null.`;
+//         return new Error(msg);
+//     }
+//     static queryResultTypeError() {
+//         let msg = 'Type of the query result is expected as Array or DataSourceSelectResult.';
+//         return new Error(msg);
+//     }
+//     static argumentFieldNull(argumentName: string, fieldName: string) {
+//         let msg = `Argument ${argumentName} ${fieldName} field can not be null or empty.`
+//         return new Error(msg);
+//     }
+// }
+// }
+var Errors = Object.assign(_maishuToolkit.errors, {
+  columnsCanntEmpty: function columnsCanntEmpty() {
+    return new Error("Columns cannt empty.");
+  },
+  notImplemented: function notImplemented(message) {
+    message = message || "Not implemented";
+    return new Error(message);
   }
-
-  _createClass(Errors, null, [{
-    key: "notImplemented",
-    value: function notImplemented(message) {
-      message = message || "Not implemented";
-      return new Error(message);
-    }
-  }, {
-    key: "argumentNull",
-    value: function argumentNull(paramName) {
-      return new Error("Argument '" + paramName + "' can not be null.");
-    }
-  }, {
-    key: "controllBelonsAnother",
-    value: function controllBelonsAnother() {
-      return new Error("The control is belongs another control.");
-    }
-  }, {
-    key: "columnsCanntEmpty",
-    value: function columnsCanntEmpty() {
-      return new Error("Columns cannt empty.");
-    }
-  }, {
-    key: "dataSourceCanntInsert",
-    value: function dataSourceCanntInsert() {
-      return new Error("DataSource can not insert.");
-    }
-  }, {
-    key: "dataSourceCanntUpdate",
-    value: function dataSourceCanntUpdate() {
-      return new Error("DataSource can not update.");
-    }
-  }, {
-    key: "dataSourceCanntDelete",
-    value: function dataSourceCanntDelete() {
-      return new Error("DataSource can not delete.");
-    }
-  }, {
-    key: "primaryKeyNull",
-    value: function primaryKeyNull(key) {
-      var msg = "Primary key named '".concat(key, "' value is null.");
-      return new Error(msg);
-    }
-  }, {
-    key: "queryResultTypeError",
-    value: function queryResultTypeError() {
-      var msg = 'Type of the query result is expected as Array or DataSourceSelectResult.';
-      return new Error(msg);
-    }
-  }, {
-    key: "argumentFieldNull",
-    value: function argumentFieldNull(argumentName, fieldName) {
-      var msg = "Argument ".concat(argumentName, " ").concat(fieldName, " field can not be null or empty.");
-      return new Error(msg);
-    }
-  }]);
-
-  return Errors;
-}(); // }
-
-
+});
 exports.Errors = Errors;
 //# sourceMappingURL=Errors.js.map
 
@@ -790,7 +961,7 @@ exports.GridView = exports.GridViewDataRow = exports.GridViewRow = exports.GridV
 
 var _Control3 = __webpack_require__(/*! ./Control */ "./out-es5/Control.js");
 
-var _DataSource = __webpack_require__(/*! ./DataSource */ "./out-es5/DataSource.js");
+var _maishuToolkit = __webpack_require__(/*! maishu-toolkit */ "./node_modules/maishu-toolkit/out/index.js");
 
 var _DataControlField = __webpack_require__(/*! ./fields/DataControlField */ "./out-es5/fields/DataControlField.js");
 
@@ -800,7 +971,7 @@ var _Utility = __webpack_require__(/*! ./Utility */ "./out-es5/Utility.js");
 
 var _Errors = __webpack_require__(/*! ./Errors */ "./out-es5/Errors.js");
 
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -808,9 +979,13 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
+function _createSuper(Derived) { return function () { var Super = _getPrototypeOf(Derived), result; if (_isNativeReflectConstruct()) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -842,10 +1017,10 @@ function findParentElement(element, parentTagName) {
   }
 }
 
-var GridViewRow =
-/*#__PURE__*/
-function (_Control) {
+var GridViewRow = /*#__PURE__*/function (_Control) {
   _inherits(GridViewRow, _Control);
+
+  var _super = _createSuper(GridViewRow);
 
   function GridViewRow(rowType) {
     var _this;
@@ -853,7 +1028,7 @@ function (_Control) {
     _classCallCheck(this, GridViewRow);
 
     var element = document.createElement('tr');
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(GridViewRow).call(this, element));
+    _this = _super.call(this, element);
     _this._rowType = rowType;
     return _this;
   }
@@ -896,17 +1071,17 @@ function (_Control) {
 
 exports.GridViewRow = GridViewRow;
 
-var GridViewDataRow =
-/*#__PURE__*/
-function (_GridViewRow) {
+var GridViewDataRow = /*#__PURE__*/function (_GridViewRow) {
   _inherits(GridViewDataRow, _GridViewRow);
+
+  var _super2 = _createSuper(GridViewDataRow);
 
   function GridViewDataRow(gridView, dataItem) {
     var _this2;
 
     _classCallCheck(this, GridViewDataRow);
 
-    _this2 = _possibleConstructorReturn(this, _getPrototypeOf(GridViewDataRow).call(this, GridViewRowType.Data));
+    _this2 = _super2.call(this, GridViewRowType.Data);
     _this2._dataItem = dataItem;
 
     for (var i = 0; i < gridView.columns.length; i++) {
@@ -932,17 +1107,17 @@ function (_GridViewRow) {
 
 exports.GridViewDataRow = GridViewDataRow;
 
-var GridView =
-/*#__PURE__*/
-function (_Control2) {
+var GridView = /*#__PURE__*/function (_Control2) {
   _inherits(GridView, _Control2);
+
+  var _super3 = _createSuper(GridView);
 
   function GridView(params) {
     var _this3;
 
     _classCallCheck(this, GridView);
 
-    _this3 = _possibleConstructorReturn(this, _getPrototypeOf(GridView).call(this, params.element || document.createElement('table')));
+    _this3 = _super3.call(this, params.element || document.createElement('table'));
     _this3.emptyDataHTML = '暂无记录';
     _this3.initDataHTML = '数据正在加载中...';
     _this3.loadFailHTML = '加载数据失败，点击重新加载。'; //========================================================
@@ -971,23 +1146,23 @@ function (_Control2) {
 
     _this3._dataSource = params.dataSource;
 
-    _this3._dataSource.selected.add(function (sender, e) {
-      return _this3.on_selectedExecuted(e);
+    _this3._dataSource.selected.add(function (args) {
+      return _this3.on_selectedExecuted(args.selectResult);
     });
 
-    _this3._dataSource.updated.add(function (sender, item) {
-      return _this3.on_updateExecuted(item);
+    _this3._dataSource.updated.add(function (args) {
+      return _this3.on_updateExecuted(args.dataItem);
     });
 
-    _this3._dataSource.inserted.add(function (sender, item, index) {
-      return _this3.on_insertExecuted(item, index);
+    _this3._dataSource.inserted.add(function (args) {
+      return _this3.on_insertExecuted(args.dataItem, args.index);
     });
 
-    _this3._dataSource.deleted.add(function (sender, item) {
-      return _this3.on_deleteExecuted(item);
+    _this3._dataSource.deleted.add(function (args) {
+      return _this3.on_deleteExecuted(args.dataItem);
     });
 
-    _this3._dataSource.selecting.add(function (sender, e) {
+    _this3._dataSource.selecting.add(function (args) {
       var display = _this3._emtpyRow.element.style.display;
 
       if (display != 'none') {
@@ -995,8 +1170,8 @@ function (_Control2) {
       }
     });
 
-    _this3._dataSource.error.add(function (sender, e) {
-      if (e.method == 'select') {
+    _this3._dataSource.error.add(function (args) {
+      if (args.error.method == 'select') {
         _this3.renderDataItems([]);
 
         var element = _this3._emtpyRow.cells[0].element;
@@ -1006,9 +1181,9 @@ function (_Control2) {
           _this3._dataSource.select(_this3.selectArguments);
         };
 
-        e.handled = true;
-        console.error(e.message);
-        console.log(e.stack);
+        args.error.handled = true;
+        console.error(args.error.message);
+        console.log(args.error.stack);
       }
     });
 
@@ -1044,7 +1219,7 @@ function (_Control2) {
       }
     }
 
-    _this3.selectArguments = _this3.pagingBar ? _this3.pagingBar.selectArguments : new _DataSource.DataSourceSelectArguments();
+    _this3.selectArguments = _this3.pagingBar ? _this3.pagingBar.selectArguments : new _maishuToolkit.DataSourceSelectArguments();
 
     _this3.dataSource.select(_this3.selectArguments);
 
@@ -1337,13 +1512,17 @@ exports.NumberPagingBar = exports.DataSourcePagingBar = exports.PagingBar = expo
 
 var _Errors = __webpack_require__(/*! ./Errors */ "./out-es5/Errors.js");
 
-var _DataSource = __webpack_require__(/*! ./DataSource */ "./out-es5/DataSource.js");
+var _maishuToolkit = __webpack_require__(/*! maishu-toolkit */ "./node_modules/maishu-toolkit/out/index.js");
 
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _createSuper(Derived) { return function () { var Super = _getPrototypeOf(Derived), result; if (_isNativeReflectConstruct()) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
 
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -1369,9 +1548,7 @@ exports.PagerPosition = PagerPosition;
 
 ;
 
-var PagingBar =
-/*#__PURE__*/
-function () {
+var PagingBar = /*#__PURE__*/function () {
   function PagingBar() {
     _classCallCheck(this, PagingBar);
   }
@@ -1384,14 +1561,14 @@ function () {
       // if (dataSource == null)
       //     throw Errors.argumentNull('dataSource');
       this._pageIndex = 0;
-      this._selectArguments = selectArguments || new _DataSource.DataSourceSelectArguments();
+      this._selectArguments = selectArguments || new _maishuToolkit.DataSourceSelectArguments();
       var pagingBar = this;
       pagingBar.totalRowCount = 1000000;
 
       if (dataSource) {
-        dataSource.selected.add(function (source, args) {
+        dataSource.selected.add(function (args) {
           pagingBar.pageSize = _this._selectArguments.maximumRows;
-          var totalRowCount = args.totalRowCount;
+          var totalRowCount = args.selectResult.totalRowCount;
 
           if (totalRowCount != null && totalRowCount >= 0) {
             pagingBar.totalRowCount = totalRowCount;
@@ -1460,10 +1637,10 @@ function () {
 
 exports.PagingBar = PagingBar;
 
-var DataSourcePagingBar =
-/*#__PURE__*/
-function (_PagingBar) {
+var DataSourcePagingBar = /*#__PURE__*/function (_PagingBar) {
   _inherits(DataSourcePagingBar, _PagingBar);
+
+  var _super = _createSuper(DataSourcePagingBar);
 
   function DataSourcePagingBar(params) {
     var _this2;
@@ -1480,7 +1657,7 @@ function (_PagingBar) {
       previousPageText: '...',
       showTotal: true
     }, params.pagerSettings || {});
-    _this2 = _possibleConstructorReturn(this, _getPrototypeOf(DataSourcePagingBar).call(this));
+    _this2 = _super.call(this);
     _this2.dataSource = params.dataSource;
     _this2.pagerSettings = pagerSettings;
     _this2.element = params.element;
@@ -1745,10 +1922,10 @@ function (_PagingBar) {
 
 exports.DataSourcePagingBar = DataSourcePagingBar;
 
-var NumberPagingBar =
-/*#__PURE__*/
-function (_PagingBar2) {
+var NumberPagingBar = /*#__PURE__*/function (_PagingBar2) {
   _inherits(NumberPagingBar, _PagingBar2);
+
+  var _super2 = _createSuper(NumberPagingBar);
 
   function NumberPagingBar(params) {
     var _this4;
@@ -1765,7 +1942,7 @@ function (_PagingBar2) {
       previousPageText: '...',
       showTotal: true
     }, params.pagerSettings || {});
-    _this4 = _possibleConstructorReturn(this, _getPrototypeOf(NumberPagingBar).call(this));
+    _this4 = _super2.call(this);
     _this4.loadData = params.loadData;
     _this4.pagerSettings = pagerSettings;
     _this4.element = params.element;
@@ -2055,13 +2232,17 @@ var _Control2 = __webpack_require__(/*! ./Control */ "./out-es5/Control.js");
 
 var _Errors = __webpack_require__(/*! ./Errors */ "./out-es5/Errors.js");
 
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _createSuper(Derived) { return function () { var Super = _getPrototypeOf(Derived), result; if (_isNativeReflectConstruct()) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
 
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -2069,10 +2250,10 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
-var TextBox =
-/*#__PURE__*/
-function (_Control) {
+var TextBox = /*#__PURE__*/function (_Control) {
   _inherits(TextBox, _Control);
+
+  var _super = _createSuper(TextBox);
 
   function TextBox(params) {
     var _this;
@@ -2084,7 +2265,7 @@ function (_Control) {
     if (!params.dataField) throw _Errors.Errors.argumentFieldNull("params", "dataField");
     if (!params.dataItem) throw _Errors.Errors.argumentFieldNull("params", "dataItem");
     if (!params.valueType) throw _Errors.Errors.argumentFieldNull("params", "valuetype");
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(TextBox).call(this, params.element));
+    _this = _super.call(this, params.element);
     var element = params.element,
         dataField = params.dataField,
         dataItem = params.dataItem,
@@ -2133,7 +2314,7 @@ exports.callbacks1 = callbacks1;
 exports.fireCallback = fireCallback;
 exports.Callback = exports.ElementHelper = void 0;
 
-var _Errors = __webpack_require__(/*! ./Errors */ "./out-es5/Errors.js");
+var _maishuToolkit = __webpack_require__(/*! maishu-toolkit */ "./node_modules/maishu-toolkit/out/index.js");
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -2141,9 +2322,7 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-var ElementHelper =
-/*#__PURE__*/
-function () {
+var ElementHelper = /*#__PURE__*/function () {
   function ElementHelper() {
     _classCallCheck(this, ElementHelper);
   }
@@ -2151,13 +2330,13 @@ function () {
   _createClass(ElementHelper, null, [{
     key: "showElement",
     value: function showElement(element) {
-      if (!element) throw _Errors.Errors.argumentNull('element');
+      if (!element) throw _maishuToolkit.errors.argumentNull('element');
       element.style.removeProperty('display');
     }
   }, {
     key: "hideElement",
     value: function hideElement(element) {
-      if (!element) throw _Errors.Errors.argumentNull('element');
+      if (!element) throw _maishuToolkit.errors.argumentNull('element');
       element.style.display = 'none';
     }
   }, {
@@ -2176,8 +2355,8 @@ function () {
   }, {
     key: "findFirstParentByTagName",
     value: function findFirstParentByTagName(element, tagName) {
-      if (element == null) throw _Errors.Errors.argumentNull("element");
-      if (!tagName) throw _Errors.Errors.argumentNull('tagName');
+      if (element == null) throw _maishuToolkit.errors.argumentNull("element");
+      if (!tagName) throw _maishuToolkit.errors.argumentNull('tagName');
       var parent = element.parentElement;
 
       while (parent != null) {
@@ -2209,9 +2388,7 @@ function applyStyle(element, value) {
   }
 }
 
-var Callback =
-/*#__PURE__*/
-function () {
+var Callback = /*#__PURE__*/function () {
   function Callback() {
     _classCallCheck(this, Callback);
 
@@ -2287,7 +2464,7 @@ var _DataControlField2 = __webpack_require__(/*! ./DataControlField */ "./out-es
 
 var _GridViewEditableCell = __webpack_require__(/*! ./GridViewEditableCell */ "./out-es5/fields/GridViewEditableCell.js");
 
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -2295,9 +2472,13 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
+function _createSuper(Derived) { return function () { var Super = _getPrototypeOf(Derived), result; if (_isNativeReflectConstruct()) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -2305,15 +2486,15 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
-var BoundField =
-/*#__PURE__*/
-function (_DataControlField) {
+var BoundField = /*#__PURE__*/function (_DataControlField) {
   _inherits(BoundField, _DataControlField);
+
+  var _super = _createSuper(BoundField);
 
   function BoundField() {
     _classCallCheck(this, BoundField);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(BoundField).apply(this, arguments));
+    return _super.apply(this, arguments);
   }
 
   _createClass(BoundField, [{
@@ -2437,13 +2618,17 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _createSuper(Derived) { return function () { var Super = _getPrototypeOf(Derived), result; if (_isNativeReflectConstruct()) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
 
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -2451,31 +2636,31 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
-var GridViewCommandCell =
-/*#__PURE__*/
-function (_GridViewCell) {
+var GridViewCommandCell = /*#__PURE__*/function (_GridViewCell) {
   _inherits(GridViewCommandCell, _GridViewCell);
+
+  var _super = _createSuper(GridViewCommandCell);
 
   function GridViewCommandCell(field) {
     _classCallCheck(this, GridViewCommandCell);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(GridViewCommandCell).call(this));
+    return _super.call(this);
   }
 
   return GridViewCommandCell;
 }(_DataControlField2.GridViewCell);
 
-var CommandField =
-/*#__PURE__*/
-function (_DataControlField) {
+var CommandField = /*#__PURE__*/function (_DataControlField) {
   _inherits(CommandField, _DataControlField);
+
+  var _super2 = _createSuper(CommandField);
 
   function CommandField(params) {
     var _this;
 
     _classCallCheck(this, CommandField);
 
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(CommandField).call(this, params));
+    _this = _super2.call(this, params);
     if (!_this.params.cancelButtonHTML) _this.params.cancelButtonHTML = '取消';
     if (!_this.params.deleteButtonHTML) _this.params.deleteButtonHTML = '删除';
     if (!_this.params.editButtonHTML) _this.params.editButtonHTML = '编辑';
@@ -2903,7 +3088,7 @@ exports.CustomBoundField = void 0;
 
 var _BoundField2 = __webpack_require__(/*! ./BoundField */ "./out-es5/fields/BoundField.js");
 
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -2911,13 +3096,17 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
+function _get(target, property, receiver) { if (typeof Reflect !== "undefined" && Reflect.get) { _get = Reflect.get; } else { _get = function _get(target, property, receiver) { var base = _superPropBase(target, property); if (!base) return; var desc = Object.getOwnPropertyDescriptor(base, property); if (desc.get) { return desc.get.call(receiver); } return desc.value; }; } return _get(target, property, receiver || target); }
+
+function _superPropBase(object, property) { while (!Object.prototype.hasOwnProperty.call(object, property)) { object = _getPrototypeOf(object); if (object === null) break; } return object; }
+
+function _createSuper(Derived) { return function () { var Super = _getPrototypeOf(Derived), result; if (_isNativeReflectConstruct()) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
-function _get(target, property, receiver) { if (typeof Reflect !== "undefined" && Reflect.get) { _get = Reflect.get; } else { _get = function _get(target, property, receiver) { var base = _superPropBase(target, property); if (!base) return; var desc = Object.getOwnPropertyDescriptor(base, property); if (desc.get) { return desc.get.call(receiver); } return desc.value; }; } return _get(target, property, receiver || target); }
-
-function _superPropBase(object, property) { while (!Object.prototype.hasOwnProperty.call(object, property)) { object = _getPrototypeOf(object); if (object === null) break; } return object; }
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -2925,15 +3114,15 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
-var CustomBoundField =
-/*#__PURE__*/
-function (_BoundField) {
+var CustomBoundField = /*#__PURE__*/function (_BoundField) {
   _inherits(CustomBoundField, _BoundField);
+
+  var _super = _createSuper(CustomBoundField);
 
   function CustomBoundField(params) {
     _classCallCheck(this, CustomBoundField);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(CustomBoundField).call(this, params));
+    return _super.call(this, params);
   }
 
   _createClass(CustomBoundField, [{
@@ -2985,7 +3174,7 @@ exports.CustomField = void 0;
 
 var _DataControlField2 = __webpack_require__(/*! ./DataControlField */ "./out-es5/fields/DataControlField.js");
 
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -2993,13 +3182,17 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
+function _get(target, property, receiver) { if (typeof Reflect !== "undefined" && Reflect.get) { _get = Reflect.get; } else { _get = function _get(target, property, receiver) { var base = _superPropBase(target, property); if (!base) return; var desc = Object.getOwnPropertyDescriptor(base, property); if (desc.get) { return desc.get.call(receiver); } return desc.value; }; } return _get(target, property, receiver || target); }
+
+function _superPropBase(object, property) { while (!Object.prototype.hasOwnProperty.call(object, property)) { object = _getPrototypeOf(object); if (object === null) break; } return object; }
+
+function _createSuper(Derived) { return function () { var Super = _getPrototypeOf(Derived), result; if (_isNativeReflectConstruct()) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
-function _get(target, property, receiver) { if (typeof Reflect !== "undefined" && Reflect.get) { _get = Reflect.get; } else { _get = function _get(target, property, receiver) { var base = _superPropBase(target, property); if (!base) return; var desc = Object.getOwnPropertyDescriptor(base, property); if (desc.get) { return desc.get.call(receiver); } return desc.value; }; } return _get(target, property, receiver || target); }
-
-function _superPropBase(object, property) { while (!Object.prototype.hasOwnProperty.call(object, property)) { object = _getPrototypeOf(object); if (object === null) break; } return object; }
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -3007,15 +3200,15 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
-var CustomField =
-/*#__PURE__*/
-function (_DataControlField) {
+var CustomField = /*#__PURE__*/function (_DataControlField) {
   _inherits(CustomField, _DataControlField);
+
+  var _super = _createSuper(CustomField);
 
   function CustomField() {
     _classCallCheck(this, CustomField);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(CustomField).apply(this, arguments));
+    return _super.apply(this, arguments);
   }
 
   _createClass(CustomField, [{
@@ -3083,7 +3276,7 @@ var _Utility = __webpack_require__(/*! ../Utility */ "./out-es5/Utility.js");
 
 var _Errors = __webpack_require__(/*! ../Errors */ "./out-es5/Errors.js");
 
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
@@ -3091,9 +3284,13 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+function _createSuper(Derived) { return function () { var Super = _getPrototypeOf(Derived), result; if (_isNativeReflectConstruct()) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -3101,15 +3298,15 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
-var GridViewCell =
-/*#__PURE__*/
-function (_Control) {
+var GridViewCell = /*#__PURE__*/function (_Control) {
   _inherits(GridViewCell, _Control);
+
+  var _super = _createSuper(GridViewCell);
 
   function GridViewCell() {
     _classCallCheck(this, GridViewCell);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(GridViewCell).call(this, document.createElement('td')));
+    return _super.call(this, document.createElement('td'));
   }
 
   return GridViewCell;
@@ -3117,17 +3314,17 @@ function (_Control) {
 
 exports.GridViewCell = GridViewCell;
 
-var GridViewDataCell =
-/*#__PURE__*/
-function (_GridViewCell) {
+var GridViewDataCell = /*#__PURE__*/function (_GridViewCell) {
   _inherits(GridViewDataCell, _GridViewCell);
+
+  var _super2 = _createSuper(GridViewDataCell);
 
   function GridViewDataCell(params) {
     var _this;
 
     _classCallCheck(this, GridViewDataCell);
 
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(GridViewDataCell).call(this));
+    _this = _super2.call(this);
     var p = params;
     _this.nullText = p.nullText != null ? p.nullText : '';
     _this.dataFormatString = p.dataFormatString;
@@ -3258,17 +3455,17 @@ function (_GridViewCell) {
 
 exports.GridViewDataCell = GridViewDataCell;
 
-var GridViewHeaderCell =
-/*#__PURE__*/
-function (_Control2) {
+var GridViewHeaderCell = /*#__PURE__*/function (_Control2) {
   _inherits(GridViewHeaderCell, _Control2);
+
+  var _super3 = _createSuper(GridViewHeaderCell);
 
   function GridViewHeaderCell(field) {
     var _this2;
 
     _classCallCheck(this, GridViewHeaderCell);
 
-    _this2 = _possibleConstructorReturn(this, _getPrototypeOf(GridViewHeaderCell).call(this, document.createElement('th')));
+    _this2 = _super3.call(this, document.createElement('th'));
     _this2.ascHTML = '↑';
     _this2.descHTML = '↓';
     _this2.sortingHTML = '...';
@@ -3363,9 +3560,7 @@ function (_Control2) {
 
 exports.GridViewHeaderCell = GridViewHeaderCell;
 
-var DataControlField =
-/*#__PURE__*/
-function () {
+var DataControlField = /*#__PURE__*/function () {
   function DataControlField(params) {
     _classCallCheck(this, DataControlField);
 
@@ -3512,7 +3707,7 @@ var _Errors = __webpack_require__(/*! ../Errors */ "./out-es5/Errors.js");
 
 var _Utility = __webpack_require__(/*! ../Utility */ "./out-es5/Utility.js");
 
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -3520,13 +3715,17 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
+function _get(target, property, receiver) { if (typeof Reflect !== "undefined" && Reflect.get) { _get = Reflect.get; } else { _get = function _get(target, property, receiver) { var base = _superPropBase(target, property); if (!base) return; var desc = Object.getOwnPropertyDescriptor(base, property); if (desc.get) { return desc.get.call(receiver); } return desc.value; }; } return _get(target, property, receiver || target); }
+
+function _superPropBase(object, property) { while (!Object.prototype.hasOwnProperty.call(object, property)) { object = _getPrototypeOf(object); if (object === null) break; } return object; }
+
+function _createSuper(Derived) { return function () { var Super = _getPrototypeOf(Derived), result; if (_isNativeReflectConstruct()) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
-function _get(target, property, receiver) { if (typeof Reflect !== "undefined" && Reflect.get) { _get = Reflect.get; } else { _get = function _get(target, property, receiver) { var base = _superPropBase(target, property); if (!base) return; var desc = Object.getOwnPropertyDescriptor(base, property); if (desc.get) { return desc.get.call(receiver); } return desc.value; }; } return _get(target, property, receiver || target); }
-
-function _superPropBase(object, property) { while (!Object.prototype.hasOwnProperty.call(object, property)) { object = _getPrototypeOf(object); if (object === null) break; } return object; }
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -3534,10 +3733,10 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
-var GridViewEditableCell =
-/*#__PURE__*/
-function (_GridViewDataCell) {
+var GridViewEditableCell = /*#__PURE__*/function (_GridViewDataCell) {
   _inherits(GridViewEditableCell, _GridViewDataCell);
+
+  var _super = _createSuper(GridViewEditableCell);
 
   function GridViewEditableCell(field, dataItem) {
     var _this;
@@ -3546,11 +3745,11 @@ function (_GridViewDataCell) {
 
     if (field == null) throw _Errors.Errors.argumentNull('field');
     if (dataItem == null) throw _Errors.Errors.argumentNull('dataItem');
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(GridViewEditableCell).call(this, {
+    _this = _super.call(this, {
       dataField: field.dataField,
       nullText: field.nullText,
       dataFormatString: field.dataFormatString
-    }));
+    });
     _this._field = field;
     _this._dataItem = dataItem;
     _this._mode = 'read';
@@ -3733,18 +3932,6 @@ Object.defineProperty(exports, "TextBox", {
     return _TextBox.TextBox;
   }
 });
-Object.defineProperty(exports, "DataSource", {
-  enumerable: true,
-  get: function get() {
-    return _DataSource.DataSource;
-  }
-});
-Object.defineProperty(exports, "DataSourceSelectArguments", {
-  enumerable: true,
-  get: function get() {
-    return _DataSource.DataSourceSelectArguments;
-  }
-});
 Object.defineProperty(exports, "ArrayDataSource", {
   enumerable: true,
   get: function get() {
@@ -3767,6 +3954,18 @@ Object.defineProperty(exports, "Control", {
   enumerable: true,
   get: function get() {
     return _Control.Control;
+  }
+});
+Object.defineProperty(exports, "DataSource", {
+  enumerable: true,
+  get: function get() {
+    return _maishuToolkit.DataSource;
+  }
+});
+Object.defineProperty(exports, "DataSourceSelectArguments", {
+  enumerable: true,
+  get: function get() {
+    return _maishuToolkit.DataSourceSelectArguments;
   }
 });
 
@@ -3793,6 +3992,8 @@ var _DataSource = __webpack_require__(/*! ./DataSource */ "./out-es5/DataSource.
 var _NumberPagingBar = __webpack_require__(/*! ./NumberPagingBar */ "./out-es5/NumberPagingBar.js");
 
 var _Control = __webpack_require__(/*! ./Control */ "./out-es5/Control.js");
+
+var _maishuToolkit = __webpack_require__(/*! maishu-toolkit */ "./node_modules/maishu-toolkit/out/index.js");
 //# sourceMappingURL=index.js.map
 
 

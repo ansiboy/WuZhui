@@ -7,13 +7,17 @@ exports.NumberPagingBar = exports.DataSourcePagingBar = exports.PagingBar = expo
 
 var _Errors = require("./Errors");
 
-var _DataSource = require("./DataSource");
+var _maishuToolkit = require("maishu-toolkit");
 
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _createSuper(Derived) { return function () { var Super = _getPrototypeOf(Derived), result; if (_isNativeReflectConstruct()) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
 
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -39,9 +43,7 @@ exports.PagerPosition = PagerPosition;
 
 ;
 
-var PagingBar =
-/*#__PURE__*/
-function () {
+var PagingBar = /*#__PURE__*/function () {
   function PagingBar() {
     _classCallCheck(this, PagingBar);
   }
@@ -54,14 +56,14 @@ function () {
       // if (dataSource == null)
       //     throw Errors.argumentNull('dataSource');
       this._pageIndex = 0;
-      this._selectArguments = selectArguments || new _DataSource.DataSourceSelectArguments();
+      this._selectArguments = selectArguments || new _maishuToolkit.DataSourceSelectArguments();
       var pagingBar = this;
       pagingBar.totalRowCount = 1000000;
 
       if (dataSource) {
-        dataSource.selected.add(function (source, args) {
+        dataSource.selected.add(function (args) {
           pagingBar.pageSize = _this._selectArguments.maximumRows;
-          var totalRowCount = args.totalRowCount;
+          var totalRowCount = args.selectResult.totalRowCount;
 
           if (totalRowCount != null && totalRowCount >= 0) {
             pagingBar.totalRowCount = totalRowCount;
@@ -130,10 +132,10 @@ function () {
 
 exports.PagingBar = PagingBar;
 
-var DataSourcePagingBar =
-/*#__PURE__*/
-function (_PagingBar) {
+var DataSourcePagingBar = /*#__PURE__*/function (_PagingBar) {
   _inherits(DataSourcePagingBar, _PagingBar);
+
+  var _super = _createSuper(DataSourcePagingBar);
 
   function DataSourcePagingBar(params) {
     var _this2;
@@ -150,7 +152,7 @@ function (_PagingBar) {
       previousPageText: '...',
       showTotal: true
     }, params.pagerSettings || {});
-    _this2 = _possibleConstructorReturn(this, _getPrototypeOf(DataSourcePagingBar).call(this));
+    _this2 = _super.call(this);
     _this2.dataSource = params.dataSource;
     _this2.pagerSettings = pagerSettings;
     _this2.element = params.element;
@@ -415,10 +417,10 @@ function (_PagingBar) {
 
 exports.DataSourcePagingBar = DataSourcePagingBar;
 
-var NumberPagingBar =
-/*#__PURE__*/
-function (_PagingBar2) {
+var NumberPagingBar = /*#__PURE__*/function (_PagingBar2) {
   _inherits(NumberPagingBar, _PagingBar2);
+
+  var _super2 = _createSuper(NumberPagingBar);
 
   function NumberPagingBar(params) {
     var _this4;
@@ -435,7 +437,7 @@ function (_PagingBar2) {
       previousPageText: '...',
       showTotal: true
     }, params.pagerSettings || {});
-    _this4 = _possibleConstructorReturn(this, _getPrototypeOf(NumberPagingBar).call(this));
+    _this4 = _super2.call(this);
     _this4.loadData = params.loadData;
     _this4.pagerSettings = pagerSettings;
     _this4.element = params.element;

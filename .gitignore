@@ -3,3 +3,6 @@
 /.git
 /.tscache
 package-lock.json
+dist
+out
+out-es5

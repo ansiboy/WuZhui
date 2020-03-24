@@ -5,79 +5,54 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.Errors = void 0;
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+var _maishuToolkit = require("maishu-toolkit");
 
 // namespace wuzhui {
-var Errors =
-/*#__PURE__*/
-function () {
-  function Errors() {
-    _classCallCheck(this, Errors);
+// export class Errors {
+//     static notImplemented(message?: string) {
+//         message = message || "Not implemented";
+//         return new Error(message);
+//     }
+//     static argumentNull(paramName) {
+//         return new Error("Argument '" + paramName + "' can not be null.");
+//     }
+//     static controllBelonsAnother() {
+//         return new Error("The control is belongs another control.");
+//     }
+//     static columnsCanntEmpty() {
+//         return new Error("Columns cannt empty.");
+//     }
+//     static dataSourceCanntInsert() {
+//         return new Error("DataSource can not insert.");
+//     }
+//     static dataSourceCanntUpdate() {
+//         return new Error("DataSource can not update.");
+//     }
+//     static dataSourceCanntDelete() {
+//         return new Error("DataSource can not delete.");
+//     }
+//     static primaryKeyNull(key: string) {
+//         let msg = `Primary key named '${key}' value is null.`;
+//         return new Error(msg);
+//     }
+//     static queryResultTypeError() {
+//         let msg = 'Type of the query result is expected as Array or DataSourceSelectResult.';
+//         return new Error(msg);
+//     }
+//     static argumentFieldNull(argumentName: string, fieldName: string) {
+//         let msg = `Argument ${argumentName} ${fieldName} field can not be null or empty.`
+//         return new Error(msg);
+//     }
+// }
+// }
+var Errors = Object.assign(_maishuToolkit.errors, {
+  columnsCanntEmpty: function columnsCanntEmpty() {
+    return new Error("Columns cannt empty.");
+  },
+  notImplemented: function notImplemented(message) {
+    message = message || "Not implemented";
+    return new Error(message);
   }
-
-  _createClass(Errors, null, [{
-    key: "notImplemented",
-    value: function notImplemented(message) {
-      message = message || "Not implemented";
-      return new Error(message);
-    }
-  }, {
-    key: "argumentNull",
-    value: function argumentNull(paramName) {
-      return new Error("Argument '" + paramName + "' can not be null.");
-    }
-  }, {
-    key: "controllBelonsAnother",
-    value: function controllBelonsAnother() {
-      return new Error("The control is belongs another control.");
-    }
-  }, {
-    key: "columnsCanntEmpty",
-    value: function columnsCanntEmpty() {
-      return new Error("Columns cannt empty.");
-    }
-  }, {
-    key: "dataSourceCanntInsert",
-    value: function dataSourceCanntInsert() {
-      return new Error("DataSource can not insert.");
-    }
-  }, {
-    key: "dataSourceCanntUpdate",
-    value: function dataSourceCanntUpdate() {
-      return new Error("DataSource can not update.");
-    }
-  }, {
-    key: "dataSourceCanntDelete",
-    value: function dataSourceCanntDelete() {
-      return new Error("DataSource can not delete.");
-    }
-  }, {
-    key: "primaryKeyNull",
-    value: function primaryKeyNull(key) {
-      var msg = "Primary key named '".concat(key, "' value is null.");
-      return new Error(msg);
-    }
-  }, {
-    key: "queryResultTypeError",
-    value: function queryResultTypeError() {
-      var msg = 'Type of the query result is expected as Array or DataSourceSelectResult.';
-      return new Error(msg);
-    }
-  }, {
-    key: "argumentFieldNull",
-    value: function argumentFieldNull(argumentName, fieldName) {
-      var msg = "Argument ".concat(argumentName, " ").concat(fieldName, " field can not be null or empty.");
-      return new Error(msg);
-    }
-  }]);
-
-  return Errors;
-}(); // }
-
-
+});
 exports.Errors = Errors;
 //# sourceMappingURL=Errors.js.map

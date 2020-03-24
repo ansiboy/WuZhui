@@ -9,7 +9,7 @@ exports.callbacks1 = callbacks1;
 exports.fireCallback = fireCallback;
 exports.Callback = exports.ElementHelper = void 0;
 
-var _Errors = require("./Errors");
+var _maishuToolkit = require("maishu-toolkit");
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -17,9 +17,7 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-var ElementHelper =
-/*#__PURE__*/
-function () {
+var ElementHelper = /*#__PURE__*/function () {
   function ElementHelper() {
     _classCallCheck(this, ElementHelper);
   }
@@ -27,13 +25,13 @@ function () {
   _createClass(ElementHelper, null, [{
     key: "showElement",
     value: function showElement(element) {
-      if (!element) throw _Errors.Errors.argumentNull('element');
+      if (!element) throw _maishuToolkit.errors.argumentNull('element');
       element.style.removeProperty('display');
     }
   }, {
     key: "hideElement",
     value: function hideElement(element) {
-      if (!element) throw _Errors.Errors.argumentNull('element');
+      if (!element) throw _maishuToolkit.errors.argumentNull('element');
       element.style.display = 'none';
     }
   }, {
@@ -52,8 +50,8 @@ function () {
   }, {
     key: "findFirstParentByTagName",
     value: function findFirstParentByTagName(element, tagName) {
-      if (element == null) throw _Errors.Errors.argumentNull("element");
-      if (!tagName) throw _Errors.Errors.argumentNull('tagName');
+      if (element == null) throw _maishuToolkit.errors.argumentNull("element");
+      if (!tagName) throw _maishuToolkit.errors.argumentNull('tagName');
       var parent = element.parentElement;
 
       while (parent != null) {
@@ -85,9 +83,7 @@ function applyStyle(element, value) {
   }
 }
 
-var Callback =
-/*#__PURE__*/
-function () {
+var Callback = /*#__PURE__*/function () {
   function Callback() {
     _classCallCheck(this, Callback);
 

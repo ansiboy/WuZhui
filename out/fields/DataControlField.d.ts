@@ -48,8 +48,8 @@ export declare class GridViewHeaderCell<T> extends Control<HTMLTableHeaderCellEl
     constructor(field: DataControlField<T>);
     handleSort(): Promise<void>;
     private defaultHeaderText;
-    get sortType(): "asc" | "desc";
-    set sortType(value: "asc" | "desc");
+    get sortType(): "desc" | "asc";
+    set sortType(value: "desc" | "asc");
     clearSortIcon(): void;
     private updateSortIcon;
 }

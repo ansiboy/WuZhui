@@ -7,7 +7,7 @@ exports.GridView = exports.GridViewDataRow = exports.GridViewRow = exports.GridV
 
 var _Control3 = require("./Control");
 
-var _DataSource = require("./DataSource");
+var _maishuToolkit = require("maishu-toolkit");
 
 var _DataControlField = require("./fields/DataControlField");
 
@@ -17,7 +17,7 @@ var _Utility = require("./Utility");
 
 var _Errors = require("./Errors");
 
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -25,9 +25,13 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
+function _createSuper(Derived) { return function () { var Super = _getPrototypeOf(Derived), result; if (_isNativeReflectConstruct()) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -59,10 +63,10 @@ function findParentElement(element, parentTagName) {
   }
 }
 
-var GridViewRow =
-/*#__PURE__*/
-function (_Control) {
+var GridViewRow = /*#__PURE__*/function (_Control) {
   _inherits(GridViewRow, _Control);
+
+  var _super = _createSuper(GridViewRow);
 
   function GridViewRow(rowType) {
     var _this;
@@ -70,7 +74,7 @@ function (_Control) {
     _classCallCheck(this, GridViewRow);
 
     var element = document.createElement('tr');
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(GridViewRow).call(this, element));
+    _this = _super.call(this, element);
     _this._rowType = rowType;
     return _this;
   }
@@ -113,17 +117,17 @@ function (_Control) {
 
 exports.GridViewRow = GridViewRow;
 
-var GridViewDataRow =
-/*#__PURE__*/
-function (_GridViewRow) {
+var GridViewDataRow = /*#__PURE__*/function (_GridViewRow) {
   _inherits(GridViewDataRow, _GridViewRow);
+
+  var _super2 = _createSuper(GridViewDataRow);
 
   function GridViewDataRow(gridView, dataItem) {
     var _this2;
 
     _classCallCheck(this, GridViewDataRow);
 
-    _this2 = _possibleConstructorReturn(this, _getPrototypeOf(GridViewDataRow).call(this, GridViewRowType.Data));
+    _this2 = _super2.call(this, GridViewRowType.Data);
     _this2._dataItem = dataItem;
 
     for (var i = 0; i < gridView.columns.length; i++) {
@@ -149,17 +153,17 @@ function (_GridViewRow) {
 
 exports.GridViewDataRow = GridViewDataRow;
 
-var GridView =
-/*#__PURE__*/
-function (_Control2) {
+var GridView = /*#__PURE__*/function (_Control2) {
   _inherits(GridView, _Control2);
+
+  var _super3 = _createSuper(GridView);
 
   function GridView(params) {
     var _this3;
 
     _classCallCheck(this, GridView);
 
-    _this3 = _possibleConstructorReturn(this, _getPrototypeOf(GridView).call(this, params.element || document.createElement('table')));
+    _this3 = _super3.call(this, params.element || document.createElement('table'));
     _this3.emptyDataHTML = '暂无记录';
     _this3.initDataHTML = '数据正在加载中...';
     _this3.loadFailHTML = '加载数据失败，点击重新加载。'; //========================================================
@@ -188,23 +192,23 @@ function (_Control2) {
 
     _this3._dataSource = params.dataSource;
 
-    _this3._dataSource.selected.add(function (sender, e) {
-      return _this3.on_selectedExecuted(e);
+    _this3._dataSource.selected.add(function (args) {
+      return _this3.on_selectedExecuted(args.selectResult);
     });
 
-    _this3._dataSource.updated.add(function (sender, item) {
-      return _this3.on_updateExecuted(item);
+    _this3._dataSource.updated.add(function (args) {
+      return _this3.on_updateExecuted(args.dataItem);
     });
 
-    _this3._dataSource.inserted.add(function (sender, item, index) {
-      return _this3.on_insertExecuted(item, index);
+    _this3._dataSource.inserted.add(function (args) {
+      return _this3.on_insertExecuted(args.dataItem, args.index);
     });
 
-    _this3._dataSource.deleted.add(function (sender, item) {
-      return _this3.on_deleteExecuted(item);
+    _this3._dataSource.deleted.add(function (args) {
+      return _this3.on_deleteExecuted(args.dataItem);
     });
 
-    _this3._dataSource.selecting.add(function (sender, e) {
+    _this3._dataSource.selecting.add(function (args) {
       var display = _this3._emtpyRow.element.style.display;
 
       if (display != 'none') {
@@ -212,8 +216,8 @@ function (_Control2) {
       }
     });
 
-    _this3._dataSource.error.add(function (sender, e) {
-      if (e.method == 'select') {
+    _this3._dataSource.error.add(function (args) {
+      if (args.error.method == 'select') {
         _this3.renderDataItems([]);
 
         var element = _this3._emtpyRow.cells[0].element;
@@ -223,9 +227,9 @@ function (_Control2) {
           _this3._dataSource.select(_this3.selectArguments);
         };
 
-        e.handled = true;
-        console.error(e.message);
-        console.log(e.stack);
+        args.error.handled = true;
+        console.error(args.error.message);
+        console.log(args.error.stack);
       }
     });
 
@@ -261,7 +265,7 @@ function (_Control2) {
       }
     }
 
-    _this3.selectArguments = _this3.pagingBar ? _this3.pagingBar.selectArguments : new _DataSource.DataSourceSelectArguments();
+    _this3.selectArguments = _this3.pagingBar ? _this3.pagingBar.selectArguments : new _maishuToolkit.DataSourceSelectArguments();
 
     _this3.dataSource.select(_this3.selectArguments);
 

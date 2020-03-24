@@ -81,18 +81,6 @@ Object.defineProperty(exports, "TextBox", {
     return _TextBox.TextBox;
   }
 });
-Object.defineProperty(exports, "DataSource", {
-  enumerable: true,
-  get: function get() {
-    return _DataSource.DataSource;
-  }
-});
-Object.defineProperty(exports, "DataSourceSelectArguments", {
-  enumerable: true,
-  get: function get() {
-    return _DataSource.DataSourceSelectArguments;
-  }
-});
 Object.defineProperty(exports, "ArrayDataSource", {
   enumerable: true,
   get: function get() {
@@ -115,6 +103,18 @@ Object.defineProperty(exports, "Control", {
   enumerable: true,
   get: function get() {
     return _Control.Control;
+  }
+});
+Object.defineProperty(exports, "DataSource", {
+  enumerable: true,
+  get: function get() {
+    return _maishuToolkit.DataSource;
+  }
+});
+Object.defineProperty(exports, "DataSourceSelectArguments", {
+  enumerable: true,
+  get: function get() {
+    return _maishuToolkit.DataSourceSelectArguments;
   }
 });
 
@@ -141,4 +141,6 @@ var _DataSource = require("./DataSource");
 var _NumberPagingBar = require("./NumberPagingBar");
 
 var _Control = require("./Control");
+
+var _maishuToolkit = require("maishu-toolkit");
 //# sourceMappingURL=index.js.map
