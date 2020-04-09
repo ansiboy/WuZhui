@@ -2,3 +2,7 @@
 /node_modules
 /.git
 /.tscache
+package-lock.json
+dist
+out
+out-es5

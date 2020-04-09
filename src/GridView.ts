@@ -1,9 +1,9 @@
 import { Control } from "./Control";
-import { DataSource, DataSourceSelectArguments, DataSourceSelectResult } from "./DataSource";
+import { DataSource, DataSourceSelectArguments, DataSourceSelectResult } from "maishu-toolkit";
 import { DataControlField, GridViewHeaderCell, GridViewCell, GridViewDataCell } from "./fields/DataControlField";
 import { PagerSettings, DataSourcePagingBar } from "./NumberPagingBar";
 import { callbacks, applyStyle, fireCallback } from "./Utility";
-import { Errors } from "./Errors";
+import { Errors as errors } from "./Errors";
 
 // namespace wuzhui {
 export enum GridViewRowType {
@@ -137,7 +137,7 @@ export class GridView<T> extends Control<HTMLTableElement> {
         this._params = params;
         this._columns = params.columns || [];
         if (this._columns.length == 0)
-            throw Errors.columnsCanntEmpty();
+            throw errors.columnsCanntEmpty();
 
         for (var i = 0; i < this._columns.length; i++) {
             var column = this._columns[i];
@@ -145,27 +145,27 @@ export class GridView<T> extends Control<HTMLTableElement> {
         }
 
         this._dataSource = params.dataSource;
-        this._dataSource.selected.add((sender, e) => this.on_selectedExecuted(e));
-        this._dataSource.updated.add((sender, item) => this.on_updateExecuted(item));
-        this._dataSource.inserted.add((sender, item, index) => this.on_insertExecuted(item, index));
-        this._dataSource.deleted.add((sender, item) => this.on_deleteExecuted(item));
-        this._dataSource.selecting.add((sender, e) => {
+        this._dataSource.selected.add(args => this.on_selectedExecuted(args.selectResult));
+        this._dataSource.updated.add(args => this.on_updateExecuted(args.dataItem));
+        this._dataSource.inserted.add(args => this.on_insertExecuted(args.dataItem, args.index));
+        this._dataSource.deleted.add(args => this.on_deleteExecuted(args.dataItem));
+        this._dataSource.selecting.add(args => {
             let display = this._emtpyRow.element.style.display;
             if (display != 'none') {
                 this._emtpyRow.element.cells[0].innerHTML = this.initDataHTML;
             }
         });
-        this._dataSource.error.add((sender, e) => {
-            if (e.method == 'select') {
+        this._dataSource.error.add(args => {
+            if (args.error.method == 'select') {
                 this.renderDataItems([]);
                 var element = this._emtpyRow.cells[0].element;
                 element.innerHTML = this.loadFailHTML;
                 element.onclick = () => {
                     this._dataSource.select(this.selectArguments);
                 }
-                e.handled = true;
-                console.error(e.message);
-                console.log(e.stack)
+                args.error.handled = true;
+                console.error(args.error.message);
+                console.log(args.error.stack)
             }
         })
 
@@ -370,7 +370,7 @@ export class GridView<T> extends Control<HTMLTableElement> {
         this.renderDataItems(dataItems);
     }
 
-    private on_deleteExecuted(item: any) {
+    private on_deleteExecuted(item: T) {
 
         let rows = this._body.element.rows;
         let dataRows = new Array<GridViewDataRow>();
