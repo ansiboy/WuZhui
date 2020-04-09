@@ -5,6 +5,7 @@ export interface DropDownParams<T> {
     element: HTMLSelectElement;
     nameField?: keyof T;
     valueField?: keyof T;
+    emptyText?: string;
 }
 export declare class DropDown<T> extends Control<HTMLSelectElement> {
     constructor(params: DropDownParams<T>);
