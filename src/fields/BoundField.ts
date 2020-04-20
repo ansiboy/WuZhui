@@ -8,6 +8,7 @@ export interface BoundFieldParams<T> extends DataControlFieldParams {
     nullText?: string,
     readOnly?: boolean,
     valueType?: ValueType,
+    emptyText?: string,
 }
 
 export type ValueType = 'number' | 'date' | 'string' | 'boolean'
@@ -53,10 +54,11 @@ export class BoundField<T> extends DataControlField<T, BoundFieldParams<T>> {
     //===============================================
     // Virutal Methods
     createControl(): GridViewCellControl {
-        // let control = document.createElement("input");
-        // control.name = this.dataField as string;
-        // return control;
         let element = document.createElement("input");
+        if (this.params.emptyText) {
+            element.placeholder = this.params.emptyText;
+        }
+
         let control = {
             element,
             valueType: this.params.valueType,
