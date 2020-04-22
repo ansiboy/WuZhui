@@ -12,8 +12,8 @@ module.exports = {
     output: {
         path: __dirname + "/dist",       //打包后的文件存放的地方
         filename: "index.js",            //打包后输出文件的文件名
-        library: "wuzhui",
         libraryTarget: "umd",
+        library: "wuzhui",
     },
     mode: 'development',
     devtool: 'source-map',
