@@ -54,14 +54,14 @@ export class BoundField<T> extends DataControlField<T, BoundFieldParams<T>> {
     // Virutal Methods
     createControl(): GridViewCellControl {
         let element = document.createElement("input");
+        let valueType = this.params.valueType;
         let control = {
             element,
-            valueType: this.params.valueType,
             get value(): any {
                 let it = this as typeof control;
                 let input = it.element as HTMLInputElement;
                 let text = input.value;
-                switch (it.valueType) {
+                switch (valueType) {
                     case 'number':
                         return new Number(text).valueOf();
                     case 'date':
@@ -69,7 +69,6 @@ export class BoundField<T> extends DataControlField<T, BoundFieldParams<T>> {
                     default:
                         return text;
                 }
-
             },
             set value(value) {
                 let it = this as typeof control;
@@ -86,5 +85,5 @@ export class BoundField<T> extends DataControlField<T, BoundFieldParams<T>> {
 export interface GridViewCellControl {
     element: HTMLElement
     value: any
-    valueType?: ValueType
+    // valueType?: ValueType
 }
