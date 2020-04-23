@@ -4,10 +4,12 @@
         "sourceMap": false,
         "declaration": true,
         "outDir": "../out",
+        "strict": true,
+        "strictPropertyInitialization": false,
         "strictNullChecks": false,
         "baseUrl": "./",
         "paths": {
-            "maishu-toolkit":[
+            "maishu-toolkit": [
                 "../node_modules/maishu-toolkit/out/index.d.ts"
             ]
         }

@@ -1,8 +1,8 @@
 import { Control } from "../Control";
-import { Callback1, callbacks, fireCallback } from "../Utility";
 import { BoundField } from "./BoundField";
 import { GridView } from "../GridView";
 import { Errors } from "../Errors";
+import { Callback } from "maishu-toolkit";
 
 export class GridViewCell extends Control<HTMLTableCellElement> {
 
@@ -171,15 +171,15 @@ export class GridViewHeaderCell<T> extends Control<HTMLTableHeaderCellElement> {
     sortingHTML = '...';
     toSortHTML = '↕'
 
-    sorting: Callback1<GridViewHeaderCell<T>, { sortType: string }>;
-    sorted: Callback1<GridViewHeaderCell<T>, { sortType: string }>;
+    sorting: Callback<{ sortType: string }>;
+    sorted: Callback<{ sortType: string }>;
 
     constructor(field: DataControlField<T>) {
         super(document.createElement('th'));
 
         this.field = field;
-        this.sorting = callbacks();
-        this.sorted = callbacks();
+        this.sorting = new Callback();
+        this.sorted = new Callback();
 
         if (field.sortExpression) {
             let labelElement = document.createElement('a');
@@ -208,12 +208,14 @@ export class GridViewHeaderCell<T> extends Control<HTMLTableHeaderCellElement> {
         let selectArguments = this.field.gridView.selectArguments;
         let sortType: 'asc' | 'desc' = this.sortType == 'asc' ? 'desc' : 'asc';
 
-        fireCallback(this.sorting, this, { sortType });
+        // fireCallback(this.sorting, this, { sortType });
+        this.sorting.fire({ sortType });
         selectArguments.sortExpression = (this.field as BoundField<T>).sortExpression + ' ' + sortType;
         return this.field.gridView.dataSource.select(selectArguments)
             .then(() => {
                 this.sortType = sortType;
-                fireCallback(this.sorted, this, { sortType });
+                // fireCallback(this.sorted, this, { sortType });
+                this.sorted.fire({ sortType });
             });
     }
 

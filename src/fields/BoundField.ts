@@ -52,7 +52,7 @@ export class BoundField<T> extends DataControlField<T, BoundFieldParams<T>> {
 
     //===============================================
     // Virutal Methods
-    createControl(dataItem: T): GridViewCellControl {
+    createControl(): GridViewCellControl {
         let element = document.createElement("input");
         let valueType = this.params.valueType;
         let control = {

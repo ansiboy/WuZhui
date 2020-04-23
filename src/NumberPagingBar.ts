@@ -10,15 +10,15 @@ export enum PagerPosition {
 
 export interface PagerSettings {
     /** The text to display for the first-page button. */
-    firstPageText?: string,
+    firstPageText: string,
     /** The text to display for the last-page button. */
-    lastPageText?: string,
+    lastPageText: string,
     /** The text to display for the last-page button. */
-    nextPageText?: string,
+    nextPageText: string,
     /** The number of page buttons to display in the pager when the Mode property is set to the Numeric or NumericFirstLast value. */
-    pageButtonCount?: number,
+    pageButtonCount: number,
     /** The text to display for the previous-page button. */
-    previousPageText?: string,
+    previousPageText: string,
 
     /** Class name of the number buttons. */
     buttonClassName?: string,
@@ -142,7 +142,7 @@ export class DataSourcePagingBar extends PagingBar {
     private createButton: (container: HTMLElement) => NumberPagingButton<DataSourcePagingBar>;
 
     constructor(params: {
-        dataSource?: DataSource<any>, element: HTMLElement, pagerSettings?: PagerSettings,
+        dataSource?: DataSource<any>, element: HTMLElement, pagerSettings?: Partial<PagerSettings>,
         selectArguments?: DataSourceSelectArguments
     }) {
         if (!params.dataSource) throw Errors.argumentNull('dataSource');
@@ -547,7 +547,7 @@ export class NumberPagingBar extends PagingBar {
                     element.removeAttribute('class');
 
             },
-            onclick: null as NumberPagingButtonClickEvent<NumberPagingBar>
+            onclick: null as NumberPagingButtonClickEvent<NumberPagingBar> | null
         };
         button.onclick = () => {
             if (result.onclick) {

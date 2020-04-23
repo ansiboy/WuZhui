@@ -1,8 +1,8 @@
 import { Control } from "./Control";
-import { DataSource, DataSourceSelectArguments, DataSourceSelectResult } from "maishu-toolkit";
+import { DataSource, DataSourceSelectArguments, DataSourceSelectResult, Callback } from "maishu-toolkit";
 import { DataControlField, GridViewHeaderCell, GridViewCell, GridViewDataCell } from "./fields/DataControlField";
 import { PagerSettings, DataSourcePagingBar } from "./NumberPagingBar";
-import { callbacks, applyStyle, fireCallback } from "./Utility";
+import { applyStyle } from "./Utility";
 import { Errors as errors } from "./Errors";
 
 // namespace wuzhui {
@@ -63,7 +63,7 @@ export class GridViewRow extends Control<HTMLTableRowElement> {
 }
 
 export class GridViewDataRow extends GridViewRow {
-    private _dataItem;
+    private _dataItem: any;
     constructor(gridView: GridView<any>, dataItem: any) {
         super(GridViewRowType.Data);
         this._dataItem = dataItem;
@@ -121,7 +121,7 @@ export class GridView<T> extends Control<HTMLTableElement> {
     //private emptyDataRowStyle: string;
     //========================================================
 
-    rowCreated = callbacks<GridView<T>, { row: GridViewRow }>();
+    rowCreated = new Callback<{ row: GridViewRow }>(); //callbacks<GridView<T>, { row: GridViewRow }>();
     private pagingBar: DataSourcePagingBar;
 
     readonly selectArguments: DataSourceSelectArguments;
@@ -231,7 +231,8 @@ export class GridView<T> extends Control<HTMLTableElement> {
         }
         this._emtpyRow.appendChild(cell);
         this._body.appendChild(this._emtpyRow);
-        fireCallback(this.rowCreated, this, { row: this._emtpyRow });
+        // fireCallback(this.rowCreated, this, { row: this._emtpyRow });
+        this.rowCreated.fire({ row: this._emtpyRow });
     }
 
     public appendDataRow(dataItem: any, index?: number) {
@@ -247,7 +248,8 @@ export class GridView<T> extends Control<HTMLTableElement> {
             }
         }
 
-        fireCallback(this.rowCreated, this, { row });
+        // fireCallback(this.rowCreated, this, { row });
+        this.rowCreated.fire({ row });
         if (this._emtpyRow.element.style.display != 'none')
             this.hideEmptyRow();
 
@@ -267,7 +269,8 @@ export class GridView<T> extends Control<HTMLTableElement> {
             var column = this.columns[i];
             let cell = column.createHeaderCell();
             if (cell instanceof GridViewHeaderCell) {
-                (cell as GridViewHeaderCell<T>).sorting.add((e, a) => this.on_sort(e, a));
+                let c = cell as GridViewHeaderCell<T>;
+                c.sorting.add(a => this.on_sort(c, a));
             }
 
             row.appendChild(cell);

@@ -16,7 +16,8 @@ export class ElementHelper {
         return !display || display != 'none';
     }
 
-    static data(element: HTMLElement, name: string, value?: any) {
+    static data(e: HTMLElement, name: string, value?: any) {
+        let element = e as any;
         element['data'] = element['data'] || {};
         if (value == null)
             return element['data'].name;
@@ -24,7 +25,7 @@ export class ElementHelper {
         element['data'].name = value;
     }
 
-    static findFirstParentByTagName(element: Element, tagName: string): HTMLElement {
+    static findFirstParentByTagName(element: Element, tagName: string): HTMLElement | null {
         if (element == null) throw errors.argumentNull("element");
         if (!tagName) throw errors.argumentNull('tagName');
         let parent = element.parentElement;
@@ -41,60 +42,59 @@ export class ElementHelper {
 }
 
 export function applyStyle(element: HTMLElement, value: Partial<CSSStyleDeclaration> | string) {
-    let style = value || '';
-    if (typeof style == 'string') {
-        element.setAttribute('style', style);
-    }
-    else {
-        for (let key in <any>style) {
-            element.style[key] = style[key];
-        }
-    }
-}
-
-
-export class Callback {
-    private funcs = new Array<(...args: Array<any>) => void>();
-
-    constructor() {
+    if (typeof value == 'string') {
+        element.setAttribute('style', value);
+        return;
     }
 
-    add(func: (...args: Array<any>) => any) {
-        this.funcs.push(func);
-    }
-    remove(func: (...args: Array<any>) => any) {
-        this.funcs = this.funcs.filter(o => o != func);
-    }
-    fire(...args: Array<any>) {
-        this.funcs.forEach(o => o(...args));
+    for (let key in value) {
+        element.style[key] = value[key] as any;
     }
 }
 
-export interface Callback1<S, A> extends Callback {
-    add(func: (sender: S, arg: A) => any);
-    remove(func: (sender: S, arg: A) => any);
-    fire(sender: S, arg: A);
-}
 
-export interface Callback2<S, A, A1> extends Callback {
-    add(func: (sender: S, arg: A, arg1: A1) => any);
-    remove(func: (sender: S, arg: A, arg1: A1) => any);
-    fire(sender: S, arg: A, arg1: A1);
-}
+// export class Callback {
+//     private funcs = new Array<(...args: Array<any>) => void>();
 
-export function callbacks<S, A>(): Callback1<S, A> {
-    return new Callback();
-}
+//     constructor() {
+//     }
 
-export function callbacks1<S, A, A1>(): Callback2<S, A, A1> {
-    return new Callback();
-}
+//     add(func: (...args: Array<any>) => any) {
+//         this.funcs.push(func);
+//     }
+//     remove(func: (...args: Array<any>) => any) {
+//         this.funcs = this.funcs.filter(o => o != func);
+//     }
+//     fire(...args: Array<any>) {
+//         this.funcs.forEach(o => o(...args));
+//     }
+// }
 
-export function fireCallback<S, A, B>(callback: Callback2<S, A, B>, sender: S, arg1: A, arg2: B)
-export function fireCallback<S, A>(callback: Callback1<S, A>, sender: S, args: A)
-export function fireCallback<S, A>(callback: Callback, ...args) {
-    callback.fire(...args);
-}
+// export interface Callback1<S, A> extends Callback {
+//     add(func: (sender: S, arg: A) => any);
+//     remove(func: (sender: S, arg: A) => any);
+//     fire(sender: S, arg: A);
+// }
+
+// export interface Callback2<S, A, A1> extends Callback {
+//     add(func: (sender: S, arg: A, arg1: A1) => any);
+//     remove(func: (sender: S, arg: A, arg1: A1) => any);
+//     fire(sender: S, arg: A, arg1: A1);
+// }
+
+// export function callbacks<S, A>(): Callback1<S, A> {
+//     return new Callback();
+// }
+
+// export function callbacks1<S, A, A1>(): Callback2<S, A, A1> {
+//     return new Callback();
+// }
+
+// export function fireCallback<S, A, B>(callback: Callback2<S, A, B>, sender: S, arg1: A, arg2: B)
+// export function fireCallback<S, A>(callback: Callback1<S, A>, sender: S, args: A)
+// export function fireCallback<S, A>(callback: Callback, ...args) {
+//     callback.fire(...args);
+// }
 
 
 

@@ -59,7 +59,7 @@ export class GridViewEditableCell<T> extends GridViewDataCell<T> {
         if (this._mode == 'edit') {
             this.element.innerHTML = "";
 
-            this.createControl(dataItem);
+            this.createControl();
             console.assert(this.control != null);
             let value = dataItem[this.field.dataField];
             this.control.value = value;
@@ -73,8 +73,8 @@ export class GridViewEditableCell<T> extends GridViewDataCell<T> {
         super.render(dataItem);
     }
 
-    createControl(dataItem: T): HTMLElement {
-        this.control = this.field.createControl(dataItem);
+    createControl(): HTMLElement {
+        this.control = this.field.createControl();
         return this.control.element;
     }
 

@@ -292,7 +292,7 @@ export class CommandField<T> extends DataControlField<T, CommandFieldParams> {
         console.assert(cellElement != null);
         let rowElement = <HTMLTableRowElement>cellElement.parentElement;
         var row = Control.getControlByElement(rowElement) as GridViewDataRow;
-        if (row["isNew"] == true) {
+        if ((row as any)["isNew"] == true) {
             rowElement.remove();
             return;
         }
@@ -316,8 +316,8 @@ export class CommandField<T> extends DataControlField<T, CommandFieldParams> {
     }
     private on_insertOrUpdateButtonClick(e: MouseEvent) {
 
-        if (e.target['_updating'])
-            e.target['_updating'] = true;
+        if ((e.target as any)['_updating'])
+            (e.target as any)['_updating'] = true;
 
         let cellElement = ElementHelper.findFirstParentByTagName(e.target as HTMLElement, 'td');
         let rowElement = <HTMLTableRowElement>cellElement.parentElement;
@@ -351,9 +351,9 @@ export class CommandField<T> extends DataControlField<T, CommandFieldParams> {
             editableCells.forEach((item) => item.endEdit());
             let cell = <GridViewCommandCell<T>>Control.getControlByElement(cellElement);
             this.showReadStatusButtons(cell);
-            e.target['_updating'] = false;
+            (e.target as any)['_updating'] = false;
 
-        }).catch(() => e.target['_updating'] = false);
+        }).catch(() => (e.target as any)['_updating'] = false);
 
     }
     private on_deleteButtonClick(e: Event) {
@@ -371,12 +371,13 @@ export class CommandField<T> extends DataControlField<T, CommandFieldParams> {
         let gridView = row.gridView;
 
         let newRow = gridView.appendDataRow({}, rowElement.rowIndex);
-        newRow["isNew"] = true;
+        (newRow as any)["isNew"] = true;
         let commandCells = newRow.cells.filter(o => o instanceof GridViewCommandCell);
         newRow.cells.filter(o => o instanceof GridViewEditableCell)
-            .forEach((c: GridViewEditableCell<T>) => c.beginEdit());
+            .forEach(c => (c as GridViewEditableCell<T>).beginEdit());
 
-        commandCells.forEach((cell: GridViewCommandCell<T>) => {
+        commandCells.forEach(c => {
+            let cell = c as GridViewCommandCell<T>;
             if (cell.deleteButton)
                 this.hideButton(cell.deleteButton);
 

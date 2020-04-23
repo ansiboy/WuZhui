@@ -19,7 +19,9 @@ export class CustomField<T> extends DataControlField<T, CustomFieldParams<T>> {
     createFooterCell(): GridViewCell {
         if (this.params.createFooterCell) {
             let cell = this.params.createFooterCell();
-            cell.style(this.params.footerStyle);
+            if (this.params.footerStyle)
+                cell.style(this.params.footerStyle);
+                
             return cell;
         }
 
