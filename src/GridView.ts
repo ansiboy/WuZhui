@@ -86,7 +86,7 @@ export interface GridViewArguments<T> {
     columns: Array<DataControlField<T>>,
     showHeader?: boolean,
     showFooter?: boolean,
-    element?: HTMLTableElement,
+    element: HTMLTableElement,
     emptyDataRowStyle?: string,
     // allowPaging?: boolean,
     pageSize?: number,
