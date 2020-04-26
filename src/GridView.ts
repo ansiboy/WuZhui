@@ -4,6 +4,7 @@ import { DataControlField, GridViewHeaderCell, GridViewCell, GridViewDataCell } 
 import { PagerSettings, DataSourcePagingBar } from "./NumberPagingBar";
 import { applyStyle } from "./Utility";
 import { Errors as errors } from "./Errors";
+import { GridViewEditableCell } from "./fields/GridViewEditableCell";
 
 // namespace wuzhui {
 export enum GridViewRowType {
@@ -336,7 +337,7 @@ export class GridView<T> extends Control<HTMLTableElement> {
             let cells = row.cells;
             for (let j = 0; j < cells.length; j++) {
                 let cell = cells[j];
-                if (cell instanceof GridViewDataCell) {
+                if (cell instanceof GridViewDataCell || cell instanceof GridViewEditableCell) {
                     cell.render(dataItem);
                 }
             }
