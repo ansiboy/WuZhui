@@ -3,6 +3,7 @@ import { BoundField } from "./BoundField";
 import { GridView } from "../GridView";
 import { Errors } from "../Errors";
 import { Callback } from "maishu-toolkit";
+import { CellType } from "../types";
 
 export class GridViewCell extends Control<HTMLTableCellElement> {
 
@@ -24,6 +25,8 @@ type GridViewDataCellArgument2<T> = {
 export class GridViewDataCell<T> extends GridViewCell {
     private nullText: string;
     private dataFormatString?: string;
+
+    type: CellType = "GridViewDataCell";
 
     dataField: keyof T;
 
@@ -161,10 +164,12 @@ export interface DataControlFieldParams {
     sortExpression?: string
 }
 
+
 export class GridViewHeaderCell<T> extends Control<HTMLTableHeaderCellElement> {
     private _sortType: 'asc' | 'desc';
     private _iconElement: HTMLElement;
     private field: DataControlField<T>;
+    type: CellType = "GridViewHeaderCell";
 
     ascHTML = '↑';
     descHTML = '↓';

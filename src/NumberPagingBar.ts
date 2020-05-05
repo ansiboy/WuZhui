@@ -141,20 +141,22 @@ export class DataSourcePagingBar extends PagingBar {
     private createLabel: () => PagingTotalLabel;
     private createButton: (container: HTMLElement) => NumberPagingButton<DataSourcePagingBar>;
 
+    static defaultPagerSettings: PagerSettings = {
+        pageButtonCount: 10,
+        firstPageText: '<<',
+        lastPageText: '>>',
+        nextPageText: '...',
+        previousPageText: '...',
+        showTotal: true,
+    }
+
     constructor(params: {
         dataSource?: DataSource<any>, element: HTMLElement, pagerSettings?: Partial<PagerSettings>,
         selectArguments?: DataSourceSelectArguments
     }) {
         if (!params.dataSource) throw Errors.argumentNull('dataSource');
         if (!params.element) throw Errors.argumentNull('element');
-        let pagerSettings = Object.assign(<PagerSettings>{
-            pageButtonCount: 10,
-            firstPageText: '<<',
-            lastPageText: '>>',
-            nextPageText: '...',
-            previousPageText: '...',
-            showTotal: true,
-        }, params.pagerSettings || {});
+        let pagerSettings = Object.assign(DataSourcePagingBar.defaultPagerSettings, params.pagerSettings || {});
 
 
         super();

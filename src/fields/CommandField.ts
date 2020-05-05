@@ -271,7 +271,7 @@ export class CommandField<T> extends DataControlField<T, CommandFieldParams> {
 
         for (let i = 0; i < rowElement.cells.length; i++) {
             let cell = Control.getControlByElement(<HTMLElement>rowElement.cells[i]);
-            if (cell instanceof GridViewEditableCell) {
+            if ((<GridViewEditableCell<T>>cell).type == "GridViewEditableCell") {
                 (<GridViewEditableCell<T>>cell).beginEdit();
             }
         }
@@ -299,7 +299,7 @@ export class CommandField<T> extends DataControlField<T, CommandFieldParams> {
 
         for (let i = 0; i < rowElement.cells.length; i++) {
             let cell = Control.getControlByElement(<HTMLElement>rowElement.cells[i]);
-            if (cell instanceof GridViewEditableCell) {
+            if ((<GridViewEditableCell<T>>cell).type == "GridViewEditableCell") {
                 (<GridViewEditableCell<T>>cell).cancelEdit();
             }
         }
@@ -334,9 +334,10 @@ export class CommandField<T> extends DataControlField<T, CommandFieldParams> {
         let editableCells = new Array<GridViewEditableCell<T>>();
         for (let i = 0; i < rowElement.cells.length; i++) {
             let cell = Control.getControlByElement(<HTMLElement>rowElement.cells[i]);
-            if (cell instanceof GridViewEditableCell && (cell as GridViewEditableCell<T>).mode == 'edit') {
-                dataItem[(<BoundField<T>>cell.field).dataField] = cell.controlValue;
-                editableCells.push(cell);
+            if ((<GridViewEditableCell<T>>cell).type == "GridViewEditableCell" && (cell as GridViewEditableCell<T>).mode == 'edit') {
+                let field = (<GridViewEditableCell<T>>cell).field as BoundField<T>;
+                dataItem[field.dataField] = (<GridViewEditableCell<T>>cell).controlValue;
+                editableCells.push((<GridViewEditableCell<T>>cell));
             }
         }
 
@@ -372,8 +373,8 @@ export class CommandField<T> extends DataControlField<T, CommandFieldParams> {
 
         let newRow = gridView.appendDataRow({}, rowElement.rowIndex);
         (newRow as any)["isNew"] = true;
-        let commandCells = newRow.cells.filter(o => o instanceof GridViewCommandCell);
-        newRow.cells.filter(o => o instanceof GridViewEditableCell)
+        let commandCells = newRow.cells.filter(o => (<GridViewEditableCell<T>>o).type == "GridViewCommandCell");//GridViewCommandCell
+        newRow.cells.filter(o => (<GridViewEditableCell<T>>o).type == "GridViewEditableCell")//GridViewEditableCell
             .forEach(c => (c as GridViewEditableCell<T>).beginEdit());
 
         commandCells.forEach(c => {

@@ -38,7 +38,7 @@ export class GridViewRow extends Control<HTMLTableRowElement> {
         this._rowType = rowType;
     }
 
-    get rowType() {
+    get rowType(): GridViewRowType {
         return this._rowType;
     }
 
@@ -65,6 +65,7 @@ export class GridViewRow extends Control<HTMLTableRowElement> {
 
 export class GridViewDataRow extends GridViewRow {
     private _dataItem: any;
+
     constructor(gridView: GridView<any>, dataItem: any) {
         super(GridViewRowType.Data);
         this._dataItem = dataItem;
@@ -268,10 +269,9 @@ export class GridView<T> extends Control<HTMLTableElement> {
         var row = new GridViewRow(GridViewRowType.Header);
         for (var i = 0; i < this.columns.length; i++) {
             var column = this.columns[i];
-            let cell = column.createHeaderCell();
-            if (cell instanceof GridViewHeaderCell) {
-                let c = cell as GridViewHeaderCell<T>;
-                c.sorting.add(a => this.on_sort(c, a));
+            let cell = column.createHeaderCell() as GridViewHeaderCell<T>;
+            if (cell.type == "GridViewHeaderCell") {
+                cell.sorting.add(a => this.on_sort(cell, a));
             }
 
             row.appendChild(cell);
@@ -321,7 +321,7 @@ export class GridView<T> extends Control<HTMLTableElement> {
         for (let i = 0; i < this._body.element.rows.length; i++) {
             let row_element = this._body.element.rows[i] as HTMLElement;
             let row = Control.getControlByElement(row_element) as GridViewRow;;
-            if (!(row instanceof GridViewDataRow))
+            if ((<GridViewDataRow>row).rowType != GridViewRowType.Data)
                 continue;
 
 
@@ -337,12 +337,14 @@ export class GridView<T> extends Control<HTMLTableElement> {
             let cells = row.cells;
             for (let j = 0; j < cells.length; j++) {
                 let cell = cells[j];
-                if (cell instanceof GridViewDataCell || cell instanceof GridViewEditableCell) {
-                    cell.render(dataItem);
+                if ((<GridViewDataCell<T>>cell).type == "GridViewDataCell") {
+                    (<GridViewDataCell<T>>cell).render(dataItem);
+                }
+                else if ((<GridViewEditableCell<T>>cell).type == "GridViewEditableCell") {
+                    (<GridViewEditableCell<T>>cell).render(dataItem);
                 }
             }
 
-            // break;
         }
 
         if (this._params.translate) {
@@ -364,7 +366,7 @@ export class GridView<T> extends Control<HTMLTableElement> {
         for (let i = 0; i < this._body.element.rows.length; i++) {
             let row_element = this._body.element.rows[i] as HTMLElement;
             let row = Control.getControlByElement(row_element) as GridViewRow;;
-            if (!(row instanceof GridViewDataRow))
+            if (row.rowType != GridViewRowType.Data)
                 continue;
 
             let dataItem = (row as GridViewDataRow).dataItem;
@@ -380,8 +382,8 @@ export class GridView<T> extends Control<HTMLTableElement> {
         let dataRows = new Array<GridViewDataRow>();
         for (let i = 0; i < rows.length; i++) {
             let row = Control.getControlByElement(rows.item(i)) as GridViewRow;
-            if ((row instanceof GridViewDataRow))
-                dataRows.push(row);
+            if ((row.rowType == GridViewRowType.Data))
+                dataRows.push(<GridViewDataRow>row);
         }
 
         if (this._params.translate) {

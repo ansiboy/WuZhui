@@ -2,12 +2,15 @@ import { GridViewDataCell } from "./DataControlField";
 import { Errors } from "../Errors";
 import { applyStyle } from "../Utility";
 import { BoundField, GridViewCellControl } from "./BoundField";
+import { CellType } from "../types";
 
 export class GridViewEditableCell<T> extends GridViewDataCell<T> {
     private _dataItem: T;
     private _field: BoundField<T>;
     private _mode: 'read' | 'edit';
     control: GridViewCellControl;
+
+    type: CellType;
 
     constructor(field: BoundField<T>, dataItem: T) {
         if (field == null)
@@ -22,6 +25,7 @@ export class GridViewEditableCell<T> extends GridViewDataCell<T> {
         this._field = field;
         this._dataItem = dataItem;
         this._mode = 'read';
+        this.type = "GridViewEditableCell";
     }
 
     get dataItem() {
