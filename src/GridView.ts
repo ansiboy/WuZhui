@@ -6,7 +6,6 @@ import { applyStyle } from "./Utility";
 import { Errors as errors } from "./Errors";
 import { GridViewEditableCell } from "./fields/GridViewEditableCell";
 
-// namespace wuzhui {
 export enum GridViewRowType {
     Header,
     Footer,
@@ -126,7 +125,7 @@ export class GridView<T> extends Control<HTMLTableElement> {
     rowCreated = new Callback<{ row: GridViewRow }>(); //callbacks<GridView<T>, { row: GridViewRow }>();
     private pagingBar: DataSourcePagingBar;
 
-    readonly selectArguments: DataSourceSelectArguments;
+    selectArguments: DataSourceSelectArguments;
 
     constructor(params: GridViewArguments<T>) {
 
@@ -136,6 +135,11 @@ export class GridView<T> extends Control<HTMLTableElement> {
             showHeader: true, showFooter: false,
             allowPaging: false
         }, params);
+
+        this.selectArguments = new DataSourceSelectArguments();
+        if (params.pageSize)
+            this.selectArguments.maximumRows = params.pageSize;
+
         this._params = params;
         this._columns = params.columns || [];
         if (this._columns.length == 0)
@@ -195,11 +199,14 @@ export class GridView<T> extends Control<HTMLTableElement> {
 
             if (allowPaging) {
                 this.createPagingBar(params.pagerSettings);
-                this.pagingBar.selectArguments.maximumRows = params.pageSize;
+                // this.pagingBar.selectArguments.maximumRows = params.pageSize;
             }
         }
 
-        this.selectArguments = this.pagingBar ? this.pagingBar.selectArguments : new DataSourceSelectArguments()
+        // this.selectArguments = this.pagingBar ? this.pagingBar.selectArguments : new DataSourceSelectArguments();
+        // if (params.pageSize)
+        //     this.selectArguments.maximumRows = params.pageSize;
+
         this.dataSource.select(this.selectArguments);
     }
 
