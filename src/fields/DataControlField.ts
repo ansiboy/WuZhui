@@ -5,10 +5,10 @@ import { Errors } from "../Errors";
 import { Callback } from "maishu-toolkit";
 import { CellType } from "../types";
 
-export class GridViewCell extends Control<HTMLTableCellElement> {
+export class GridViewCell extends Control<HTMLElement> {
 
-    constructor() {
-        super(document.createElement('td'));
+    constructor(element: HTMLElement = document.createElement('td')) {
+        super(element);
     }
 }
 
@@ -165,7 +165,7 @@ export interface DataControlFieldParams {
 }
 
 
-export class GridViewHeaderCell<T> extends Control<HTMLTableHeaderCellElement> {
+export class GridViewHeaderCell<T> extends Control<HTMLElement> {
     private _sortType: 'asc' | 'desc';
     private _iconElement: HTMLElement;
     private field: DataControlField<T>;
@@ -179,8 +179,8 @@ export class GridViewHeaderCell<T> extends Control<HTMLTableHeaderCellElement> {
     sorting: Callback<{ sortType: string }>;
     sorted: Callback<{ sortType: string }>;
 
-    constructor(field: DataControlField<T>) {
-        super(document.createElement('th'));
+    constructor(field: DataControlField<T>, cellElement: HTMLElement = document.createElement('th')) {
+        super(cellElement);
 
         this.field = field;
         this.sorting = new Callback();
@@ -329,22 +329,22 @@ export abstract class DataControlField<T, P extends DataControlFieldParams = Dat
         this.params.sortExpression = value;
     }
 
-    createHeaderCell(): GridViewCell {
-        let cell = new GridViewHeaderCell(this);
+    createHeaderCell(cellElement?: HTMLElement): GridViewCell {
+        let cell = new GridViewHeaderCell(this, cellElement);
         return cell;
     }
-    createFooterCell(): GridViewCell {
-        let cell = new GridViewCell();
+    createFooterCell(cellElement?: HTMLElement): GridViewCell {
+        let cell = new GridViewCell(cellElement);
         cell.element.innerHTML = this.footerText || '';
         cell.style(this.footerStyle);
 
         return cell;
     }
-    createItemCell(dataItem: any): GridViewCell {
+    createItemCell(dataItem: any, cellElement?: HTMLElement): GridViewCell {
         if (!dataItem)
             throw Errors.argumentNull('dataItem');
 
-        let cell = new GridViewCell();
+        let cell = new GridViewCell(cellElement);
         cell.style(this.itemStyle);
 
         return cell;

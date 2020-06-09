@@ -234,7 +234,7 @@ export class GridView<T> extends Control<HTMLTableElement> {
         this._emtpyRow.element.className = GridView.emptyRowClassName;
 
         let cell = new GridViewCell();
-        cell.element.colSpan = this.columns.length;
+        cell.element.setAttribute("colspan", this.columns.length.toString());
         if (!this._params.emptyDataRowStyle) {
             applyStyle(cell.element, this._params.emptyDataRowStyle);
         }
