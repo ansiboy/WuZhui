@@ -5,8 +5,8 @@ import { GridViewRowType } from "./GridViewRowType";
 export class GridViewDataRow extends GridViewRow {
     private _dataItem: any;
 
-    constructor(gridView: GridView<any>, dataItem: any) {
-        super(GridViewRowType.Data);
+    constructor(gridView: GridView<any>, dataItem: any, rowElement: HTMLElement) {
+        super(GridViewRowType.Data, rowElement);
         this._dataItem = dataItem;
         for (var i = 0; i < gridView.columns.length; i++) {
             var column = gridView.columns[i];

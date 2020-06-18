@@ -22,8 +22,8 @@ export class GridViewDataCell<T> extends GridViewCell {
 
     dataField: keyof T;
 
-    constructor(params: GridViewDataCellArgument1<T> | GridViewDataCellArgument2<T>) {
-        super();
+    constructor(params: GridViewDataCellArgument1<T> | GridViewDataCellArgument2<T>, cellElement: HTMLElement) {
+        super(cellElement);
 
 
         let p = params as (GridViewDataCellArgument1<T> & GridViewDataCellArgument2<T>)

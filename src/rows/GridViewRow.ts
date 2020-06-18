@@ -3,13 +3,13 @@ import { GridView } from "../GridView";
 import { GridViewRowType } from "./GridViewRowType";
 import { GridViewCell } from "../cells/index";
 
-export class GridViewRow extends Control<HTMLTableRowElement> {
+export class GridViewRow extends Control<HTMLElement> {
     private _rowType: GridViewRowType;
     private _gridView: GridView<any>;
 
-    constructor(rowType: GridViewRowType) {
-        let element = document.createElement('tr');
-        super(element);
+    constructor(rowType: GridViewRowType, rowElement: HTMLElement) {
+        // let element = document.createElement('tr');
+        super(rowElement);
         this._rowType = rowType;
     }
 
@@ -29,8 +29,8 @@ export class GridViewRow extends Control<HTMLTableRowElement> {
 
     get cells(): GridViewCell[] {
         let cells = new Array<GridViewCell>();
-        for (let i = 0; i < this.element.cells.length; i++) {
-            let cell = Control.getControlByElement(this.element.cells[i] as HTMLTableCellElement) as GridViewCell;
+        for (let i = 0; i < this.element.children.length; i++) {
+            let cell = Control.getControlByElement(this.element.children[i] as HTMLElement) as GridViewCell;
             console.assert(cell != null);
             cells[i] = cell;
         }

@@ -12,15 +12,16 @@ export class GridViewEditableCell<T> extends GridViewDataCell<T> {
 
     type: CellType;
 
-    constructor(field: BoundField<T>, dataItem: T) {
+    constructor(field: BoundField<T>, dataItem: T, cellElement: HTMLElement) {
         if (field == null)
             throw Errors.argumentNull('field');
         if (dataItem == null)
             throw Errors.argumentNull('dataItem');
+
         super({
             dataField: field.dataField,
-            nullText: field.nullText, dataFormatString: field.dataFormatString
-        });
+            nullText: field.nullText, dataFormatString: field.dataFormatString,
+        }, cellElement);
 
         this._field = field;
         this._dataItem = dataItem;

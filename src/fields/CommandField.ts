@@ -17,8 +17,8 @@ class GridViewCommandCell<T> extends GridViewCell {
     updateButton: HTMLElement;
     insertButton: HTMLElement;
 
-    constructor(field: DataControlField<T>) {
-        super()
+    constructor(field: DataControlField<T>, cellElement: HTMLElement) {
+        super(cellElement)
     }
 
 
@@ -115,7 +115,7 @@ export class CommandField<T> extends DataControlField<T, CommandFieldParams> {
     }
 
     createItemCell(dataItem: any): GridViewCell {
-        let cell = new GridViewCommandCell(this);
+        let cell = new GridViewCommandCell(this, this.gridView.elementProvider.createCellElement());
         cell.style(this.itemStyle);
         if (this.params.showEditButton) {
             let editButton = this.createEditButton();

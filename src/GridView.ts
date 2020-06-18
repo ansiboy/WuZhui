@@ -8,11 +8,6 @@ import { GridViewEditableCell } from "./fields/GridViewEditableCell";
 import { GridViewCell, GridViewDataCell } from "./cells/index";
 import { GridViewRow, GridViewRowType, GridViewDataRow } from "./rows/index";
 
-
-
-
-
-
 export interface GridViewArguments<T> {
     dataSource: DataSource<T>,
     columns: Array<DataControlField<T>>,
@@ -26,6 +21,12 @@ export interface GridViewArguments<T> {
     emptyDataHTML?: string,
     initDataHTML?: string,
     translate?: (items: T[]) => T[],
+}
+
+export interface ElementProvider {
+    createRowElement: () => HTMLElement,
+    createCellElement: () => HTMLElement,
+    createViewElement: () => HTMLElement,
 }
 
 export class GridView<T> extends Control<HTMLTableElement> {
@@ -44,6 +45,14 @@ export class GridView<T> extends Control<HTMLTableElement> {
     private emptyDataHTML = '暂无记录';
     private initDataHTML = '数据正在加载中...';
     private loadFailHTML = '加载数据失败，点击重新加载。';
+    private pagingBar: DataSourcePagingBar;
+
+    elementProvider: ElementProvider = {
+        createRowElement: () => document.createElement("tr"),
+        createCellElement: () => document.createElement('td'),
+        createViewElement: () => document.createElement("table")
+    }
+
     //========================================================
     // 样式
     // headerStyle: string;
@@ -54,8 +63,6 @@ export class GridView<T> extends Control<HTMLTableElement> {
     //========================================================
 
     rowCreated = new Callback<{ row: GridViewRow }>(); //callbacks<GridView<T>, { row: GridViewRow }>();
-    private pagingBar: DataSourcePagingBar;
-
     selectArguments: DataSourceSelectArguments;
 
     constructor(params: GridViewArguments<T>) {
@@ -89,7 +96,7 @@ export class GridView<T> extends Control<HTMLTableElement> {
         this._dataSource.selecting.add(args => {
             let display = this._emtpyRow.element.style.display;
             if (display != 'none') {
-                this._emtpyRow.element.cells[0].innerHTML = this.initDataHTML;
+                this._emtpyRow.element.children[0].innerHTML = this.initDataHTML;
             }
         });
         this._dataSource.error.add(args => {
@@ -142,10 +149,12 @@ export class GridView<T> extends Control<HTMLTableElement> {
     }
 
     private createPagingBar(pagerSettings?: PagerSettings) {
-        var pagingBarContainer = document.createElement('tr');
-        var pagingBarElement = document.createElement('td');
+        var pagingBarContainer = this.elementProvider.createRowElement(); //document.createElement('tr');
+        var pagingBarElement = this.elementProvider.createCellElement();//document.createElement('td');
         pagingBarElement.className = GridView.pagingBarClassName;
-        pagingBarElement.colSpan = this.columns.length;
+        if (pagingBarElement.tagName == "td")
+            pagingBarElement.setAttribute("colspan", `${this.columns.length}`);// pagingBarElement.colSpan = this.columns.length;
+
         pagingBarContainer.appendChild(pagingBarElement);
         console.assert(this._footer != null);
         this._footer.appendChild(pagingBarContainer);
@@ -161,10 +170,10 @@ export class GridView<T> extends Control<HTMLTableElement> {
     }
 
     private appendEmptyRow() {
-        this._emtpyRow = new GridViewRow(GridViewRowType.Empty);
+        this._emtpyRow = new GridViewRow(GridViewRowType.Empty, this.elementProvider.createRowElement());
         this._emtpyRow.element.className = GridView.emptyRowClassName;
 
-        let cell = new GridViewCell();
+        let cell = new GridViewCell(this.elementProvider.createCellElement());
         cell.element.setAttribute("colspan", this.columns.length.toString());
         if (!this._params.emptyDataRowStyle) {
             applyStyle(cell.element, this._params.emptyDataRowStyle);
@@ -176,7 +185,7 @@ export class GridView<T> extends Control<HTMLTableElement> {
     }
 
     public appendDataRow(dataItem: any, index?: number) {
-        var row = new GridViewDataRow(this, dataItem);
+        var row = new GridViewDataRow(this, dataItem, this.elementProvider.createRowElement());
         row.element.className = GridView.dataRowClassName;
         this._body.appendChild(row, index);
 
@@ -204,7 +213,7 @@ export class GridView<T> extends Control<HTMLTableElement> {
     }
 
     private appendHeaderRow() {
-        var row = new GridViewRow(GridViewRowType.Header);
+        var row = new GridViewRow(GridViewRowType.Header, this.elementProvider.createRowElement());
         for (var i = 0; i < this.columns.length; i++) {
             var column = this.columns[i];
             let cell = column.createHeaderCell() as GridViewHeaderCell<T>;
@@ -219,7 +228,7 @@ export class GridView<T> extends Control<HTMLTableElement> {
     }
 
     private appendFooterRow() {
-        var row = new GridViewRow(GridViewRowType.Footer);
+        var row = new GridViewRow(GridViewRowType.Footer, this.elementProvider.createRowElement());
         for (var i = 0; i < this.columns.length; i++) {
             var column = this.columns[i];
             let cell = column.createFooterCell();
@@ -345,7 +354,7 @@ export class GridView<T> extends Control<HTMLTableElement> {
     }
 
     private showEmptyRow() {
-        this._emtpyRow.element.cells[0].innerHTML = this.emptyDataHTML;
+        this._emtpyRow.element.children[0].innerHTML = this.emptyDataHTML;
         this._emtpyRow.element.style.removeProperty('display');
     }
 

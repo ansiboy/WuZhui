@@ -23,7 +23,7 @@ export class BoundField<T> extends DataControlField<T, BoundFieldParams<T>> {
     }
 
     createItemCell(dataItem: T): GridViewCell {
-        let cell = new GridViewEditableCell(this, dataItem);
+        let cell = new GridViewEditableCell(this, dataItem, this.gridView.elementProvider.createCellElement());
         cell.style(this.itemStyle);
 
         return cell;

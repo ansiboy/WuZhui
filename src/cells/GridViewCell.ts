@@ -2,7 +2,7 @@ import { Control } from "../Control";
 
 export class GridViewCell extends Control<HTMLElement> {
 
-    constructor(element: HTMLElement = document.createElement('td')) {
+    constructor(element: HTMLElement) {
         super(element);
     }
 }
