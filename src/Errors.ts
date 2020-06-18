@@ -45,5 +45,9 @@ export let Errors = Object.assign(baseErrors, {
     notImplemented(message?: string) {
         message = message || "Not implemented";
         return new Error(message);
+    },
+    gridViewNull() {
+        let msg = "Grid view is null.";
+        return new Error(msg);
     }
 })

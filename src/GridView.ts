@@ -1,12 +1,13 @@
 import { Control } from "./Control";
 import { DataSource, DataSourceSelectArguments, DataSourceSelectResult, Callback } from "maishu-toolkit";
-import { DataControlField, GridViewHeaderCell, } from "./fields/DataControlField";
+import { DataControlField, } from "./fields/DataControlField";
 import { PagerSettings, DataSourcePagingBar } from "./NumberPagingBar";
 import { applyStyle } from "./Utility";
 import { Errors as errors } from "./Errors";
 import { GridViewEditableCell } from "./fields/GridViewEditableCell";
-import { GridViewCell, GridViewDataCell } from "./cells/index";
+import { GridViewCell, GridViewDataCell, GridViewHeaderCell } from "./cells/index";
 import { GridViewRow, GridViewRowType, GridViewDataRow } from "./rows/index";
+import { ElementProvider, defaultElementProvider } from "./ElementProvider";
 
 export interface GridViewArguments<T> {
     dataSource: DataSource<T>,
@@ -21,24 +22,6 @@ export interface GridViewArguments<T> {
     emptyDataHTML?: string,
     initDataHTML?: string,
     translate?: (items: T[]) => T[],
-}
-
-export interface ElementProvider {
-    createRowElement: () => HTMLElement,
-    createCellElement: (type: "header" | "body" | "footer") => HTMLElement,
-    createViewElement: () => HTMLElement,
-    createHeaderElement: () => HTMLElement,
-    createFooterElement: () => HTMLElement,
-    createBodyElement: () => HTMLElement,
-}
-
-let defaultElementProvider: ElementProvider = {
-    createRowElement: () => document.createElement("tr"),
-    createCellElement: (type: "header" | "body" | "footer" = "body") => type == "header" ? document.createElement("th") : document.createElement('td'),
-    createViewElement: () => document.createElement("table"),
-    createHeaderElement: () => document.createElement("thead"),
-    createFooterElement: () => document.createElement("tfoot"),
-    createBodyElement: () => document.createElement("tbody"),
 }
 
 export class GridView<T> extends Control<HTMLElement> {

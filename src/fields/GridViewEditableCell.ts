@@ -4,10 +4,11 @@ import { BoundField } from "./BoundField";
 import { CellType } from "../types";
 import { GridViewDataCell, GridViewCellControl } from "../cells/index";
 
+type Mode = "read" | "edit";
 export class GridViewEditableCell<T> extends GridViewDataCell<T> {
     private _dataItem: T;
     private _field: BoundField<T>;
-    private _mode: 'read' | 'edit';
+    private _mode: Mode;
     control: GridViewCellControl;
 
     type: CellType;
@@ -43,25 +44,25 @@ export class GridViewEditableCell<T> extends GridViewDataCell<T> {
             return;
         }
         this._mode = 'edit';
-        this.render(this._dataItem);
+        this.render(this._dataItem, "edit");
     }
     endEdit() {
         if (this._field.readOnly) {
             return;
         }
         this._mode = 'read';
-        this.render(this._dataItem);
+        this.render(this._dataItem, "read");
     }
     cancelEdit() {
         if (this._field.readOnly) {
             return;
         }
         this._mode = 'read';
-        this.render(this._dataItem);
+        this.render(this._dataItem, "read");
     }
 
-    render(dataItem: T) {
-        if (this._mode == 'edit') {
+    render(dataItem: T, mode?: Mode) {
+        if (mode == 'edit') {
             this.element.innerHTML = "";
 
             this.createControl();

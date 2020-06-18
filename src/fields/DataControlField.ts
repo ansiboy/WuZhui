@@ -1,10 +1,7 @@
-import { Control } from "../Control";
-import { BoundField } from "./BoundField";
 import { GridView } from "../GridView";
 import { Errors } from "../Errors";
-import { Callback } from "maishu-toolkit";
-import { CellType } from "../types";
-import { GridViewCell } from "../cells/index";
+import { GridViewCell, GridViewHeaderCell } from "../cells/index";
+import { defaultElementProvider, ElementProvider } from "../ElementProvider";
 
 export interface DataControlFieldParams {
     footerText?: string,
@@ -17,103 +14,17 @@ export interface DataControlFieldParams {
 }
 
 
-export class GridViewHeaderCell<T> extends Control<HTMLElement> {
-    private _sortType: 'asc' | 'desc';
-    private _iconElement: HTMLElement;
-    private field: DataControlField<T>;
-    type: CellType = "GridViewHeaderCell";
-
-    ascHTML = '↑';
-    descHTML = '↓';
-    sortingHTML = '...';
-    toSortHTML = '↕'
-
-    sorting: Callback<{ sortType: string }>;
-    sorted: Callback<{ sortType: string }>;
-
-    constructor(field: DataControlField<T>, cellElement: HTMLElement) {
-        super(cellElement);
-
-        this.field = field;
-        this.sorting = new Callback();
-        this.sorted = new Callback();
-
-        if (field.sortExpression) {
-            let labelElement = document.createElement('a');
-            labelElement.href = 'javascript:';
-
-            labelElement.innerHTML = this.defaultHeaderText();
-            labelElement.onclick = () => this.handleSort();
-
-            this._iconElement = document.createElement('span');
-            this._iconElement.innerHTML = this.toSortHTML
-
-            this.appendChild(labelElement);
-            this.appendChild(this._iconElement);
-
-            this.sorting.add(() => this._iconElement.innerHTML = this.sortingHTML);
-            this.sorted.add(() => this.updateSortIcon());
-        }
-        else {
-            this.element.innerHTML = this.defaultHeaderText();
-        }
-
-        this.style(field.headerStyle);
-    }
-
-    handleSort() {
-        let selectArguments = this.field.gridView.selectArguments;
-        let sortType: 'asc' | 'desc' = this.sortType == 'asc' ? 'desc' : 'asc';
-
-        // fireCallback(this.sorting, this, { sortType });
-        this.sorting.fire({ sortType });
-        selectArguments.sortExpression = (this.field as BoundField<T>).sortExpression + ' ' + sortType;
-        return this.field.gridView.dataSource.select(selectArguments)
-            .then(() => {
-                this.sortType = sortType;
-                // fireCallback(this.sorted, this, { sortType });
-                this.sorted.fire({ sortType });
-            });
-    }
-
-    private defaultHeaderText() {
-        return this.field.headerText || (this.field as BoundField<T>).dataField as string || '';
-    }
-
-    get sortType() {
-        return this._sortType;
-    }
-    set sortType(value) {
-        this._sortType = value;
-    }
-
-    clearSortIcon() {
-        this._iconElement.innerHTML = this.toSortHTML;
-    }
-
-    private updateSortIcon() {
-        if (this.sortType == 'asc') {
-            this._iconElement.innerHTML = this.ascHTML;
-        }
-        else if (this.sortType == 'desc') {
-            this._iconElement.innerHTML = this.descHTML;
-        }
-        else {
-            this._iconElement.innerHTML = this.toSortHTML;
-        }
-    }
-}
-
 export abstract class DataControlField<T, P extends DataControlFieldParams = DataControlFieldParams> {
     private _gridView: GridView<T>;
-
+    private _elementProvider: ElementProvider;
     protected params: P;
 
-    constructor(params?: P) {
+    constructor(params?: P, elementProvider?: ElementProvider) {
         if (params.visible == null)
             params.visible = true;
 
         this.params = params;
+        this._elementProvider = elementProvider;
     }
 
     /**
@@ -139,6 +50,16 @@ export abstract class DataControlField<T, P extends DataControlFieldParams = Dat
     */
     public set headerText(value: string) {
         this.params.headerText = value;
+    }
+
+    protected get elementProvider(): ElementProvider {
+        if (this._elementProvider != null)
+            return this._elementProvider;
+
+        if (this.gridView != null)
+            return this.gridView.elementProvider;
+
+        return null;
     }
 
     public get itemStyle(): string | Partial<CSSStyleDeclaration> {
@@ -182,13 +103,13 @@ export abstract class DataControlField<T, P extends DataControlFieldParams = Dat
     }
 
     createHeaderCell(): GridViewCell {
-        let cell = new GridViewHeaderCell(this, this.gridView.elementProvider.createCellElement("header"));
+        let cell = new GridViewHeaderCell(this, this.elementProvider.createCellElement("header"));
         return cell;
     }
 
 
     createFooterCell(): GridViewCell {
-        let cell = new GridViewCell(this.gridView.elementProvider.createCellElement("footer"));
+        let cell = new GridViewCell(this.elementProvider.createCellElement("footer"));
         cell.element.innerHTML = this.footerText || '';
         cell.style(this.footerStyle);
 
@@ -204,7 +125,7 @@ export abstract class DataControlField<T, P extends DataControlFieldParams = Dat
         if (!dataItem)
             throw Errors.argumentNull('dataItem');
 
-        let cell = new GridViewCell(this.gridView.elementProvider.createCellElement("body"));
+        let cell = new GridViewCell(this.elementProvider.createCellElement("body"));
         cell.style(this.itemStyle);
 
         return cell;
