@@ -33,11 +33,13 @@ export class Control<T extends HTMLElement> {
             throw Errors.argumentNull('child');
 
         let childElement: HTMLElement;
-        if (child instanceof HTMLElement)
-            childElement = child;
-        else
-            childElement = child.element;
-
+        if ((child as HTMLElement).tagName != null) {
+            childElement = child as HTMLElement;
+        }
+        else {
+            childElement = (child as Control<any>).element;
+        }
+        
         let placeChild: HTMLElement;
         if (index != null) {
             placeChild = this.element.children[index] as HTMLElement;

@@ -31,7 +31,7 @@ export class GridViewHeaderCell<T> extends Control<HTMLElement> {
     sorting: Callback<{ sortType: string }>;
     sorted: Callback<{ sortType: string }>;
 
-    constructor(field: DataControlField<T>, cellElement: HTMLElement = document.createElement('th')) {
+    constructor(field: DataControlField<T>, cellElement: HTMLElement) {
         super(cellElement);
 
         this.field = field;
@@ -181,14 +181,14 @@ export abstract class DataControlField<T, P extends DataControlFieldParams = Dat
         this.params.sortExpression = value;
     }
 
-    createHeaderCell(cellElement?: HTMLElement): GridViewCell {
-        let cell = new GridViewHeaderCell(this, cellElement);
+    createHeaderCell(): GridViewCell {
+        let cell = new GridViewHeaderCell(this, this.gridView.elementProvider.createCellElement("header"));
         return cell;
     }
 
 
-    createFooterCell(cellElement?: HTMLElement): GridViewCell {
-        let cell = new GridViewCell(cellElement);
+    createFooterCell(): GridViewCell {
+        let cell = new GridViewCell(this.gridView.elementProvider.createCellElement("footer"));
         cell.element.innerHTML = this.footerText || '';
         cell.style(this.footerStyle);
 
@@ -200,11 +200,11 @@ export abstract class DataControlField<T, P extends DataControlFieldParams = Dat
      * @param dataItem 数据项
      * @param cellElement 单元格元素
      */
-    createItemCell(dataItem: any, cellElement?: HTMLElement): GridViewCell {
+    createItemCell(dataItem: any): GridViewCell {
         if (!dataItem)
             throw Errors.argumentNull('dataItem');
 
-        let cell = new GridViewCell(cellElement);
+        let cell = new GridViewCell(this.gridView.elementProvider.createCellElement("body"));
         cell.style(this.itemStyle);
 
         return cell;

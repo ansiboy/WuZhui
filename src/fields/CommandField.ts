@@ -115,7 +115,7 @@ export class CommandField<T> extends DataControlField<T, CommandFieldParams> {
     }
 
     createItemCell(dataItem: any): GridViewCell {
-        let cell = new GridViewCommandCell(this, this.gridView.elementProvider.createCellElement());
+        let cell = new GridViewCommandCell(this, this.gridView.elementProvider.createCellElement("body"));
         cell.style(this.itemStyle);
         if (this.params.showEditButton) {
             let editButton = this.createEditButton();
