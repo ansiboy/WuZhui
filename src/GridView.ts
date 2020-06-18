@@ -1,86 +1,17 @@
 import { Control } from "./Control";
 import { DataSource, DataSourceSelectArguments, DataSourceSelectResult, Callback } from "maishu-toolkit";
-import { DataControlField, GridViewHeaderCell, GridViewCell, GridViewDataCell } from "./fields/DataControlField";
+import { DataControlField, GridViewHeaderCell, } from "./fields/DataControlField";
 import { PagerSettings, DataSourcePagingBar } from "./NumberPagingBar";
 import { applyStyle } from "./Utility";
 import { Errors as errors } from "./Errors";
 import { GridViewEditableCell } from "./fields/GridViewEditableCell";
+import { GridViewCell, GridViewDataCell } from "./cells/index";
+import { GridViewRow, GridViewRowType, GridViewDataRow } from "./rows/index";
 
-export enum GridViewRowType {
-    Header,
-    Footer,
-    Data,
-    Paging,
-    Empty
-}
 
-function findParentElement(element: HTMLElement, parentTagName: string) {
-    console.assert(element != null);
-    console.assert(parentTagName != null);
-    parentTagName = parentTagName.toUpperCase();
-    let p = element.parentElement;
-    while (p) {
-        if (p.tagName == parentTagName)
-            return p;
 
-        p = p.parentElement;
-    }
-}
 
-export class GridViewRow extends Control<HTMLTableRowElement> {
-    private _rowType: GridViewRowType;
-    private _gridView: GridView<any>;
 
-    constructor(rowType: GridViewRowType) {
-        let element = document.createElement('tr');
-        super(element);
-        this._rowType = rowType;
-    }
-
-    get rowType(): GridViewRowType {
-        return this._rowType;
-    }
-
-    get gridView(): GridView<any> {
-        if (this._gridView == null) {
-            let gridViewElement = findParentElement(this.element, 'table');
-            console.assert(gridViewElement != null);
-            this._gridView = <GridView<any>>Control.getControlByElement(gridViewElement);
-            console.assert(this._gridView != null);
-        }
-        return this._gridView;
-    }
-
-    get cells(): GridViewCell[] {
-        let cells = new Array<GridViewCell>();
-        for (let i = 0; i < this.element.cells.length; i++) {
-            let cell = Control.getControlByElement(this.element.cells[i] as HTMLTableCellElement) as GridViewCell;
-            console.assert(cell != null);
-            cells[i] = cell;
-        }
-        return cells;
-    }
-}
-
-export class GridViewDataRow extends GridViewRow {
-    private _dataItem: any;
-
-    constructor(gridView: GridView<any>, dataItem: any) {
-        super(GridViewRowType.Data);
-        this._dataItem = dataItem;
-        for (var i = 0; i < gridView.columns.length; i++) {
-            var column = gridView.columns[i];
-            var cell = column.createItemCell(dataItem);
-            cell.visible = column.visible;
-
-            this.appendChild(cell);
-        }
-    }
-
-    get dataItem() {
-        return this._dataItem;
-    }
-}
 
 export interface GridViewArguments<T> {
     dataSource: DataSource<T>,

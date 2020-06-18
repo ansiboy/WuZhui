@@ -1,5 +1,6 @@
-import { DataControlFieldParams, DataControlField, GridViewCell } from "./DataControlField";
+import { DataControlFieldParams, DataControlField } from "./DataControlField";
 import { GridViewEditableCell } from "./GridViewEditableCell";
+import { GridViewCell, GridViewCellControl } from "../cells/index";
 
 export interface BoundFieldParams<T> extends DataControlFieldParams {
     dataField: Extract<keyof T, string>,
@@ -82,8 +83,3 @@ export class BoundField<T> extends DataControlField<T, BoundFieldParams<T>> {
 
 }
 
-export interface GridViewCellControl {
-    element: HTMLElement
-    value: any
-    // valueType?: ValueType
-}

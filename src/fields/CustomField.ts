@@ -1,4 +1,5 @@
-import { GridViewCell, DataControlFieldParams, DataControlField } from "./DataControlField";
+import { DataControlFieldParams, DataControlField } from "./DataControlField";
+import { GridViewCell } from "../cells/index";
 
 export interface CustomFieldParams<T> extends DataControlFieldParams {
     createHeaderCell?: () => GridViewCell,
@@ -21,7 +22,7 @@ export class CustomField<T> extends DataControlField<T, CustomFieldParams<T>> {
             let cell = this.params.createFooterCell();
             if (this.params.footerStyle)
                 cell.style(this.params.footerStyle);
-                
+
             return cell;
         }
 

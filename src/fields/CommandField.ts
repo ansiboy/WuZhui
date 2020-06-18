@@ -1,11 +1,12 @@
 /// <reference path="DataControlField.ts"/>
 
-import { GridViewCell, DataControlField, DataControlFieldParams } from "./DataControlField";
+import { DataControlField, DataControlFieldParams } from "./DataControlField";
 import { Control } from "../Control";
 import { BoundField } from "./BoundField";
 import { GridViewEditableCell } from "./GridViewEditableCell";
 import { ElementHelper } from "../Utility";
-import { GridViewRow, GridViewDataRow } from "../GridView";
+import { GridViewRow, GridViewDataRow } from "../rows/index";
+import { GridViewCell } from "../cells/index";
 
 
 class GridViewCommandCell<T> extends GridViewCell {
@@ -20,8 +21,8 @@ class GridViewCommandCell<T> extends GridViewCell {
         super()
     }
 
-}
 
+}
 export interface CommandFieldParams extends DataControlFieldParams {
     showEditButton?: boolean,
     showNewButton?: boolean,
