@@ -13,7 +13,6 @@ export interface DataControlFieldParams {
     sortExpression?: string
 }
 
-
 export abstract class DataControlField<T, P extends DataControlFieldParams = DataControlFieldParams> {
     private _gridView: GridView<T>;
     private _elementProvider: ElementProvider;
@@ -102,14 +101,14 @@ export abstract class DataControlField<T, P extends DataControlFieldParams = Dat
         this.params.sortExpression = value;
     }
 
-    createHeaderCell(): GridViewCell {
-        let cell = new GridViewHeaderCell(this, this.elementProvider.createCellElement("header"));
+    createHeaderCell(cellElement: HTMLElement): GridViewCell {
+        let cell = new GridViewHeaderCell(this, cellElement);
         return cell;
     }
 
 
-    createFooterCell(): GridViewCell {
-        let cell = new GridViewCell(this.elementProvider.createCellElement("footer"));
+    createFooterCell(cellElement: HTMLElement): GridViewCell {
+        let cell = new GridViewCell(cellElement);
         cell.element.innerHTML = this.footerText || '';
         cell.style(this.footerStyle);
 
@@ -121,11 +120,11 @@ export abstract class DataControlField<T, P extends DataControlFieldParams = Dat
      * @param dataItem 数据项
      * @param cellElement 单元格元素
      */
-    createItemCell(dataItem: any): GridViewCell {
+    createItemCell(dataItem: any, cellElement: HTMLElement): GridViewCell {
         if (!dataItem)
             throw Errors.argumentNull('dataItem');
 
-        let cell = new GridViewCell(this.elementProvider.createCellElement("body"));
+        let cell = new GridViewCell(cellElement);
         cell.style(this.itemStyle);
 
         return cell;

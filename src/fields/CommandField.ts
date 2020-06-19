@@ -7,22 +7,8 @@ import { GridViewEditableCell } from "./GridViewEditableCell";
 import { ElementHelper } from "../Utility";
 import { GridViewRow, GridViewDataRow } from "../rows/index";
 import { GridViewCell } from "../cells/index";
+import { GridViewCommandCell } from "../cells/GridViewCommandCell";
 
-
-class GridViewCommandCell<T> extends GridViewCell {
-    cacelButton: HTMLElement;
-    deleteButton: HTMLElement;
-    editButton: HTMLElement;
-    newButton: HTMLElement;
-    updateButton: HTMLElement;
-    insertButton: HTMLElement;
-
-    constructor(field: DataControlField<T>, cellElement: HTMLElement) {
-        super(cellElement)
-    }
-
-
-}
 export interface CommandFieldParams extends DataControlFieldParams {
     showEditButton?: boolean,
     showNewButton?: boolean,

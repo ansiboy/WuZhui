@@ -18,12 +18,10 @@ export class GridViewDataCell<T> extends GridViewCell {
     private nullText: string;
     private dataFormatString?: string;
 
-    type: CellType = "GridViewDataCell";
-
     dataField: keyof T;
 
     constructor(params: GridViewDataCellArgument1<T> | GridViewDataCellArgument2<T>, cellElement: HTMLElement) {
-        super(cellElement);
+        super(cellElement, "GridViewDataCell");
 
 
         let p = params as (GridViewDataCellArgument1<T> & GridViewDataCellArgument2<T>)

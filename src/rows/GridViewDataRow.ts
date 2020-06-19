@@ -10,7 +10,7 @@ export class GridViewDataRow extends GridViewRow {
         this._dataItem = dataItem;
         for (var i = 0; i < gridView.columns.length; i++) {
             var column = gridView.columns[i];
-            var cell = column.createItemCell(dataItem);
+            var cell = column.createItemCell(dataItem, this.gridView.elementProvider.createCellElement("body"));
             cell.visible = column.visible;
 
             this.appendChild(cell);

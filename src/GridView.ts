@@ -208,7 +208,7 @@ export class GridView<T> extends Control<HTMLElement> {
         var row = new GridViewRow(GridViewRowType.Header, this.elementProvider.createRowElement());
         for (var i = 0; i < this.columns.length; i++) {
             var column = this.columns[i];
-            let cell = column.createHeaderCell() as GridViewHeaderCell<T>;
+            let cell = column.createHeaderCell(this.elementProvider.createCellElement("header")) as GridViewHeaderCell<T>;
             if (cell.type == "GridViewHeaderCell") {
                 cell.sorting.add(a => this.on_sort(cell, a));
             }
@@ -223,7 +223,7 @@ export class GridView<T> extends Control<HTMLElement> {
         var row = new GridViewRow(GridViewRowType.Footer, this.elementProvider.createRowElement());
         for (var i = 0; i < this.columns.length; i++) {
             var column = this.columns[i];
-            let cell = column.createFooterCell();
+            let cell = column.createFooterCell(this.elementProvider.createCellElement("footer"));
 
             row.appendChild(cell);
             cell.visible = column.visible;

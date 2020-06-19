@@ -1,15 +1,13 @@
-import { Control } from "../Control";
 import { DataControlField } from "../fields/DataControlField";
-import { CellType } from "../types";
 import { Callback } from "maishu-toolkit";
 import { Errors } from "../Errors";
 import { BoundField } from "../fields/BoundField";
+import { GridViewCell } from "./GridViewCell";
 
-export class GridViewHeaderCell<T> extends Control<HTMLElement> {
+export class GridViewHeaderCell<T> extends GridViewCell {
     private _sortType: 'asc' | 'desc';
     private _iconElement: HTMLElement;
     private field: DataControlField<T>;
-    type: CellType = "GridViewHeaderCell";
 
     ascHTML = '↑';
     descHTML = '↓';
@@ -20,7 +18,7 @@ export class GridViewHeaderCell<T> extends Control<HTMLElement> {
     sorted: Callback<{ sortType: string }>;
 
     constructor(field: DataControlField<T>, cellElement: HTMLElement) {
-        super(cellElement);
+        super(cellElement, "GridViewHeaderCell");
 
         this.field = field;
         this.sorting = new Callback();

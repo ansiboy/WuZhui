@@ -10,8 +10,8 @@ export class CustomBoundField<T> extends BoundField<T> {
         super(params);
     }
 
-    createItemCell(dataItem: T) {
-        let cell = super.createItemCell(dataItem) as GridViewEditableCell<T>;
+    createItemCell(dataItem: T, cellElement: HTMLElement) {
+        let cell = super.createItemCell(dataItem, cellElement) as GridViewEditableCell<T>;
         let cellRender = cell.render;
 
         cell.render = function (dataItem) {

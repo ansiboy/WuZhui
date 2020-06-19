@@ -1,1 +1,1 @@
-export type CellType = "GridViewHeaderCell" | "GridViewDataCell" | "GridViewEditableCell" | "GridViewCommandCell";
+export type CellType = "GridViewHeaderCell" | "GridViewDataCell" | "GridViewEditableCell" | "GridViewCommandCell" | "GridViewCell";

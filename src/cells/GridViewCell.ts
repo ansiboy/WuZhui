@@ -1,9 +1,12 @@
 import { Control } from "../Control";
+import { CellType } from "types";
 
 export class GridViewCell extends Control<HTMLElement> {
-
-    constructor(element: HTMLElement) {
+    type: CellType;
+    constructor(element: HTMLElement, type: CellType = "GridViewCell") {
         super(element);
+
+        this.type = type;
     }
 }
 
