@@ -1,5 +1,5 @@
 import { Control } from "../Control";
-import { CellType } from "types";
+import { CellType } from "../types";
 
 export class GridViewCell extends Control<HTMLElement> {
     type: CellType;

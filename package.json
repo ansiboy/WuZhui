@@ -1,6 +1,6 @@
 {
     "name": "maishu-wuzhui",
-    "version": "1.17.35",
+    "version": "1.17.36",
     "main": "./dist/index.js",
     "types": "./out/index.d.ts",
     "scripts": {

@@ -1,5 +1,5 @@
 import { DataControlFieldParams, DataControlField } from "./DataControlField";
-import { GridViewEditableCell } from "./GridViewEditableCell";
+import { GridViewEditableCell } from "../cells/GridViewEditableCell";
 import { GridViewCell, GridViewCellControl } from "../cells/index";
 
 export interface BoundFieldParams<T> extends DataControlFieldParams {

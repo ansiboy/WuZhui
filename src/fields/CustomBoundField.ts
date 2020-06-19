@@ -1,5 +1,5 @@
 import { BoundField, BoundFieldParams } from "./BoundField";
-import { GridViewEditableCell } from "./GridViewEditableCell";
+import { GridViewEditableCell } from "../cells/GridViewEditableCell";
 
 export interface CustomBoundFieldParams<T> extends BoundFieldParams<T> {
     cellRender?: (dataItem: T, element: HTMLElement) => void

@@ -1,8 +1,8 @@
 import { Errors } from "../Errors";
 import { applyStyle } from "../Utility";
-import { BoundField } from "./BoundField";
+import { BoundField } from "../fields/BoundField";
 import { CellType } from "../types";
-import { GridViewDataCell, GridViewCellControl } from "../cells/index";
+import { GridViewDataCell, GridViewCellControl } from "./index";
 
 type Mode = "read" | "edit";
 export class GridViewEditableCell<T> extends GridViewDataCell<T> {

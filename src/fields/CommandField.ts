@@ -3,7 +3,7 @@
 import { DataControlField, DataControlFieldParams } from "./DataControlField";
 import { Control } from "../Control";
 import { BoundField } from "./BoundField";
-import { GridViewEditableCell } from "./GridViewEditableCell";
+import { GridViewEditableCell } from "../cells/GridViewEditableCell";
 import { ElementHelper } from "../Utility";
 import { GridViewRow, GridViewDataRow } from "../rows/index";
 import { GridViewCell } from "../cells/index";
@@ -255,7 +255,6 @@ export class CommandField<T> extends DataControlField<T, CommandFieldParams> {
         console.assert(cellElement != null);
 
         let rowElement = <HTMLTableRowElement>cellElement.parentElement;
-
         for (let i = 0; i < rowElement.cells.length; i++) {
             let cell = Control.getControlByElement(<HTMLElement>rowElement.cells[i]);
             if ((<GridViewEditableCell<T>>cell).type == "GridViewEditableCell") {

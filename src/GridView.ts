@@ -4,7 +4,7 @@ import { DataControlField, } from "./fields/DataControlField";
 import { PagerSettings, DataSourcePagingBar } from "./NumberPagingBar";
 import { applyStyle } from "./Utility";
 import { Errors as errors } from "./Errors";
-import { GridViewEditableCell } from "./fields/GridViewEditableCell";
+import { GridViewEditableCell } from "./cells/GridViewEditableCell";
 import { GridViewCell, GridViewDataCell, GridViewHeaderCell } from "./cells/index";
 import { GridViewRow, GridViewRowType, GridViewDataRow } from "./rows/index";
 import { ElementProvider, defaultElementProvider } from "./ElementProvider";
