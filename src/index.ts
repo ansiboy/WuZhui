@@ -13,3 +13,4 @@ export { Control } from "./Control";
 export { DataSource, DataSourceArguments, DataSourceSelectArguments, DataSourceSelectResult, } from "maishu-toolkit";
 export { GridViewCell, GridViewDataCell, GridViewCellControl } from "./cells/index";
 export { GridViewDataRow, GridViewRowType } from "./rows/index";
+export { ElementProvider } from "./ElementProvider";

@@ -8,6 +8,7 @@ import { GridViewEditableCell } from "./cells/GridViewEditableCell";
 import { GridViewCell, GridViewDataCell, GridViewHeaderCell } from "./cells/index";
 import { GridViewRow, GridViewRowType, GridViewDataRow } from "./rows/index";
 import { ElementProvider, defaultElementProvider } from "./ElementProvider";
+import { HTML } from "maishu-toolkit";
 
 export interface GridViewArguments<T> {
     dataSource: DataSource<T>,
@@ -57,7 +58,7 @@ export class GridView<T> extends Control<HTMLElement> {
 
     constructor(params: GridViewArguments<T>, elementProvider = defaultElementProvider) {
 
-        super(params.element || elementProvider.createViewElement());
+        super(params.element);
 
 
         this.elementProvider = elementProvider;
@@ -143,8 +144,9 @@ export class GridView<T> extends Control<HTMLElement> {
     private createPagingBar(pagerSettings?: PagerSettings) {
         var pagingBarContainer = this.elementProvider.createRowElement(); //document.createElement('tr');
         var pagingBarElement = this.elementProvider.createCellElement("footer");//document.createElement('td');
-        pagingBarElement.className = GridView.pagingBarClassName;
-        if (pagingBarElement.tagName == "td")
+        // pagingBarElement.className = GridView.pagingBarClassName;
+        HTML.addClassName(pagingBarElement, GridView.pagingBarClassName);
+        if (pagingBarElement.tagName == "TD")
             pagingBarElement.setAttribute("colspan", `${this.columns.length}`);// pagingBarElement.colSpan = this.columns.length;
 
         pagingBarContainer.appendChild(pagingBarElement);
@@ -178,7 +180,8 @@ export class GridView<T> extends Control<HTMLElement> {
 
     public appendDataRow(dataItem: any, index?: number) {
         var row = new GridViewDataRow(this, dataItem, this.elementProvider.createRowElement());
-        row.element.className = GridView.dataRowClassName;
+        // row.element.className = GridView.dataRowClassName;
+        HTML.addClassName(row.element, GridView.dataRowClassName);
         this._body.appendChild(row, index);
 
         let cells = row.cells;

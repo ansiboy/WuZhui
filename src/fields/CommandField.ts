@@ -8,6 +8,7 @@ import { ElementHelper } from "../Utility";
 import { GridViewRow, GridViewDataRow } from "../rows/index";
 import { GridViewCell } from "../cells/index";
 import { GridViewCommandCell } from "../cells/GridViewCommandCell";
+import { HTML } from "maishu-toolkit";
 
 export interface CommandFieldParams extends DataControlFieldParams {
     showEditButton?: boolean,
@@ -107,7 +108,7 @@ export class CommandField<T> extends DataControlField<T, CommandFieldParams> {
             let editButton = this.createEditButton();
             editButton.style.marginRight = '4px';
             if (this.editButtonClass)
-                editButton.className = this.editButtonClass;
+                HTML.addClassName(editButton, this.editButtonClass); //editButton.className = this.editButtonClass;
 
             cell.editButton = editButton;
             editButton.addEventListener('click', (e) => this.on_editButtonClick(e));
@@ -117,7 +118,7 @@ export class CommandField<T> extends DataControlField<T, CommandFieldParams> {
             updateButton.style.display = 'none';
             updateButton.style.marginRight = '4px';
             if (this.updateButtonClass)
-                updateButton.className = this.updateButtonClass;
+                HTML.addClassName(updateButton, this.updateButtonClass); //updateButton.className = this.updateButtonClass;
 
             cell.updateButton = updateButton;
             updateButton.addEventListener('click', (e) => this.on_insertOrUpdateButtonClick(e));
@@ -127,7 +128,7 @@ export class CommandField<T> extends DataControlField<T, CommandFieldParams> {
             cancelButton.style.display = 'none';
             cancelButton.style.marginRight = '4px';
             if (this.cancelButtonClass)
-                cancelButton.className = this.cancelButtonClass;
+                HTML.addClassName(cancelButton, this.cancelButtonClass); //cancelButton.className = this.cancelButtonClass;
 
             cell.cacelButton = cancelButton;
 
@@ -138,7 +139,7 @@ export class CommandField<T> extends DataControlField<T, CommandFieldParams> {
             let deleteButton = this.createDeleteButton();
             deleteButton.style.marginRight = '4px';
             if (this.deleteButtonClass)
-                deleteButton.className = this.deleteButtonClass;
+                HTML.addClassName(deleteButton, this.deleteButtonClass); //deleteButton.className = this.deleteButtonClass;
 
             cell.deleteButton = deleteButton;
             deleteButton.onclick = (e) => this.on_deleteButtonClick(e);
@@ -148,7 +149,7 @@ export class CommandField<T> extends DataControlField<T, CommandFieldParams> {
             let newButton = this.createNewButton();
             newButton.style.marginRight = '4px';
             if (this.newButtonClass)
-                newButton.className = this.newButtonClass;
+                HTML.addClassName(newButton, this.newButtonClass); //newButton.className = this.newButtonClass;
 
             newButton.onclick = (e) => this.on_newButtonClick(e);
             cell.newButton = newButton;
@@ -159,7 +160,7 @@ export class CommandField<T> extends DataControlField<T, CommandFieldParams> {
             insertButton.style.marginRight = '4px';
             insertButton.addEventListener('click', (e) => this.on_insertOrUpdateButtonClick(e));
             if (this.insertButtonClass)
-                insertButton.className = this.updateButtonClass;
+                HTML.addClassName(insertButton, this.insertButtonClass); // insertButton.className = this.updateButtonClass;
 
             cell.insertButton = insertButton;
             cell.appendChild(insertButton);
@@ -169,7 +170,7 @@ export class CommandField<T> extends DataControlField<T, CommandFieldParams> {
             cancelButton.style.marginRight = '4px';
             cancelButton.addEventListener('click', (e) => this.on_cancelButtonClick(e));
             if (this.cancelButtonClass)
-                cancelButton.className = this.cancelButtonClass;
+                HTML.addClassName(cancelButton, this.cancelButtonClass);  // cancelButton.className = this.cancelButtonClass;
 
             cell.cacelButton = cancelButton;
             cell.appendChild(cancelButton);
