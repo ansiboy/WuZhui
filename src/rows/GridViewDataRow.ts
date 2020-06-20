@@ -6,7 +6,7 @@ export class GridViewDataRow extends GridViewRow {
     private _dataItem: any;
 
     constructor(gridView: GridView<any>, dataItem: any, rowElement: HTMLElement) {
-        super(GridViewRowType.Data, rowElement);
+        super(GridViewRowType.Data, rowElement, gridView);
         this._dataItem = dataItem;
         for (var i = 0; i < gridView.columns.length; i++) {
             var column = gridView.columns[i];

@@ -14,7 +14,7 @@ export interface GridViewArguments<T> {
     columns: Array<DataControlField<T>>,
     showHeader?: boolean,
     showFooter?: boolean,
-    element: HTMLTableElement,
+    element: HTMLElement,
     emptyDataRowStyle?: string,
     // allowPaging?: boolean,
     pageSize?: number,
@@ -162,7 +162,7 @@ export class GridView<T> extends Control<HTMLElement> {
     }
 
     private appendEmptyRow() {
-        this._emtpyRow = new GridViewRow(GridViewRowType.Empty, this.elementProvider.createRowElement());
+        this._emtpyRow = new GridViewRow(GridViewRowType.Empty, this.elementProvider.createRowElement(), this);
         this._emtpyRow.element.className = GridView.emptyRowClassName;
 
         let cell = new GridViewCell(this.elementProvider.createCellElement("body"));
@@ -205,7 +205,7 @@ export class GridView<T> extends Control<HTMLElement> {
     }
 
     private appendHeaderRow() {
-        var row = new GridViewRow(GridViewRowType.Header, this.elementProvider.createRowElement());
+        var row = new GridViewRow(GridViewRowType.Header, this.elementProvider.createRowElement(), this);
         for (var i = 0; i < this.columns.length; i++) {
             var column = this.columns[i];
             let cell = column.createHeaderCell(this.elementProvider.createCellElement("header")) as GridViewHeaderCell<T>;
@@ -220,7 +220,7 @@ export class GridView<T> extends Control<HTMLElement> {
     }
 
     private appendFooterRow() {
-        var row = new GridViewRow(GridViewRowType.Footer, this.elementProvider.createRowElement());
+        var row = new GridViewRow(GridViewRowType.Footer, this.elementProvider.createRowElement(), this);
         for (var i = 0; i < this.columns.length; i++) {
             var column = this.columns[i];
             let cell = column.createFooterCell(this.elementProvider.createCellElement("footer"));

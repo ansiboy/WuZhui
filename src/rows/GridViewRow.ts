@@ -2,29 +2,28 @@ import { Control } from "../Control";
 import { GridView } from "../GridView";
 import { GridViewRowType } from "./GridViewRowType";
 import { GridViewCell } from "../cells/index";
+import { Errors } from "../Errors";
 
 export class GridViewRow extends Control<HTMLElement> {
-    private _rowType: GridViewRowType;
-    private _gridView: GridView<any>;
+    #rowType: GridViewRowType;
+    #gridView: GridView<any>;
 
-    constructor(rowType: GridViewRowType, rowElement: HTMLElement) {
-        // let element = document.createElement('tr');
+    constructor(rowType: GridViewRowType, rowElement: HTMLElement, gridView: GridView<any>) {
         super(rowElement);
-        this._rowType = rowType;
+
+        if (gridView == null)
+            throw Errors.argumentNull("gridView");
+
+        this.#gridView = gridView;
+        this.#rowType = rowType;
     }
 
     get rowType(): GridViewRowType {
-        return this._rowType;
+        return this.#rowType;
     }
 
     get gridView(): GridView<any> {
-        if (this._gridView == null) {
-            let gridViewElement = findParentElement(this.element, 'table');
-            console.assert(gridViewElement != null);
-            this._gridView = <GridView<any>>Control.getControlByElement(gridViewElement);
-            console.assert(this._gridView != null);
-        }
-        return this._gridView;
+        return this.#gridView;
     }
 
     get cells(): GridViewCell[] {
@@ -38,15 +37,15 @@ export class GridViewRow extends Control<HTMLElement> {
     }
 }
 
-function findParentElement(element: HTMLElement, parentTagName: string) {
-    console.assert(element != null);
-    console.assert(parentTagName != null);
-    parentTagName = parentTagName.toUpperCase();
-    let p = element.parentElement;
-    while (p) {
-        if (p.tagName == parentTagName)
-            return p;
+// function findParentElement(element: HTMLElement, parentTagName: string) {
+//     console.assert(element != null);
+//     console.assert(parentTagName != null);
+//     parentTagName = parentTagName.toUpperCase();
+//     let p = element.parentElement;
+//     while (p) {
+//         if (p.tagName == parentTagName)
+//             return p;
 
-        p = p.parentElement;
-    }
-}
+//         p = p.parentElement;
+//     }
+// }
