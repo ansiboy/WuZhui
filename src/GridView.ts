@@ -17,7 +17,9 @@ export interface GridViewArguments<T> {
     showFooter?: boolean,
     element: HTMLElement,
     emptyDataRowStyle?: string,
-    // allowPaging?: boolean,
+    /** 是否显示分页栏 */
+    showPagingBar?: boolean,
+    /** 一页最多的纪录数， */
     pageSize?: number,
     pagerSettings?: PagerSettings,
     emptyDataHTML?: string,
@@ -64,8 +66,8 @@ export class GridView<T> extends Control<HTMLElement> {
         this.elementProvider = elementProvider;
         params = Object.assign({
             showHeader: true, showFooter: false,
-            allowPaging: false
-        }, params);
+            showPagingBar: true
+        } as GridViewArguments<T>, params);
 
         this.selectArguments = new DataSourceSelectArguments();
         if (params.pageSize)
@@ -120,15 +122,15 @@ export class GridView<T> extends Control<HTMLElement> {
 
         this.appendEmptyRow();
 
-        let allowPaging = params.pageSize;
-        if (params.showFooter || allowPaging) {
+        let showPagingBar = params.showPagingBar;
+        if (params.showFooter || showPagingBar) {
             this._footer = new Control(this.elementProvider.createFooterElement());
             this.appendChild(this._footer);
 
             if (params.showFooter)
                 this.appendFooterRow();
 
-            if (allowPaging) {
+            if (showPagingBar) {
                 this.createPagingBar(params.pagerSettings);
                 // this.pagingBar.selectArguments.maximumRows = params.pageSize;
             }
