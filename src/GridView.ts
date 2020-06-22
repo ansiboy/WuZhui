@@ -176,13 +176,11 @@ export class GridView<T> extends Control<HTMLElement> {
         }
         this._emtpyRow.appendChild(cell);
         this._body.appendChild(this._emtpyRow);
-        // fireCallback(this.rowCreated, this, { row: this._emtpyRow });
         this.rowCreated.fire({ row: this._emtpyRow });
     }
 
     public appendDataRow(dataItem: any, index?: number) {
         var row = new GridViewDataRow(this, dataItem, this.elementProvider.createRowElement());
-        // row.element.className = GridView.dataRowClassName;
         HTML.addClassName(row.element, GridView.dataRowClassName);
         this._body.appendChild(row, index);
 
@@ -194,7 +192,6 @@ export class GridView<T> extends Control<HTMLElement> {
             }
         }
 
-        // fireCallback(this.rowCreated, this, { row });
         this.rowCreated.fire({ row });
         if (this._emtpyRow.element.style.display != 'none')
             this.hideEmptyRow();

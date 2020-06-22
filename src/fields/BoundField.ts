@@ -5,7 +5,7 @@ import { GridViewCell, GridViewCellControl } from "../cells/index";
 export interface BoundFieldParams<T> extends DataControlFieldParams {
     dataField: Extract<keyof T, string>,
     dataFormatString?: string,
-    controlStyle?: Partial<CSSStyleDeclaration> | string,
+    controlStyle?: Partial<CSSStyleDeclaration>,
     nullText?: string,
     readOnly?: boolean,
     valueType?: ValueType,
