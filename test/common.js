@@ -56,6 +56,7 @@ exports.createGridView = async function (elementProvider) {
     ]);
 
     let gridView = new GridView({
+        element: elementProvider.createViewElement(),
         dataSource,
         columns: [
             new BoundField({ dataField: 'name' }),
