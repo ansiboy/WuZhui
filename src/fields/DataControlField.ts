@@ -14,8 +14,8 @@ export interface DataControlFieldParams {
 }
 
 export abstract class DataControlField<T, P extends DataControlFieldParams = DataControlFieldParams> {
-    private _gridView: GridView<T>;
-    private _elementProvider: ElementProvider;
+    #gridView: GridView<T>;
+    #elementProvider: ElementProvider;
     protected params: P;
 
     constructor(params?: P, elementProvider?: ElementProvider) {
@@ -23,7 +23,7 @@ export abstract class DataControlField<T, P extends DataControlFieldParams = Dat
             params.visible = true;
 
         this.params = params;
-        this._elementProvider = elementProvider;
+        this.#elementProvider = elementProvider;
     }
 
     /**
@@ -55,8 +55,8 @@ export abstract class DataControlField<T, P extends DataControlFieldParams = Dat
     }
 
     protected get elementProvider(): ElementProvider {
-        if (this._elementProvider != null)
-            return this._elementProvider;
+        if (this.#elementProvider != null)
+            return this.#elementProvider;
 
         if (this.gridView != null)
             return this.gridView.elementProvider;
@@ -86,10 +86,10 @@ export abstract class DataControlField<T, P extends DataControlFieldParams = Dat
         return this.params.visible;
     }
     get gridView(): GridView<any> {
-        return this._gridView;
+        return this.#gridView;
     }
     set gridView(value: GridView<any>) {
-        this._gridView = value;
+        this.#gridView = value;
     }
     /**
      * Gets a sort expression that is used by a data source control to sort data.

@@ -16,7 +16,7 @@ export interface BoundFieldParams<T> extends DataControlFieldParams {
 
 export type ValueType = 'number' | 'date' | 'string' | 'boolean'
 
-export class BoundField<T> extends DataControlField<T, BoundFieldParams<T>> {
+export class BoundField<T, P extends BoundFieldParams<T> = BoundFieldParams<T>> extends DataControlField<T, P> {
 
     /**
      * Gets the caption displayed for a field when the field's value is null.
