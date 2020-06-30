@@ -1,19 +1,14 @@
 import { BoundFieldParams, BoundField } from "./BoundField";
 import { DataSource, errors } from "maishu-toolkit";
 import { GridViewEditableCell } from "../cells/GridViewEditableCell";
-import { Dropdown } from "DropDown";
+import { Dropdown } from "../DropDown";
 
 const emptyValue = "";
-interface DropdownFieldParams<T, S> extends BoundFieldParams<T> {
+export interface DropdownFieldParams<T, S> extends BoundFieldParams<T> {
     dataSource: DataSource<S>;
     emptyText?: string;
     nameField: keyof S;
     valueField: keyof S
-}
-
-export function dropdownField<T, S>(params: DropdownFieldParams<T, S>) {
-    let field = new DropdownField(params);
-    return field;
 }
 
 export class DropdownField<T, S> extends BoundField<T, DropdownFieldParams<T, S>> {
