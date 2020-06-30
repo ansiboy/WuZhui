@@ -22,6 +22,11 @@ export class Dropdown<T> extends Control<HTMLSelectElement> {
         if (params == null) throw errors.argumentNull('params')
         if (params.dataSource == null) throw errors.argumentFieldNull('params', 'dataSource')
         if (params.element == null) throw errors.argumentFieldNull('params', 'element')
+        if (params.nameField == null) throw errors.argumentFieldNull("params", "nameField");
+        if (params.valueField == null) throw errors.argumentFieldNull("params", "valueField");
+
+        this.#nameField = params.nameField;
+        this.#valueField = params.valueField;
 
         this.init(params);
     }
@@ -61,6 +66,9 @@ export class Dropdown<T> extends Control<HTMLSelectElement> {
     }
 
     private addOptionElement(dataItem: T) {
+        console.assert(this.#nameField != null);
+        console.assert(this.#valueField != null);
+        
         let name: any = dataItem[this.#nameField];
         let value: any = dataItem[this.#valueField];
 
