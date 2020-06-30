@@ -1,6 +1,7 @@
 import { DataControlFieldParams, DataControlField } from "./DataControlField";
 import { GridViewEditableCell } from "../cells/GridViewEditableCell";
 import { GridViewCell, GridViewCellControl } from "../cells/index";
+import { Rule } from "maishu-dilu";
 
 export interface BoundFieldParams<T> extends DataControlFieldParams {
     dataField: Extract<keyof T, string>,
@@ -9,6 +10,8 @@ export interface BoundFieldParams<T> extends DataControlFieldParams {
     nullText?: string,
     readOnly?: boolean,
     valueType?: ValueType,
+    validateRules?: Rule[],
+    emptyText?: string,
 }
 
 export type ValueType = 'number' | 'date' | 'string' | 'boolean'
@@ -52,17 +55,26 @@ export class BoundField<T> extends DataControlField<T, BoundFieldParams<T>> {
         return this.params.readOnly;
     }
 
+    get validateRules() {
+        return this.params.validateRules;
+    }
+
     //===============================================
     // Virutal Methods
     createControl(): GridViewCellControl {
         let element = document.createElement("input");
         let valueType = this.params.valueType;
+        let field = this;
         let control = {
             element,
             get value(): any {
                 let it = this as typeof control;
                 let input = it.element as HTMLInputElement;
                 let text = input.value;
+                input.name = `${field.dataField}`;
+                if (field.params.emptyText) {
+                    input.placeholder = field.params.emptyText;
+                }
                 switch (valueType) {
                     case 'number':
                         return new Number(text).valueOf();

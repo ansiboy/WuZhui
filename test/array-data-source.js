@@ -4,8 +4,8 @@ const assert = require("assert");
 describe("array data source", function () {
 
     let arr = [
-        { id: 1, name: "China" },
-        { id: 2, name: "America" },
+        { id: "1", name: "China" },
+        { id: "2", name: "America" },
     ]
     let dataSource = new ArrayDataSource(arr, ["id"]);
 
@@ -15,15 +15,19 @@ describe("array data source", function () {
     })
 
     it("update data item", async function () {
-        await dataSource.update({ id: 1, name: "Japan" });
+        await dataSource.update({ id: "1", name: "Japan" });
         let item = arr.filter(o => o.id == 1)[0];
         assert.notEqual(item, null);
         assert.equal(item.name, "Japan");
     })
 
     it("find data item", async function () {
-        let item = await dataSource.findDataItem({ id: 1 });
+        let item = await dataSource.findDataItem({ id: "1" });
         assert.notEqual(item, null);
-        assert.equal(item.id, 1);
+        assert.equal(item.id, "1");
+
+        item = await dataSource.findDataItem({ id: "2" });
+        assert.notEqual(item, null);
+        assert.equal(item.id, "2");
     })
 })

@@ -20,4 +20,7 @@ module.exports = {
     plugins: [
         new webpack.BannerPlugin(license),
     ],
+    externals: [
+        'maishu-dilu', 'maishu-toolkit'//'maishu-wuzhui', 
+    ]
 }

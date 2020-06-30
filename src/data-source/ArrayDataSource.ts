@@ -2,13 +2,12 @@ import { DataSource } from "maishu-toolkit"
 
 export class ArrayDataSource<T> extends DataSource<T> {
     #dataItems: T[];
-    #items: T[] | Promise<T[]>;
 
-    constructor(items: T[] | Promise<T[]>, primaryKeys?: (keyof T)[]) {
+    constructor(dataItems: T[], primaryKeys?: (keyof T)[]) {
         super({
             primaryKeys,
             select: async (args) => {
-                let arr = await this.getDateItems();
+                let arr = this.dataItems;
                 if (args.maximumRows == null || args.maximumRows <= arr.length)
                     return { dataItems: arr, totalRowCount: arr.length };
 
@@ -18,18 +17,18 @@ export class ArrayDataSource<T> extends DataSource<T> {
                 return result
             },
             update: async (dataItem) => {
-                let item = await this.findDataItem(dataItem);
+                let item = this.findDataItem(dataItem);
                 if (item != null) {
                     Object.assign(item, dataItem);
                 }
                 return item;
             },
             insert: async (dataItem) => {
-                let items = await this.getDateItems();
+                let items = this.dataItems;
                 items.push(dataItem);
             },
             delete: async (dataItem) => {
-                let item = await this.findDataItem(dataItem);
+                let item = this.findDataItem(dataItem);
                 if (item == null) {
                     console.assert(this.#dataItems != null);
                     this.#dataItems = this.#dataItems.filter(o => o != item);
@@ -38,32 +37,32 @@ export class ArrayDataSource<T> extends DataSource<T> {
             }
         })
 
-        this.#items = items;
+        this.#dataItems = dataItems;
     }
 
-    private async findDataItem(pks: Partial<T>): Promise<T> {
-        let items = await this.getDateItems();
+    get dataItems() {
+        return this.#dataItems;
+    }
+    set dataItems(value) {
+        this.#dataItems = value;
+    }
+
+    private findDataItem(pks: Partial<T>): T {
+        let items = this.dataItems;
         for (let i = 0; i < items.length; i++) {
-            for (let j = 0; j < this.primaryKeys.length; j++) {
-                if (items[i][this.primaryKeys[j]] != pks[this.primaryKeys[j]]) {
-                    continue;
-                }
+            if (this.samePrimaryKeyValues(items[i], pks)) {
+                return items[i];
             }
-            return items[i];
         }
         return null;
     }
 
-    private async getDateItems() {
-        if (this.#dataItems == null) {
-            if (Array.isArray(this.#items)) {
-                this.#dataItems = this.#items;
-            }
-            else {
-                this.#dataItems = await this.#items;
+    private samePrimaryKeyValues(item1: Partial<T>, item2: Partial<T>) {
+        for (let j = 0; j < this.primaryKeys.length; j++) {
+            if (item1[this.primaryKeys[j]] != item2[this.primaryKeys[j]]) {
+                return false;
             }
         }
-
-        return this.#dataItems;
+        return true;
     }
 }

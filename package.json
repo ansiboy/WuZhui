@@ -1,6 +1,6 @@
 {
     "name": "maishu-wuzhui",
-    "version": "1.17.49",
+    "version": "1.17.59",
     "main": "./dist/index.js",
     "types": "./out/index.d.ts",
     "scripts": {
@@ -20,7 +20,8 @@
         "webpack-cli": "^3.3.0"
     },
     "dependencies": {
-        "maishu-toolkit": "^1.4.13"
+        "maishu-dilu": "^1.6.10",
+        "maishu-toolkit": "^1.4.14"
     },
     "files": [
         "dist",
