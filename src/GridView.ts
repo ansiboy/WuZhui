@@ -16,7 +16,7 @@ export interface GridViewArguments<T> {
     showHeader?: boolean,
     showFooter?: boolean,
     element: HTMLElement,
-    emptyDataRowStyle?: string,
+    emptyDataRowStyle?: string | CSSStyleDeclaration,
     /** 是否显示分页栏 */
     showPagingBar?: boolean,
     /** 一页最多的纪录数， */
@@ -171,7 +171,7 @@ export class GridView<T> extends Control<HTMLElement> {
 
         let cell = new GridViewCell(this.elementProvider.createCellElement("body"));
         cell.element.setAttribute("colspan", this.columns.length.toString());
-        if (!this._params.emptyDataRowStyle) {
+        if (this._params.emptyDataRowStyle) {
             applyStyle(cell.element, this._params.emptyDataRowStyle);
         }
         this._emtpyRow.appendChild(cell);
