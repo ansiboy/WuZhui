@@ -85,10 +85,10 @@ export abstract class DataControlField<T, P extends DataControlFieldParams = Dat
     get visible(): boolean {
         return this.params.visible;
     }
-    get gridView(): GridView<any> {
+    get gridView(): GridView<T> {
         return this.#gridView;
     }
-    set gridView(value: GridView<any>) {
+    set gridView(value: GridView<T>) {
         this.#gridView = value;
     }
     /**
@@ -122,7 +122,7 @@ export abstract class DataControlField<T, P extends DataControlFieldParams = Dat
      * @param dataItem 数据项
      * @param cellElement 单元格元素
      */
-    createItemCell(dataItem: any, cellElement: HTMLElement): GridViewCell {
+    createItemCell(dataItem: T, cellElement: HTMLElement): GridViewCell {
         if (!dataItem)
             throw Errors.argumentNull('dataItem');
 
