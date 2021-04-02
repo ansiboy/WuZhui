@@ -89,9 +89,11 @@ export class GridView<T> extends Control<HTMLElement> {
         this._dataSource.inserted.add(args => this.on_insertExecuted(args.dataItem, args.index));
         this._dataSource.deleted.add(args => this.on_deleteExecuted(args.dataItem));
         this._dataSource.selecting.add(args => {
-            let display = this._emtpyRow.element.style.display;
-            if (display != 'none') {
-                this._emtpyRow.element.children[0].innerHTML = this.initDataHTML;
+            if (this._emtpyRow != null) {
+                let display = this._emtpyRow.element.style.display;
+                if (display != 'none') {
+                    this._emtpyRow.element.children[0].innerHTML = this.initDataHTML;
+                }
             }
         });
         this._dataSource.error.add(args => {
@@ -177,6 +179,7 @@ export class GridView<T> extends Control<HTMLElement> {
         this._emtpyRow.appendChild(cell);
         this._body.appendChild(this._emtpyRow);
         this.rowCreated.fire({ row: this._emtpyRow });
+        cell.element.innerHTML = this.emptyDataHTML;
     }
 
     public appendDataRow(dataItem: any, index?: number) {
@@ -193,8 +196,11 @@ export class GridView<T> extends Control<HTMLElement> {
         }
 
         this.rowCreated.fire({ row });
-        if (this._emtpyRow.element.style.display != 'none')
-            this.hideEmptyRow();
+        // if (this._emtpyRow.element.style.display != 'none')
+        //     this.hideEmptyRow();
+        if (this._emtpyRow) {
+            this.removeEmptyRow();
+        }
 
         return row;
     }
@@ -239,7 +245,7 @@ export class GridView<T> extends Control<HTMLElement> {
             this._body.element.removeChild(rows[i]);
 
         if (items.length == 0) {
-            this.showEmptyRow();
+            this.appendEmptyRow();
             return;
         }
 
@@ -343,17 +349,23 @@ export class GridView<T> extends Control<HTMLElement> {
 
             dataRow.element.remove();
             if (dataRows.length == 1)
-                this.showEmptyRow();
+                this.appendEmptyRow();
         }
     }
 
-    private showEmptyRow() {
-        this._emtpyRow.element.children[0].innerHTML = this.emptyDataHTML;
-        this._emtpyRow.element.style.removeProperty('display');
+    // private showEmptyRow() {
+    //     this._emtpyRow.element.children[0].innerHTML = this.emptyDataHTML;
+    //     this._emtpyRow.element.style.removeProperty('display');
+    // }
+
+    // private hideEmptyRow() {
+    //     this._emtpyRow.element.style.display = 'none';
+    // }
+
+    removeEmptyRow() {
+        this._emtpyRow.element.remove();
+        this._emtpyRow = null;
     }
 
-    private hideEmptyRow() {
-        this._emtpyRow.element.style.display = 'none';
-    }
 }
 // }

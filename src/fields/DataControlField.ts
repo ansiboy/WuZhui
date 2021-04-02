@@ -2,6 +2,8 @@ import { GridView } from "../GridView";
 import { Errors } from "../Errors";
 import { GridViewCell, GridViewHeaderCell } from "../cells/index";
 import { ElementProvider } from "../ElementProvider";
+import { FieldValidation } from "./BoundField";
+import { ValidateField } from "maishu-dilu";
 
 export interface DataControlFieldParams {
     footerText?: string,
@@ -10,10 +12,11 @@ export interface DataControlFieldParams {
     headerStyle?: Partial<CSSStyleDeclaration>;
     footerStyle?: Partial<CSSStyleDeclaration>;
     visible?: boolean,
-    sortExpression?: string
+    sortExpression?: string,
+    validation?: FieldValidation["validation"],
 }
 
-export abstract class DataControlField<T, P extends DataControlFieldParams = DataControlFieldParams> {
+export abstract class DataControlField<T, P extends DataControlFieldParams = DataControlFieldParams> implements FieldValidation {
     #gridView: GridView<T>;
     #elementProvider: ElementProvider;
     protected params: P;
@@ -24,6 +27,13 @@ export abstract class DataControlField<T, P extends DataControlFieldParams = Dat
 
         this.params = params;
         this.#elementProvider = elementProvider;
+    }
+
+    get validation(): Omit<ValidateField, "name"> {
+        return this.params.validation;
+    }
+    set validation(value) {
+        this.params.validation = value;
     }
 
     /**

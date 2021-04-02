@@ -1,7 +1,7 @@
 import { DataControlFieldParams, DataControlField } from "./DataControlField";
 import { GridViewEditableCell } from "../cells/GridViewEditableCell";
 import { GridViewCell, GridViewCellControl } from "../cells/index";
-import { Rule } from "maishu-dilu";
+import { Rule, ValidateField } from "maishu-dilu";
 
 export interface BoundFieldParams<T> extends DataControlFieldParams {
     dataField: Extract<keyof T, string>,
@@ -10,11 +10,13 @@ export interface BoundFieldParams<T> extends DataControlFieldParams {
     nullText?: string,
     readOnly?: boolean,
     valueType?: ValueType,
-    validateRules?: Rule[],
     emptyText?: string,
 }
 
 export type ValueType = 'number' | 'date' | 'string' | 'boolean'
+export interface FieldValidation {
+    validation: Omit<ValidateField, "name">
+}
 
 export class BoundField<T, P extends BoundFieldParams<T> = BoundFieldParams<T>> extends DataControlField<T, P> {
 
@@ -53,10 +55,6 @@ export class BoundField<T, P extends BoundFieldParams<T> = BoundFieldParams<T>> 
 
     get readOnly() {
         return this.params.readOnly;
-    }
-
-    get validateRules() {
-        return this.params.validateRules;
     }
 
     //===============================================

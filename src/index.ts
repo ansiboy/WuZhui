@@ -1,5 +1,5 @@
 export { GridView, GridViewArguments, } from './GridView';
-export { BoundField, BoundFieldParams } from './fields/BoundField';
+export { BoundField, BoundFieldParams, FieldValidation } from './fields/BoundField';
 export { CommandField, CommandFieldParams } from './fields/CommandField';
 export { CustomField, CustomFieldParams } from './fields/CustomField';
 export { CustomBoundField, CustomBoundFieldParams } from "./fields/CustomBoundField";
