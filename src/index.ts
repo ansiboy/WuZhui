@@ -13,5 +13,5 @@ export { PagerSettings, DataSourcePagingBar } from './NumberPagingBar';
 export { Control } from "./Control";
 export { DataSource, DataSourceArguments, DataSourceSelectArguments, DataSourceSelectResult, } from "maishu-toolkit";
 export { GridViewCell, GridViewDataCell, GridViewCellControl } from "./cells/index";
-export { GridViewDataRow, GridViewRowType } from "./rows/index";
+export { GridViewDataRow, GridViewRowType, GridViewRow } from "./rows/index";
 export { ElementProvider } from "./ElementProvider";

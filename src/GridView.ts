@@ -168,6 +168,10 @@ export class GridView<T> extends Control<HTMLElement> {
     }
 
     private appendEmptyRow() {
+        if (this._emtpyRow) {
+            this.removeEmptyRow();
+        }
+        
         this._emtpyRow = new GridViewRow(GridViewRowType.Empty, this.elementProvider.createRowElement(), this);
         this._emtpyRow.element.className = GridView.emptyRowClassName;
 

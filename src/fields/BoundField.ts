@@ -23,8 +23,12 @@ export class BoundField<T, P extends BoundFieldParams<T> = BoundFieldParams<T>> 
     /**
      * Gets the caption displayed for a field when the field's value is null.
      */
-    public get nullText(): string {
-        return this.params.nullText || "";
+    public get nullText(): string | undefined {
+        return this.params.nullText;
+    }
+
+    public get emptyText(): string | undefined {
+        return this.params.emptyText;
     }
 
     createItemCell(dataItem: T, cellElement?: HTMLElement): GridViewCell {
