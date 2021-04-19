@@ -26,9 +26,15 @@ export class BoundField<T, P extends BoundFieldParams<T> = BoundFieldParams<T>> 
     public get nullText(): string | undefined {
         return this.params.nullText;
     }
+    public set nullText(value) {
+        this.params.nullText = value;
+    }
 
     public get emptyText(): string | undefined {
         return this.params.emptyText;
+    }
+    public set emptyText(value) {
+        this.params.emptyText = value;
     }
 
     createItemCell(dataItem: T, cellElement?: HTMLElement): GridViewCell {
