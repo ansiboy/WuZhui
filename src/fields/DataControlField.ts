@@ -22,6 +22,7 @@ export abstract class DataControlField<T, P extends DataControlFieldParams = Dat
     protected params: P;
 
     constructor(params?: P, elementProvider?: ElementProvider) {
+        params = params || {} as P;
         if (params.visible == null)
             params.visible = true;
 

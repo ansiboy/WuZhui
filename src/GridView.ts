@@ -36,6 +36,8 @@ export class GridView<T> extends Control<HTMLElement> {
     private _emtpyRow: GridViewRow;
     private _currentSortCell: GridViewHeaderCell<T>;
     private _params: GridViewArguments<T>;
+    private _dataRows: GridViewDataRow[];
+
     static emptyRowClassName = 'empty';
     static dataRowClassName = 'data';
     static pagingBarClassName = 'pagingBar';
@@ -46,14 +48,7 @@ export class GridView<T> extends Control<HTMLElement> {
     private pagingBar: DataSourcePagingBar;
 
     elementProvider: ElementProvider;
-    //========================================================
-    // 样式
-    // headerStyle: string;
-    // footerStyle: string;
-    // rowStyle: string;
-    // alternatingRowStyle: string;
-    //private emptyDataRowStyle: string;
-    //========================================================
+
 
     rowCreated = new Callback<{ row: GridViewRow }>(); //callbacks<GridView<T>, { row: GridViewRow }>();
     selectArguments: DataSourceSelectArguments;
@@ -167,11 +162,15 @@ export class GridView<T> extends Control<HTMLElement> {
         return this._dataSource;
     }
 
+    get dataRows() {
+        return this._dataRows;
+    }
+
     private appendEmptyRow() {
         if (this._emtpyRow) {
             this.removeEmptyRow();
         }
-        
+
         this._emtpyRow = new GridViewRow(GridViewRowType.Empty, this.elementProvider.createRowElement(), this);
         this._emtpyRow.element.className = GridView.emptyRowClassName;
 
@@ -200,11 +199,11 @@ export class GridView<T> extends Control<HTMLElement> {
         }
 
         this.rowCreated.fire({ row });
-        // if (this._emtpyRow.element.style.display != 'none')
-        //     this.hideEmptyRow();
         if (this._emtpyRow) {
             this.removeEmptyRow();
         }
+
+        this._dataRows.push(row);
 
         return row;
     }
@@ -248,6 +247,7 @@ export class GridView<T> extends Control<HTMLElement> {
         for (let i = 0; i < rows.length; i++)
             this._body.element.removeChild(rows[i]);
 
+        this._dataRows = [];
         if (items.length == 0) {
             this.appendEmptyRow();
             return;
